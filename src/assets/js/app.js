@@ -1,0 +1,157 @@
+'use strict';
+
+/***********************************************************
+* public module app
+***********************************************************/
+
+/** @description Creates a module for the app using the immediately invoked anonymous function pattern. In OO terms, basically a singleton of an anonymous class with no meaningful static members.
+*
+* @constructor
+*
+* @return {Object} Top-level singleton (module) providing a simple, encapsulated namespace, as well as module-level functionality, for the app.
+*
+* @author Ulrik H. Gade, January 2016
+*
+*/
+
+var app = (function(self) {
+	
+	var _registry = []; // top level collection of collections of data model objects managed by the app
+	
+	var _prefs = { // list of prefs, private so we can control access
+		
+		isLocalStorageAllowed: false,	
+	
+		localStoragePrefix: 'dk.ulrikgade.udacity.srwebdev.meetup-app.'
+	}
+	
+	
+	self.prefs = { // public accessors for preferences, using unified accessor pattern
+		
+		
+		/** Gets or sets permission to store data locally */
+		
+		isLocalStorageAllowed: function(bool_isAllowed) {
+			
+			if (typeof bool_isAllowed !== 'undefined') { // param present
+				
+				if (typeof bool_isAllowed === 'boolean') { // parem is boolean, so set
+				
+					_prefs.isLocalStorageAllowed = bool_isAllowed;
+				}
+				
+				else {
+					
+					throw new TypeError('Wrong type: Expected Boolean');
+				}
+			}
+			
+			return _prefs.isLocalStorageAllowed;
+		},
+		
+		
+		/** Gets prefix to be used in keys for local storage of app data (read-only) */
+		
+		localStoragePrefix: function() {
+			
+			if (arguments.length === 0) {
+			
+				return _prefs.localStoragePrefix;
+			}
+			
+			else {
+				
+				throw new IllegalAccessError('Illegal parameter: Local storage prefix is read-only');
+			}
+		}
+	}
+		
+	self.registry = { // allows serialization/deserialization of all the app's data in one fell swoop
+		
+		//ObjectRegistry class needs named class reference, so cannot be used with this anonymous module
+		
+		add: function(obj) { _registry.push(obj);}, // later type check to only accept ObjectRegistry's
+		
+		
+		clear: function() {
+			
+			_registry.forEach(function(reg) {reg.clear();});
+		},
+		
+		getObjectList: function() {return _registry},
+		
+		writeObject: function() { // write app data (in class registries) out to local storage
+			
+			if (!window.localStorage) {throw new ReferenceError('localStorage not available');}
+	
+			if (!app.prefs.isLocalStorageAllowed()) {throw new IllegalAccessError('Use of local storage not allowed by user');}
+	
+			localStorage.clear(); // clear out any crud
+			
+			for (var i = 0, len = _registry.length; i < len; i++) {_registry[i].writeObject()}
+		},
+		
+		
+		readObject: function() { // read app data (in class registries) in from local storage
+			
+			// Re-instantiate all objects of every class, and their registries
+			
+			for (var i = 0, len = localStorage.length, key, className, obj_json, objectClassName; i < len; i++) {
+				
+				key = localStorage.key(i).split('.'); className = key[key.length - 2];
+				
+				if (className === 'ObjectRegistry') { // read in object registries
+					
+					obj_json = JSON.parse(localStorage.getItem(localStorage.key(i)));
+				
+					objectClassName = obj_json._objectClassName;
+					
+					app[objectClassName].registry = new app.ObjectRegistry(obj_json._id); // registry
+					
+					app[objectClassName].registry.readObjects(); // registry contents
+				}
+				
+				// else throw new TypeError('...');
+			}
+			
+			
+		},
+		
+		
+		onDeserialized: function() { // re-establish references between objects after they have been read in
+		
+			//_registry.forEach(function(reg, self) {console.log(reg.objectClassName());reg.onDeserialized()});
+			
+			//for (var i = 0, len = _registry.length; i < len; i++) {_registry[i].onDeserialized();}
+			
+			
+			// loops don't work (registries' onDeserialized() don't see the objects), so going manual
+			
+			self.Account.registry.onDeserialized();
+	
+			self.Email.registry.onDeserialized();
+			
+			self.Event.registry.onDeserialized();
+			
+			self.Organization.registry.onDeserialized();
+			
+			self.Person.registry.onDeserialized();
+		}
+	}
+	
+	self.init = function() {
+		
+		self.registry.add(self.Account.registry);
+	
+		self.registry.add(self.Email.registry);
+		
+		self.registry.add(self.Event.registry);
+		
+		self.registry.add(self.Organization.registry);
+		
+		self.registry.add(self.Person.registry);
+	};
+	
+	return self;
+	
+})(app || {});
