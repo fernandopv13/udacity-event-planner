@@ -62,21 +62,23 @@ describe('class ObjectRegistry', function(){
 			app.TestType.cnt = 0;
 		});
 		
-		xit('can add return its class name', function() {
+		it('can add return its class name', function() {
 			
-			
+			expect(testRegistry.className()).toBe('ObjectRegistry');
 		});
 		
 		
-		xit('can add return its id', function() {
+		it('can add return its id', function() {
 			
-			
+			expect(parseInt(testRegistry.id())).toEqual(testRegistry.id());
+
+			expect(parseInt(testRegistry.id())).toBeGreaterThan(-1);
 		});
 		
 		
-		xit('can add return the class name of the objects it holds', function() {
+		it('can add return the class name of the objects it holds', function() {
 			
-			
+			expect(testRegistry.objectClassName()).toBe('TestType');
 		});
 				
 		
