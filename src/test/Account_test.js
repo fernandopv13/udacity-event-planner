@@ -2,6 +2,14 @@
 
 /* Jasmine.js unit test suite for javascript pseuado-classical class template */
 
+
+// Mock some of the other app classes, if necessary
+
+app.Email = app.Email || function(){this.address = function() {return 'nosuchuser@unknown.domain';};};
+
+app.Person = app.Person || function(){this.name = function() {return 'Test person';};};
+
+
 describe('class Account', function(){
 	
 	app.Email = app.Email || function() {};
@@ -13,12 +21,18 @@ describe('class Account', function(){
 	});
 	
 	
-	it('can be instantiated', function() {
+	it('can be created with an email and a valid password', function() {
 		
 		expect((new app.Account(new app.Email(), 'Abcd!123')).constructor).toBe(app.Account);
 	});
 	
 	
+	it('can be created with an email, a valid password, and an account holder', function() {
+		
+		expect((new app.Account(new app.Email(), 'Abcd!123', new app.Person('Test person'))).constructor).toBe(app.Account);
+	});
+
+
 	it('rejects attempt to create with an email that is not an Email', function() {
 			
 		try {
@@ -51,6 +65,22 @@ describe('class Account', function(){
 	});
 	
 	
+	it('rejects attempt to create with an account holder that is not a Person', function() {
+			
+			try {
+				
+				this.success = new app.Account(new app.Email(), 'Abcd!123', 'Not a person');
+			}
+			
+			catch(e) {
+				
+				expect(e.message).toBe('Account holder must be a Person');
+			}
+			
+			expect(this.success).not.toBeDefined();
+	});
+
+
 	it('has an object registry', function() {
 		
 		expect(app.Account.registry.constructor).toBe(app.ObjectRegistry);
@@ -63,11 +93,12 @@ describe('class Account', function(){
 		
 		var testAccount, oldPermission;
 		
-		
 		beforeEach(function(){
 			
 			testAccount = new app.Account();
 			
+			testAccount.accountHolder(new app.Person('Test person'));
+
 			oldPermission = app.prefs.isLocalStorageAllowed();
 			
 			app.prefs.isLocalStorageAllowed(true);
@@ -148,6 +179,30 @@ describe('class Account', function(){
 			expect(testAccount.password()).not.toBeDefined();
 		});
 		
+
+		it('can set and get its account holder', function() {
+		
+			testAccount.accountHolder(new app.Person('No such person'));
+			
+			expect(testAccount.accountHolder().name()).toBe('No such person');
+		});
+		
+		
+		it('rejects attempt to set an account holder that is not of class Person', function() {
+			
+			try {
+				
+				testAccount.accountHolder('Not a Person');
+			}
+			
+			catch(e) {
+				
+				expect(e.message).toBe('Account holder must be a Person');
+			}
+			
+			expect(testAccount.accountHolder().name()).toBe('Test person');
+		});
+
 		
 		it('can be serialized to a valid JSON string', function() {
 			
@@ -164,6 +219,8 @@ describe('class Account', function(){
 			expect(obj._email).not.toBeDefined();
 			
 			expect(obj._password).toBeDefined();
+
+			expect(obj._accountHolder).toBeDefined();
 		});
 		
 		
@@ -176,6 +233,8 @@ describe('class Account', function(){
 			expect(testAccount.className()).toEqual(obj._className);
 			
 			expect(testAccount.id()).toEqual(obj._id);
+
+			expect(testAccount.accountHolder().id()).toEqual(obj._accountHolder._id);
 			
 			expect(JSON.stringify(testAccount).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
 		});
@@ -196,6 +255,8 @@ describe('class Account', function(){
 			expect(testAccount.className()).toBe('Account'); // test
 			
 			expect(testAccount.password()).toBe('Pass!Word2');
+
+			expect(testAccount.accountHolder()._className).toBe('Person'); // not deserialized yet
 		});
 		
 		
@@ -332,11 +393,13 @@ describe('class Account', function(){
 			
 			var id = testAccount.email().id();
 			
+			
 			testAccount.writeObject(); // write out to local storage
 			
 			app.Account.registry.remove(testAccount); // remove from registry
 			
 			testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
+			
 			
 			expect(testAccount.className()).toBe('Account'); // verify re-instantiation
 			
@@ -345,10 +408,11 @@ describe('class Account', function(){
 			expect(testAccount.email()._id).toBe(id);
 			
 			
-			testAccount.onDeserialized();
-			
+			testAccount.onDeserialized(); // verify deserialization
 			
 			expect(testAccount.email().address()).toBe('nosuchuser@undef.nowhere');
+
+			expect(testAccount.accountHolder().name()).toBe('Test person')
 		});
 		
 		afterEach(function() {

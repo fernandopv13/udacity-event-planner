@@ -25,7 +25,7 @@ var app = app || {};
 *
 */
 
-app.Account = function(Email_email, str_password) {
+app.Account = function(Email_email, str_password, Person_accountHolder) {
 
 
 	/*----------------------------------------------------------------------------------------
@@ -38,13 +38,48 @@ app.Account = function(Email_email, str_password) {
 
 	_email,
 	
-	_password;
+	_password,
+
+	_accountHolder; // (Person) The person holding the account
 	
 	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
+	/** Gets or sets account holder
+	*
+	* @param {Person} accountholder The person holding the account (optional, supply if setting)
+	*
+	* @return {Person} TThe person holding the account
+	*
+	* @throws {TypeError} If attempting to set account holder not of class Person
+	*/
+	
+	this.accountHolder = function (obj_person) {
+		
+		if (arguments.length !== 0) { // normal setter
+			
+			if (obj_person.constructor === app.Person) {
+				
+				_accountHolder = obj_person;
+			}
+			
+			else if (obj_person._className === 'Person' && typeof obj_person._id !== 'undefined') { // setting unresolved object reference when called from readObject()
+				
+				_accountHolder = obj_person;
+			}
+			
+			else {
+				
+				throw new TypeError('Account holder must be a Person')
+			}
+		}
+		
+		return _accountHolder;
+	}
+	
+	
 	/** Gets name of object's class. Class name is read-only.
 	*
 	* (Method realization required by ISerializable.)
@@ -166,11 +201,16 @@ app.Account = function(Email_email, str_password) {
 	
 	this.onDeserialized = function() { // Replace IDs with references to objects of that ID
 		
-		// Verify that properties exist and are likely to be temporary literals left by readObject();
+		// Verify that properties exist and are likely to be temporary literals left by readObject() before assigning references
 		
 		if (_email && _email.constructor !== app.Email && _email._className === 'Email') {
 		
 			_email = app.Email.registry.getObjectById(_email._id);
+		}
+
+		if (_accountHolder && _accountHolder.constructor !== app.Person && _accountHolder._className === 'Person') {
+		
+			_accountHolder = app.Person.registry.getObjectById(_accountHolder._id);
 		}
 		
 		return true;
@@ -194,7 +234,9 @@ app.Account = function(Email_email, str_password) {
 			
 			_email: _email ? {_className: _email.className(), _id: _email.id()} : undefined,
 			
-			_password: _password// ? _password : null
+			_password: _password,
+
+			_accountHolder: _accountHolder ? {_className: _accountHolder.className(), _id: _accountHolder.id()} : undefined
 		};
 	};
 	
@@ -233,6 +275,8 @@ app.Account = function(Email_email, str_password) {
 		if (Email_email) {this.email(Email_email);}
 		
 		if (str_password) {this.password(str_password);}
+
+		if (Person_accountHolder) {this.accountHolder(Person_accountHolder);}
 	}
 
 	
