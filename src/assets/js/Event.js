@@ -55,7 +55,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 	_end,
 	
-	_capacity = 0,
+	_capacity = 50, // set a reasonable non-zero default
 	
 	_guests = [], // (Person array) A collection of guests invited to, or participating in, the event
 	

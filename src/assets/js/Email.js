@@ -264,7 +264,6 @@ app.Email = function(str_address) {
 app.Email.registry = new app.ObjectRegistry(app.Email, 'Email');
 
 
-
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/

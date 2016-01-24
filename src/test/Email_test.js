@@ -36,7 +36,6 @@ describe('class Email', function(){
 		expect(app.Email.registry.type()).toBe(app.Email);
 	});
 	
-	
 	describe('Email instance', function() {
 		
 		var testMail, oldPermission;
