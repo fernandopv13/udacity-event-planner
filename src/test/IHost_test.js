@@ -22,61 +22,14 @@ describe('Interface IHost', function(){
 		}
 	});
 	
-	
-	/*
-	it('defines a setHostName() method signature', function() {
-			
-		// verify that method signature exists
-		
-		expect(app.IHost.prototype.setHostName).toBeDefined();
-	});
-		
-	
-	it('throws an error if setHostName() is invoked', function() {
-			
-		// verify that method invokation throws error
-		
-		try {
-		
-			app.IHost.prototype.setHostName('');
-		}
-		
-		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
-		
-			expect(e.message).toEqual(app.IHost.prototype.setHostName.errorMessage);
-		}
-	});
-		
-	
-	it('defines a getHostName() method signature', function() {
-			
-		// verify that method signature exists
-		
-		expect(app.IHost.prototype.getHostName).toBeDefined();
-	});
-		
-	
-	it('throws an error if getHostName() is invoked', function() {
-			
-		// verify that method invokation throws error
-		
-		try {
-		
-			void app.IHost.prototype.getHostName();
-		}
-		
-		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
-		
-			expect(e.message).toEqual(app.IHost.prototype.getHostName.errorMessage);
-		}
-	});
-	*/
-	
+
 	it('defines a hostName() method signature', function() {
 			
 		// verify that method signature exists
 		
 		expect(app.IHost.prototype.hostName).toBeDefined();
+
+		expect(typeof app.IHost.prototype.hostName).toBe('function');
 	});
 		
 	
@@ -92,6 +45,32 @@ describe('Interface IHost', function(){
 		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
 		
 			expect(e.message).toEqual(app.IHost.prototype.hostName.errorMessage);
+		}
+	});
+
+
+	it('defines an isInstanceOf() method signature', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IHost.prototype.isInstanceOf).toBeDefined();
+
+		expect(typeof app.IHost.prototype.isInstanceOf).toBe('function');
+	});
+		
+	
+	it('throws an error if isInstanceOf() is invoked', function() {
+			
+		// verify that method invokation throws error
+		
+		try {
+		
+			void app.IHost.prototype.isInstanceOf();
+		}
+		
+		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
+		
+			expect(e.message).toEqual(app.IHost.prototype.isInstanceOf.errorMessage);
 		}
 	});
 });

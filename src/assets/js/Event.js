@@ -285,22 +285,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	}
 	
 	
- 	
-	/*
-	this.guestList = function() {
-	
-		if (arguments.length === 0) {
-			
-			return _guests;
-		}
-			
-		else {
-				
-				throw new Error('Illegal parameter: id is read-only');
-		}
-	}
-	*/
-
 	/** Adds a person to the event's guest list */
 
 	this.addGuest = function (obj_guest) {
@@ -437,6 +421,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			}
 			
 			else if (['Person', 'Organization'].indexOf(Ihost_host._className) > -1 && typeof Ihost_host._id !== 'undefined') { // setting unresolved object reference when called from readObject()
+			//else if (Ihost_host.isInstanceOf && Ihost_host.isInstanceOf(app.IHost) && typeof Ihost_host._id !== 'undefined') { // setting unresolved object reference when called from readObject()
 			
 				_host = Ihost_host;
 			}
@@ -516,17 +501,17 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			
 			_id: _id,
 			
-			_start: _start,// ? _start : null,
+			_start: _start,
 			
-			_end: _end,// ? _end : null,
+			_end: _end,
 			
-			_name: _name,// ? _name : null,
+			_name: _name,
 			
-			_type: _type,// ? _type : null,
+			_type: _type,
 			
-			_location: _location,// ? _location : null,
+			_location: _location,
 			
-			_description: _description,// ? _description: null, // may need to remove line breaks
+			_description: _description, // may need to remove line breaks
 			
 			_host: _host ? {_className: _host.className(), _id: _host.id()} : undefined, // if host is undefined, pass in undefined
 			

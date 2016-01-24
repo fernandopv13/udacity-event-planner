@@ -246,19 +246,12 @@ app.ISerializable.prototype.default_readObject = function(arr_exclusions) {
 				
 				if (exclusions.indexOf(prop) === -1) { // skip props in exclusions list
 				
-					// maybe call accessor on anything that has an underscore, and where accessor exists; might handle most complexes too
+					// call accessor (assumed have same name as property, except popping leading underscore)
 					
-					if (true) {//obj_json[prop] === null || isPrimitive(typeof obj_json[prop])) { // this shouldn't be necessary, as long as the accessors are up for it
-					
-						// call accessor (assumed have same name as property, except popping leading underscore)
-						
-						this[prop.slice(1)](obj_json[prop]); // primitive data type, call the property's accessor
-					}
-					
-					// else: placeholder for complex data type (array or object), leave for re-referincing later
+					this[prop.slice(1)](obj_json[prop]);
 				}
 				
-				// else: in exclusions list, leave for custom logic to sort out
+				// else: in exclusion list, leave for custom logic to sort out
 			}
 		
 		return true;

@@ -4,7 +4,7 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /***********************************************************
-* public class Organization
+* public class Organization implements IHost ISerializable
 ***********************************************************/
 
 /** @classdesc Describes an organization that may host an event.
@@ -31,6 +31,8 @@ app.Organization = function(str_name) {
 		
 	var	_className = 'Organization', // (String) Name of this class
 	
+	_implements = [app.IHost, app.ISerializable], // list of interfaces implemented by this class (by function reference)
+
 	_id, // (int) Unique organization ID obtaining from Organization object registry
 	
 	_name;
@@ -129,6 +131,23 @@ app.Organization = function(str_name) {
 		return _name;
 	}
 	
+
+	/** Returns true if class implements the interface passed in (by function reference)
+	*
+	* (Method realization required by ISerializable.)
+	*
+	* @param {Function} interface The interface we wish to determine if this class implements
+	*
+	* @return {Boolean} instanceof True if class implements interface, otherwise false
+	*	
+	*/
+	
+	this.isInstanceOf = function (func_interface) {
+		
+		return _implements.indexOf(func_interface) > -1;
+	};
+
+
 	/** Re-establishes references to complex members after they have been deserialized
 	*
 	* (Method realization required by ISerializable.)

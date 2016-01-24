@@ -447,11 +447,6 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 
 app.ObjectRegistry.count = 0;
 
-/** Provides registry and unique object ID services to this class  */
-
-//app.Person.registry = new app.ObjectRegistry(app.ObjectRegistry, 'ObjectRegistry');
-
-
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/

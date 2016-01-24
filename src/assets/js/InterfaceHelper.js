@@ -61,12 +61,7 @@ app.InterfaceHelper.mixInto = function(Func_interface, Func_class, obj_classInst
 					Func_class.prototype[prop_popped] = Func_interface.prototype[prop]; // mix in method, removing prefix
 				}
 				
-				/*
-				else { // do not mix in default method if it has been overriden by implementing class
-					
-					throw new ReferenceError('Method ' + prop_popped + ' already defined. Inheritance from interface failed');
-				}
-				*/
+				//else: ignore (do not mix in default method if it has been overriden by implementing class)
 			}
 		}
 	}

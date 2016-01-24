@@ -91,11 +91,27 @@ describe('class Organization', function(){
 		});
 		
 		
+		it('can tell if it is an instance of IHost', function() {
+
+			expect(testOrg.isInstanceOf(app.IHost)).toBe(true);
+
+			expect(testOrg.isInstanceOf(Error)).toBe(false);
+		});
+
+
 		it('can set and get its IHost hostName', function() { //uses Interface.js
 			
 			testOrg.hostName('testHostName');
 			
 			expect(testOrg.hostName()).toBe('testHostName');
+		});
+		
+
+		it('can tell if it is an instance of ISerializable', function() {
+
+			expect(testOrg.isInstanceOf(app.ISerializable)).toBe(true);
+
+			expect(testOrg.isInstanceOf(Error)).toBe(false);
 		});
 		
 		

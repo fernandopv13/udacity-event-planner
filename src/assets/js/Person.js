@@ -40,7 +40,7 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email) {
 		
 	var	_className = 'Person', // (String) Name of this class
 
-	_implements = [app.IHost, app.ISerializable], //
+	_implements = [app.IHost, app.ISerializable], // list of interfaces implemented by this class (by function reference)
 	
 	_id, // (int) Unique person ID obtaining from Person object registry
 	

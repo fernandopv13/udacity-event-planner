@@ -97,72 +97,7 @@ describe('class Person', function(){
 		expect(this.success).not.toBeDefined();
 	});
 	
-	
-	/*
-	it('can re-instantiate from a JSON object', function() {
 		
-		var testPerson = new app.Person();
-		
-		app.Person.registry.remove(testPerson); // else we get duplication error when new instance tries to insert itself into registry during construction
-		
-		expect((new app.Person(JSON.parse(JSON.stringify(testPerson)))).id()).toEqual(testPerson.id());
-	});
-	
-	
-	it('rejects attempt to re-instantiate from JSON with the wrong class', function() {
-		
-		try {
-			
-			this.success = new app.Email({_className: 'NotPerson'});
-		}
-		
-		catch(e) {
-			
-			expect(e.message).toBe('Wrong constructor "NotPerson". Expected Email');
-		}
-		
-		expect(this.success).not.toBeDefined();
-	});
-	
-	
-	it('rejects attempt to re-instantiate from JSON missing non-zero integer ID', function() {
-		
-		try {
-			
-			this.success = new app.Person({_className: 'Person'});
-		}
-		
-		catch(e) {
-			
-			expect(e.message).toBe('Cannot re-instantiate object: ID not defined or not valid');
-		}
-		
-		
-		try {
-			
-			this.success = new app.Person({_className: 'Person', _id: 'not an integer'});
-		}
-		
-		catch(e) {
-			
-			expect(e.message).toBe('Cannot re-instantiate object: ID not defined or not valid');
-		}
-		
-		
-		try {
-			
-			this.success = new app.Person({_className: 'Person', _id: -1});
-		}
-		
-		catch(e) {
-			
-			expect(e.message).toBe('Cannot re-instantiate object: ID not defined or not valid');
-		}
-		
-		expect(this.success).not.toBeDefined();
-	});
-	*/
-	
 	it('has an object registry', function() {
 		
 		expect(app.Person.registry.constructor).toBe(app.ObjectRegistry);
@@ -282,6 +217,12 @@ describe('class Person', function(){
 			expect(testPerson.email()).toBe(oldMail);
 		});
 		
+		it('can tell if it is an instance of IHost', function() {
+
+			expect(testPerson.isInstanceOf(app.IHost)).toBe(true);
+
+			expect(testPerson.isInstanceOf(Error)).toBe(false);
+		});
 		
 		it('can set and get its IHost hostName', function() {
 			
@@ -291,6 +232,14 @@ describe('class Person', function(){
 		});
 		
 		
+		it('can tell if it is an instance of ISerializable', function() {
+
+			expect(testPerson.isInstanceOf(app.ISerializable)).toBe(true);
+
+			expect(testPerson.isInstanceOf(Error)).toBe(false);
+		});
+		
+
 		it('can be serialized to a valid JSON string', function() {
 			
 			testPerson.name('what\'s in a name?')
@@ -468,106 +417,6 @@ describe('class Person', function(){
 			
 			expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
 		});
-		
-		
-		/*
-		it('can write itself to local storage', function() {
-			
-			testPerson.writeObject();
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
-			
-			expect(testPerson.className()).toEqual(obj._className);
-			
-			expect(testPerson.id()).toEqual(obj._id);
-			
-			expect(JSON.stringify(testPerson).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
-		});
-		
-		
-		it('can read itself from local storage', function() {
-			
-			testPerson.writeObject();
-			
-			var obj = testPerson.readObject();
-			
-			expect(testPerson.className()).toEqual(obj._className);
-			
-			expect(testPerson.id()).toEqual(obj._id);
-			
-			expect(JSON.stringify(testPerson).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
-		});
-		
-		
-		it('can remove itself from local storage', function() {
-			
-			testPerson.writeObject();
-			
-			expect(testPerson.readObject()).toBeDefined();
-			
-			testPerson.removeObject();
-			
-			expect(testPerson.readObject()).toBe(null);
-			
-		});
-		
-		
-		it('can be deserialized from a JSON string in local storage back into an instance of the class', function() {
-			
-			testPerson.name('Chandra'); // set a value to test for
-			
-			testPerson.writeObject(); // write out to local storage
-			
-			app.Person.registry = new app.ObjectRegistry(app.Person, 'Person'); // reset registry
-			
-			expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
-			
-			expect(testPerson.className()).toBe('Person'); // test
-			
-			expect(testPerson.name()).toBe('Chandra');
-		});
-		*/
-		
-		/*
-		it('can be deserialized from a JSON object back into an instance of the class', function() {
-			
-			app.Person.registry = new app.ObjectRegistry(app.Person); // reset registry
-			
-			expect(app.Person.registry.getObjectList()).toEqual({}); // confirm that we're empty
-			
-			void new app.Person('Mary');
-			
-			void new app.Person('Jane');
-			
-			void new app.Person('Paul');
-			
-			expect(app.Person.registry.getObjectList()).not.toEqual({}); // check that we have some data
-			
-			
-			var before = JSON.stringify(app.Person.registry); // serialize accounts in registry to string
-			
-			app.Person.registry = new app.ObjectRegistry(app.Person); // reset registry
-			
-			expect(app.Person.registry.getObjectList()).toEqual({}); // confirm that we're empty
-			
-			app.Person.registry.processJSON(JSON.parse(before)); //parse back into JSON
-			
-			expect(app.Person.registry.getObjectList()).not.toEqual({}); // check that we have some data
-			
-			
-			expect(app.Person.registry.getObjectById(0).name()).toBe('Mary'); // test
-			
-			expect(app.Person.registry.getObjectById(1).name()).toBe('Jane');
-			
-			expect(app.Person.registry.getObjectById(2).name()).toBe('Paul');
-			
-			
-			app.Person.registry.onDeserialized(); //re-establish complex object references
-			//no test for those yet
-		});
-		*/
 		
 		
 		it('can re-establish object references when de-serializing from JSON', function(){
