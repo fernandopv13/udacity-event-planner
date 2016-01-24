@@ -40,11 +40,11 @@ app.data = {
 	
 	accounts:
 	[
-		new app.Account(new app.Email('tina@server.domain'), 'Abcd!1234'),
+		new app.Account(new app.Email('tina@server.domain'), new app.Password('Abcd!1234')),
 		
-		new app.Account(new app.Email('lisa@server.domain'), 'aBc!12345'),
+		new app.Account(new app.Email('lisa@server.domain'), new app.Password('aBc!12345')),
 		
-		new app.Account(new app.Email('john@server.domain'), 'abCd1234!')
+		new app.Account(new app.Email('john@server.domain'), new app.Password('abCd1234!'))
 	]
 };
 

@@ -7,6 +7,8 @@
 
 app.Email = app.Email || function(){this.address = function() {return 'nosuchuser@unknown.domain';};};
 
+app.Password = app.Password || function(){this.password = function() {return '123!abcDEF';};};
+
 app.Person = app.Person || function(){this.name = function() {return 'Test person';};};
 
 
@@ -23,13 +25,13 @@ describe('class Account', function(){
 	
 	it('can be created with an email and a valid password', function() {
 		
-		expect((new app.Account(new app.Email(), 'Abcd!123')).constructor).toBe(app.Account);
+		expect((new app.Account(new app.Email(), new app.Password('123!abcDEF'))).constructor).toBe(app.Account);
 	});
 	
 	
 	it('can be created with an email, a valid password, and an account holder', function() {
 		
-		expect((new app.Account(new app.Email(), 'Abcd!123', new app.Person('Test person'))).constructor).toBe(app.Account);
+		expect((new app.Account(new app.Email(), new app.Password('123!abcDEF'), new app.Person('Test person'))).constructor).toBe(app.Account);
 	});
 
 
@@ -58,7 +60,7 @@ describe('class Account', function(){
 		
 		catch(e) {
 			
-			expect(e.message).toBe('Invalid password: Passwords must be at least min. 8 chars long and have at least one each of uppercase, lowercase and non-alpha character');
+			expect(e.name).toBe('IllegalArgumentError');
 		}
 		
 		expect(this.success).not.toBeDefined();
@@ -69,7 +71,7 @@ describe('class Account', function(){
 			
 			try {
 				
-				this.success = new app.Account(new app.Email(), 'Abcd!123', 'Not a person');
+				this.success = new app.Account(new app.Email(), new app.Password('123!abcDEF'), 'Not a person');
 			}
 			
 			catch(e) {
@@ -158,9 +160,9 @@ describe('class Account', function(){
 		
 		it('can set and get its password', function() {
 		
-			testAccount.password('1!fghDwe');
+			testAccount.password(new app.Password('123!abcDEF'));
 			
-			expect(testAccount.password()).toBe('1!fghDwe');
+			expect(testAccount.password().password()).toBe('123!abcDEF');
 		});
 		
 		
@@ -168,12 +170,12 @@ describe('class Account', function(){
 			
 			try {
 				
-				testAccount.password('insecure');
+				testAccount.password(new app.Password('insecure'));
 			}
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Invalid password: Passwords must be at least min. 8 chars long and have at least one each of uppercase, lowercase and non-alpha character');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 			
 			expect(testAccount.password()).not.toBeDefined();
@@ -206,7 +208,7 @@ describe('class Account', function(){
 		
 		it('can be serialized to a valid JSON string', function() {
 			
-			testAccount.password('adsghlkggAGA435q23__');
+			testAccount.password(new app.Password('adsghlkggAGA435q23!'));
 			
 			var obj = JSON.parse(JSON.stringify(testAccount));
 			
@@ -242,7 +244,7 @@ describe('class Account', function(){
 		
 		it('can read (i.e. re-instantiate) itself from local storage', function() {
 			
-			testAccount.password('Pass!Word2'); // set a value to test for
+			testAccount.password(new app.Password('Pass!Word2')); // set a value to test for
 			
 			testAccount.writeObject(); // write out to local storage
 			
@@ -254,7 +256,7 @@ describe('class Account', function(){
 			
 			expect(testAccount.className()).toBe('Account'); // test
 			
-			expect(testAccount.password()).toBe('Pass!Word2');
+			expect(testAccount.password()._className).toBe('Password');
 
 			expect(testAccount.accountHolder()._className).toBe('Person'); // not deserialized yet
 		});
@@ -262,13 +264,13 @@ describe('class Account', function(){
 		
 		it('can remove itself from local storage', function() {
 			
-			testAccount.password('Pass!Word2'); // set a value to test for
+			testAccount.password(new app.Password('Pass!Word2')); // set a value to test for
 			
 			testAccount.writeObject(); // write out to local storage
 			
 			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
 			
-			expect(obj._password).toBe('Pass!Word2'); // verify write
+			expect(obj._password._className).toBe('Password'); // verify write
 			
 			testAccount.removeObject(); // remove from local storage
 			
@@ -387,7 +389,7 @@ describe('class Account', function(){
 		
 		it('can re-establish object references when de-serializing from JSON', function(){
 			
-			testAccount.password('Pass!Word76'); // set a value to test for
+			testAccount.password(new app.Password('Pass!Word76')); // set a value to test for
 			
 			testAccount.email(new app.Email('nosuchuser@undef.nowhere'));
 			
@@ -403,7 +405,7 @@ describe('class Account', function(){
 			
 			expect(testAccount.className()).toBe('Account'); // verify re-instantiation
 			
-			expect(testAccount.password()).toBe('Pass!Word76');
+			expect(testAccount.password()._className).toBe('Password');
 			
 			expect(testAccount.email()._id).toBe(id);
 			

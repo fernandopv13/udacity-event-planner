@@ -406,7 +406,7 @@ describe('class Password', function(){
 			
 			// Required by ISerializable but nothing to do for now
 			
-			expect(true).toBe(true);
+			expect(testPassword.onDeserialized()).toBe(true);
 		});
 		
 		

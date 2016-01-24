@@ -347,7 +347,7 @@ describe('class Email', function(){
 			
 			// Required by ISerializable but nothing to do for now
 			
-			expect(true).toBe(true);
+			expect(testMail.onDeserialized()).toBe(true);
 		});
 		
 		

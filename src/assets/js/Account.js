@@ -25,7 +25,7 @@ var app = app || {};
 *
 */
 
-app.Account = function(Email_email, str_password, Person_accountHolder) {
+app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 
 	/*----------------------------------------------------------------------------------------
@@ -145,7 +145,7 @@ app.Account = function(Email_email, str_password, Person_accountHolder) {
 			
 			else {
 				
-				throw new TypeError('Wrong type: Email must be an instance of the Email class')
+				throw new IllegalArgumentError('Wrong type: Email must be an instance of the Email class')
 			}
 		}
 		
@@ -155,33 +155,42 @@ app.Account = function(Email_email, str_password, Person_accountHolder) {
 	
 	/** Gets or sets password
 	*
-	* @param {String} password The account's password
+	* @param {Password} password The account's password
 	*
-	* @return {String} The account's password.
+	* @return {Password} The account's password.
 	*
-	* @throws {Error} If attempting to set insecure password
+	* @throws {IllegalArgumentError} If attempting to set insecure password
 	*/
 	
-	this.password = function (str_password) {
+	this.password = function (obj_password) {
 		
 		if (arguments.length !== 0) {
 			
-			if (str_password !== null) { // Deserialization may createcall with null, ignore
+			if (obj_password !== null) { // Deserialization may create call with null, ignore
 				
-				if (!/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(str_password)) {
+				//if (!/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(str_password)) {
 					
-					_password = str_password;
+				if (obj_password.constructor === app.Password) {
+
+					_password = obj_password;
 				}
+
+				else if (obj_password._className === 'Password' && typeof obj_password._id !== 'undefined') { // setting unresolved object reference when called from readObject()
+				
+				_password = obj_password;
+			}
 				
 				else {
 					
-					throw new Error('Invalid password: Passwords must be at least min. 8 chars long and have at least one each of uppercase, lowercase and non-alpha character');
+					throw new IllegalArgumentError('Password must be instance of class Password');
 				}
 			}
+
+			//else: fail silently on null
 		}
 		
 		return _password;
-	}
+	};
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -206,6 +215,11 @@ app.Account = function(Email_email, str_password, Person_accountHolder) {
 		if (_email && _email.constructor !== app.Email && _email._className === 'Email') {
 		
 			_email = app.Email.registry.getObjectById(_email._id);
+		}
+
+		if (_password && _password.constructor !== app.Password && _password._className === 'Password') {
+		
+			_password = app.Password.registry.getObjectById(_password._id);
 		}
 
 		if (_accountHolder && _accountHolder.constructor !== app.Person && _accountHolder._className === 'Person') {
@@ -234,7 +248,7 @@ app.Account = function(Email_email, str_password, Person_accountHolder) {
 			
 			_email: _email ? {_className: _email.className(), _id: _email.id()} : undefined,
 			
-			_password: _password,
+			_password: _password ? {_className: _password.className(), _id: _password.id()} : undefined,
 
 			_accountHolder: _accountHolder ? {_className: _accountHolder.className(), _id: _accountHolder.id()} : undefined
 		};
@@ -274,7 +288,7 @@ app.Account = function(Email_email, str_password, Person_accountHolder) {
 		
 		if (Email_email) {this.email(Email_email);}
 		
-		if (str_password) {this.password(str_password);}
+		if (Password_password) {this.password(Password_password);}
 
 		if (Person_accountHolder) {this.accountHolder(Person_accountHolder);}
 	}
