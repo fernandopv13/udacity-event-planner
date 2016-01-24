@@ -62,7 +62,7 @@ describe('class Person', function(){
 	
 	it('can be instantiated with a full set of valid parameters', function() {
 		
-		expect((new app.Person('testPerson', testOrg, 'big boss', testMail)).constructor).toBe(app.Person);
+		expect((new app.Person('testPerson', testOrg, 'big boss', testMail, new Date())).constructor).toBe(app.Person);
 	});
 	
 	
@@ -216,6 +216,48 @@ describe('class Person', function(){
 			
 			expect(testPerson.email()).toBe(oldMail);
 		});
+
+
+		it('can set and get its birthday (using Date)', function() {
+		
+			var testDate = new Date();
+			
+			testPerson.birthday(testDate);
+			
+			expect(testPerson.birthday()).toBe(testDate);
+		});
+		
+		
+		it('can set and get its birthday (using string)', function() {
+		
+			var testDate = new Date().toString();
+			
+			testPerson.birthday(testDate);
+			
+			expect(testPerson.birthday().toString()).toBe(testDate);
+		});
+
+
+		it('rejects attempt to set birthday that is not a valid Date (object or string)', function() {
+		
+			var oldDate = testPerson.birthday();
+			
+			var testDate = 'not a valid Date (object or string)';
+			
+			try { // this should throw error
+				
+				testPerson.birthday(testDate);
+			}
+			
+			catch(e)
+			{
+				
+				expect(e.message).toBe('Birthday must be Date');
+			}
+			
+			expect(testPerson.birthday()).toEqual(oldDate);
+		});
+
 		
 		it('can tell if it is an instance of IHost', function() {
 
@@ -242,7 +284,9 @@ describe('class Person', function(){
 
 		it('can be serialized to a valid JSON string', function() {
 			
-			testPerson.name('what\'s in a name?')
+			testPerson.name('what\'s in a name?');
+
+			testPerson.birthday(new Date());
 			
 			var obj = JSON.parse(JSON.stringify(testPerson));
 			
@@ -259,6 +303,8 @@ describe('class Person', function(){
 			expect(obj._jobTitle).not.toBeDefined();
 			
 			expect(obj._email).not.toBeDefined();
+
+			expect(obj._birthday).toBeDefined();
 		});
 		
 		
@@ -278,8 +324,10 @@ describe('class Person', function(){
 		
 		it('can read (i.e. re-instantiate) itself from local storage', function() {
 			
-			testPerson.name('Claudia'); // set a value to test for
+			testPerson.name('Claudia'); // set a couple of values to test for
 			
+			testPerson.birthday(new Date());
+
 			testPerson.writeObject(); // write out to local storage
 			
 			app.Person.registry = new app.ObjectRegistry(app.Person, 'Person'); // reset registry
@@ -291,6 +339,8 @@ describe('class Person', function(){
 			expect(testPerson.className()).toBe('Person'); // test
 			
 			expect(testPerson.name()).toBe('Claudia');
+
+			expect(testPerson.birthday()).toBeDefined()
 		});
 		
 		
@@ -465,7 +515,7 @@ describe('class Person', function(){
 		
 		afterAll(function() {
 			
-			testPerson = null;
+			testPerson = undefined;
 		});
 		
 	});

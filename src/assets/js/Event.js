@@ -70,7 +70,46 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
+
+	/** Gets or sets capacity
+	*
+	* @param {int} capacity The capacity of the event (optional, supply if setting)
+	*
+	* @return {int} The capacity of the event
+	*
+	* @throws {RangeError} If capacity is set lower than zero
+	*/
+	
+	this.capacity = function (int_capacity) {
 		
+		if (arguments.length !== 0) {
+			
+			if (int_capacity !== null) { // i.e. undefined when serialized, ignore
+			
+				if (parseInt(int_capacity) === int_capacity) { // integer required
+				
+					if (parseInt(int_capacity) >= 0) { // must not be negative
+				
+						_capacity = parseInt(int_capacity);
+					}
+					
+					else {
+						
+						throw new RangeError('Capacity cannot be negative');
+					}
+				}
+				
+				else {
+					
+					throw new TypeError('Capacity must be an integer');
+				}
+			}
+		}
+		
+		return _capacity;
+	};
+
+
 	/** Gets name of object's class. Class name is read-only.
 	*
 	* (Method realization required by ISerializable.)
@@ -91,97 +130,21 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 	
 	
-	/** Gets unique event ID. ID can only be set from within the object itself.
+	/** Gets or sets description
 	*
-	* (Method realization required by ISerializable.)
+	* @param {String} description A short description of the event (optional, supply if setting)
 	*
-	* @return {int} An integer, if called with no parameters
-	*	
-	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
+	* @return {String} A short description of the event
 	*/
 	
-	this.id = function () {
-		
-		if(arguments.length === 0) { return _id;}
-		
-		else {
-			
-			throw new Error('Illegal parameter: id is read-only');
-		}
-	};
-	
-	
-	/** Gets or sets name
-	*
-	* @param {String} name The name of the event (optional, supply if setting)
-	*
-	* @return {String} The name of the event
-	*/
-	
-	this.name = function (str_name) {
+	this.description = function (str_description) {
 		
 		if (arguments.length !== 0) {
 			
-			_name = str_name;
+			_description = str_description;
 		}
 		
-		return _name;
-	}
-	
-	
-	/** Gets or sets event type
-	*
-	* @param {String} type The type of event (e.g. birthday, bachelor's party, religious holiday etc.) (optional, supply if setting)
-	*
-	* @return {String} The type of event (e.g. birthday, bachelor's party, religious holiday etc.)
-	*/
-	
-	this.type = function (str_type) {
-		
-		if (arguments.length !== 0) {
-			
-			_type = str_type;
-		}
-		
-		return _type;
-	}
-	
-
-	/** Gets or sets the start date
-	*
-	* @description Takes a single parameter when setting: either a Date object or a valid date string.
-	*
-	* @param {Date} start The date and time when the event starts (Date representation)
-	*
-	* @param {String} start The date and time when the event starts (String representation)
-	*
-	* @return {Date} The date and time when the event starts
-	*/
-	
-	this.start = function(date_start) {
-		
-		if (arguments.length !== 0) {
-			
-			if (date_start !== null) {
-				
-				if (date_start.constructor === Date) { // date as Date; default form
-					
-					_start = date_start;
-				}
-				
-				else if (!isNaN(Date.parse(date_start))) { // date as string; mostly used to parse in from JSON
-					
-					_start = new Date(date_start);
-				}
-				
-				else {
-					
-					throw new TypeError('Start must be Date');
-				}
-			} // silently ignore null
-		}
-		
-		return _start;
+		return _description;
 	};
 
 
@@ -222,44 +185,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		return _end;
 	};
 
-
-	/** Gets or sets capacity
-	*
-	* @param {int} capacity The capacity of the event (optional, supply if setting)
-	*
-	* @return {int} The capacity of the event
-	*
-	* @throws {RangeError} If capacity is set lower than zero
-	*/
-	
-	this.capacity = function (int_capacity) {
-		
-		if (arguments.length !== 0) {
-			
-			if (int_capacity !== null) { // i.e. undefined when serialized, ignore
-			
-				if (parseInt(int_capacity) === int_capacity) { // integer required
-				
-					if (parseInt(int_capacity) >= 0) { // must not be negative
-				
-						_capacity = parseInt(int_capacity);
-					}
-					
-					else {
-						
-						throw new RangeError('Capacity cannot be negative');
-					}
-				}
-				
-				else {
-					
-					throw new TypeError('Capacity must be an integer');
-				}
-			}
-		}
-		
-		return _capacity;
-	}
 	
 	/** Gets copy of the guest list for the event. Guest list cannot be manipulated directly: use add() or remove() methods.
 	*
@@ -282,8 +207,164 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		}
 		
 		return _guests;
+	};
+	
+	
+	/** Gets or sets the host
+	*
+	* @param {IHost} host The person or organization hosting the event
+	*
+	* @return {IHost} The person or organization hosting the event
+	*/
+	
+	this.host = function(Ihost_host) {
+		
+		if (arguments.length !== 0) {
+			
+			if (typeof Ihost_host.hostName === 'function') { // verify that we have an instance of a class that implements iHost
+				
+				_host = Ihost_host;
+			}
+			
+			else if (['Person', 'Organization'].indexOf(Ihost_host._className) > -1 && typeof Ihost_host._id !== 'undefined') { // setting unresolved object reference when called from readObject()
+			//else if (Ihost_host.isInstanceOf && Ihost_host.isInstanceOf(app.IHost) && typeof Ihost_host._id !== 'undefined') { // setting unresolved object reference when called from readObject()
+			
+				_host = Ihost_host;
+			}
+			
+			else {
+				
+				throw new TypeError('Host must implement IHost')
+			}
+		}
+		
+		return _host;
+	};
+	
+	
+	/** Gets unique event ID. ID can only be set from within the object itself.
+	*
+	* (Method realization required by ISerializable.)
+	*
+	* @return {int} An integer, if called with no parameters
+	*	
+	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
+	*/
+	
+	this.id = function () {
+		
+		if(arguments.length === 0) { return _id;}
+		
+		else {
+			
+			throw new Error('Illegal parameter: id is read-only');
+		}
+	};
+
+
+	/** Gets or sets location
+	*
+	* @param {String} location The location of the event (optional, supply if setting)
+	*
+	* @return {String} The location of the event
+	*/
+	
+	this.location = function (str_location) {
+		
+		if (arguments.length !== 0) {
+			
+			_location = str_location;
+		}
+		
+		return _location;
+	};
+	
+	
+	/** Gets or sets name
+	*
+	* @param {String} name The name of the event (optional, supply if setting)
+	*
+	* @return {String} The name of the event
+	*/
+	
+	this.name = function (str_name) {
+		
+		if (arguments.length !== 0) {
+			
+			_name = str_name;
+		}
+		
+		return _name;
 	}
 	
+
+	/** Gets or sets the start date
+	*
+	* @description Takes a single parameter when setting: either a Date object or a valid date string.
+	*
+	* @param {Date} start The date and time when the event starts (Date representation)
+	*
+	* @param {String} start The date and time when the event starts (String representation)
+	*
+	* @return {Date} The date and time when the event starts
+	*/
+	
+	this.start = function(date_start) {
+		
+		if (arguments.length !== 0) {
+			
+			if (date_start !== null) {
+				
+				if (date_start.constructor === Date) { // date as Date; default form
+					
+					_start = date_start;
+				}
+				
+				else if (!isNaN(Date.parse(date_start))) { // date as string; mostly used to parse in from JSON
+					
+					_start = new Date(date_start);
+				}
+				
+				else {
+					
+					throw new TypeError('Start must be Date');
+				}
+			} // silently ignore null
+		}
+		
+		return _start;
+	};
+	
+	
+	/** Gets or sets event type
+	*
+	* @param {String} type The type of event (e.g. birthday, bachelor's party, religious holiday etc.) (optional, supply if setting)
+	*
+	* @return {String} The type of event (e.g. birthday, bachelor's party, religious holiday etc.)
+	*/
+	
+	this.type = function (str_type) {
+		
+		if (arguments.length !== 0) {
+			
+			_type = str_type;
+		}
+		
+		return _type;
+	};
+	
+	
+	
+	/*----------------------------------------------------------------------------------------
+	* Private instance methods (may depend on accessors, so declare after them)
+	*---------------------------------------------------------------------------------------*/
+	
+	// None so far
+		
+	
+	/*----------------------------------------------------------------------------------------
+	* Public instance methods (beyond accessors)
+	*---------------------------------------------------------------------------------------*/
 	
 	/** Adds a person to the event's guest list */
 
@@ -337,117 +418,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 
 
-	/** Removes a person from the event's guest list
-	*
-	* @return {Array} An array with the person that was removed, an empty array if the person was not found on the guest list
-	*/
-
-	this.removeGuest = function (obj_person) {
-		
-		var ret;
-		
-		if (obj_person.constructor === app.Person) {
-			
-			for (var i = 0, len = _guests.length; i < len; i++) {
-			
-				if (_guests[i].id() === obj_person.id()) {
-					
-					ret = _guests.splice(i, 1);
-					
-					break;
-				}
-			}
-		}
-		
-		else {
-			
-			throw new TypeError('Guest must be Person');
-		}
-		
-		return ret;
-	};
-
-
-	/** Gets or sets location
-	*
-	* @param {String} location The location of the event (optional, supply if setting)
-	*
-	* @return {String} The location of the event
-	*/
-	
-	this.location = function (str_location) {
-		
-		if (arguments.length !== 0) {
-			
-			_location = str_location;
-		}
-		
-		return _location;
-	}
-	
-	
-	/** Gets or sets description
-	*
-	* @param {String} description A short description of the event (optional, supply if setting)
-	*
-	* @return {String} A short description of the event
-	*/
-	
-	this.description = function (str_description) {
-		
-		if (arguments.length !== 0) {
-			
-			_description = str_description;
-		}
-		
-		return _description;
-	}
-	
-	
-	/** Gets or sets the host
-	*
-	* @param {IHost} host The person or organization hosting the event
-	*
-	* @return {IHost} The person or organization hosting the event
-	*/
-	
-	this.host = function(Ihost_host) {
-		
-		if (arguments.length !== 0) {
-			
-			if (typeof Ihost_host.hostName === 'function') { // verify that we have an instance of a class that implements iHost
-				
-				_host = Ihost_host;
-			}
-			
-			else if (['Person', 'Organization'].indexOf(Ihost_host._className) > -1 && typeof Ihost_host._id !== 'undefined') { // setting unresolved object reference when called from readObject()
-			//else if (Ihost_host.isInstanceOf && Ihost_host.isInstanceOf(app.IHost) && typeof Ihost_host._id !== 'undefined') { // setting unresolved object reference when called from readObject()
-			
-				_host = Ihost_host;
-			}
-			
-			else {
-				
-				throw new TypeError('Host must implement IHost')
-			}
-		}
-		
-		return _host;
-	};
-	
-	
-	
-	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
-	*---------------------------------------------------------------------------------------*/
-	
-	// None so far
-		
-	
-	/*----------------------------------------------------------------------------------------
-	* Public instance methods (beyond accessors)
-	*---------------------------------------------------------------------------------------*/
-	
 	/** Re-establishes references to complex members after they have been deserialized
 	*
 	* (Method realization required by ISerializable.)
@@ -483,7 +453,38 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		}
 		
 		return true;
-	}
+	};
+
+
+	/** Removes a person from the event's guest list
+	*
+	* @return {Array} An array with the person that was removed, an empty array if the person was not found on the guest list
+	*/
+
+	this.removeGuest = function (obj_person) {
+		
+		var ret;
+		
+		if (obj_person.constructor === app.Person) {
+			
+			for (var i = 0, len = _guests.length; i < len; i++) {
+			
+				if (_guests[i].id() === obj_person.id()) {
+					
+					ret = _guests.splice(i, 1);
+					
+					break;
+				}
+			}
+		}
+		
+		else {
+			
+			throw new TypeError('Guest must be Person');
+		}
+		
+		return ret;
+	};
 
 	
 	/** Converts event to JSON object

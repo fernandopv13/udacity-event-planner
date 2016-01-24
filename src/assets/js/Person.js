@@ -21,16 +21,16 @@ var app = app || {}; // create a simple namespace for the app
 *
 * @param {Email} email The person's email
 *
+* @param {Date} birthday The person's birthday
+*
 * @return {Person} A Person instance
 *
 * @author Ulrik H. Gade, December 2015/January 2016
 *
-* @throws Same errors as email and employer accessors if passing in invalid data.
-*
-* @todo Add birthday to data stored about a Person
+* @throws Same errors as parameter accessors if passing in invalid data.
 */
 
-app.Person = function(str_name, obj_employer, str_jobTitle, obj_email) {
+app.Person = function(str_name, obj_employer, str_jobTitle, obj_email, Date_birthday) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
@@ -50,12 +50,52 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email) {
 	
 	_jobTitle,
 	
-	_email;
+	_email,
+
+	_birthday;
 	
 
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
+
+	/** Gets or sets the person's birthday
+	*
+	* @description Takes a single parameter when setting: either a Date object or a valid date string.
+	*
+	* @param {Date} start The date of the person's birth (Date representation)
+	*
+	* @param {String} start The date of the person's birth (String representation)
+	*
+	* @return {Date} The date and time when the person was born
+	*/
+	
+	this.birthday = function(date_birthday) {
+		
+		if (arguments.length !== 0) {
+			
+			if (date_birthday !== null) {
+				
+				if (date_birthday.constructor === Date) { // date as Date; default form
+					
+					_birthday = date_birthday;
+				}
+				
+				else if (!isNaN(Date.parse(date_birthday))) { // date as string; mostly used to parse in from JSON
+					
+					_birthday = new Date(date_birthday);
+				}
+				
+				else {
+					
+					throw new TypeError('Birthday must be Date');
+				}
+			} // silently ignore null
+		}
+		
+		return _birthday;
+	};
+
 
 	/** Gets name of object's class. Class name is read-only.
 	*
@@ -285,11 +325,13 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email) {
 			
 			_name: _name,
 			
-			_email: _email ? {_className: _email.className(), _id: _email.id()} : undefined,
-			
 			_employer: _employer ? {_className: _employer.className(), _id: _employer.id()} : undefined,
 			
-			_jobTitle: _jobTitle
+			_jobTitle: _jobTitle,
+
+			_email: _email ? {_className: _email.className(), _id: _email.id()} : undefined,
+			
+			_birthday: _birthday
 		};
 	};
 	
@@ -325,13 +367,15 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email) {
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
-		if (str_name) {this.name(str_name)}
+		if (str_name) {this.name(str_name);}
 				
-		if (obj_employer) {this.employer(obj_employer)}
+		if (obj_employer) {this.employer(obj_employer);}
 		
-		if (str_jobTitle) {this.jobTitle(str_jobTitle)}
+		if (str_jobTitle) {this.jobTitle(str_jobTitle);}
 		
-		if (obj_email) {this.email(obj_email)}
+		if (obj_email) {this.email(obj_email);}
+
+		if (Date_birthday) {this.birthday(Date_birthday);}
 	}
 	
 	this.constructor.registry.add(this); // Will only happend if param passing passes w/o error
