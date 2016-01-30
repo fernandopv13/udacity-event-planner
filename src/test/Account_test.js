@@ -11,12 +11,27 @@ app.Password = app.Password || function(){this.password = function() {return '12
 
 app.Person = app.Person || function(){this.name = function() {return 'Test person';};};
 
+function Observer() {
+
+	this.isUpdated = false;
+
+	this.isInstanceOf = function(fnc) {return fnc === app.IObserver;};
+
+	this.update = function() {this.isUpdated = true;};
+};
+
 
 describe('class Account', function(){
 	
 	app.Email = app.Email || function() {};
 			
 	
+	it('implements the IObservable interface', function() { // uses Interface.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Account, app.IObservable)).toBe(true);
+	});
+
+
 	it('implements the ISerializable interface', function() { // uses Interface.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Account, app.ISerializable)).toBe(true);
@@ -93,7 +108,7 @@ describe('class Account', function(){
 	
 	describe('Account instance', function() {
 		
-		var testAccount, oldPermission;
+		var testAccount, oldPermission, testObserver;
 		
 		beforeEach(function(){
 			
@@ -104,34 +119,8 @@ describe('class Account', function(){
 			oldPermission = app.prefs.isLocalStorageAllowed();
 			
 			app.prefs.isLocalStorageAllowed(true);
-		});
-		
-		
-		it('can get its ID', function() {
-		
-			expect(testAccount.id()).toBeDefined();
-		});
-		
-		
-		it('rejects attempt to set ID (b/c read-only', function() {
-		
-			try {
-				
-				testAccount.id(5);
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
-			}
-		});
-		
-				
-		it('has an ID that is a positive integer or zero', function() {
-		
-			expect(testAccount.id()).toBeGreaterThan(-1);
-			
-			expect(parseInt(testAccount.id()) === testAccount.id()).toBe(true);
+
+			testObserver = new Observer();
 		});
 		
 		
@@ -205,6 +194,105 @@ describe('class Account', function(){
 			expect(testAccount.accountHolder().name()).toBe('Test person');
 		});
 
+		
+		// IObservable testing
+
+		it('can register an observer', function(){
+
+			expect(testAccount.registerObserver(testObserver)).toBe(true);
+		});
+		
+
+		it('rejects attempt to register an observer that does not implement IObservable', function(){
+
+			try {
+
+				testAccount.registerObserver({});
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+		});
+
+
+		it('can notify its observers', function(){
+
+			var testObserver2 = new Observer();
+
+			expect(testObserver.isUpdated).toBe(false);
+
+			expect(testObserver2.isUpdated).toBe(false);
+
+			testAccount.registerObserver(testObserver);
+
+			testAccount.registerObserver(testObserver2);
+
+			testAccount.notifyObservers();
+
+			expect(testObserver.isUpdated).toBe(true);
+
+			expect(testObserver2.isUpdated).toBe(true);
+		});
+		
+
+		it('can get its list of observers', function() {
+
+			var testObserver2 = new Observer();
+
+			testAccount.registerObserver(testObserver);
+
+			testAccount.registerObserver(testObserver2);
+
+			expect(testAccount.observers.constructor).toBe(Array);
+
+			expect(testAccount.observers.length).toBe(2);
+
+			expect(testAccount.observers[0].constructor).toBe(Observer);
+
+			expect(testAccount.observers[1].constructor).toBe(Observer);
+
+			expect(testAccount.observers[2]).not.toBeDefined();
+		});
+
+		
+		// ISerializable testing
+
+		it('can get its class name', function() {
+
+			expect(testAccount.className()).toBe('Account');
+		});
+		
+
+		it('can get its ID', function() {
+		
+			expect(testAccount.id()).toBeDefined();
+		});
+		
+		
+		it('rejects attempt to set ID (b/c read-only', function() {
+		
+			try {
+				
+				testAccount.id(5);
+			}
+			
+			catch(e) {
+				
+				expect(e.message).toBe('Illegal parameter: id is read-only');
+			}
+		});
+		
+				
+		it('has an ID that is a positive integer or zero', function() {
+		
+			expect(testAccount.id()).toBeGreaterThan(-1);
+			
+			expect(parseInt(testAccount.id()) === testAccount.id()).toBe(true);
+		});
+		
 		
 		it('can be serialized to a valid JSON string', function() {
 			

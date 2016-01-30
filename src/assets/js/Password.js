@@ -115,42 +115,28 @@ app.Password = function(str_password) {
 
 										_password = str_password;
 									}
-
 									else {
-
 										throw new IllegalArgumentError('Password contains illegal characters');
 									}
-
 								}
-
 								else {
-
-									throw new IllegalArgumentError('Passwords must contain punctuation (!@#$%^&*)');
+									throw new IllegalArgumentError('Password must contain punctuation (i.e. one or more of !@#$%^&*)');
 								}
 							}
-
 							else {
-
-								throw new IllegalArgumentError('Passwords must contain numerical characters');
+								throw new IllegalArgumentError('Password must contain numerical characters');
 							}
 						}
-
 						else {
-
-							throw new IllegalArgumentError('Passwords must contain lowercase characters');
+							throw new IllegalArgumentError('Password must contain lowercase characters');
 						}
 					}
-
 					else {
-
-						throw new IllegalArgumentError('Passwords must contain uppercase characters');
+						throw new IllegalArgumentError('Password must contain uppercase characters');
 					}
-
 				}
-
 				else {
-					
-					throw new IllegalArgumentError('Passwords must be at least min. 8 chars long');
+					throw new IllegalArgumentError('Password must be at least 8 characters long');
 				}
 			}
 
@@ -237,7 +223,7 @@ app.Password = function(str_password) {
 		if (str_password) {this.password(str_password)} // Set password
 	}
 	
-	this.constructor.registry.add(this); // Will only happend if param passing passes w/o error
+	this.constructor.registry.add(this); // Will only happend if param parsing passes w/o error
 };
 
 
@@ -250,12 +236,15 @@ app.Password = function(str_password) {
 app.Password.registry = new app.ObjectRegistry(app.Password, 'Password');
 
 
+
 /*----------------------------------------------------------------------------------------
 * Public class (static) methods
 *---------------------------------------------------------------------------------------*/
 
-// Helper functions needed when doing interactive validation in the UI.
+// Helper functions used for password validation in the accessor.
+// Also needed when doing interactive validation in the UI.
 // Using regexes provided in Udacity Web forms course.
+
 
 /** Determines if a string contains the total number of characters required from a valid password.
 *
@@ -267,7 +256,7 @@ app.Password.registry = new app.ObjectRegistry(app.Password, 'Password');
 app.Password.hasValidCharacterCount = function(str_password) {return str_password.length > 7};
 
 
-/** Determines if string contains the number of uppercase characters required from a valid password.
+/** Determines if a string contains the number of uppercase characters required from a valid password.
 *
 * @param {String} password The Password
 *
@@ -277,7 +266,7 @@ app.Password.hasValidCharacterCount = function(str_password) {return str_passwor
 app.Password.hasValidUpperCaseCount = function(str_password) {return (/[A-Z]/g).test(str_password)};
 
 
-/** Determines if string contains the number of lowercase characters required from a valid password.
+/** Determines if a string contains the number of lowercase characters required from a valid password.
 *
 * @param {String} password The Password
 *
@@ -287,7 +276,7 @@ app.Password.hasValidUpperCaseCount = function(str_password) {return (/[A-Z]/g).
 app.Password.hasValidLowerCaseCount = function(str_password) {return (/[a-z]/g).test(str_password)};
 
 
-/** Determines if string contains the number of numerical characters required from a valid password.
+/** Determines if a string contains the number of numerical characters required from a valid password.
 *
 * @param {String} password The Password
 *
@@ -297,7 +286,7 @@ app.Password.hasValidLowerCaseCount = function(str_password) {return (/[a-z]/g).
 app.Password.hasValidNumberCount = function(str_password) {return (/[0-9]/g).test(str_password)};
 
 
-/** Determines if string contains the number of non-alphanum characters required from a valid password.
+/** Determines if a string contains the number of non-alphanum characters required from a valid password.
 *
 * @param {String} password The Password
 *
@@ -307,7 +296,7 @@ app.Password.hasValidNumberCount = function(str_password) {return (/[0-9]/g).tes
 app.Password.hasValidPunctuationCount = function(str_password) {return (/[\!\@\#\$\%\^\&\*]/g).test(str_password)};
 
 
-/** Determines if string contains characters that are not allowed in a valid password.
+/** Determines if a string contains characters that are not allowed in a valid password.
 *
 * @param {String} password The Password
 *

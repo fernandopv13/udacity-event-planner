@@ -57,7 +57,7 @@ app.ISerializable = function() {
 	
 	this.constructor.prototype.id.errorMessage = 'Method signature "id()" must be realized in derived classes';
 	
-	
+
 	/** Converts object to JSON object
 	*
 	* @return {Object} JSON object representation of person (used to override default behaviour of JSON.stringify())

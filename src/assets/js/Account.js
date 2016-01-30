@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class Account implements ISerializable
+* public class Account implements IObservable ISerializable
 ******************************************************************************/
 
 var app = app || {};
@@ -41,7 +41,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	_password,
 
 	_accountHolder; // (Person) The person holding the account
-	
+
 	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
@@ -198,14 +198,81 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	*---------------------------------------------------------------------------------------*/
 	
 	// None so far
-		
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Public instance fields (non-encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+	
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	
+	
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
+	/** Notifies observers that object state has been changed
+	*
+	* (Method realization required by IObservable.)
+	*
+	* @return {Array} Array of IObservers
+	*/
+
+	/*this.notifyObservers = function() {
+
+		observers.forEach(function(observer) {
+
+			observer.update(this);
+		
+		}.bind(this));
+	};
+	*/
+
+	/** Returns list of objects registred as observers
+	*
+	* (Method realization required by IObservable.)
+	*
+	* @return {Array} Array of IObservers
+	*/
+
+	//observers = function() {return this.observers;};
+
+	
+	/** Registers observer
+	*
+	* (Method realization required by IObservable.)
+	*
+	* @param {IObserver} Object implementing IObserver interface
+	*
+	* @return {Boolean} true if succesfull
+	*
+	* @throws {IllegalArgumentError} If observer is not an instance of IObserver
+	*/
+
+	/*
+	this.registerObserver = function(IObserver_observer) {
+
+		if (IObserver_observer.isInstanceOf && IObserver_observer.isInstanceOf(app.IObserver)) {
+
+			observers.push(IObserver_observer);
+		}
+
+		else {
+
+			throw new IllegalArgumentError('Observer must implement IObserver');
+		}
+
+		return true;
+	};
+	*/
+
 	/** Re-establishes references to complex members after they have been deserialized.
 	*
 	* (Method realization required by ISerializable.)
+	*
+	* @return {Boolean} true if successful
+	*
+	* @todo Return false or throw error if not successful, or void
 	*/
 	
 	this.onDeserialized = function() { // Replace IDs with references to objects of that ID
@@ -312,5 +379,7 @@ app.Account.registry = new app.ObjectRegistry(app.Account, 'Account');
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
+
+void app.InterfaceHelper.mixInto(app.IObservable, app.Account);
 
 void app.InterfaceHelper.mixInto(app.ISerializable, app.Account);

@@ -120,34 +120,6 @@ describe('class Person', function(){
 		});
 		
 		
-		it('can get its ID', function() {
-		
-			expect(testPerson.id()).toBeDefined();
-		});
-		
-		
-		it('rejects attempt to set ID (b/c read-only', function() {
-		
-			try {
-				
-				testPerson.id(5);
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
-			}
-		});
-		
-		
-		it('has an ID that is a positive integer or zero', function() {
-		
-			expect(testPerson.id()).toBeGreaterThan(-1);
-			
-			expect(parseInt(testPerson.id()) === testPerson.id()).toBe(true);
-		});
-		
-		
 		it('can set and get its name', function() {
 		
 			testPerson.name('testName');
@@ -259,12 +231,15 @@ describe('class Person', function(){
 		});
 
 		
+		// IHost testing
+
 		it('can tell if it is an instance of IHost', function() {
 
 			expect(testPerson.isInstanceOf(app.IHost)).toBe(true);
 
 			expect(testPerson.isInstanceOf(Error)).toBe(false);
 		});
+		
 		
 		it('can set and get its IHost hostName', function() {
 			
@@ -282,6 +257,42 @@ describe('class Person', function(){
 		});
 		
 
+		// ISerializable testing
+
+		it('can get its class name', function() {
+
+			expect(testPerson.className()).toBe('Person');
+		});
+
+
+		it('can get its ID', function() {
+		
+			expect(testPerson.id()).toBeDefined();
+		});
+		
+		
+		it('rejects attempt to set ID (b/c read-only', function() {
+		
+			try {
+				
+				testPerson.id(5);
+			}
+			
+			catch(e) {
+				
+				expect(e.message).toBe('Illegal parameter: id is read-only');
+			}
+		});
+		
+		
+		it('has an ID that is a positive integer or zero', function() {
+		
+			expect(testPerson.id()).toBeGreaterThan(-1);
+			
+			expect(parseInt(testPerson.id()) === testPerson.id()).toBe(true);
+		});
+		
+		
 		it('can be serialized to a valid JSON string', function() {
 			
 			testPerson.name('what\'s in a name?');

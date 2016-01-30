@@ -55,6 +55,48 @@ describe('class Organization', function(){
 		});
 		
 		
+		it('can set and get its name', function() {
+		
+			testOrg.name('testName');
+			
+			expect(testOrg.name()).toBe('testName');
+		});
+		
+		
+		// IHost testing
+
+		it('can tell if it is an instance of IHost', function() {
+
+			expect(testOrg.isInstanceOf(app.IHost)).toBe(true);
+
+			expect(testOrg.isInstanceOf(Error)).toBe(false);
+		});
+
+
+		it('can set and get its IHost hostName', function() { //uses Interface.js
+			
+			testOrg.hostName('testHostName');
+			
+			expect(testOrg.hostName()).toBe('testHostName');
+		});
+		
+
+		it('can tell if it is an instance of ISerializable', function() {
+
+			expect(testOrg.isInstanceOf(app.ISerializable)).toBe(true);
+
+			expect(testOrg.isInstanceOf(Error)).toBe(false);
+		});
+		
+		
+		// ISerializable testing
+
+		it('can get its class name', function() {
+
+			expect(testOrg.className()).toBe('Organization');
+		});
+		
+
 		it('can get its ID', function() {
 		
 			expect(testOrg.id()).toBeDefined();
@@ -80,38 +122,6 @@ describe('class Organization', function(){
 			expect(testOrg.id()).toBeGreaterThan(-1);
 			
 			expect(parseInt(testOrg.id()) === testOrg.id()).toBe(true);
-		});
-		
-		
-		it('can set and get its name', function() {
-		
-			testOrg.name('testName');
-			
-			expect(testOrg.name()).toBe('testName');
-		});
-		
-		
-		it('can tell if it is an instance of IHost', function() {
-
-			expect(testOrg.isInstanceOf(app.IHost)).toBe(true);
-
-			expect(testOrg.isInstanceOf(Error)).toBe(false);
-		});
-
-
-		it('can set and get its IHost hostName', function() { //uses Interface.js
-			
-			testOrg.hostName('testHostName');
-			
-			expect(testOrg.hostName()).toBe('testHostName');
-		});
-		
-
-		it('can tell if it is an instance of ISerializable', function() {
-
-			expect(testOrg.isInstanceOf(app.ISerializable)).toBe(true);
-
-			expect(testOrg.isInstanceOf(Error)).toBe(false);
 		});
 		
 		

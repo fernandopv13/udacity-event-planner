@@ -64,6 +64,12 @@ describe('class Event', function(){
 	}
 
 
+	xit('implements the IObservable interface', function() { // uses Interface.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Event, app.IObservable)).toBe(true);
+	});
+
+
 	it('implements the ISerializable interface', function() { // uses Interface.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Event, app.ISerializable)).toBe(true);
@@ -105,34 +111,6 @@ describe('class Event', function(){
 			oldPermission = app.prefs.isLocalStorageAllowed();
 			
 			app.prefs.isLocalStorageAllowed(true);
-		});
-		
-		
-		it('can get its ID', function() {
-		
-			expect((new app.Event()).id()).toBeDefined();
-		});
-		
-		
-		it('rejects attempt to set ID (b/c read-only)', function() {
-		
-			try {
-				
-				(new app.Event()).id(5);
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
-			}
-		});
-		
-			
-		it('has an ID that is a positive integer or zero', function() {
-		
-			expect(testEvent.id()).toBeGreaterThan(-1);
-			
-			expect(parseInt(testEvent.id()) === testEvent.id()).toBe(true);
 		});
 		
 		
@@ -444,6 +422,105 @@ describe('class Event', function(){
 			expect(testEvent.host()).toBe(oldHost);
 		});
 		
+		
+		// IObservable testing
+
+		xit('can register an observer', function(){
+
+			expect(testEvent.registerObserver(testObserver)).toBe(true);
+		});
+		
+
+		xit('rejects attempt to register an observer that does not implement IObservable', function(){
+
+			try {
+
+				testEvent.registerObserver({});
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+		});
+
+
+		xit('can notify its observers', function(){
+
+			var testObserver2 = new Observer();
+
+			expect(testObserver.isUpdated).toBe(false);
+
+			expect(testObserver2.isUpdated).toBe(false);
+
+			testEvent.registerObserver(testObserver);
+
+			testEvent.registerObserver(testObserver2);
+
+			testEvent.notifyObservers();
+
+			expect(testObserver.isUpdated).toBe(true);
+
+			expect(testObserver2.isUpdated).toBe(true);
+		});
+		
+
+		xit('can get its list of observers', function() {
+
+			var testObserver2 = new Observer();
+
+			testEvent.registerObserver(testObserver);
+
+			testEvent.registerObserver(testObserver2);
+
+			expect(testEvent.observers().constructor).toBe(Array);
+
+			expect(testEvent.observers().length).toBe(2);
+
+			expect(testEvent.observers()[0].constructor).toBe(Observer);
+
+			expect(testEvent.observers()[1].constructor).toBe(Observer);
+
+			expect(testEvent.observers()[2]).not.toBeDefined();
+		});
+
+		
+		// ISerializable testing
+
+		it('can get its class name', function() {
+
+			expect(testEvent.className()).toBe('Event');
+		});
+
+
+		it('can get its ID', function() {
+		
+			expect((new app.Event()).id()).toBeDefined();
+		});
+		
+		
+		it('rejects attempt to set ID (b/c read-only)', function() {
+		
+			try {
+				
+				(new app.Event()).id(5);
+			}
+			
+			catch(e) {
+				
+				expect(e.message).toBe('Illegal parameter: id is read-only');
+			}
+		});
+		
+			
+		it('has an ID that is a positive integer or zero', function() {
+		
+			expect(testEvent.id()).toBeGreaterThan(-1);
+			
+			expect(parseInt(testEvent.id()) === testEvent.id()).toBe(true);
+		});
+
 		
 		it('can be serialized to a valid JSON string', function() {
 			

@@ -11,6 +11,12 @@ var app = app || {};
 
 describe('class ObjectRegistry', function(){
 	
+	it('implements the ISerializable interface', function() { // uses Interface.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.ObjectRegistry, app.ISerializable)).toBe(true);
+	});
+	
+
 	it('can be instantiated', function() {
 		
 		app.String = String; // workaround for param validation in constructor; expects property of app
@@ -60,19 +66,6 @@ describe('class ObjectRegistry', function(){
 			app.TestType.registry.clear();// = new app.ObjectRegistry(app.TestType, 'TestType');
 		
 			app.TestType.cnt = 0;
-		});
-		
-		it('can add return its class name', function() {
-			
-			expect(testRegistry.className()).toBe('ObjectRegistry');
-		});
-		
-		
-		it('can add return its id', function() {
-			
-			expect(parseInt(testRegistry.id())).toEqual(testRegistry.id());
-
-			expect(parseInt(testRegistry.id())).toBeGreaterThan(-1);
 		});
 		
 		
@@ -370,6 +363,22 @@ describe('class ObjectRegistry', function(){
 		});
 		
 		
+		// ISerializable testing
+
+		it('can get its class name', function() {
+			
+			expect(testRegistry.className()).toBe('ObjectRegistry');
+		});
+		
+		
+		it('can get its id', function() {
+			
+			expect(parseInt(testRegistry.id())).toEqual(testRegistry.id());
+
+			expect(parseInt(testRegistry.id())).toBeGreaterThan(-1);
+		});
+
+
 		it('can serialize its data to a valid JSON string', function() {
 			
 			void new app.TestType();

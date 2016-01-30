@@ -100,34 +100,6 @@ describe('class Password', function(){
 		});
 		
 		
-		it('can get its ID', function() {
-		
-			expect(testPassword.id()).toBeDefined();
-		});
-		
-		
-		it('rejects attempt to set ID (b/c read-only)', function() {
-		
-			try {
-				
-				testPassword.id(5);
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
-			}
-		});
-		
-				
-		it('has an ID that is a positive integer or zero', function() {
-		
-			expect(testPassword.id()).toBeGreaterThan(-1);
-			
-			expect(parseInt(testPassword.id()) === testPassword.id()).toBe(true);
-		});
-		
-		
 		it('can set and get its password', function() {
 		
 			testPassword.password('1234abc!DEF');
@@ -230,6 +202,42 @@ describe('class Password', function(){
 		});
 		
 		
+		// ISerializable testing
+
+		it('can get its class name', function() {
+
+			expect(testPassword.className()).toBe('Password');
+		});
+
+		
+		it('can get its ID', function() {
+		
+			expect(testPassword.id()).toBeDefined();
+		});
+		
+		
+		it('rejects attempt to set ID (b/c read-only)', function() {
+		
+			try {
+				
+				testPassword.id(5);
+			}
+			
+			catch(e) {
+				
+				expect(e.message).toBe('Illegal parameter: id is read-only');
+			}
+		});
+		
+				
+		it('has an ID that is a positive integer or zero', function() {
+		
+			expect(testPassword.id()).toBeGreaterThan(-1);
+			
+			expect(parseInt(testPassword.id()) === testPassword.id()).toBe(true);
+		});
+
+
 		it('can be serialized to a valid JSON string', function() {
 			
 			var obj = JSON.parse(JSON.stringify(testPassword));

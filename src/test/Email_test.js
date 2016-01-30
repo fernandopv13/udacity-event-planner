@@ -51,34 +51,6 @@ describe('class Email', function(){
 		});
 		
 		
-		it('can get its ID', function() {
-		
-			expect(testMail.id()).toBeDefined();
-		});
-		
-		
-		it('rejects attempt to set ID (b/c read-only', function() {
-		
-			try {
-				
-				testMail.id(5);
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
-			}
-		});
-		
-				
-		it('has an ID that is a positive integer or zero', function() {
-		
-			expect(testMail.id()).toBeGreaterThan(-1);
-			
-			expect(parseInt(testMail.id()) === testMail.id()).toBe(true);
-		});
-		
-		
 		it('can set and get its address', function() {
 		
 			testMail.address('name@server.domain');
@@ -170,6 +142,42 @@ describe('class Email', function(){
 		});
 		
 		
+		// ISerializable testing
+
+		it('can get its class name', function() {
+
+			expect(testMail.className()).toBe('Email');
+		});
+		
+
+		it('can get its ID', function() {
+		
+			expect(testMail.id()).toBeDefined();
+		});
+		
+		
+		it('rejects attempt to set ID (b/c read-only', function() {
+		
+			try {
+				
+				testMail.id(5);
+			}
+			
+			catch(e) {
+				
+				expect(e.message).toBe('Illegal parameter: id is read-only');
+			}
+		});
+		
+				
+		it('has an ID that is a positive integer or zero', function() {
+		
+			expect(testMail.id()).toBeGreaterThan(-1);
+			
+			expect(parseInt(testMail.id()) === testMail.id()).toBe(true);
+		});
+		
+
 		it('can be serialized to a valid JSON string', function() {
 			
 			var obj = JSON.parse(JSON.stringify(testMail));
