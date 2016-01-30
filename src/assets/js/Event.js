@@ -363,6 +363,13 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 	
 	/*----------------------------------------------------------------------------------------
+	* Public instance fields (non-encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+	
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	
+	
+	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
@@ -595,5 +602,7 @@ app.Event.registry = new app.ObjectRegistry(app.Event, 'Event');
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
+
+void app.InterfaceHelper.mixInto(app.IObservable, app.Event);
 
 void app.InterfaceHelper.mixInto(app.ISerializable, app.Event);

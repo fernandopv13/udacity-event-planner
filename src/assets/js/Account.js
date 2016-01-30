@@ -211,61 +211,6 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Notifies observers that object state has been changed
-	*
-	* (Method realization required by IObservable.)
-	*
-	* @return {Array} Array of IObservers
-	*/
-
-	/*this.notifyObservers = function() {
-
-		observers.forEach(function(observer) {
-
-			observer.update(this);
-		
-		}.bind(this));
-	};
-	*/
-
-	/** Returns list of objects registred as observers
-	*
-	* (Method realization required by IObservable.)
-	*
-	* @return {Array} Array of IObservers
-	*/
-
-	//observers = function() {return this.observers;};
-
-	
-	/** Registers observer
-	*
-	* (Method realization required by IObservable.)
-	*
-	* @param {IObserver} Object implementing IObserver interface
-	*
-	* @return {Boolean} true if succesfull
-	*
-	* @throws {IllegalArgumentError} If observer is not an instance of IObserver
-	*/
-
-	/*
-	this.registerObserver = function(IObserver_observer) {
-
-		if (IObserver_observer.isInstanceOf && IObserver_observer.isInstanceOf(app.IObserver)) {
-
-			observers.push(IObserver_observer);
-		}
-
-		else {
-
-			throw new IllegalArgumentError('Observer must implement IObserver');
-		}
-
-		return true;
-	};
-	*/
-
 	/** Re-establishes references to complex members after they have been deserialized.
 	*
 	* (Method realization required by ISerializable.)

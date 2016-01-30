@@ -7,9 +7,18 @@
 
 */
 
+function TestObserver() {
+
+	this.isUpdated = false;
+
+	this.isInstanceOf = function(fnc) {return fnc === app.IObserver;};
+
+	this.update = function() {this.isUpdated = true;};
+};
+
 describe('class Event', function(){
 	
-	var testEvent, testOrg, testPerson;
+	var testEvent, testOrg, testPerson, testObserver;
 	
 	{ // Set up some mocks
 		
@@ -34,7 +43,8 @@ describe('class Event', function(){
 			
 			this.hostName = function(name) {_name = name}; //need to exist for IHost related unit tests to pass
 		};
-		
+
+
 		
 		beforeEach(function() {
 			
@@ -60,6 +70,8 @@ describe('class Event', function(){
 				
 				500
 			);
+
+			testObserver = new TestObserver();
 		});
 	}
 
@@ -425,13 +437,13 @@ describe('class Event', function(){
 		
 		// IObservable testing
 
-		xit('can register an observer', function(){
+		it('can register an observer', function(){
 
-			expect(testEvent.registerObserver(testObserver)).toBe(true);
+			expect(testEvent.registerObserver(testObserver)).not.toBe(null);
 		});
 		
 
-		xit('rejects attempt to register an observer that does not implement IObservable', function(){
+		it('rejects attempt to register an observer that does not implement IObservable', function(){
 
 			try {
 
@@ -446,9 +458,9 @@ describe('class Event', function(){
 		});
 
 
-		xit('can notify its observers', function(){
+		it('can notify its observers', function(){
 
-			var testObserver2 = new Observer();
+			var testObserver2 = new TestObserver();
 
 			expect(testObserver.isUpdated).toBe(false);
 
@@ -466,23 +478,23 @@ describe('class Event', function(){
 		});
 		
 
-		xit('can get its list of observers', function() {
+		it('can get its list of observers', function() {
 
-			var testObserver2 = new Observer();
+			var testObserver2 = new TestObserver();
 
 			testEvent.registerObserver(testObserver);
 
 			testEvent.registerObserver(testObserver2);
 
-			expect(testEvent.observers().constructor).toBe(Array);
+			expect(testEvent.observers.constructor).toBe(Array);
 
-			expect(testEvent.observers().length).toBe(2);
+			expect(testEvent.observers.length).toBe(2);
 
-			expect(testEvent.observers()[0].constructor).toBe(Observer);
+			expect(testEvent.observers[0].constructor).toBe(TestObserver);
 
-			expect(testEvent.observers()[1].constructor).toBe(Observer);
+			expect(testEvent.observers[1].constructor).toBe(TestObserver);
 
-			expect(testEvent.observers()[2]).not.toBeDefined();
+			expect(testEvent.observers[2]).not.toBeDefined();
 		});
 
 		
