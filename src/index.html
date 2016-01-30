@@ -1,37 +1,63 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="utf-8">
+		
 		<title>Event Meetup Planner Project</title>
-	
+		
+		<meta charset="utf-8">
+		
+		<!--Import Google Icon Font () used by Materialize-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		
+		<!--Import materialize.css-->
+		<link type="text/css" rel="stylesheet" href="assets/css/materialize-0.97.5.min.css"  media="screen,projection"/>
+
+		<!--Let browser know website is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		
+		
 		
 		
 	</head>
 
 	<body>
+
+		<div id="event-list">
+			<ul class="collection">
+				<li class="collection-item"><div>Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>
+				<li class="collection-item"><div>Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>
+				<li class="collection-item"><div>Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>
+				<li class="collection-item"><div>Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>
+			</ul>
+		</div>
+
+		<div id="event-form">
+			
+		</div>
 		
 		<!-- Library source files -->
-		<script src="lib/jquery-1.11.3.min.js"></script>
-		
+		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
+		<script type="text/javascript" src="lib/materialize-0.97.5.min.js"></script>
 		
 		<!-- App source files -->
-		<script src="assets/js/Error.js"></script>
 		<script src="assets/js/Object.js"></script>
+		<script src="assets/js/Error.js"></script>
 		<script src="assets/js/app.js"></script>
 		<script src="assets/js/InterfaceHelper.js"></script>
 		<script src="assets/js/IHost.js"></script>
+		<script src="assets/js/IObserver.js"></script>
+		<script src="assets/js/IObservable.js"></script>
 		<script src="assets/js/ISerializable.js"></script>
+		<script src="assets/js/IViewable.js"></script>
 		<script src="assets/js/ObjectRegistry.js"></script>
 		<script src="assets/js/Email.js"></script>
+		<script src="assets/js/Password.js"></script>
 		<script src="assets/js/Person.js"></script>
 		<script src="assets/js/Organization.js"></script>
 		<script src="assets/js/Event.js"></script>
 		<script src="assets/js/Account.js"></script>
 		<script src="assets/js/FoursquareSearch.js"></script>
 		<script src="test/util/data.js"></script>
-		
-		
-		
 		
 	</body>
 </html>

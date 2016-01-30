@@ -76,7 +76,7 @@ describe('class Event', function(){
 	}
 
 
-	xit('implements the IObservable interface', function() { // uses Interface.js
+	it('implements the IObservable interface', function() { // uses Interface.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Event, app.IObservable)).toBe(true);
 	});
