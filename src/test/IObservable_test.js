@@ -9,7 +9,27 @@
 
 describe('Interface IObservable', function(){
 	
-	
+	// set up some mocks
+
+	function TestObserver() {
+
+		this.isUpdated = false;
+
+		this.isInstanceOf = function(fnc) {return fnc === app.IObserver;};
+
+		this.update = function() {this.isUpdated = true;};
+	};
+
+	var testObservable, testObserver;
+
+	beforeEach(function() {
+
+		testObservable = new (function() {this.observers = []})();
+
+		testObserver = new TestObserver();
+	});
+
+
 	it('cannot be instantiated', function() {
 		
 		try { // this shold throw an error
@@ -24,55 +44,35 @@ describe('Interface IObservable', function(){
 	});
 	
 
-	xit('defines an observers() method signature', function() {
+	it('defines a default notifyObservers() method', function() {
 			
 		// verify that method signature exists
 		
-		expect(app.IObservable.prototype.observers).toBeDefined();
+		expect(app.IObservable.prototype.default_notifyObservers).toBeDefined();
 		
-		expect(typeof app.IObservable.prototype.observers).toBe('function');
+		expect(typeof app.IObservable.prototype.default_notifyObservers).toBe('function');
 	});
 		
 	
-	xit('throws an error if observers() is invoked', function() {
-			
-		// verify that method invokation throws error
-		
-		try {
-		
-			app.IObservable.prototype.observers();
-		}
-		
-		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
-		
-			expect(e.message).toEqual(app.IObservable.prototype.observers.errorMessage);
-		}
+	it('can notify its observers', function(){
+
+		var testObserver2 = new TestObserver();
+
+		expect(testObserver.isUpdated).toBe(false);
+
+		expect(testObserver2.isUpdated).toBe(false);
+
+		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver);
+
+		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver2);
+
+		app.IObservable.prototype.default_notifyObservers.call(testObservable);
+
+		expect(testObserver.isUpdated).toBe(true);
+
+		expect(testObserver2.isUpdated).toBe(true);
 	});
-	
-	xit('defines a notifyObservers() method signature', function() {
-			
-		// verify that method signature exists
-		
-		expect(app.IObservable.prototype.notifyObservers).toBeDefined();
-		
-		expect(typeof app.IObservable.prototype.notifyObservers).toBe('function');
-	});
-		
-	
-	xit('throws an error if notifyObservers() is invoked', function() {
-			
-		// verify that method invokation throws error
-		
-		try {
-		
-			app.IObservable.prototype.notifyObservers();
-		}
-		
-		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
-		
-			expect(e.message).toEqual(app.IObservable.prototype.notifyObservers.errorMessage);
-		}
-	});
+
 	
 	it('defines a default registerObserver() method', function() {
 			
@@ -82,20 +82,12 @@ describe('Interface IObservable', function(){
 		
 		expect(typeof app.IObservable.prototype.default_registerObserver).toBe('function');
 	});
-		
 	
-	xit('throws an error if registerObserver() is invoked', function() {
-			
-		// verify that method invokation throws error
-		
-		try {
-		
-			app.IObservable.prototype.registerObserver();
-		}
-		
-		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
-		
-			expect(e.message).toEqual(app.IObservable.prototype.registerObserver.errorMessage);
-		}
+
+	it('can register an observer', function(){
+
+		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver);
+
+		expect(testObservable.observers.length).toBe(1);
 	});
 });

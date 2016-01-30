@@ -11,7 +11,7 @@ app.Password = app.Password || function(){this.password = function() {return '12
 
 app.Person = app.Person || function(){this.name = function() {return 'Test person';};};
 
-function Observer() {
+function TestObserver() {
 
 	this.isUpdated = false;
 
@@ -120,7 +120,7 @@ describe('class Account', function(){
 			
 			app.prefs.isLocalStorageAllowed(true);
 
-			testObserver = new Observer();
+			testObserver = new TestObserver();
 		});
 		
 		
@@ -220,7 +220,7 @@ describe('class Account', function(){
 
 		it('can notify its observers', function(){
 
-			var testObserver2 = new Observer();
+			var testObserver2 = new TestObserver();
 
 			expect(testObserver.isUpdated).toBe(false);
 
@@ -237,26 +237,6 @@ describe('class Account', function(){
 			expect(testObserver2.isUpdated).toBe(true);
 		});
 		
-
-		it('can get its list of observers', function() {
-
-			var testObserver2 = new Observer();
-
-			testAccount.registerObserver(testObserver);
-
-			testAccount.registerObserver(testObserver2);
-
-			expect(testAccount.observers.constructor).toBe(Array);
-
-			expect(testAccount.observers.length).toBe(2);
-
-			expect(testAccount.observers[0].constructor).toBe(Observer);
-
-			expect(testAccount.observers[1].constructor).toBe(Observer);
-
-			expect(testAccount.observers[2]).not.toBeDefined();
-		});
-
 		
 		// ISerializable testing
 
