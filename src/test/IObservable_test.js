@@ -11,7 +11,9 @@ describe('Interface IObservable', function(){
 	
 	// set up some mocks
 
-	function TestObserver() {
+	function TestObserver(id) {
+
+		this.id = id;
 
 		this.isUpdated = false;
 
@@ -87,6 +89,56 @@ describe('Interface IObservable', function(){
 	it('can register an observer', function(){
 
 		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver);
+
+		expect(testObservable.observers.length).toBe(1);
+	});
+
+
+	it('rejects attempt to register an observer that does not implement IObservable', function(){
+
+		try {
+
+			app.IObservable.prototype.default_registerObserver.call(testObservable, {});
+		}
+
+		catch(e) {
+
+			expect(e.name).toBe('IllegalArgumentError');
+		}
+
+	});
+
+
+	it('rejects attempt to register an observer more than once', function(){
+
+		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver);
+
+		expect(testObservable.observers.length).toBe(1);
+
+		expect(app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver)).toBe(null);
+	});
+
+
+	it('defines a default removeObserver() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IObservable.prototype.default_removeObserver).toBeDefined();
+		
+		expect(typeof app.IObservable.prototype.default_removeObserver).toBe('function');
+	});
+	
+	it('can remove an observer', function(){
+
+		var testObserver2 = new TestObserver(2);
+
+		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver);
+
+		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver2);
+
+		expect(testObservable.observers.length).toBe(2);
+
+		app.IObservable.prototype.default_removeObserver.call(testObservable, testObserver);
 
 		expect(testObservable.observers.length).toBe(1);
 	});

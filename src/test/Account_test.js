@@ -199,7 +199,13 @@ describe('class Account', function(){
 
 		it('can register an observer', function(){
 
-			expect(testAccount.registerObserver(testObserver)).toBe(true);
+			expect(testAccount.registerObserver(testObserver)).not.toBe(null);
+
+			var testObserver2 = new TestObserver();
+
+			expect(testAccount.registerObserver(testObserver2)).not.toBe(null);
+
+			expect(testAccount.observers.length).toBe(2);
 		});
 		
 
@@ -236,6 +242,22 @@ describe('class Account', function(){
 
 			expect(testObserver2.isUpdated).toBe(true);
 		});
+
+
+		it('can remove an observer', function(){
+
+		var testObserver2 = new TestObserver(2);
+
+		testAccount.registerObserver(testObserver);
+
+		testAccount.registerObserver(testObserver2);
+
+		expect(testAccount.observers.length).toBe(2);
+
+		expect(testAccount.removeObserver(testObserver2)).toBe(testObserver2);
+
+		expect(testAccount.observers.length).toBe(1);
+	});
 		
 		
 		// ISerializable testing
