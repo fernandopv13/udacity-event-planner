@@ -25,7 +25,8 @@ var app = (function(self) {
 		localStoragePrefix: 'dk.ulrikgade.udacity.srwebdev.meetup-app.'
 	}
 	
-	
+	self.controller = new self.Controller();
+
 	self.prefs = { // public accessors for preferences, using unified accessor pattern
 		
 		
@@ -149,7 +150,15 @@ var app = (function(self) {
 		
 		self.registry.add(self.Organization.registry);
 		
+		self.registry.add(self.Password.registry);
+
 		self.registry.add(self.Person.registry);
+
+		//self.registry.readObject();
+
+		//self.registry.onDeserialized();
+
+		self.controller.init();
 	};
 	
 	return self;
