@@ -19,7 +19,9 @@ app.EventView = function(Event_evt) {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _event = Event_evt; // (Event) The event in the data model this view is observing
+	var _event = Event_evt,
+	
+	_implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference); // (Event) The event in the data model this view is observing
 	
 
 	
@@ -39,24 +41,55 @@ app.EventView = function(Event_evt) {
 	this.render = function() {
 		
 		var listElmnt = document.createElement('li');
+		
 		listElmnt.classList.add('collection-item');
 		
+		listElmnt.id = 'event-list-id-' + _event.id();
+		
+		
 		var divElmnt = document.createElement('div');
-		divElmnt.innerHTML = _event.name() ? _event.name() : 'Unnamed event';
+		
+		divElmnt.innerHTML = (_event.name() ? _event.name() : 'Unnamed event') + ' (' + _event.guests().length + ')';
+		
 		divElmnt.onclick = (function(e) {this.onclick(_event.id());}).bind(this);
 		
-		var linkElmnt = document.createElement('a');
-		linkElmnt.classList.add('secondary-content');
+		
+		/*
+		var spanElmnt = document.createElement('span');
+		
+		spanElmnt.classList.add('badge');
+		
+		spanElmnt.innerHTML = _event.guests().length + ' guests';
+		
+		*/
+		//<span class="badge">1</span>
+		
+		
+		var anchorElmnt = document.createElement('a');
+		
+		anchorElmnt.classList.add('secondary-content');
+
+		anchorElmnt.href = '#!';
+		
 		
 		var iconElmnt = document.createElement('i');
+		
 		iconElmnt.classList.add('material-icons');
-		iconElmnt.innerHTML = 'send';
+		
+		iconElmnt.innerHTML = 'chevron_right';
 
+		
 		listElmnt.appendChild(divElmnt);
-		divElmnt.appendChild(linkElmnt);
-		linkElmnt.appendChild(iconElmnt);
+		
+		//divElmnt.appendChild(spanElmnt);
+		
+		divElmnt.appendChild(anchorElmnt);
+		
+		anchorElmnt.appendChild(iconElmnt);
+		
 		
 		return listElmnt;
+		
 		//return '<li class="collection-item"><div>' + _event.name() + '<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>'
 	};
 		
@@ -73,8 +106,21 @@ app.EventView = function(Event_evt) {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
-	// (Prefer prototypical inheritance whenever method does not require direct access to private member)
+	/** Returns true if class implements the interface passed in (by function reference)
+	*
+	* (Method realization required by ISerializable.)
+	*
+	* @param {Function} interface The interface we wish to determine if this class implements
+	*
+	* @return {Boolean} instanceof True if class implements interface, otherwise false
+	*	
+	*/
+	
+	this.isInstanceOf = function (func_interface) {
 		
+		return _implements.indexOf(func_interface) > -1;
+	};
+	
 
 	/** Respond to click on event in events list */
 	

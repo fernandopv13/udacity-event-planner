@@ -311,3 +311,5 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 *---------------------------------------------------------------------------------------*/
 
 void app.InterfaceHelper.mixInto(app.ISerializable, app.Password);
+
+app.Password.registry.clear(); // remove object created by mixInto()

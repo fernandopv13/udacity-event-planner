@@ -26,7 +26,13 @@ app.data = {
 		
 		new app.Event('Welcome reception for Peter'),
 		
-		new app.Event('Friday bar')
+		new app.Event('Friday bar'),
+
+		new app.Event('Diwali'),
+		
+		new app.Event('Stag night for Andrea'),
+		
+		new app.Event('Sunday lunch at mom\'s')
 	],
 	
 	emails:

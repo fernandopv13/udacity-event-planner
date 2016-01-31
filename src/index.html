@@ -22,19 +22,59 @@
 
 	<body>
 
-		<div id="event-list">
-			<ul class="collection">
-				<li class="collection-item"><div>Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>
-				<li class="collection-item"><div>Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>
-				<li class="collection-item"><div>Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>
-				<li class="collection-item"><div>Alvin<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>
-			</ul>
-		</div>
+		<div id="event-list" style="display:none;"></div>
 
 		<div id="event-form">
-			
+			<div class="row">
+				<form class="col s12">
+					<h4 class="collection-header">[Event Name]</h4>
+					<div class="row">
+						<div class="input-field col s12">
+							<input id="event-name" type="text" class="validate">
+							<label for="event-name">Event Name</label>
+						</div>
+						<div class="input-field col s12">
+							<input id="event-location" type="text" class="validate">
+							<label for="event-location">Location</label>
+						</div>
+						<div class="input-field col s12">
+							<input id="event-start-date" type="date" class="datepicker">
+							<label for="event-start-date">Starts</label>
+						</div>
+						<div class="input-field col s12">
+							<input id="event-end-date" type="date" class="datepicker">
+							<label for="event-end-date">Ends</label>
+						</div>
+						<div class="input-field col s12">
+							<input id="event-type" list="event-types" type="text" class="validate">
+							<label for="event-type">Event Type</label>
+							<datalist id="event-types">
+								<option value="Anniversary"></option>
+								<option value="Birthday"></option>
+								<option value="Family gathering"></option>
+								<option value="Party"></option>
+								<option value="Religious festival"></option>
+								<option value="Wedding"></option>
+							</datalist>
+						</div>
+						<div class="input-field col s12">
+							<input id="event-capacity" placeholder="Max. number of guests" type="range" min="0" step="1" value="50" class="validate">
+							<label for="event-capacity" class="active">Capacity</label>
+						</div>
+						<div class="input-field col s12">
+							<input id="event-host" type="text" class="validate">
+							<label for="event-host">Host</label>
+						</div>
+						<div class="input-field col s12">
+							<textarea id="event-description" class="materialize-textarea"></textarea>
+							<label for="event-description">Description</label>
+						</div>
+						<a id="event-submit" class="waves-effect waves-light btn"><i class="material-icons left">check</i>Done</a>
+					</div>
+				</form>
+			</div>
 		</div>
-		
+
 		<!-- Library source files -->
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
 		<script type="text/javascript" src="lib/materialize-0.97.5.min.js"></script>
@@ -62,7 +102,14 @@
 		<script src="test/util/data.js"></script>
 		
 		<script type="text/javascript">
-			window.onload = function() {app.init();};
+			window.onload = function() {
+				app.init();
+
+				$('.datepicker').pickadate({
+					selectMonths: true, // Creates a dropdown to control month
+					selectYears: 15 // Creates a dropdown of 15 years to control year
+				});
+			};
 		</script>
 
 	</body>

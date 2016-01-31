@@ -30,6 +30,20 @@ app.IObserver = function() {
 	
 	/** Receive and act upon notification from observable
 	*
+	* @return {Boolean}
+	*/
+
+	
+	app.IObserver.prototype.isInstanceOf = function() {
+		
+		throw new AbstractMethodError(app.IObserver.prototype.isInstanceOf.errorMessage);
+	};
+	
+	this.constructor.prototype.isInstanceOf.errorMessage = 'Method signature "update()" must be realized in derived classes';
+	
+	
+	/** Receive and act upon notification from observable
+	*
 	* @return {void}
 	*/
 

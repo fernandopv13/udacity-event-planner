@@ -33,12 +33,28 @@ app.Controller = function() {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
+	/** Render event list in response to changes in the data model */
+	
 	this.updateEventList = function() {
 
 		var $list = $('#event-list');
 
 		var ULElmnt = document.createElement('ul');
+		
 		ULElmnt.classList.add('collection');
+
+		ULElmnt.classList.add('with-header');
+
+
+		var headerElmnt = document.createElement('h4');
+
+		headerElmnt.classList.add('collection-header');
+
+		headerElmnt.innerHTML = 'My Events';
+
+		ULElmnt.appendChild(headerElmnt);
+
+		
 
 		_eventViews.forEach(function(evt) {
 
@@ -63,16 +79,20 @@ app.Controller = function() {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
-	// (Prefer prototypical inheritance whenever method does not require direct access to private member)
-		
-
+	
 	app.Controller.prototype.init = function() {
 
-		var objList = app.Event.registry.getObjectList();
+		
+		
+		var ev, objList = app.Event.registry.getObjectList();
 
 		for (var prop in objList) {
 
-			_eventViews.push(new app.EventView(objList[prop]));
+			ev = new app.EventView(objList[prop])
+			
+			objList[prop].registerObserver(ev);
+			
+			_eventViews.push(ev);
 		};
 	
 		this.updateEventList();
