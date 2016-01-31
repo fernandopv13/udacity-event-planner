@@ -54,17 +54,6 @@ app.EventView = function(Event_evt) {
 		divElmnt.onclick = (function(e) {this.onclick(_event.id());}).bind(this);
 		
 		
-		/*
-		var spanElmnt = document.createElement('span');
-		
-		spanElmnt.classList.add('badge');
-		
-		spanElmnt.innerHTML = _event.guests().length + ' guests';
-		
-		*/
-		//<span class="badge">1</span>
-		
-		
 		var anchorElmnt = document.createElement('a');
 		
 		anchorElmnt.classList.add('secondary-content');

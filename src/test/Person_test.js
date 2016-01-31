@@ -113,6 +113,8 @@ describe('class Person', function(){
 		beforeEach(function() {
 			
 			testPerson = new app.Person();
+
+			testPerson.imgUrl('test URL');
 			
 			oldPermission = app.prefs.isLocalStorageAllowed();
 			
@@ -125,6 +127,14 @@ describe('class Person', function(){
 			testPerson.name('testName');
 			
 			expect(testPerson.name()).toBe('testName');
+		});
+
+
+		it('can set and get its image URL', function() {
+		
+			testPerson.imgUrl('test URL');
+			
+			expect(testPerson.imgUrl()).toBe('test URL');
 		});
 		
 		
@@ -351,6 +361,8 @@ describe('class Person', function(){
 			
 			expect(testPerson.name()).toBe('Claudia');
 
+			expect(testPerson.imgUrl()).toBe('test URL');
+
 			expect(testPerson.birthday()).toBeDefined()
 		});
 		
@@ -482,8 +494,8 @@ describe('class Person', function(){
 		
 		it('can re-establish object references when de-serializing from JSON', function(){
 			
-			testPerson.name('Big boss tester'); // set a value to test for
-			
+			testPerson.name('Big boss tester'); // set some values to test for
+
 			testPerson.email(new app.Email('nosuchuser@undef.anywhere'));
 			
 			var email_id = testPerson.email().id();
@@ -501,6 +513,8 @@ describe('class Person', function(){
 			expect(testPerson.className()).toBe('Person'); // verify re-instantiation
 			
 			expect(testPerson.name()).toBe('Big boss tester');
+
+			expect(testPerson.imgUrl()).toBe('test URL');
 			
 			expect(testPerson.email()._id).toBe(email_id);
 			

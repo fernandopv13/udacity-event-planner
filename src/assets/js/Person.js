@@ -30,7 +30,7 @@ var app = app || {}; // create a simple namespace for the app
 * @throws Same errors as parameter accessors if passing in invalid data.
 */
 
-app.Person = function(str_name, obj_employer, str_jobTitle, obj_email, Date_birthday) {
+app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email, Date_birthday, str_imgUrl) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
@@ -52,7 +52,9 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email, Date_birt
 	
 	_email,
 
-	_birthday;
+	_birthday,
+
+	_imgUrl; // URL to avatar image for person
 	
 
 	/*----------------------------------------------------------------------------------------
@@ -126,18 +128,18 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email, Date_birt
 	* @throws {TypeError} If attempting to set email not of class Email
 	*/
 	
-	this.email = function (obj_email) {
+	this.email = function (Email_email) {
 		
 		if (arguments.length !== 0) { // normal setter
 			
-			if (obj_email.constructor === app.Email) {
+			if (Email_email.constructor === app.Email) {
 				
-				_email = obj_email;
+				_email = Email_email;
 			}
 			
-			else if (obj_email._className === 'Email' && typeof obj_email._id !== 'undefined') { // setting unresolved object reference when called from readObject()
+			else if (Email_email._className === 'Email' && typeof Email_email._id !== 'undefined') { // setting unresolved object reference when called from readObject()
 				
-				_email = obj_email;
+				_email = Email_email;
 			}
 						
 			else {
@@ -159,18 +161,18 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email, Date_birt
 	* @throws {TypeError} If attempting to set employer not of class Employer
 	*/
 	
-	this.employer = function (obj_employer) {
+	this.employer = function (Organization_employer) {
 		
 		if (arguments.length !== 0) { // normal setter
 			
-			if (obj_employer.constructor === app.Organization) {
+			if (Organization_employer.constructor === app.Organization) {
 				
-				_employer = obj_employer;
+				_employer = Organization_employer;
 			}
 			
-			else if (obj_employer._className === 'Organization' && typeof obj_employer._id !== 'undefined') { // setting unresolved object reference when called from readObject()
+			else if (Organization_employer._className === 'Organization' && typeof Organization_employer._id !== 'undefined') { // setting unresolved object reference when called from readObject()
 				
-				_employer = obj_employer;
+				_employer = Organization_employer;
 			}
 			
 			else {
@@ -221,6 +223,24 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email, Date_birt
 	};
 	
 	
+	/** Gets or sets URL to portrait image (avatar)
+	*
+	* @param {String} imageUrl The URL to the image file
+	*
+	* @return {String} The URL to the image file
+	*/
+	
+	this.imgUrl = function (str_imgUrl) {
+		
+		if (arguments.length !== 0) {
+			
+			_imgUrl = str_imgUrl;
+		}
+		
+		return _imgUrl;
+	}
+
+
 	/** Gets or sets job title
 	*
 	* @param {String} jobTitle The person's job title (optional, supply if setting)
@@ -324,6 +344,8 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email, Date_birt
 			_id: _id,
 			
 			_name: _name,
+
+			_imgUrl: _imgUrl,
 			
 			_employer: _employer ? {_className: _employer.className(), _id: _employer.id()} : undefined,
 			
@@ -369,11 +391,11 @@ app.Person = function(str_name, obj_employer, str_jobTitle, obj_email, Date_birt
 		
 		if (str_name) {this.name(str_name);}
 				
-		if (obj_employer) {this.employer(obj_employer);}
+		if (Organization_employer) {this.employer(Organization_employer);}
 		
 		if (str_jobTitle) {this.jobTitle(str_jobTitle);}
 		
-		if (obj_email) {this.email(obj_email);}
+		if (Email_email) {this.email(Email_email);}
 
 		if (Date_birthday) {this.birthday(Date_birthday);}
 	}
