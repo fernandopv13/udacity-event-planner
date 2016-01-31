@@ -33,7 +33,7 @@ app.Controller = function() {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Render event list in response to changes in the data model */
+	/** Render event list to the UI */
 	
 	this.updateEventList = function() {
 
@@ -64,6 +64,18 @@ app.Controller = function() {
 		$list.empty();
 
 		$list.append(ULElmnt);
+	};
+
+
+	/** Render guest list to the UI */
+	
+	this.updateGuestList = function() {
+
+		var $list = $('#guest-list');
+
+		$list.empty();
+
+		$list.append(_eventViews[0].renderGuests());
 	}
 
 	
@@ -73,7 +85,7 @@ app.Controller = function() {
 	
 	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
 	
-	
+	this.currentEvent;
 	
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
@@ -82,20 +94,23 @@ app.Controller = function() {
 	
 	app.Controller.prototype.init = function() {
 
-		
+		// Bind EventView to every Event in data model
 		
 		var ev, objList = app.Event.registry.getObjectList();
 
 		for (var prop in objList) {
 
-			ev = new app.EventView(objList[prop])
+			ev = new app.EventView(objList[prop]); // create eventview
 			
-			objList[prop].registerObserver(ev);
+			objList[prop].registerObserver(ev); // bind to event
 			
-			_eventViews.push(ev);
+			_eventViews.push(ev); // add to list of eventviews
 		};
 	
-		this.updateEventList();
+		this.updateEventList(); // refresh display of event list
+
+
+		this.updateGuestList();
 	};
 
 	

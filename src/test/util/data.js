@@ -54,6 +54,8 @@ app.data = {
 	]
 };
 
+app.data.people[2].imgUrl('assets/img/test-avatar.jpg');
+
 app.data.people[0].employer(app.data.organizations[0]);
 app.data.people[1].employer(app.data.organizations[1]);
 app.data.people[2].employer(app.data.organizations[2]);

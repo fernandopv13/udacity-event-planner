@@ -83,6 +83,104 @@ app.EventView = function(Event_evt) {
 	};
 		
 	
+	/** Render guests to list items */
+	
+	this.renderGuests = function() {
+		
+		var ULElmnt = document.createElement('ul');
+
+		ULElmnt.classList.add('collection');
+
+		ULElmnt.classList.add('with-header');
+
+
+		var headerElmnt = document.createElement('h4');
+
+		headerElmnt.classList.add('collection-header');
+
+		headerElmnt.innerHTML = 'Guest List';
+
+		ULElmnt.appendChild(headerElmnt);
+
+		
+		var listElmnt, avatarElmnt, spanElmnt, pElmnt, anchorElmnt, iconElmnt;
+
+		_event.guests().forEach(function(guest) {
+
+			listElmnt = document.createElement('li');
+			
+			listElmnt.classList.add('collection-item');
+
+			listElmnt.classList.add('avatar');
+			
+			listElmnt.id = 'guest-list-id-' + guest.id();
+			
+			
+			if (guest.imgUrl()) { // use existing image
+
+				avatarElmnt = document.createElement('img');
+
+				avatarElmnt.classList.add('circle');
+
+				avatarElmnt.src = guest.imgUrl();
+
+				avatarElmnt.alt = guest.name();
+			}
+
+			else { // use generic avatar
+
+				avatarElmnt = document.createElement('i');
+
+				avatarElmnt.classList.add('material-icons');
+
+				avatarElmnt.classList.add('circle');
+
+				avatarElmnt.innerHTML = 'account_circle'
+			}
+
+
+
+			spanElmnt = document.createElement('span');
+			
+			spanElmnt.innerHTML = guest.name() ? guest.name() : '';
+			
+			
+			pElmnt = document.createElement('p');
+
+			pElmnt.innerHTML = guest.email().address() ? guest.email().address() : '';
+
+
+			anchorElmnt = document.createElement('a');
+			
+			anchorElmnt.classList.add('secondary-content');
+
+			anchorElmnt.href = '#!';
+			
+			
+			iconElmnt = document.createElement('i');
+			
+			iconElmnt.classList.add('material-icons');
+			
+			iconElmnt.innerHTML = 'chevron_right';
+
+			
+			listElmnt.appendChild(avatarElmnt);
+
+			listElmnt.appendChild(spanElmnt);
+
+			listElmnt.appendChild(pElmnt);
+
+			listElmnt.appendChild(anchorElmnt);
+			
+			anchorElmnt.appendChild(iconElmnt);
+
+			ULElmnt.appendChild(listElmnt);
+		});
+
+		return ULElmnt;
+	};
+
+
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
