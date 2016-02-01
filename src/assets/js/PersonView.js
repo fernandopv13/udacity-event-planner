@@ -1,29 +1,27 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class EventView Implements IViewable IObserver
+* public class PersonView Implements IViewable IObserver
 ******************************************************************************/
 
 var app = app || {};
 
-/** @classdesc ViewObject for individual events. Renders event in UI, and captures UI events on event.
+/** @classdesc ViewObject for individual persons. Renders person in UI, and captures UI events on person.
 *
 * @constructor
 *
-* @author Ulrik H. Gade, January 2016
+* @author Ulrik H. Gade, February 2016
 */
 
-app.EventView = function(Event_evt) {
+app.PersonView = function(Person_p) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _event = Event_evt, // (Event) The event in the data model this EventView is observing
+	var _person = Person_p, // (Person) The person in the data model this PersonView is observing
 	
 	_implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
-
-	
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -37,139 +35,56 @@ app.EventView = function(Event_evt) {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Render guests to list items
-	*
-	* Treat as if private to reduce complexity of public interface. Defined on EventView.prototype
-	* for memory efficiency.
-	*/
-
-	app.EventView.prototype._renderGuestList = function() {
+	/** Render guests to list items */
+	
+	_renderListItem = function(self) {
 		
-		var self = this;
-
-		var ULElmnt = document.createElement('ul');
-
-		ULElmnt.classList.add('collection');
-
-		ULElmnt.classList.add('with-header');
-
-
-		var headerElmnt = document.createElement('h4');
-
-		headerElmnt.classList.add('collection-header');
-
-		headerElmnt.innerHTML = 'Guest List';
-
-		ULElmnt.appendChild(headerElmnt);
-
-		
-		var listElmnt, avatarElmnt, spanElmnt, pElmnt, anchorElmnt, iconElmnt;
-
-		this.event().guests().forEach(function(guest) {
-
-			listElmnt = document.createElement('li');
-			
-			listElmnt.classList.add('collection-item');
-
-			listElmnt.classList.add('avatar');
-			
-			listElmnt.id = 'guest-list-id-' + guest.id();
-
-			listElmnt.onclick = (function(e) {self.onguestclick('guest ' + guest.id());});
-			
-			
-			if (guest.imgUrl()) { // use existing image
-
-				avatarElmnt = document.createElement('img');
-
-				avatarElmnt.classList.add('circle');
-
-				avatarElmnt.src = guest.imgUrl();
-
-				avatarElmnt.alt = guest.name();
-			}
-
-			else { // use generic avatar
-
-				avatarElmnt = document.createElement('i');
-
-				avatarElmnt.classList.add('material-icons');
-
-				avatarElmnt.classList.add('circle');
-
-				avatarElmnt.innerHTML = 'account_circle'
-			}
-
-
-			spanElmnt = document.createElement('span');
-			
-			spanElmnt.innerHTML = guest.name() ? guest.name() : '';
-			
-			
-			pElmnt = document.createElement('p');
-
-			pElmnt.innerHTML = guest.email().address() ? guest.email().address() : '';
-
-
-			anchorElmnt = document.createElement('a');
-			
-			anchorElmnt.classList.add('secondary-content');
-
-			anchorElmnt.href = '#!';
-			
-			
-			iconElmnt = document.createElement('i');
-			
-			iconElmnt.classList.add('material-icons');
-			
-			iconElmnt.innerHTML = 'chevron_right';
-
-			
-			listElmnt.appendChild(avatarElmnt);
-
-			listElmnt.appendChild(spanElmnt);
-
-			listElmnt.appendChild(pElmnt);
-
-			listElmnt.appendChild(anchorElmnt);
-			
-			anchorElmnt.appendChild(iconElmnt);
-
-			ULElmnt.appendChild(listElmnt);
-		});
-
-		return ULElmnt;
-	};
-
-
-	function renderGuestList() {
-
-		var $list = $('#guest-list');
-
-		$list.empty();
-
-		$list.append(_event.guests().render('list-item'));
-	}
-
-
-	/** Render to event list item */
-
-	function _renderListItem(self) {
-
 		var listElmnt = document.createElement('li');
 		
 		listElmnt.classList.add('collection-item');
+
+		listElmnt.classList.add('avatar');
 		
-		listElmnt.id = 'event-list-id-' + _event.id();
-		
-		
-		var divElmnt = document.createElement('div');
-		
-		divElmnt.innerHTML = (_event.name() ? _event.name() : 'Unnamed event') + ' (' + _event.guests().length + ')';
-		
-		divElmnt.onclick = (function(e) {self.onclick('event ' + _event.id());}).bind(self);
+		listElmnt.id = 'guest-list-id-' + _person.id();
+
+		listElmnt.onclick = (function(e) {self.onclick('guest ' + _person.id());}.bind(self));
 		
 		
+		var avatarElmnt;
+
+		if (_person.imgUrl()) { // use existing image
+
+			avatarElmnt = document.createElement('img');
+
+			avatarElmnt.classList.add('circle');
+
+			avatarElmnt.src = _person.imgUrl();
+
+			avatarElmnt.alt = _person.name();
+		}
+
+		else { // use generic avatar
+
+			avatarElmnt = document.createElement('i');
+
+			avatarElmnt.classList.add('material-icons');
+
+			avatarElmnt.classList.add('circle');
+
+			avatarElmnt.innerHTML = 'account_circle'
+		}
+
+
+		var spanElmnt = document.createElement('span');
+		
+		spanElmnt.innerHTML = _person.name() ? _person.name() : '';
+		
+		
+		var pElmnt = document.createElement('p');
+
+		pElmnt.innerHTML = _person.email().address() ? _person.email().address() : '';
+
+
 		var anchorElmnt = document.createElement('a');
 		
 		anchorElmnt.classList.add('secondary-content');
@@ -184,15 +99,19 @@ app.EventView = function(Event_evt) {
 		iconElmnt.innerHTML = 'chevron_right';
 
 		
-		listElmnt.appendChild(divElmnt);
-		
-		divElmnt.appendChild(anchorElmnt);
+		listElmnt.appendChild(avatarElmnt);
+
+		listElmnt.appendChild(spanElmnt);
+
+		listElmnt.appendChild(pElmnt);
+
+		listElmnt.appendChild(anchorElmnt);
 		
 		anchorElmnt.appendChild(iconElmnt);
-		
-		
+
+
 		return listElmnt;
-	}
+	};
 
 
 	/*----------------------------------------------------------------------------------------
@@ -225,21 +144,13 @@ app.EventView = function(Event_evt) {
 
 	/** Respond to tap/click on event in events list */
 	
-	app.EventView.prototype.onclick = function(evt_id) {
+	app.PersonView.prototype.onclick = function(person_id) {
 		
-		console.log(evt_id);
+		console.log(person_id);
 	};
 	
 
-	/** Respond to tap/click on event in guest list */
-	
-	app.EventView.prototype.onguestclick = function(guest_id) {
-		
-		console.log(guest_id);
-	};
-
-	
-	/** Render event */
+	/** Render person */
 	
 	this.render = function(str_type) {
 		
@@ -255,12 +166,6 @@ app.EventView = function(Event_evt) {
 
 				break;
 
-			case 'guest-list':
-
-				return this._renderGuestList()
-
-				break;
-
 			default:
 
 				//throw new IllegalArgumentError('Cannot render "' + str_type + '"');
@@ -272,7 +177,7 @@ app.EventView = function(Event_evt) {
 
 	/** Update event presentation when model has changed */
 	
-	app.EventView.prototype.update = function() {
+	app.PersonView.prototype.update = function() {
 		
 		this.render();
 	};
@@ -294,20 +199,20 @@ app.EventView = function(Event_evt) {
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 
-/** Renders collection of EventViews to list in UI
+/** Renders collection of PersonViews to guest list in UI
 *
 * Static method because no single instance has knowledge of the full collection.
 *
-* @param {Object} Eventviews Collection of eventviews to be rendered
+* @param {Object} PersonViews Collection of personviews to be rendered
  */
 
-app.EventView.render = function(Object_eventviews) {
+app.PersonView.render = function(Object_personviews) {
 	
-	var $list = $('#event-list');
+	var $list = $('#guest-list');
 
 
 	var ULElmnt = document.createElement('ul'); // generate list
-	
+
 	ULElmnt.classList.add('collection');
 
 	ULElmnt.classList.add('with-header');
@@ -317,14 +222,14 @@ app.EventView.render = function(Object_eventviews) {
 
 	headerElmnt.classList.add('collection-header');
 
-	headerElmnt.innerHTML = 'My Events';
+	headerElmnt.innerHTML = 'Guest List';
 
 	ULElmnt.appendChild(headerElmnt);
 
 	
-	for (var prop in Object_eventviews) { // generate list items
+	for (var prop in Object_personviews) { // generate list items
 
-		ULElmnt.appendChild(Object_eventviews[prop].render('list-item'));
+		ULElmnt.appendChild(Object_personviews[prop].render('list-item'));
 	}
 
 	

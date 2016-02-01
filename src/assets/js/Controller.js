@@ -21,9 +21,9 @@ app.Controller = function() {
 	
 	var _eventViews = [],
 
-	_account,
+	_account, // the currently active account
 
-	_event; // the currently selected event
+	_event; // the currently active event
 
 
 	/*----------------------------------------------------------------------------------------
@@ -37,43 +37,6 @@ app.Controller = function() {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Render event list to the UI */
-	
-	/*
-	this.renderEventList = function() {
-
-		var $list = $('#event-list');
-
-
-		var ULElmnt = document.createElement('ul'); // generate list
-		
-		ULElmnt.classList.add('collection');
-
-		ULElmnt.classList.add('with-header');
-
-
-		var headerElmnt = document.createElement('h4');
-
-		headerElmnt.classList.add('collection-header');
-
-		headerElmnt.innerHTML = 'My Events';
-
-		ULElmnt.appendChild(headerElmnt);
-
-		
-
-		_eventViews.forEach(function(evt) { // generate list items
-
-			ULElmnt.appendChild(evt.render());
-		});
-
-		
-		$list.empty(); // update to DOM
-
-		$list.append(ULElmnt);
-	};
-	*/
-
 	/** Render guest list to the UI */
 	
 	this.renderGuestList = function() {
@@ -118,10 +81,12 @@ app.Controller = function() {
 			// later, register controller as observer of EventView
 		}
 	
-		app.EventView.renderList(_eventViews); // refresh display of Event list
+		app.EventView.render(_eventViews); // refresh display of Event list
 
 
-		//this.renderGuestList();
+		_event = _account.events()[0];
+
+		
 	};
 
 	
