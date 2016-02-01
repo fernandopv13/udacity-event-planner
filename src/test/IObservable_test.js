@@ -20,7 +20,8 @@ describe('Interface IObservable', function(){
 		this.isInstanceOf = function(fnc) {return fnc === app.IObserver;};
 
 		this.update = function() {this.isUpdated = true;};
-	};
+	}
+	
 
 	var testObservable, testObserver;
 

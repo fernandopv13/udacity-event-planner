@@ -11,7 +11,7 @@ var app = app || {}; // create a simple namespace for the app
 *
 * @constructor
 *
-* @return Nothing. An interface cannot be instantiated
+* @return Nothing. An interface cannot be instantiated.
 *
 * @throws {InstantiationError} If attempting to instantiate interface
 *
@@ -35,12 +35,12 @@ app.ISerializable = function() {
 	* @return {String} name Object's class name as string. Must evaluate to valide function as property of app.
 	*/
 	
-	this.constructor.prototype.className = function() {
+	app.ISerializable.prototype.className = function() {
 		
 		throw new AbstractMethodError(app.ISerializable.prototype.className.errorMessage);
 	}
 	
-	this.constructor.prototype.className.errorMessage = 'Method signature "className()" must be realized in derived classes';
+	app.ISerializable.prototype.className.errorMessage = 'Method signature "className()" must be realized in derived classes';
 	
 	
 	/** Gets object's unique id
@@ -50,12 +50,12 @@ app.ISerializable = function() {
 	* @return {int} ID Object's unique ID (by class)
 	*/
 	
-	this.constructor.prototype.id = function() {
+	app.ISerializable.prototype.id = function() {
 		
 		throw new AbstractMethodError(app.ISerializable.prototype.id.errorMessage);
 	}
 	
-	this.constructor.prototype.id.errorMessage = 'Method signature "id()" must be realized in derived classes';
+	app.ISerializable.prototype.id.errorMessage = 'Method signature "id()" must be realized in derived classes';
 	
 
 	/** Converts object to JSON object
@@ -63,31 +63,31 @@ app.ISerializable = function() {
 	* @return {Object} JSON object representation of person (used to override default behaviour of JSON.stringify())
 	*/
 	
-	this.constructor.prototype.toJSON = function() {
+	app.ISerializable.prototype.toJSON = function() {
 		
 		throw new AbstractMethodError(app.ISerializable.prototype.toJSON.errorMessage);
 	}
 	
-	this.constructor.prototype.toJSON.errorMessage = 'Method signature "toJSON()" must be realized in derived classes';
+	app.ISerializable.prototype.toJSON.errorMessage = 'Method signature "toJSON()" must be realized in derived classes';
 	
 	
 	/** Re-establishes references to complex members after they have been deserialized */
 	
-	this.constructor.prototype.onDeserialized = function() {
+	app.ISerializable.prototype.onDeserialized = function() {
 		
 		throw new AbstractMethodError(app.ISerializable.prototype.onDeserialized.errorMessage);
 	}
 	
-	this.constructor.prototype.onDeserialized.errorMessage = 'Method signature "onDeserialized()" must be realized in derived classes';
+	app.ISerializable.prototype.onDeserialized.errorMessage = 'Method signature "onDeserialized()" must be realized in derived classes';
 		
 	
 	/*----------------------------------------------------------------------------------------
 	* Block instantiation
 	*---------------------------------------------------------------------------------------*/
 		
-	this.constructor.constructorErrorMessage = 'Interface ISerializable cannot be instantiated. Realize in derived classes.';
+	app.ISerializable.constructorErrorMessage = 'Interface ISerializable cannot be instantiated. Realize in derived classes.';
 	
-	throw new InstantiationError(this.constructor.constructorErrorMessage);
+	throw new InstantiationError(app.ISerializable.constructorErrorMessage);
 }
 
 
@@ -138,15 +138,15 @@ app.ISerializable.prototype.default_writeObject = function() {
 *
 * Automatically parses primitive private attributes in JSON that have unified standard accessors. Re-referencing of more complex objects has to wait until this process has completed for all primary classes in the app, making the objects available in memory.
 *
-* Assumptions made: Private attribute names are prefixed with a single underscore ('_'). Standard accessors have the same name as the attribute they set, except for removing any leading underscore. They can both set and get the value of the attribute, and manage basic validation and error handling. They must also be able to gracefully handle being passed a null.
+* Assumptions made: Private attribute names are prefixed with a single underscore (e.g. '_privateAttr'). Standard accessors have the same name as the attribute they set, except for removing any leading underscore (e.g. 'privateAttr()'). They can both set and get the value of the attribute (hence 'unified'), and manage basic validation and error handling.
 *
-* @param {Array} exclusions An optional string array of the names of properties this method should ignore, letting the calling class itself handle their instantiation.
+* @param {Array} exclusions An optional array of the (string) names of properties this method should ignore, leaving the calling class itself to handle their instantiation.
 *
 * @return {Object} JSON representation of object if successful, otherwise throws error.
 *
 * @throws {ReferenceError} If local storage is not available on this device (and the polyfill has also failed)
 *
-* @throws {Error} If user has not given the app permission to use local storage
+* @throws {IllegalAccessError} If user has not given the app permission to use local storage
 *
 * @throws {ReferenceError} If no item matching the object (by id) is found in local storage
 *
@@ -167,6 +167,8 @@ app.ISerializable.prototype.default_writeObject = function() {
 
 app.ISerializable.prototype.default_readObject = function(arr_exclusions) {
 
+	// Check if localStorage is available
+	
 	if (!window.localStorage) {throw new ReferenceError('localStorage not available');}
 	
 	if (!app.prefs.isLocalStorageAllowed()) {throw new IllegalAccessError('Use of local storage not allowed by user');}
@@ -184,7 +186,6 @@ app.ISerializable.prototype.default_readObject = function(arr_exclusions) {
 		catch(e) { // ...so, for now, just bubble up the native error
 			
 			throw e;
-			
 		}
 		
 		return obj_json;
@@ -240,19 +241,17 @@ app.ISerializable.prototype.default_readObject = function(arr_exclusions) {
 	
 		var exclusions = arr_exclusions || []; exclusions.push('_className');  exclusions.push('_id');
 		
-		//function isPrimitive(str) {return ['boolean','undefined','number','string','symbol'].indexOf(str) > -1}
-		
-			for (var prop in obj_json) {
+		for (var prop in obj_json) {
+			
+			if (exclusions.indexOf(prop) === -1) { // skip props in exclusions list
+			
+				// call accessor (assumed have same name as property, except popping leading underscore)
 				
-				if (exclusions.indexOf(prop) === -1) { // skip props in exclusions list
-				
-					// call accessor (assumed have same name as property, except popping leading underscore)
-					
-					this[prop.slice(1)](obj_json[prop]);
-				}
-				
-				// else: in exclusion list, leave for custom logic to sort out
+				this[prop.slice(1)](obj_json[prop]);
 			}
+			
+			// else: in exclusion list, leave for custom logic to sort out
+		}
 		
 		return true;
 		
@@ -261,17 +260,17 @@ app.ISerializable.prototype.default_readObject = function(arr_exclusions) {
 	
 	// Return JSON
 	
-	return obj_json; // caller may need to do custom post-processing of excluded properties
+	return obj_json; // caller may need to do custom post-processing of excluded properties, so return data
 }
 
 
 /** Removes object from local storage
 *
-* @return {undefined} Return is void.
+* @return {Boolean} true if succesful, otherwise throws error
 *
 * @throws {ReferenceError} If local storage is not available on this device (and the polyfill has also failed)
 *
-* @throws {Error} If user has not given the app permission to use local storage
+* @throws {IllegalAccessError} If user has not given the app permission to use local storage
 */
 
 app.ISerializable.prototype.default_removeObject = function() {

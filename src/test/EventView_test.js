@@ -33,7 +33,7 @@ describe('class EventView', function(){
 
 		beforeEach(function(){
 
-			testEvent = new app.Event("Test event");
+			testEvent = new app.Event('Test event');
 
 			testView = new app.EventView(testEvent);
 		});

@@ -28,11 +28,10 @@ app.IObserver = function() {
 	* Method signatures
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Receive and act upon notification from observable
+	/** Report whether instance of an interface
 	*
 	* @return {Boolean}
 	*/
-
 	
 	app.IObserver.prototype.isInstanceOf = function() {
 		

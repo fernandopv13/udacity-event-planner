@@ -7,6 +7,8 @@
 
 app.Email = app.Email || function(){this.address = function() {return 'nosuchuser@unknown.domain';};};
 
+app.Event = app.Event || function(){this.id = function(){return 232;};this.name = function(){return 'test event';};};
+
 app.Password = app.Password || function(){this.password = function() {return '123!abcDEF';};};
 
 app.Person = app.Person || function(){this.name = function() {return 'Test person';};};
@@ -18,7 +20,7 @@ function TestObserver() {
 	this.isInstanceOf = function(fnc) {return fnc === app.IObserver;};
 
 	this.update = function() {this.isUpdated = true;};
-};
+}
 
 
 describe('class Account', function(){
@@ -59,7 +61,7 @@ describe('class Account', function(){
 		
 		catch(e) {
 			
-			expect(e.message).toBe('Wrong type: Email must be an instance of the Email class');
+			expect(e.name).toBe('IllegalArgumentError');
 		}
 		
 		expect(this.success).not.toBeDefined();
@@ -141,7 +143,7 @@ describe('class Account', function(){
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Wrong type: Email must be an instance of the Email class');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 			
 			expect(testAccount.email()).not.toBeDefined();
@@ -192,6 +194,84 @@ describe('class Account', function(){
 			}
 			
 			expect(testAccount.accountHolder().name()).toBe('Test person');
+		});
+
+
+		it('can get its collection of events', function() {
+		
+			expect(testAccount.events().constructor).toBe(Object);
+		});
+
+
+		it('can add an event', function() {
+		
+			var testEvent = testAccount.addEvent(new app.Event('test event'));
+
+			expect(testEvent.constructor).toBe(app.Event);
+			
+			expect(testAccount.events()[testEvent.id()].name()).toBe('test event');
+		});
+		
+		
+		it('rejects attempt to add event that is not of class Event', function() {
+			
+			try {
+				
+				testAccount.addEvent('Not an Event');
+			}
+			
+			catch(e) {
+				
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+			
+			expect(true).toBe(true); //Jasmine may not notice try in catch
+		});
+
+		
+		it('can remove an event', function() {
+		
+			var testEvent = testAccount.addEvent(new app.Event('test event'));
+
+			var len = Object.keys(testAccount.events()).length;
+
+			var evt = testAccount.removeEvent(testEvent);
+
+			expect(evt.constructor).toBe(app.Event);
+
+			expect(Object.keys(testAccount.events()).length).toBe(len - 1);
+		});
+		
+		
+		it('rejects attempt to remove event that is not of class Event', function() {
+			
+			try {
+				
+				testAccount.removeEvent('Not an Event');
+			}
+			
+			catch(e) {
+				
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+			
+			expect(true).toBe(true); //Jasmine may not notice try in catch
+		});
+
+
+		it('rejects attempt to remove event that is not registred with account', function() {
+			
+			try {
+				
+				testAccount.removeEvent(new app.Event('unknown event'));
+			}
+			
+			catch(e) {
+				
+				expect(e.name).toBe('ReferenceError');
+			}
+			
+			expect(true).toBe(true); //Jasmine may not notice try in catch
 		});
 
 		
@@ -274,7 +354,7 @@ describe('class Account', function(){
 		});
 		
 		
-		it('rejects attempt to set ID (b/c read-only', function() {
+		it('rejects attempt to set ID (b/c read-only)', function() {
 		
 			try {
 				
@@ -283,7 +363,7 @@ describe('class Account', function(){
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 		});
 		

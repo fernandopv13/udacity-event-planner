@@ -11,11 +11,13 @@ var app = app || {};
 *
 * @constructor
 *
-* @implements ISerializable
+* @implements IObservable, ISerializable
 *
-* @param {Email} email the email identifying the account
+* @param {Email} email Email identifying the account
 *
-* @param {String} password A secure apssword for the account
+* @param {String} password A secure password for the account
+*
+* @param {Person} accountHolder The person holding the account
 *
 * @return {Account} An account instance
 
@@ -40,7 +42,9 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	
 	_password,
 
-	_accountHolder; // (Person) The person holding the account
+	_accountHolder,
+
+	_events = {};
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -51,7 +55,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	*
 	* @param {Person} accountholder The person holding the account (optional, supply if setting)
 	*
-	* @return {Person} TThe person holding the account
+	* @return {Person} The person holding the account
 	*
 	* @throws {TypeError} If attempting to set account holder not of class Person
 	*/
@@ -86,7 +90,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	*
 	* @return {String} name The name of the object's class
 	*	
-	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
+	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
 	this.className = function () {
@@ -95,7 +99,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		else {
 			
-			throw new Error('Illegal parameter: className is read-only');
+			throw new IllegalArgumentError('className is read-only');
 		}
 	};
 	
@@ -106,7 +110,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	*
 	* @return {int} An integer, if called with no parameters
 	*	
-	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
+	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
 	this.id = function () {
@@ -115,7 +119,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		else {
 			
-			throw new Error('Illegal parameter: id is read-only');
+			throw new IllegalArgumentError('ID is read-only');
 		}
 	};
 	
@@ -145,7 +149,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 			else {
 				
-				throw new IllegalArgumentError('Wrong type: Email must be an instance of the Email class')
+				throw new IllegalArgumentError('Email must be an instance of the Email class')
 			}
 		}
 		
@@ -204,12 +208,88 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation anyway in order to expose list to default IObservable methods
 	
 	
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
+	
+	/** Adds event to account
+	*
+	* @param {Event} Event The event
+	*
+	* @return {Event} The event just added
+	*
+	* @throws {IllegalArgumentError} If attempting to set event not of class Event
+	*/
+	
+	this.addEvent = function (obj_event) {
+	
+		if (obj_event.constructor === app.Event) {
+			
+			_events[obj_event.id()] = obj_event;
+		}
+					
+		else {
+			
+			throw new IllegalArgumentError('Event must be an Event')
+		}
+	
+		return obj_event;
+	};
+
+
+	/** Returns collection of events registered with the account
+	
+	* @return {Event} Collection of events 
+	*
+	* @throws {IllegalArgumentError} If attempting to set events (collection is read-only)
+	*/
+	
+	this.events = function () {
+	
+		if (arguments.length !== 0) {
+			
+			throw new IllegalArgumentError('Events collection is read-only')
+		}
+
+		return _events;
+	};
+
+
+	/** Removes event from account
+	*
+	* @param {Event} Event The event
+	*
+	* @return {Event} The event just removed
+	*
+	* @throws {IllegalArgumentError} If attempting to set event not of class Event
+	*/
+	
+	this.removeEvent = function (obj_event) {
+	
+		if (obj_event.constructor === app.Event) {
+
+			if (_events[obj_event.id()]) {
+			
+				delete _events[obj_event.id()];
+			}
+
+			else {
+
+				throw new ReferenceError('Event not found in account');
+			}
+		}
+					
+		else {
+			
+			throw new IllegalArgumentError('Event must be an Event')
+		}
+	
+		return obj_event;
+	};
+
 	
 	/** Re-establishes references to complex members after they have been deserialized.
 	*
@@ -243,7 +323,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	}
 	
 	
-	/** Converts person to JSON object
+	/** Converts Person state to JSON object
 	*
 	* (Method realization required by ISerializable.)
 	*

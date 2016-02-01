@@ -19,9 +19,10 @@ app.EventView = function(Event_evt) {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _event = Event_evt,
+	var _event = Event_evt, // (Event) The event in the data model this EventView is observing
 	
-	_implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference); // (Event) The event in the data model this view is observing
+	_implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
+
 	
 
 	
@@ -29,64 +30,40 @@ app.EventView = function(Event_evt) {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
-	// none so far
+	/** Gets Event associated with this EventView. Event is read-only.
+	*
+	* This approach allows _event to be private, but methods using it to be defined on EventView.prototype
+	*
+	* @return {Event} Event The Event associated with this EventView
+	*	
+	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
+	*/
+	
+	this.event = function () {
+		
+		if(arguments.length === 0) { return _event;}
+		
+		else {
+			
+			throw new IllegalArgumentError('Event is read-only');
+		}
+	};
 
 	
 	/*----------------------------------------------------------------------------------------
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Render event to list item */
-	
-	this.render = function() {
-		
-		var listElmnt = document.createElement('li');
-		
-		listElmnt.classList.add('collection-item');
-		
-		listElmnt.id = 'event-list-id-' + _event.id();
-		
-		
-		var divElmnt = document.createElement('div');
-		
-		divElmnt.innerHTML = (_event.name() ? _event.name() : 'Unnamed event') + ' (' + _event.guests().length + ')';
-		
-		divElmnt.onclick = (function(e) {this.onclick(_event.id());}).bind(this);
-		
-		
-		var anchorElmnt = document.createElement('a');
-		
-		anchorElmnt.classList.add('secondary-content');
+	/** Render guests to list items
+	*
+	* Treat as if private to reduce complexity of public interface. Defined on EventView.prototype
+	* for memory efficiency.
+	*/
 
-		anchorElmnt.href = '#!';
+	app.EventView.prototype._renderGuestList = function() {
 		
-		
-		var iconElmnt = document.createElement('i');
-		
-		iconElmnt.classList.add('material-icons');
-		
-		iconElmnt.innerHTML = 'chevron_right';
+		var self = this;
 
-		
-		listElmnt.appendChild(divElmnt);
-		
-		//divElmnt.appendChild(spanElmnt);
-		
-		divElmnt.appendChild(anchorElmnt);
-		
-		anchorElmnt.appendChild(iconElmnt);
-		
-		
-		return listElmnt;
-		
-		//return '<li class="collection-item"><div>' + _event.name() + '<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>'
-	};
-		
-	
-	/** Render guests to list items */
-	
-	this.renderGuests = function() {
-		
 		var ULElmnt = document.createElement('ul');
 
 		ULElmnt.classList.add('collection');
@@ -105,7 +82,7 @@ app.EventView = function(Event_evt) {
 		
 		var listElmnt, avatarElmnt, spanElmnt, pElmnt, anchorElmnt, iconElmnt;
 
-		_event.guests().forEach(function(guest) {
+		this.event().guests().forEach(function(guest) {
 
 			listElmnt = document.createElement('li');
 			
@@ -114,6 +91,8 @@ app.EventView = function(Event_evt) {
 			listElmnt.classList.add('avatar');
 			
 			listElmnt.id = 'guest-list-id-' + guest.id();
+
+			listElmnt.onclick = (function(e) {self.onguestclick('guest ' + guest.id());});
 			
 			
 			if (guest.imgUrl()) { // use existing image
@@ -137,7 +116,6 @@ app.EventView = function(Event_evt) {
 
 				avatarElmnt.innerHTML = 'account_circle'
 			}
-
 
 
 			spanElmnt = document.createElement('span');
@@ -180,7 +158,6 @@ app.EventView = function(Event_evt) {
 		return ULElmnt;
 	};
 
-
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
@@ -209,17 +186,99 @@ app.EventView = function(Event_evt) {
 	};
 	
 
-	/** Respond to click on event in events list */
+	/** Respond to tap/click on event in events list */
 	
-	this.constructor.prototype.onclick = function(evt_id) {
+	app.EventView.prototype.onclick = function(evt_id) {
 		
 		console.log(evt_id);
 	};
 	
+
+	/** Respond to tap/click on event in guest list */
 	
+	app.EventView.prototype.onguestclick = function(guest_id) {
+		
+		console.log(guest_id);
+	};
+
+	
+	/** Render event */
+	
+	app.EventView.prototype.render = function(str_type) {
+		
+		switch (str_type) {
+
+			case 'event-list':
+
+				break;
+
+			case 'event-form':
+
+				break;
+
+			case 'guest-list':
+
+				return this._renderGuestList()
+
+				break;
+
+			default:
+
+				//throw new IllegalArgumentError('Cannot render "' + str_type + '"');
+
+				break;
+		}
+
+
+		var event = this.event();
+
+
+		var listElmnt = document.createElement('li');
+		
+		listElmnt.classList.add('collection-item');
+		
+		listElmnt.id = 'event-list-id-' + this.event().id();
+		
+		
+		var divElmnt = document.createElement('div');
+		
+		divElmnt.innerHTML = (event.name() ? event.name() : 'Unnamed event') + ' (' + event.guests().length + ')';
+		
+		divElmnt.onclick = (function(e) {this.onclick('event ' + event.id());}).bind(this);
+		
+		
+		var anchorElmnt = document.createElement('a');
+		
+		anchorElmnt.classList.add('secondary-content');
+
+		anchorElmnt.href = '#!';
+		
+		
+		var iconElmnt = document.createElement('i');
+		
+		iconElmnt.classList.add('material-icons');
+		
+		iconElmnt.innerHTML = 'chevron_right';
+
+		
+		listElmnt.appendChild(divElmnt);
+		
+		//divElmnt.appendChild(spanElmnt);
+		
+		divElmnt.appendChild(anchorElmnt);
+		
+		anchorElmnt.appendChild(iconElmnt);
+		
+		
+		return listElmnt;
+		
+		//return '<li class="collection-item"><div>' + _event.name() + '<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>'
+	};
+
+
 	/** Update event presentation when model has changed */
 	
-	this.constructor.prototype.update = function() {
+	app.EventView.prototype.update = function() {
 		
 		this.render();
 	};
@@ -240,7 +299,9 @@ app.EventView = function(Event_evt) {
 /*----------------------------------------------------------------------------------------
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
-		
+
+// none so far
+
 
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor

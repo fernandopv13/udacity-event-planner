@@ -14,7 +14,8 @@ function TestObserver() {
 	this.isInstanceOf = function(fnc) {return fnc === app.IObserver;};
 
 	this.update = function() {this.isUpdated = true;};
-};
+}
+
 
 describe('class Event', function(){
 	

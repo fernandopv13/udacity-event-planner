@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class Controller Implements IObserver IObservable
+* public class Controller Implements IObserver IObservable IViewable
 ******************************************************************************/
 
 var app = app || {};
@@ -19,9 +19,11 @@ app.Controller = function() {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _eventViews = [];
+	var _eventViews = [],
 
-	
+	_account;
+
+
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
@@ -35,11 +37,12 @@ app.Controller = function() {
 	
 	/** Render event list to the UI */
 	
-	this.updateEventList = function() {
+	this.renderEventList = function() {
 
 		var $list = $('#event-list');
 
-		var ULElmnt = document.createElement('ul');
+
+		var ULElmnt = document.createElement('ul'); // generate list
 		
 		ULElmnt.classList.add('collection');
 
@@ -56,12 +59,13 @@ app.Controller = function() {
 
 		
 
-		_eventViews.forEach(function(evt) {
+		_eventViews.forEach(function(evt) { // generate list items
 
 			ULElmnt.appendChild(evt.render());
 		});
 
-		$list.empty();
+		
+		$list.empty(); // update to DOM
 
 		$list.append(ULElmnt);
 	};
@@ -69,13 +73,13 @@ app.Controller = function() {
 
 	/** Render guest list to the UI */
 	
-	this.updateGuestList = function() {
+	this.renderGuestList = function() {
 
 		var $list = $('#guest-list');
 
 		$list.empty();
 
-		$list.append(_eventViews[0].renderGuests());
+		$list.append(_eventViews[0].render('guest-list')); //debug
 	}
 
 	
@@ -83,9 +87,9 @@ app.Controller = function() {
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
+							//any way in order to expose collection to default IObservable methods
 	
-	this.currentEvent;
 	
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
@@ -94,23 +98,27 @@ app.Controller = function() {
 	
 	app.Controller.prototype.init = function() {
 
-		// Bind EventView to every Event in data model
+		_account = app.data.accounts[0];
+
+		// Create and bind an EventView to every Event in the account
 		
-		var ev, objList = app.Event.registry.getObjectList();
+		var view, events = _account.events();//app.Event.registry.getObjectList();
 
-		for (var prop in objList) {
+		for (var prop in events) {
 
-			ev = new app.EventView(objList[prop]); // create eventview
+			view = new app.EventView(events[prop]); // create EventView
 			
-			objList[prop].registerObserver(ev); // bind to event
+			events[prop].registerObserver(view); // bind to Event
 			
-			_eventViews.push(ev); // add to list of eventviews
-		};
+			_eventViews.push(view); // add to list of EventViews
+
+			// later, register controller as observer of EventView
+		}
 	
-		this.updateEventList(); // refresh display of event list
+		this.renderEventList(); // refresh display of Event list
 
 
-		this.updateGuestList();
+		this.renderGuestList();
 	};
 
 	

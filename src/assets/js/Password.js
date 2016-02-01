@@ -15,7 +15,7 @@ var app = app || {}; // create a simple namespace for the app
 *
 * @return {Password} A password
 *
-* @param {String} address A string containing the password. If present, creates new Object from scratch.
+* @param {String} password A string containing the password. If present, creates new Object from scratch.
 *
 * @param {int} id An ID for a password retrieved from storage. If present, de-serializes password with original ID.
 *
@@ -59,7 +59,7 @@ app.Password = function(str_password) {
 		
 		else {
 			
-			throw new IllegalArgumentError('Illegal parameter: className is read-only');
+			throw new IllegalArgumentError('className is read-only');
 		}
 	};
 	
@@ -79,7 +79,7 @@ app.Password = function(str_password) {
 		
 		else {
 			
-			throw new IllegalArgumentError('Illegal parameter: id is read-only');
+			throw new IllegalArgumentError('id is read-only');
 		}
 	};
 	
@@ -124,7 +124,7 @@ app.Password = function(str_password) {
 								}
 							}
 							else {
-								throw new IllegalArgumentError('Password must contain numerical characters');
+								throw new IllegalArgumentError('Password must contain numbers');
 							}
 						}
 						else {

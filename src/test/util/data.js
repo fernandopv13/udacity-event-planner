@@ -13,11 +13,11 @@ app.data = {
 
 	people:
 	[
-		new app.Person('Peter'),
+		new app.Person('Peter Paulson'),
 		
-		new app.Person('Paul'),
+		new app.Person('Paul Peterson'),
 		
-		new app.Person('Mary')
+		new app.Person('Mary Nogales')
 	],
 
 	events:
@@ -82,3 +82,10 @@ app.data.events[2].capacity(100);
 app.data.events[2].addGuest(app.data.people[0]);
 app.data.events[2].addGuest(app.data.people[1]);
 app.data.events[2].addGuest(app.data.people[2]);
+
+app.data.accounts[0].addEvent(app.data.events[0]);
+app.data.accounts[0].addEvent(app.data.events[1]);
+app.data.accounts[0].addEvent(app.data.events[2]);
+app.data.accounts[0].addEvent(app.data.events[3]);
+app.data.accounts[0].addEvent(app.data.events[4]);
+app.data.accounts[0].addEvent(app.data.events[5]);

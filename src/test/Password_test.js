@@ -225,7 +225,7 @@ describe('class Password', function(){
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 		});
 		
