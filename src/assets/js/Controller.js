@@ -21,7 +21,9 @@ app.Controller = function() {
 	
 	var _eventViews = [],
 
-	_account;
+	_account,
+
+	_event; // the currently selected event
 
 
 	/*----------------------------------------------------------------------------------------
@@ -37,6 +39,7 @@ app.Controller = function() {
 	
 	/** Render event list to the UI */
 	
+	/*
 	this.renderEventList = function() {
 
 		var $list = $('#event-list');
@@ -69,7 +72,7 @@ app.Controller = function() {
 
 		$list.append(ULElmnt);
 	};
-
+	*/
 
 	/** Render guest list to the UI */
 	
@@ -102,7 +105,7 @@ app.Controller = function() {
 
 		// Create and bind an EventView to every Event in the account
 		
-		var view, events = _account.events();//app.Event.registry.getObjectList();
+		var view, events = _account.events();
 
 		for (var prop in events) {
 
@@ -115,10 +118,10 @@ app.Controller = function() {
 			// later, register controller as observer of EventView
 		}
 	
-		this.renderEventList(); // refresh display of Event list
+		app.EventView.renderList(_eventViews); // refresh display of Event list
 
 
-		this.renderGuestList();
+		//this.renderGuestList();
 	};
 
 	

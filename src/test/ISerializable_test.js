@@ -21,6 +21,8 @@ describe('Interface ISerializable', function(){
 		
 			expect(e.message).toEqual(app.ISerializable.constructorErrorMessage);
 		}
+
+		expect(true).toBe(true); // Jasmine may not see expects in trys
 	});
 	
 

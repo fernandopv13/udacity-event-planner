@@ -158,6 +158,50 @@ app.EventView = function(Event_evt) {
 		return ULElmnt;
 	};
 
+
+	/** Render event to event list item */
+
+	function _renderListItem(self) {
+
+		var listElmnt = document.createElement('li');
+		
+		listElmnt.classList.add('collection-item');
+		
+		listElmnt.id = 'event-list-id-' + _event.id();
+		
+		
+		var divElmnt = document.createElement('div');
+		
+		divElmnt.innerHTML = (_event.name() ? _event.name() : 'Unnamed event') + ' (' + _event.guests().length + ')';
+		
+		divElmnt.onclick = (function(e) {self.onclick('event ' + _event.id());}).bind(self);
+		
+		
+		var anchorElmnt = document.createElement('a');
+		
+		anchorElmnt.classList.add('secondary-content');
+
+		anchorElmnt.href = '#!';
+		
+		
+		var iconElmnt = document.createElement('i');
+		
+		iconElmnt.classList.add('material-icons');
+		
+		iconElmnt.innerHTML = 'chevron_right';
+
+		
+		listElmnt.appendChild(divElmnt);
+		
+		divElmnt.appendChild(anchorElmnt);
+		
+		anchorElmnt.appendChild(iconElmnt);
+		
+		
+		return listElmnt;
+	}
+
+
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
@@ -204,15 +248,17 @@ app.EventView = function(Event_evt) {
 	
 	/** Render event */
 	
-	app.EventView.prototype.render = function(str_type) {
+	this.render = function(str_type) {
 		
 		switch (str_type) {
 
-			case 'event-list':
+			case 'list-item':
+
+				return _renderListItem(this);
 
 				break;
 
-			case 'event-form':
+			case 'form':
 
 				break;
 
@@ -228,51 +274,6 @@ app.EventView = function(Event_evt) {
 
 				break;
 		}
-
-
-		var event = this.event();
-
-
-		var listElmnt = document.createElement('li');
-		
-		listElmnt.classList.add('collection-item');
-		
-		listElmnt.id = 'event-list-id-' + this.event().id();
-		
-		
-		var divElmnt = document.createElement('div');
-		
-		divElmnt.innerHTML = (event.name() ? event.name() : 'Unnamed event') + ' (' + event.guests().length + ')';
-		
-		divElmnt.onclick = (function(e) {this.onclick('event ' + event.id());}).bind(this);
-		
-		
-		var anchorElmnt = document.createElement('a');
-		
-		anchorElmnt.classList.add('secondary-content');
-
-		anchorElmnt.href = '#!';
-		
-		
-		var iconElmnt = document.createElement('i');
-		
-		iconElmnt.classList.add('material-icons');
-		
-		iconElmnt.innerHTML = 'chevron_right';
-
-		
-		listElmnt.appendChild(divElmnt);
-		
-		//divElmnt.appendChild(spanElmnt);
-		
-		divElmnt.appendChild(anchorElmnt);
-		
-		anchorElmnt.appendChild(iconElmnt);
-		
-		
-		return listElmnt;
-		
-		//return '<li class="collection-item"><div>' + _event.name() + '<a href="#!" class="secondary-content"><i class="material-icons">send</i></a></div></li>'
 	};
 
 
@@ -300,7 +301,44 @@ app.EventView = function(Event_evt) {
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 
-// none so far
+/** Renders collection of EventViews to list in UI
+*
+* Static method because no single instance has knowledge of the full collection.
+*
+* @param {Object} Eventviews Collection of eventviews to be rendered
+ */
+
+app.EventView.renderList = function(Object_eventviews) {
+	
+	var $list = $('#event-list');
+
+
+	var ULElmnt = document.createElement('ul'); // generate list
+	
+	ULElmnt.classList.add('collection');
+
+	ULElmnt.classList.add('with-header');
+
+
+	var headerElmnt = document.createElement('h4'); // generate header
+
+	headerElmnt.classList.add('collection-header');
+
+	headerElmnt.innerHTML = 'My Events';
+
+	ULElmnt.appendChild(headerElmnt);
+
+	
+	for (var prop in Object_eventviews) { // generate list items
+
+		ULElmnt.appendChild(Object_eventviews[prop].render('list-item'));
+	}
+
+	
+	$list.empty(); // update DOM
+
+	$list.append(ULElmnt);
+};
 
 
 /*----------------------------------------------------------------------------------------
