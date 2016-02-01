@@ -35,93 +35,16 @@ app.PersonView = function(Person_p) {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Render guests to list items */
+	// none so far
+
 	
-	_renderListItem = function(self) {
-		
-		var listElmnt = document.createElement('li');
-		
-		listElmnt.classList.add('collection-item');
-
-		listElmnt.classList.add('avatar');
-		
-		listElmnt.id = 'guest-list-id-' + _person.id();
-
-		listElmnt.onclick = (function(e) {self.onclick('guest ' + _person.id());}.bind(self));
-		
-		
-		var avatarElmnt;
-
-		if (_person.imgUrl()) { // use existing image
-
-			avatarElmnt = document.createElement('img');
-
-			avatarElmnt.classList.add('circle');
-
-			avatarElmnt.src = _person.imgUrl();
-
-			avatarElmnt.alt = _person.name();
-		}
-
-		else { // use generic avatar
-
-			avatarElmnt = document.createElement('i');
-
-			avatarElmnt.classList.add('material-icons');
-
-			avatarElmnt.classList.add('circle');
-
-			avatarElmnt.innerHTML = 'account_circle'
-		}
-
-
-		var spanElmnt = document.createElement('span');
-		
-		spanElmnt.innerHTML = _person.name() ? _person.name() : '';
-		
-		
-		var pElmnt = document.createElement('p');
-
-		pElmnt.innerHTML = _person.email().address() ? _person.email().address() : '';
-
-
-		var anchorElmnt = document.createElement('a');
-		
-		anchorElmnt.classList.add('secondary-content');
-
-		anchorElmnt.href = '#!';
-		
-		
-		var iconElmnt = document.createElement('i');
-		
-		iconElmnt.classList.add('material-icons');
-		
-		iconElmnt.innerHTML = 'chevron_right';
-
-		
-		listElmnt.appendChild(avatarElmnt);
-
-		listElmnt.appendChild(spanElmnt);
-
-		listElmnt.appendChild(pElmnt);
-
-		listElmnt.appendChild(anchorElmnt);
-		
-		anchorElmnt.appendChild(iconElmnt);
-
-
-		return listElmnt;
-	};
-
-
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
 	// none so far
 	
-	
-	
+		
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
@@ -144,34 +67,17 @@ app.PersonView = function(Person_p) {
 
 	/** Respond to tap/click on event in events list */
 	
-	app.PersonView.prototype.onclick = function(person_id) {
+	this.onclick = function(int_personId) {
 		
-		console.log(person_id);
+		app.controller.onGuestSelected(int_personId);
 	};
 	
 
 	/** Render person */
 	
-	this.render = function(str_type) {
+	this.render = function() {
 		
-		switch (str_type) {
-
-			case 'list-item':
-
-				return _renderListItem(this);
-
-				break;
-
-			case 'form':
-
-				break;
-
-			default:
-
-				//throw new IllegalArgumentError('Cannot render "' + str_type + '"');
-
-				break;
-		}
+		// this is where we build the form
 	};
 
 
@@ -206,11 +112,85 @@ app.PersonView = function(Person_p) {
 * @param {Object} PersonViews Collection of personviews to be rendered
  */
 
-app.PersonView.render = function(Object_personviews) {
+app.PersonView.renderList = function(Event_event) {
 	
-	var $list = $('#guest-list');
+	function renderListItem(Person_guest) {
+		
+		var listElmnt = document.createElement('li');
+		
+		listElmnt.classList.add('collection-item');
+
+		listElmnt.classList.add('avatar');
+		
+		listElmnt.id = 'guest-list-id-' + Person_guest.id();
+
+		listElmnt.onclick = (function(e) {app.controller.onGuestSelected(Person_guest.id());});
+		
+		
+		var avatarElmnt;
+
+		if (Person_guest.imgUrl()) { // use existing image
+
+			avatarElmnt = document.createElement('img');
+
+			avatarElmnt.classList.add('circle');
+
+			avatarElmnt.src = Person_guest.imgUrl();
+
+			avatarElmnt.alt = Person_guest.name();
+		}
+
+		else { // use generic avatar
+
+			avatarElmnt = document.createElement('i');
+
+			avatarElmnt.classList.add('material-icons');
+
+			avatarElmnt.classList.add('circle');
+
+			avatarElmnt.innerHTML = 'account_circle'
+		}
 
 
+		var spanElmnt = document.createElement('span');
+		
+		spanElmnt.innerHTML = Person_guest.name() ? Person_guest.name() : '';
+		
+		
+		var pElmnt = document.createElement('p');
+
+		pElmnt.innerHTML = Person_guest.email() && Person_guest.email().address() ? Person_guest.email().address() : '';
+
+
+		var anchorElmnt = document.createElement('a');
+		
+		anchorElmnt.classList.add('secondary-content');
+
+		anchorElmnt.href = '#!';
+		
+		
+		var iconElmnt = document.createElement('i');
+		
+		iconElmnt.classList.add('material-icons');
+		
+		iconElmnt.innerHTML = 'chevron_right';
+
+		
+		listElmnt.appendChild(avatarElmnt);
+
+		listElmnt.appendChild(spanElmnt);
+
+		listElmnt.appendChild(pElmnt);
+
+		listElmnt.appendChild(anchorElmnt);
+		
+		anchorElmnt.appendChild(iconElmnt);
+
+
+		return listElmnt;
+	};
+
+	
 	var ULElmnt = document.createElement('ul'); // generate list
 
 	ULElmnt.classList.add('collection');
@@ -227,13 +207,17 @@ app.PersonView.render = function(Object_personviews) {
 	ULElmnt.appendChild(headerElmnt);
 
 	
-	for (var prop in Object_personviews) { // generate list items
+	var guests = Event_event.guests()
 
-		ULElmnt.appendChild(Object_personviews[prop].render('list-item'));
+	for (var prop in guests) { // generate list items
+
+		ULElmnt.appendChild(renderListItem(guests[prop]));
 	}
 
 	
-	$list.empty(); // update DOM
+	var $list = $('#guest-list');  // update DOM
+
+	$list.empty();
 
 	$list.append(ULElmnt);
 };
@@ -243,6 +227,6 @@ app.PersonView.render = function(Object_personviews) {
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.EventView);
+void app.InterfaceHelper.mixInto(app.IObserver, app.PersonView);
 
-void app.InterfaceHelper.mixInto(app.IViewable, app.EventView);
+void app.InterfaceHelper.mixInto(app.IViewable, app.PersonView);

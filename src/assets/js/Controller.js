@@ -21,9 +21,13 @@ app.Controller = function() {
 	
 	var _eventViews = [],
 
-	_account, // the currently active account
+	_personViews = [],
 
-	_event; // the currently active event
+	_selectedAccount = null, // the currently selected account, or null if none selected
+
+	_selectedEvent = null, // the currently selected event, or null if none selected
+
+	_selectedGuest = null; // the currently selected guest, or null if none selected
 
 
 	/*----------------------------------------------------------------------------------------
@@ -61,32 +65,51 @@ app.Controller = function() {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
+	this.onAccountSelected = function(int_accountId) {
+
+		_selectedAccount = app.Account.registry.getObjectById(int_accountId);
+
+		app.EventView.renderList(_selectedAccount);
+	};
+
+
+	this.onEventSelected = function(int_eventId) {
+
+		_selectedEvent = app.Event.registry.getObjectById(int_eventId);
+
+		app.PersonView.renderList(_selectedEvent);
+
+		console.log(int_eventId);
+
+		
+
+		// bind event form to event, display form
+	};
+
+
+	this.onGuestListSelected = function() {
+
+		app.personView.render(_selectedEvent.guests());
+
+		// bind guest form to event, display form
+	};
+
+
+	this.onGuestSelected = function(int_guestId) {
+
+		_selectedGuest = app.Person.registry.getObjectById(int_guestId);
+
+		console.log(int_guestId);
+
+		// bind guest form to event, display form
+	};
+
 	
 	app.Controller.prototype.init = function() {
 
-		_account = app.data.accounts[0];
+		this.onAccountSelected(0);
 
-		// Create and bind an EventView to every Event in the account
-		
-		var view, events = _account.events();
-
-		for (var prop in events) {
-
-			view = new app.EventView(events[prop]); // create EventView
-			
-			events[prop].registerObserver(view); // bind to Event
-			
-			_eventViews.push(view); // add to list of EventViews
-
-			// later, register controller as observer of EventView
-		}
-	
-		app.EventView.render(_eventViews); // refresh display of Event list
-
-
-		_event = _account.events()[0];
-
-		
+		this.onEventSelected(0);
 	};
 
 	

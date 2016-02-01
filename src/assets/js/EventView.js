@@ -13,17 +13,15 @@ var app = app || {};
 * @author Ulrik H. Gade, January 2016
 */
 
-app.EventView = function(Event_evt) {
+app.EventView = function() {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _event = Event_evt, // (Event) The event in the data model this EventView is observing
+	var _event, // (Event) The event in the data model this EventView is observing
 	
 	_implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
-
-	
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -37,163 +35,7 @@ app.EventView = function(Event_evt) {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Render guests to list items
-	*
-	* Treat as if private to reduce complexity of public interface. Defined on EventView.prototype
-	* for memory efficiency.
-	*/
-
-	app.EventView.prototype._renderGuestList = function() {
-		
-		var self = this;
-
-		var ULElmnt = document.createElement('ul');
-
-		ULElmnt.classList.add('collection');
-
-		ULElmnt.classList.add('with-header');
-
-
-		var headerElmnt = document.createElement('h4');
-
-		headerElmnt.classList.add('collection-header');
-
-		headerElmnt.innerHTML = 'Guest List';
-
-		ULElmnt.appendChild(headerElmnt);
-
-		
-		var listElmnt, avatarElmnt, spanElmnt, pElmnt, anchorElmnt, iconElmnt;
-
-		this.event().guests().forEach(function(guest) {
-
-			listElmnt = document.createElement('li');
-			
-			listElmnt.classList.add('collection-item');
-
-			listElmnt.classList.add('avatar');
-			
-			listElmnt.id = 'guest-list-id-' + guest.id();
-
-			listElmnt.onclick = (function(e) {self.onguestclick('guest ' + guest.id());});
-			
-			
-			if (guest.imgUrl()) { // use existing image
-
-				avatarElmnt = document.createElement('img');
-
-				avatarElmnt.classList.add('circle');
-
-				avatarElmnt.src = guest.imgUrl();
-
-				avatarElmnt.alt = guest.name();
-			}
-
-			else { // use generic avatar
-
-				avatarElmnt = document.createElement('i');
-
-				avatarElmnt.classList.add('material-icons');
-
-				avatarElmnt.classList.add('circle');
-
-				avatarElmnt.innerHTML = 'account_circle'
-			}
-
-
-			spanElmnt = document.createElement('span');
-			
-			spanElmnt.innerHTML = guest.name() ? guest.name() : '';
-			
-			
-			pElmnt = document.createElement('p');
-
-			pElmnt.innerHTML = guest.email().address() ? guest.email().address() : '';
-
-
-			anchorElmnt = document.createElement('a');
-			
-			anchorElmnt.classList.add('secondary-content');
-
-			anchorElmnt.href = '#!';
-			
-			
-			iconElmnt = document.createElement('i');
-			
-			iconElmnt.classList.add('material-icons');
-			
-			iconElmnt.innerHTML = 'chevron_right';
-
-			
-			listElmnt.appendChild(avatarElmnt);
-
-			listElmnt.appendChild(spanElmnt);
-
-			listElmnt.appendChild(pElmnt);
-
-			listElmnt.appendChild(anchorElmnt);
-			
-			anchorElmnt.appendChild(iconElmnt);
-
-			ULElmnt.appendChild(listElmnt);
-		});
-
-		return ULElmnt;
-	};
-
-
-	function renderGuestList() {
-
-		var $list = $('#guest-list');
-
-		$list.empty();
-
-		$list.append(_event.guests().render('list-item'));
-	}
-
-
-	/** Render to event list item */
-
-	function _renderListItem(self) {
-
-		var listElmnt = document.createElement('li');
-		
-		listElmnt.classList.add('collection-item');
-		
-		listElmnt.id = 'event-list-id-' + _event.id();
-		
-		
-		var divElmnt = document.createElement('div');
-		
-		divElmnt.innerHTML = (_event.name() ? _event.name() : 'Unnamed event') + ' (' + _event.guests().length + ')';
-		
-		divElmnt.onclick = (function(e) {self.onclick('event ' + _event.id());}).bind(self);
-		
-		
-		var anchorElmnt = document.createElement('a');
-		
-		anchorElmnt.classList.add('secondary-content');
-
-		anchorElmnt.href = '#!';
-		
-		
-		var iconElmnt = document.createElement('i');
-		
-		iconElmnt.classList.add('material-icons');
-		
-		iconElmnt.innerHTML = 'chevron_right';
-
-		
-		listElmnt.appendChild(divElmnt);
-		
-		divElmnt.appendChild(anchorElmnt);
-		
-		anchorElmnt.appendChild(iconElmnt);
-		
-		
-		return listElmnt;
-	}
-
+	// none so far
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
@@ -225,48 +67,17 @@ app.EventView = function(Event_evt) {
 
 	/** Respond to tap/click on event in events list */
 	
-	app.EventView.prototype.onclick = function(evt_id) {
+	app.EventView.prototype.onclick = function(int_eventId) {
 		
-		console.log(evt_id);
+		app.controller.onEventSelected(int_eventId);
 	};
 	
 
-	/** Respond to tap/click on event in guest list */
-	
-	app.EventView.prototype.onguestclick = function(guest_id) {
-		
-		console.log(guest_id);
-	};
-
-	
 	/** Render event */
 	
-	this.render = function(str_type) {
+	this.render = function() {
 		
-		switch (str_type) {
-
-			case 'list-item':
-
-				return _renderListItem(this);
-
-				break;
-
-			case 'form':
-
-				break;
-
-			case 'guest-list':
-
-				return this._renderGuestList()
-
-				break;
-
-			default:
-
-				//throw new IllegalArgumentError('Cannot render "' + str_type + '"');
-
-				break;
-		}
+		// this is where we render the form
 	};
 
 
@@ -294,18 +105,56 @@ app.EventView = function(Event_evt) {
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 
-/** Renders collection of EventViews to list in UI
+/** Renders collection of events in account to list in UI
 *
 * Static method because no single instance has knowledge of the full collection.
 *
-* @param {Object} Eventviews Collection of eventviews to be rendered
+* @param {Account} Account The currently selected Account
  */
 
-app.EventView.render = function(Object_eventviews) {
+app.EventView.renderList = function(Account_account) {
 	
-	var $list = $('#event-list');
+	function renderListItem(Event_event) {
 
+		var listElmnt = document.createElement('li');
+		
+		listElmnt.classList.add('collection-item');
+		
+		listElmnt.id = 'event-list-id-' + Event_event.id();
+		
+		
+		var divElmnt = document.createElement('div');
+		
+		divElmnt.innerHTML = (Event_event.name() ? Event_event.name() : 'Unnamed event') + ' (' + Event_event.guests().length + ')';
+		
+		divElmnt.onclick = (function(e) {app.controller.onEventSelected(Event_event.id());});
+		
+		
+		var anchorElmnt = document.createElement('a');
+		
+		anchorElmnt.classList.add('secondary-content');
 
+		anchorElmnt.href = '#!';
+		
+		
+		var iconElmnt = document.createElement('i');
+		
+		iconElmnt.classList.add('material-icons');
+		
+		iconElmnt.innerHTML = 'chevron_right';
+
+		
+		listElmnt.appendChild(divElmnt);
+		
+		divElmnt.appendChild(anchorElmnt);
+		
+		anchorElmnt.appendChild(iconElmnt);
+		
+		
+		return listElmnt;
+	}
+
+	
 	var ULElmnt = document.createElement('ul'); // generate list
 	
 	ULElmnt.classList.add('collection');
@@ -322,13 +171,17 @@ app.EventView.render = function(Object_eventviews) {
 	ULElmnt.appendChild(headerElmnt);
 
 	
-	for (var prop in Object_eventviews) { // generate list items
+	var events = Account_account.events() // generate list items
+	
+	for (var prop in events) {
 
-		ULElmnt.appendChild(Object_eventviews[prop].render('list-item'));
+		ULElmnt.appendChild(renderListItem(events[prop]));
 	}
 
 	
-	$list.empty(); // update DOM
+	var $list = $('#event-list'); // update DOM
+
+	$list.empty();
 
 	$list.append(ULElmnt);
 };
