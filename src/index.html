@@ -10,12 +10,16 @@
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		
 		<!--Import materialize.css-->
-		<link type="text/css" rel="stylesheet" href="assets/css/materialize-0.97.5.min.css"  media="screen,projection"/>
+		<link type="text/css" rel="stylesheet" href="assets/css/materialize.css"  media="screen,projection"/>
 
 		<!--Let browser know website is optimized for mobile-->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		
-		
+		<style>
+
+			
+
+		</style>
 		
 		
 	</head>
@@ -26,29 +30,37 @@
 
 		<div id="guest-list" class="row"></div>
 
-		<div id="event-form" style="display:block;">
-			<div class="row">
-				<form class="col s12">
-					<h4 class="collection-header">Barts Big Bash</h4>
+		<div id="event-form" class="row">
+			<form class="col s12">
+				<!--h4 class="collection-header">Barts Big Bash</h4-->
+				<div class="row">
 					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-name" type="text" class="validate" required>
-							<label for="event-name">Event Name</label>
+							<label for="event-name" data-error="Please enter an event name" style="width:100%;">Event Name</label>
 						</div>
+					</div>
+					<div class="row">
 						<div class="input-field col s12">
-							<input id="event-location" type="text" class="validate">
+							<input id="event-location" type="text">
 							<label for="event-location">Location</label>
 						</div>
+					</div>
+					<div class="row">
 						<div class="input-field col s12">
-							<input id="event-start-date" type="date" class="datepicker">
-							<label for="event-start-date">Starts</label>
+							<input id="event-start-date" type="date" class="datepicker" required>
+							<label for="event-start-date" data-error="Please enter a start date" style="width:100%;">Starts</label>
 						</div>
+					</div>
+					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-end-date" type="date" class="datepicker">
-							<label for="event-end-date">Ends</label>
+							<label for="event-end-date" data-error="wrong" style="width:100%;">Ends</label>
 						</div>
+					</div>
+					<div class="row">
 						<div class="input-field col s12">
-							<input id="event-type" list="event-types" type="text" class="validate">
+							<input id="event-type" list="event-types" type="text">
 							<label for="event-type">Event Type</label>
 							<datalist id="event-types">
 								<option value="Anniversary"></option>
@@ -59,23 +71,56 @@
 								<option value="Wedding"></option>
 							</datalist>
 						</div>
+					</div>
+					<div class="row">
 						<div class="input-field col s12">
-							<input id="event-capacity" placeholder="Max. number of guests" type="number" min="0" step="1" value="50" class="validate">
-							<label for="event-capacity" class="active">Capacity</label>
+							<input id="event-capacity" placeholder="Max. number of guests" type="number" min="0" step="1" value="50" class="validate" required>
+							<label for="event-capacity" data-error="Please enter capacity" class="active" style="width:100%;">Capacity</label>
 						</div>
+					</div>
+					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-host" type="text" class="validate">
 							<label for="event-host">Host</label>
 						</div>
+					</div>
+					<div class="row">
 						<div class="input-field col s12">
-							<textarea id="event-description" class="materialize-textarea"></textarea>
+							<textarea id="event-description" class="materialize-textarea" maxlength="250"></textarea>
 							<label for="event-description">Description</label>
 						</div>
+					</div>
+					<div class="row">
 						<a id="event-submit" class="waves-effect waves-light btn"><i class="material-icons left">check</i>Done</a>
 					</div>
-				</form>
-			</div>
+				</div>
+			</form>
 		</div>
+
+		<script>
+			void document.getElementById('event-capacity').addEventListener('keyup', function(event) {
+
+				if (event.target.validity.rangeUnderflow) {
+
+					event.target.setCustomValidity('Capacity cannot be negative');
+				}
+				/*
+				else {
+
+					event.target.setCustomValidity('');
+				}
+				*/
+			});
+
+			var eventStartDate = document.getElementById("event-start-date");
+			var eventEndDate = document.getElementById("event-end-date");
+
+			eventEndDate.addEventListener('change', function(event) {
+
+				console.log(event);
+			});
+
+		</script>
 
 		<!-- Library source files -->
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->

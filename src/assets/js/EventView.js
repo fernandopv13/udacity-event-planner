@@ -127,7 +127,7 @@ app.EventView.renderList = function(Account_account) {
 		
 		divElmnt.innerHTML = (Event_event.name() ? Event_event.name() : 'Unnamed event') + ' (' + Event_event.guests().length + ')';
 		
-		divElmnt.onclick = (function(e) {app.controller.onEventSelected(Event_event.id());});
+		divElmnt.onclick = function(e) {app.controller.onEventSelected(Event_event.id());};
 		
 		
 		var anchorElmnt = document.createElement('a');

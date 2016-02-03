@@ -39,7 +39,7 @@ describe('class EventView', function(){
 		});
 
 		
-		it('can render itself into list item format', function() {
+		xit('can render itself into list item format', function() {
 
 			var el = testView.render();
 			

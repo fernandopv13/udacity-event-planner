@@ -59,7 +59,7 @@ describe('class Event', function(){
 				
 				'Mood enhancer',
 				
-				new Date(),
+				new Date(0),
 				
 				new Date(),
 				
@@ -145,7 +145,7 @@ describe('class Event', function(){
 		
 		it('can set and get its start date and time (using Date)', function() {
 		
-			var testDate = new Date();
+			var testDate = new Date(0);
 			
 			testEvent.start(testDate);
 			
@@ -154,7 +154,7 @@ describe('class Event', function(){
 		
 		it('can set and get its start date and time (using string)', function() {
 		
-			var testDate = new Date().toString();
+			var testDate = new Date(0).toString();
 			
 			testEvent.start(testDate);
 			
@@ -181,7 +181,7 @@ describe('class Event', function(){
 			expect(testEvent.start()).toEqual(oldDate);
 		});
 		
-		
+
 		it('can set and get its end date and time (using Date)', function() {
 		
 			var testDate = new Date();
@@ -203,7 +203,7 @@ describe('class Event', function(){
 		
 		it('rejects attempt to set end that is not a valid Date (object or string)', function() {
 		
-			var oldDate = testEvent.start();
+			var oldDate = testEvent.end();
 			
 			var testDate = 'not a valid Date (object or string)';
 			
@@ -215,13 +215,53 @@ describe('class Event', function(){
 			catch(e)
 			{
 				
-				expect(e.message).toBe('End must be Date');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 			
 			expect(testEvent.end()).toEqual(oldDate);
 		});
 
 		
+		it('rejects attempt to set end date before start date', function() {
+
+			testEvent.start(new Date(200));
+
+			try {
+
+				testEvent.end(new Date(100));
+			}
+
+			catch (e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+			expect(true).toBe(true); // Jasmine may not notice expects in trys
+		});
+
+
+		it('rejects attempt to set start date after end date', function() {
+
+			console.log('test start');
+
+			testEvent.end(new Date(0));
+
+			try {
+
+				testEvent.start(new Date());
+			}
+
+			catch (e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+			expect(true).toBe(true); // Jasmine may not notice expects in trys
+
+			console.log('test end');
+		});
+
+
 		it('can set and get its capacity (i.e. max no of guests)', function() {
 		
 			testEvent.capacity(100);
@@ -774,7 +814,7 @@ describe('class Event', function(){
 		});
 		
 		
-		xit('can render itself to a DIV', function(){
+		it('can render itself to a DIV', function(){
 			
 			
 		});

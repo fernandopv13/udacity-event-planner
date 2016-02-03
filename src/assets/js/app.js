@@ -20,6 +20,8 @@ var app = (function(self) {
 	
 	var _prefs = { // list of prefs, private so we can control access
 		
+		defaultEventCapacity: 50,
+
 		isLocalStorageAllowed: false,	
 	
 		localStoragePrefix: 'dk.ulrikgade.udacity.srwebdev.meetup-app.'
@@ -29,7 +31,31 @@ var app = (function(self) {
 
 	self.prefs = { // public accessors for preferences, using unified accessor pattern
 		
-		
+		/** Gets or sets default event capacity */
+
+		defaultEventCapacity: function(int_capacity) {
+
+			if (arguments.length === 1) {
+
+				if (int_capacity === parseInt(int_capacity)) {
+
+					if (int_capacity > -1) {
+
+						_prefs.defaultEventCapacity = int_capacity;
+					}
+					else {
+						throw new RangeError('Capacity cannot be negative');
+					}
+				}
+				else {
+					throw new IllegalArgumentError('Capacity must be an integer');
+				}
+			}
+
+			return _prefs.defaultEventCapacity;
+		},
+
+
 		/** Gets or sets permission to store data locally */
 		
 		isLocalStorageAllowed: function(bool_isAllowed) {

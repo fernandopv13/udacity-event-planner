@@ -21,8 +21,6 @@ app.Controller = function() {
 	
 	var _eventViews = [],
 
-	_personViews = [],
-
 	_selectedAccount = null, // the currently selected account, or null if none selected
 
 	_selectedEvent = null, // the currently selected event, or null if none selected
@@ -78,10 +76,6 @@ app.Controller = function() {
 		_selectedEvent = app.Event.registry.getObjectById(int_eventId);
 
 		app.PersonView.renderList(_selectedEvent);
-
-		console.log(int_eventId);
-
-		
 
 		// bind event form to event, display form
 	};

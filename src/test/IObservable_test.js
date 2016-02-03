@@ -27,7 +27,9 @@ describe('Interface IObservable', function(){
 
 	beforeEach(function() {
 
-		testObservable = new (function() {this.observers = []})();
+		//testObservable = new (function() {this.observers = []})();
+
+		testObservable = {observers: []};
 
 		testObserver = new TestObserver();
 	});

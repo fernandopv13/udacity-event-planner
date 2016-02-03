@@ -124,7 +124,7 @@ app.PersonView.renderList = function(Event_event) {
 		
 		listElmnt.id = 'guest-list-id-' + Person_guest.id();
 
-		listElmnt.onclick = (function(e) {app.controller.onGuestSelected(Person_guest.id());});
+		listElmnt.onclick = function(e) {app.controller.onGuestSelected(Person_guest.id());};
 		
 		
 		var avatarElmnt;
@@ -188,7 +188,7 @@ app.PersonView.renderList = function(Event_event) {
 
 
 		return listElmnt;
-	};
+	}
 
 	
 	var ULElmnt = document.createElement('ul'); // generate list

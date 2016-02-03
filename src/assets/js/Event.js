@@ -154,9 +154,11 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	*
 	* @param {Date} end The date and time when the event ends (Date representation)
 	*
-	* @param {String} start The date and time when the event starts (String representation)
+	* @param {String} end The date and time when the event ends (String representation)
 	*
 	* @return {Date} The date and time when the event ends
+	*
+	* @throws {IllegalArgumentError} If end is not a date, or end is before start
 	*/
 	
 	this.end = function(date_end) {
@@ -165,19 +167,24 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			
 			if (date_end !== null) {
 				
-				if (date_end.constructor === Date) { // date as Date; default form
+				if (date_end.constructor === Date || !isNaN(Date.parse(date_end))) { // date as Date or string (mostly used to parse in from JSON)
 					
-					_end = date_end;
+					date_end = date_end.constructor === Date ? date_end : new Date(date_end);
+
+					if (date_end >= _start) { // false if _start is undefined
+
+						_end = date_end;
+					}
+
+					else {
+
+						throw new IllegalArgumentError('End must be after start');
+					}
 				}
-				
-				else if (!isNaN(Date.parse(date_end))) { // date as string; mostly used to parse in from JSON
-					
-					_end = new Date(date_end);
-				}
-				
+
 				else {
 					
-					throw new TypeError('End must be Date');
+					throw new IllegalArgumentError('End must be Date');
 				}
 			} // silently ignore null
 		}
@@ -315,19 +322,28 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			
 			if (date_start !== null) {
 				
-				if (date_start.constructor === Date) { // date as Date; default form
+				if (date_start.constructor === Date || !isNaN(Date.parse(date_start))) { // date as Date or string (mostly used to parse in from JSONdefault)
 					
-					_start = date_start;
-				}
-				
-				else if (!isNaN(Date.parse(date_start))) { // date as string; mostly used to parse in from JSON
-					
-					_start = new Date(date_start);
+					date_start = date_start.constructor === Date ? date_start : new Date(date_start);
+
+					console.log(date_start);
+
+					console.log(date_end);
+
+					if (_end === undefined || date_start <= _end) {
+
+						_start = date_start;
+					}
+
+					else {
+
+						throw new IllegalArgumentError('Start must be before end');
+					}
 				}
 				
 				else {
 					
-					throw new TypeError('Start must be Date');
+					throw new IllegalArgumentError('Start must be Date');
 				}
 			} // silently ignore null
 		}
