@@ -48,14 +48,14 @@
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<input id="event-start-date" type="date" class="datepicker" required>
+							<input id="event-start-date" type="date" class="datepicker validate" required>
 							<label for="event-start-date" data-error="Please enter a start date" style="width:100%;">Starts</label>
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-end-date" type="date" class="datepicker">
-							<label for="event-end-date" data-error="wrong" style="width:100%;">Ends</label>
+							<label for="event-end-date" data-error="End date cannot be before start date" style="width:100%;">Ends</label>
 						</div>
 					</div>
 					<div class="row">
@@ -91,36 +91,13 @@
 						</div>
 					</div>
 					<div class="row">
-						<a id="event-submit" class="waves-effect waves-light btn"><i class="material-icons left">check</i>Done</a>
+						<a id="event-form-submit" class="waves-effect waves-light btn"><i class="material-icons left">check</i>Done</a>
 					</div>
 				</div>
 			</form>
 		</div>
 
-		<script>
-			void document.getElementById('event-capacity').addEventListener('keyup', function(event) {
-
-				if (event.target.validity.rangeUnderflow) {
-
-					event.target.setCustomValidity('Capacity cannot be negative');
-				}
-				/*
-				else {
-
-					event.target.setCustomValidity('');
-				}
-				*/
-			});
-
-			var eventStartDate = document.getElementById("event-start-date");
-			var eventEndDate = document.getElementById("event-end-date");
-
-			eventEndDate.addEventListener('change', function(event) {
-
-				console.log(event);
-			});
-
-		</script>
+		
 
 		<!-- Library source files -->
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
@@ -149,6 +126,70 @@
 		<script src="assets/js/app.js"></script>
 		<script src="test/util/data.js"></script>
 		
+
+		<script>
+
+			/** Interactive validation of start/end date fields */
+
+			(function() { // start date
+							
+				$('#event-start-date').pickadate({
+					
+					onClose: function() {
+
+						var $start = $('#event-start-date'), 
+
+						end = $('#event-end-date').val();
+						
+						
+						if (!isNaN(Date.parse(end))) { // end date exists
+
+							if (new Date($start.val()) > new Date(end)) { // start is after end
+
+								$('#event-start-date')[0].labels[0].dataset.error = 'Start date cannot be after end date';
+
+								$('#event-start-date')[0].classList.add('invalid');
+							}
+						}
+					}
+				});
+			})();
+			
+			/* Interactive validation of capacity field */
+
+			void document.getElementById('event-capacity').addEventListener('keyup', function(event) {
+
+				if (event.target.value === '') { // empty
+
+					event.target.labels[0].dataset.error = 'Please enter capacity';
+
+					event.target.classList.add('invalid');
+				}
+
+				// testing for non-number entry doesn't work, keypress doesn't fire
+
+				else if (event.target.validity.rangeUnderflow) { // negative number
+
+					event.target.labels[0].dataset.error = 'Capacity cannot be negative';
+
+					event.target.classList.add('invalid');
+				}
+				
+				else { // valid
+
+					event.target.classList.remove('invalid');
+
+					event.target.labels[0].dataset.error = 'Please enter capacity';
+				}
+			});
+
+			void document.getElementById("event-start-date").addEventListener('change', function(event) {
+
+				console.log(event);
+			});
+
+		</script>
+
 		<script type="text/javascript">
 			window.onload = function() {
 				app.init();
