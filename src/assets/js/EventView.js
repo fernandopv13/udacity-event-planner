@@ -188,6 +188,156 @@ app.EventView.renderList = function(Account_account) {
 
 
 /*----------------------------------------------------------------------------------------
+* Public static methods
+*---------------------------------------------------------------------------------------*/
+
+/* Event handler for interactive validation of capacity field */
+
+app.EventView.validateCapacity = function(event) {
+	
+	if (event.target.value === '') { // empty
+
+		event.target.labels[0].dataset.error = 'Please enter capacity'; // can't get jQuery.data() to work
+
+		event.target.classList.add('invalid');
+	}
+
+	// no need to test for non-numbers
+
+	else if (event.target.validity.rangeUnderflow) { // negative number
+
+		event.target.labels[0].dataset.error = 'Capacity cannot be negative';
+
+		event.target.classList.add('invalid');
+	}
+	
+	else { // valid
+
+		event.target.classList.remove('invalid');
+
+		event.target.labels[0].dataset.error = 'Please enter capacity';
+	}
+}
+
+
+/** Event handler for interactive validation of start date field */
+
+app.EventView.validateEndDate = function() {
+
+	var $start = $('#event-start-date'),
+
+	start = $start.val(),
+
+	$end = $('#event-end-date'),
+
+	end = $end.val(),
+
+	$err = $('#event-end-date-error');
+	
+	
+	if (!isNaN(Date.parse(start))) { // end date exists
+
+		if (new Date(end) < new Date(start)) { // end is before start
+
+			// Materialize's validation message won't display, so rolling my own
+
+			$err.html('End date cannot be before start date');
+
+			$err.css('display', 'block');
+
+			$end.addClass('invalid');
+		}
+
+		else { // reset
+
+			$err.css('display', 'none');
+
+			$end.removeClass('invalid');
+		}
+
+	}
+
+	else { // reset
+
+		$err.css('display', 'none');
+
+		$end.removeClass('invalid');
+	}
+}
+
+
+/* Event handler for interactive validation of event name field */
+
+app.EventView.validateName = function(event) {
+
+	if (event.target.value === '') { // empty
+
+		//event.target.labels[0].dataset.error = 'Please enter event name';
+
+		event.target.classList.add('invalid');
+	}
+
+	else {
+
+		event.target.classList.remove('invalid');
+	}
+}
+
+
+/** Event handler for interactive validation of start date field */
+
+app.EventView.validateStartDate = function() {
+
+	var $start = $('#event-start-date'),
+
+	start = $start.val(),
+
+	end = $('#event-end-date').val(),
+
+	$err = $('#event-start-date-error');
+	
+	
+	if (!isNaN(Date.parse(end))) { // end date exists
+
+		if (new Date(start) > new Date(end)) { // start is after end
+
+			// Materialize's validation message won't display, so rolling my own
+
+			$err.html('Start date cannot be after end date');
+
+			$err.css('display', 'block');
+
+			$start.addClass('invalid');
+		}
+
+		else { // reset
+
+			$err.css('display', 'none');
+
+			$start.removeClass('invalid');
+		}
+
+	}
+
+	else if (start === '') { // empty
+
+			$err.html('Please enter start date');
+
+			$err.css('display', 'block');
+
+			$start.addClass('invalid');
+	}
+
+	else { // reset
+
+		$err.css('display', 'none');
+
+		$start.removeClass('invalid');
+	}
+}
+
+
+/*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 

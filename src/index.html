@@ -17,7 +17,19 @@
 		
 		<style>
 
-			
+			.customValidate {
+				color: #F44336;
+				opacity: 1;
+				font-size: 0.8rem;
+				top: 0.8rem;
+				left: 0.75rem;
+				transition: .2s ease-out;
+				line-height: 1.5;
+				font-family: "Roboto", sans-serif;
+			    font-weight: normal;
+			    width: 100%;
+			    display: none;
+			}
 
 		</style>
 		
@@ -48,14 +60,16 @@
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<input id="event-start-date" type="date" class="datepicker validate" required>
+							<input id="event-start-date" type="date" class="datepicker" required>
 							<label for="event-start-date" data-error="Please enter a start date" style="width:100%;">Starts</label>
+							<div id="event-start-date-error" class="customValidate"></div>
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-end-date" type="date" class="datepicker">
 							<label for="event-end-date" data-error="End date cannot be before start date" style="width:100%;">Ends</label>
+							<div id="event-end-date-error" class="customValidate"></div>
 						</div>
 					</div>
 					<div class="row">
@@ -129,70 +143,18 @@
 
 		<script>
 
-			/** Interactive validation of start/end date fields */
-
-			(function() { // start date
-							
-				$('#event-start-date').pickadate({
-					
-					onClose: function() {
-
-						var $start = $('#event-start-date'), 
-
-						end = $('#event-end-date').val();
-						
-						
-						if (!isNaN(Date.parse(end))) { // end date exists
-
-							if (new Date($start.val()) > new Date(end)) { // start is after end
-
-								$('#event-start-date')[0].labels[0].dataset.error = 'Start date cannot be after end date';
-
-								$('#event-start-date')[0].classList.add('invalid');
-							}
-						}
-					}
-				});
-			})();
 			
-			/* Interactive validation of capacity field */
-
-			void document.getElementById('event-capacity').addEventListener('keyup', function(event) {
-
-				if (event.target.value === '') { // empty
-
-					event.target.labels[0].dataset.error = 'Please enter capacity';
-
-					event.target.classList.add('invalid');
-				}
-
-				// testing for non-number entry doesn't work, keypress doesn't fire
-
-				else if (event.target.validity.rangeUnderflow) { // negative number
-
-					event.target.labels[0].dataset.error = 'Capacity cannot be negative';
-
-					event.target.classList.add('invalid');
-				}
-				
-				else { // valid
-
-					event.target.classList.remove('invalid');
-
-					event.target.labels[0].dataset.error = 'Please enter capacity';
-				}
-			});
-
-			void document.getElementById("event-start-date").addEventListener('change', function(event) {
-
-				console.log(event);
-			});
 
 		</script>
 
 		<script type="text/javascript">
 			window.onload = function() {
 				app.init();
+
+				$('#event-capacity').keyup(event, app.EventView.validateCapacity);
+				$('#event-name').keyup(app.EventView.validateName);
+				$('#event-start-date').pickadate({onSet: app.EventView.validateStartDate});
+				$('#event-end-date').pickadate({onSet: app.EventView.validateEndDate});
 
 				$('.datepicker').pickadate({
 					selectMonths: true, // Creates a dropdown to control month
