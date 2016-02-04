@@ -195,34 +195,194 @@ app.EventView.renderList = function(Account_account) {
 
 app.EventView.validateCapacity = function(event) {
 	
-	if (event.target.value === '') { // empty
+	var $capacity = $('#event-capacity');
 
-		event.target.labels[0].dataset.error = 'Please enter capacity'; // can't get jQuery.data() to work
+	if ($capacity.val() === '') { // empty
 
-		event.target.classList.add('invalid');
+		if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+			event.target.labels[0].dataset.error = 'Please enter capacity';
+
+		}
+
+		else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+			$capacity.next('label').data('error', 'Please enter capacity');
+		}
+		
+		$capacity.addClass('invalid');
+
+		return false;
 	}
 
-	// no need to test for non-numbers
 
-	else if (event.target.validity.rangeUnderflow) { // negative number
+	// no need to test for non-numbers, not programmatically available from input
 
-		event.target.labels[0].dataset.error = 'Capacity cannot be negative';
+	
+	else if (event && event.target.validity.rangeUnderflow) { // negative number
 
-		event.target.classList.add('invalid');
+		if (event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+			event.target.labels[0].dataset.error = 'Capacity cannot be negative';
+		}
+
+		else { // Other browsers (updates value but not display, falls back on value in HTML)
+
+			$capacity.next('label').data('error', 'Capacity cannot be negative');
+		}
+		
+		$capacity.addClass('invalid');
+
+		return false;
 	}
 	
 	else { // valid
 
-		event.target.classList.remove('invalid');
+		$capacity.removeClass('invalid');
 
-		event.target.labels[0].dataset.error = 'Please enter capacity';
+		if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+			event.target.labels[0].dataset.error = 'Please enter capacity'; // can't get jQuery.data() to work
+		}
+
+		else { // Other browsers (updates value but not display, falls back on value in HTML)
+
+			$capacity.next('label').data('error', 'Please enter capacity');
+		}
 	}
+
+	return true;
+}
+
+/** Event handler for interactive validation of start and end date fields */
+
+app.EventView.validateDateRange = function() {
+
+	this.close(); // close picker; setting closeOnClear true does not work (bug)
+
+	
+	// Set up references to DOM
+
+		var $start = $('#event-start-date'),
+
+		start = $start.val(),
+
+		start_date = new Date(start),
+
+		$start_err = $('#event-start-date-error'),
+
+		$start_time = $('#event-start-time'),
+
+		start_time = $start_time.val(),
+
+		$start_time_err = $('#event-start-time-error'),
+
+		$end = $('#event-end-date'),
+
+		end = $end.val(),
+
+		end_date = new Date(end),
+
+		$end_err = $('#event-end-date-error'),
+
+		$end_time = $('#event-end-time'),
+
+		end_time = $end_time.val(),
+
+		$end_time_err = $('#event-end-time-error');
+
+
+	function reset () { // reset error states, needed b/c secondary branches in ifs
+
+		$start_err.css('display', 'none');
+
+		$start.removeClass('invalid');
+
+		$end_err.css('display', 'none');
+
+		$end.removeClass('invalid');
+
+		$end_time_err.css('display', 'none');
+
+		$end_time.removeClass('invalid');
+	}
+
+	console.log(start_date === 'Invalid Date');
+
+	if (start === '') { // start not selected
+
+		$start_err.html('Please select start date');
+
+		$start_err.css('display', 'block');
+
+		$start.addClass('invalid');
+
+		return false;
+	}
+
+	/* focus causes end datepicker to open, no time to resolve, skip for now
+	else if (end === '') { // start selected, but not end
+
+		$end.val(start); // set end date to start date
+
+		$end.addClass('active');
+
+		$end.trigger('focus');
+	}
+	*/
+	
+	else if (start !== '' && end !== '' && end_date < start_date) { // end date is before start
+
+		// Materialize's validation message won't display, so rolling my own
+
+		$end_err.html('End date cannot be before start date');
+
+		$end_err.css('display', 'block');
+
+		$end.addClass('invalid');
+
+		return false;
+	}
+
+	else if (end_date.valueOf() === start_date.valueOf() && end_time !== '' && start_time !== '') { // end and start time exist, and event stops and starts the same day
+
+		//set hours and minutes on start and end dates
+
+		end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
+
+		start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
+
+		if (end_date < start_date) { // end (time) is before start (time)
+
+			$end_time_err.html('End time cannot be before start time');
+
+			$end_time_err.css('display', 'block');
+
+			$end_time.addClass('invalid');
+
+			return false;
+		}
+
+		else {
+
+			reset();
+		}
+	}
+
+	else {
+
+		reset();
+	}
+
+	return true;
 }
 
 
-/** Event handler for interactive validation of start date field */
-
+/** Event handler for interactive validation of end date field */
+/*
 app.EventView.validateEndDate = function() {
+
+	//this.close(); // close picker; setting closeOnClear true does not work (bug)
 
 	var $start = $('#event-start-date'),
 
@@ -246,6 +406,8 @@ app.EventView.validateEndDate = function() {
 			$err.css('display', 'block');
 
 			$end.addClass('invalid');
+
+			return false;
 		}
 
 		else { // reset
@@ -263,30 +425,47 @@ app.EventView.validateEndDate = function() {
 
 		$end.removeClass('invalid');
 	}
+
+	return true;
 }
-
-
+*/
 /* Event handler for interactive validation of event name field */
 
 app.EventView.validateName = function(event) {
 
-	if (event.target.value === '') { // empty
+	var $name = $('#event-name');
 
-		//event.target.labels[0].dataset.error = 'Please enter event name';
+	if ($name.val() === '') { // empty
+	
+		if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
 
-		event.target.classList.add('invalid');
+			event.target.labels[0].dataset.error = 'Please enter event name';
+		}
+
+		else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+			$name.next('label').data('error', 'Please enter event name');
+		}
+
+		$name.addClass('invalid');
+
+		return false;
 	}
 
 	else {
 
-		event.target.classList.remove('invalid');
+		$name.removeClass('invalid');
 	}
+
+	return true;
 }
 
 
 /** Event handler for interactive validation of start date field */
-
+/*
 app.EventView.validateStartDate = function() {
+
+	//this.close(); // close picker; setting closeOnClear true does not work (bug)
 
 	var $start = $('#event-start-date'),
 
@@ -308,6 +487,8 @@ app.EventView.validateStartDate = function() {
 			$err.css('display', 'block');
 
 			$start.addClass('invalid');
+
+			return false;
 		}
 
 		else { // reset
@@ -326,6 +507,8 @@ app.EventView.validateStartDate = function() {
 			$err.css('display', 'block');
 
 			$start.addClass('invalid');
+
+			return false;
 	}
 
 	else { // reset
@@ -334,8 +517,10 @@ app.EventView.validateStartDate = function() {
 
 		$start.removeClass('invalid');
 	}
-}
 
+	return true;
+}
+*/
 
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor

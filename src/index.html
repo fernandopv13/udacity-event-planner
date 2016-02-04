@@ -12,6 +12,10 @@
 		<!--Import materialize.css-->
 		<link type="text/css" rel="stylesheet" href="assets/css/materialize.css"  media="screen,projection"/>
 
+		<!--Import pickatime.css-->
+		<link type="text/css" rel="stylesheet" href="lib/pickadate.js_v3.5.6/themes/default.time.css"  media="screen,projection"/>
+
+
 		<!--Let browser know website is optimized for mobile-->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		
@@ -49,7 +53,7 @@
 					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-name" type="text" class="validate" required>
-							<label for="event-name" data-error="Please enter an event name" style="width:100%;">Event Name</label>
+							<label for="event-name" data-error="Please enter event name" style="width:100%;">Event Name</label>
 						</div>
 					</div>
 					<div class="row">
@@ -59,17 +63,27 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="input-field col s12">
-							<input id="event-start-date" type="date" class="datepicker" required>
-							<label for="event-start-date" data-error="Please enter a start date" style="width:100%;">Starts</label>
+						<div class="input-field col s6">
+							<input id="event-start-date" type="text" class="datepicker picker__input" readonly required>
+							<label for="event-start-date" data-error="Please enter start date" style="width:100%">Start date</label>
 							<div id="event-start-date-error" class="customValidate"></div>
+						</div>
+						<div class="input-field col s6">
+							<input id="event-start-time" type="text" class="timepicker picker__input" readonly required>
+							<label for="event-start-time" data-error="Please enter start time" style="width:100%">Start time</label>
+							<div id="event-start-time-error" class="customValidate"></div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="input-field col s12">
-							<input id="event-end-date" type="date" class="datepicker">
-							<label for="event-end-date" data-error="End date cannot be before start date" style="width:100%;">Ends</label>
+						<div class="input-field col s6">
+							<input id="event-end-date" type="text" class="datepicker picker__input" readonly required>
+							<label for="event-end-date" data-error="End date cannot be before start date" style="width:100%;">End date</label>
 							<div id="event-end-date-error" class="customValidate"></div>
+						</div>
+						<div class="input-field col s6">
+							<input id="event-end-time" type="text" class="timepicker picker__input" readonly required>
+							<label for="event-end-time" data-error="Please enter end time" style="width:100%">End time</label>
+							<div id="event-end-time-error" class="customValidate"></div>
 						</div>
 					</div>
 					<div class="row">
@@ -89,7 +103,7 @@
 					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-capacity" placeholder="Max. number of guests" type="number" min="0" step="1" value="50" class="validate" required>
-							<label for="event-capacity" data-error="Please enter capacity" class="active" style="width:100%;">Capacity</label>
+							<label for="event-capacity" data-error="Please enter capacity (min. 0)" class="active" style="width:100%;">Capacity</label>
 						</div>
 					</div>
 					<div class="row">
@@ -115,51 +129,58 @@
 
 		<!-- Library source files -->
 		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
-		<script type="text/javascript" src="lib/materialize-0.97.5.min.js"></script>
+		<script type="text/javascript" src="lib/materialize_v0.97.5/bin/materialize.min.js"></script>
+		<script type="text/javascript" src="lib/pickadate.js_v3.5.6/picker.time.js"></script>
 		
 		<!-- App source files -->
-		<script src="assets/js/Object.js"></script>
-		<script src="assets/js/Error.js"></script>
-		<script src="assets/js/InterfaceHelper.js"></script>
-		<script src="assets/js/IHost.js"></script>
-		<script src="assets/js/IObserver.js"></script>
-		<script src="assets/js/IObservable.js"></script>
-		<script src="assets/js/ISerializable.js"></script>
-		<script src="assets/js/IViewable.js"></script>
-		<script src="assets/js/ObjectRegistry.js"></script>
-		<script src="assets/js/Email.js"></script>
-		<script src="assets/js/Password.js"></script>
-		<script src="assets/js/Person.js"></script>
-		<script src="assets/js/PersonView.js"></script>
-		<script src="assets/js/Organization.js"></script>
-		<script src="assets/js/Event.js"></script>
-		<script src="assets/js/EventView.js"></script>
-		<script src="assets/js/Account.js"></script>
-		<script src="assets/js/FoursquareSearch.js"></script>
-		<script src="assets/js/Controller.js"></script>
-		<script src="assets/js/app.js"></script>
-		<script src="test/util/data.js"></script>
-		
-
-		<script>
-
-			
-
-		</script>
+			<script src="assets/js/Object.js"></script>
+			<script src="assets/js/Error.js"></script>
+			<script src="assets/js/InterfaceHelper.js"></script>
+			<script src="assets/js/IHost.js"></script>
+			<script src="assets/js/IObserver.js"></script>
+			<script src="assets/js/IObservable.js"></script>
+			<script src="assets/js/ISerializable.js"></script>
+			<script src="assets/js/IViewable.js"></script>
+			<script src="assets/js/ObjectRegistry.js"></script>
+			<script src="assets/js/Email.js"></script>
+			<script src="assets/js/Password.js"></script>
+			<script src="assets/js/Person.js"></script>
+			<script src="assets/js/PersonView.js"></script>
+			<script src="assets/js/Organization.js"></script>
+			<script src="assets/js/Event.js"></script>
+			<script src="assets/js/EventView.js"></script>
+			<script src="assets/js/Account.js"></script>
+			<script src="assets/js/FoursquareSearch.js"></script>
+			<script src="assets/js/Controller.js"></script>
+			<script src="assets/js/app.js"></script>
+			<script src="test/util/data.js"></script>
 
 		<script type="text/javascript">
-			window.onload = function() {
-				app.init();
-
-				$('#event-capacity').keyup(event, app.EventView.validateCapacity);
+			
+			$(document).ready(function() {
+				$('#event-capacity').keyup(app.EventView.validateCapacity);
 				$('#event-name').keyup(app.EventView.validateName);
-				$('#event-start-date').pickadate({onSet: app.EventView.validateStartDate});
-				$('#event-end-date').pickadate({onSet: app.EventView.validateEndDate});
+				//$('#event-start-date').pickadate({onSet: app.EventView.validateStartDate});
+				//$('#event-end-date').pickadate({onSet: app.EventView.validateEndDate});
 
 				$('.datepicker').pickadate({
+					//closeOnSelect: true, // bug: ineffective
+					closeOnClear: true,
+					onSet: app.EventView.validateDateRange,
 					selectMonths: true, // Creates a dropdown to control month
 					selectYears: 15 // Creates a dropdown of 15 years to control year
 				});
+
+				$('.timepicker').pickatime({
+					//closeOnSelect: true, // bug: ineffective
+					closeOnClear: true,
+					format: 'H:i',
+					onSet: app.EventView.validateDateRange
+				});
+			});
+
+			window.onload = function() {
+				app.init();	
 			};
 		</script>
 
