@@ -48,7 +48,9 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	_localStorageAllowed = false,
 
-	_defaultEventCapacity = 50;
+	_defaultEventCapacity = 50,
+
+	_defaultLocation;
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -135,7 +137,37 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		return _defaultEventCapacity;
 	};
 
+
+	/** Gets or sets default location for the account
+	*
+	* @param {String} location The default location (as a string with the location's name)
+	*
+	* @param {Position} location The default location (as a GPS Position object)
+	*
+	* @return {Object} The default capacity
+	*
+	* @throws {IllegalArgumentError} If attempting to set capacity that is neither a string nor an Position
+	*/
 	
+	this.defaultLocation = function (obj_location) {
+	
+		if (arguments.length > 0) {
+
+			if (typeof obj_location === 'string' || obj_location.coords) {
+			
+				_defaultLocation = obj_location;
+			}
+
+			else {
+			
+				throw new IllegalArgumentError('Location must be a string or a Position')
+			}
+		}
+		
+		return _defaultLocation;
+	};
+
+		
 	/** Gets or sets email
 	*
 	* @param {Email} email The email for the account. (optional, supply if setting)

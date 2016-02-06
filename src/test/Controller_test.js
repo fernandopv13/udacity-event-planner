@@ -41,5 +41,71 @@ describe('class Controller', function(){
 
 
 		});
+
+
+		it('can get and set the selected (active) account', function() {
+
+			var testAccount = new app.Account();
+
+			expect(testController.selectedAccount(testAccount)).toBe(testAccount);
+		});
+
+
+		it('rejects attempt to set account that is not an Account', function() {
+
+			try {
+
+				testController.selectedAccount('not an Account');
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+		});
+
+
+		it('can get and set the selected (active) event', function() {
+
+			var testEvent = new app.Event();
+
+			expect(testController.selectedEvent(testEvent)).toBe(testEvent);
+		});
+
+
+		it('rejects attempt to set event that is not an Event', function() {
+
+			try {
+
+				testController.selectedEvent('not an Event');
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+		});
+
+
+		it('can get and set the selected (active) guest', function() {
+
+			var testGuest = new app.Person();
+
+			expect(testController.selectedGuest(testGuest)).toBe(testGuest);
+		});
+
+
+		it('rejects attempt to set guest that is not a Guest', function() {
+
+			try {
+
+				testController.selectedGuest('not a Person');
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+		});
 	});
 });

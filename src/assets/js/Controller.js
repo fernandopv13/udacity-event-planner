@@ -32,7 +32,88 @@ app.Controller = function() {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
-	// none so far
+	/** Gets or sets the currently selected (active) account
+	*
+	* @param {Account} selectedAccount The selected account
+	*
+	* @return {Account} The selected account
+	*
+	* @throws {IllegalArgumentError} If attempting to set account that is not an Account
+	*/
+	
+	this.selectedAccount = function (Account_account) {
+	
+		if (arguments.length > 0) {
+
+			if (Account_account.constructor === app.Account) {
+			
+				_selectedAccount = Account_account;
+			}
+
+			else {
+			
+				throw new IllegalArgumentError('Account must be instance of Account')
+			}
+		}
+		
+		return _selectedAccount;
+	};
+
+
+	/** Gets or sets the currently selected Event
+	*
+	* @param {Event} selectedAccount The selected event
+	*
+	* @return {Event} The selected event
+	*
+	* @throws {IllegalArgumentError} If attempting to set event that is not an Event
+	*/
+	
+	this.selectedEvent = function (Event_event) {
+	
+		if (arguments.length > 0) {
+
+			if (Event_event.constructor === app.Event) {
+			
+				_selectedEvent = Event_event;
+			}
+
+			else {
+			
+				throw new IllegalArgumentError('Event must be instance of Event')
+			}
+		}
+		
+		return _selectedEvent;
+	};
+
+
+	/** Gets or sets the currently selected guest
+	*
+	* @param {Person} selectedGuest The selected guest
+	*
+	* @return {Person} The selected guest
+	*
+	* @throws {IllegalArgumentError} If attempting to set guest that is not a Person
+	*/
+	
+	this.selectedGuest = function (Person_guest) {
+	
+		if (arguments.length > 0) {
+
+			if (Person_guest.constructor === app.Person) {
+			
+				_selectedGuest = Person_guest;
+			}
+
+			else {
+			
+				throw new IllegalArgumentError('Guest must be instance of Person')
+			}
+		}
+		
+		return _selectedGuest;
+	};
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -65,7 +146,7 @@ app.Controller = function() {
 	
 	this.onAccountSelected = function(int_accountId) {
 
-		_selectedAccount = app.Account.registry.getObjectById(int_accountId);
+		this.selectedAccount(app.Account.registry.getObjectById(int_accountId));
 
 		app.EventView.renderList(_selectedAccount);
 	};
@@ -73,7 +154,7 @@ app.Controller = function() {
 
 	this.onEventSelected = function(int_eventId) {
 
-		_selectedEvent = app.Event.registry.getObjectById(int_eventId);
+		this.selectedEvent(app.Event.registry.getObjectById(int_eventId));
 
 		app.PersonView.renderList(_selectedEvent);
 

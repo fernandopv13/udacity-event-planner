@@ -257,7 +257,37 @@ describe('class Account', function(){
 		
 		it('can get and set its default location', function() {
 
-			expect(testAccount.defaultLocation).toBeDefined();
+			expect(testAccount.defaultLocation('Las Vegas')).toBe('Las Vegas');
+
+			if (navigator.geolocation) {
+
+				navigator.geolocation.getCurrentPosition(
+
+					function(position) { // success
+
+						expect(testAccount.defaultLocation(position)).toBe(position);
+					},
+
+					function(error) { // error
+
+						console.log(error);
+					}
+				)
+			}
+		});
+
+
+		it('rejects attempt to set default location that is neither a string nor a position', function() {
+
+			try {
+
+				testAccount.defaultLocation(1);
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
 		});
 
 

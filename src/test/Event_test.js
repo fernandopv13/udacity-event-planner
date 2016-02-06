@@ -810,12 +810,6 @@ describe('class Event', function(){
 		});
 		
 		
-		it('can render itself to a DIV', function(){
-			
-			
-		});
-		
-		
 		afterEach(function() {
 			
 			app.prefs.isLocalStorageAllowed(oldPermission);
