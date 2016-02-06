@@ -60,7 +60,16 @@ var app = (function(self) {
 		
 		isLocalStorageAllowed: function(bool_isAllowed) {
 			
-			if (typeof bool_isAllowed !== 'undefined') { // param present
+			// Router to account, mostly to avoid refactoring of ISerializable
+
+			if (arguments.length > 0) {
+
+				app.controller.selectedAccount().localStorageAllowed(bool_isAllowed);
+			}
+
+			return app.controller.selectedAccount().localStorageAllowed();
+
+			/*if (typeof bool_isAllowed !== 'undefined') { // param present
 				
 				if (typeof bool_isAllowed === 'boolean') { // parem is boolean, so set
 				
@@ -74,6 +83,8 @@ var app = (function(self) {
 			}
 			
 			return _prefs.isLocalStorageAllowed;
+
+			*/
 		},
 		
 		

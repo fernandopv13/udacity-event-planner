@@ -132,10 +132,35 @@ describe('Interface ISerializable', function(){
 	
 	describe('when interacting with localStorage', function() {
 		
-		var testObj, oldPermission;
+		var testObj, oldPermission, testController;
 		
 		beforeEach(function() {
 			
+			app.Controller = app.Controller || function() {
+
+				var _selectedAccount;
+
+				this.selectedAccount = function(account) {
+
+					if (arguments.length > 0) {_selectedAccount = account;}
+
+					return _selectedAccount;
+				}
+			}
+
+
+			app.Account = app.Account || function() {
+
+				var _localStorageAllowed = false;
+
+				this.localStorageAllowed = function(allowed) {
+
+					if (arguments.length > 0) {_localStorageAllowed = allowed;}
+
+					return _localStorageAllowed;
+				}
+			}
+
 			app.TestClass = function() {
 				
 				var _className = 'TestClass', _id = 100, _a = 2, _b = 'one', _name = '';
@@ -160,7 +185,11 @@ describe('Interface ISerializable', function(){
 			};
 			
 			testObj = new app.TestClass();
+
+			app.controller = app.controller || new app.Controller();
 			
+			app.controller.selectedAccount(new app.Account());
+
 			oldPermission = app.prefs.isLocalStorageAllowed();
 			
 			app.prefs.isLocalStorageAllowed(true);
