@@ -193,6 +193,11 @@ app.EventView.renderList = function(Account_account) {
 * Public static methods
 *---------------------------------------------------------------------------------------*/
 
+app.EventView.suggestLocations = function() {
+
+	
+}
+
 /* Event handler for interactive validation of capacity field */
 
 app.EventView.validateCapacity = function(event) {
@@ -256,6 +261,7 @@ app.EventView.validateCapacity = function(event) {
 	return true;
 }
 
+
 /** Event handler for interactive validation of start and end date fields */
 
 app.EventView.validateDateRange = function() {
@@ -265,53 +271,20 @@ app.EventView.validateDateRange = function() {
 	
 	// Set up references to DOM
 
-		var $start = $('#event-start-date'),
+	var $start = $('#event-start-date'),
 
-		start = $start.val(),
+	start_date = new Date($start.val()),
 
-		start_date = new Date(start),
+	$start_err = $('#event-start-date-error'),
 
-		$start_err = $('#event-start-date-error'),
+	$end = $('#event-end-date'),
 
-		$start_time = $('#event-start-time'),
+	end_date = new Date($end.val()),
 
-		start_time = $start_time.val(),
+	$end_err = $('#event-end-date-error');
 
-		$start_time_err = $('#event-start-time-error'),
-
-		$end = $('#event-end-date'),
-
-		end = $end.val(),
-
-		end_date = new Date(end),
-
-		$end_err = $('#event-end-date-error'),
-
-		$end_time = $('#event-end-time'),
-
-		end_time = $end_time.val(),
-
-		$end_time_err = $('#event-end-time-error');
-
-
-	function reset () { // reset error states, needed b/c secondary branches in ifs
-
-		$start_err.css('display', 'none');
-
-		$start.removeClass('invalid');
-
-		$end_err.css('display', 'none');
-
-		$end.removeClass('invalid');
-
-		$end_time_err.css('display', 'none');
-
-		$end_time.removeClass('invalid');
-	}
-
-	console.log(start_date === 'Invalid Date');
-
-	if (start === '') { // start not selected
+		
+	if (start_date === 'Invalid Date') { // start not selected
 
 		$start_err.html('Please select start date');
 
@@ -323,7 +296,7 @@ app.EventView.validateDateRange = function() {
 	}
 
 	/* focus causes end datepicker to open, no time to resolve, skip for now
-	else if (end === '') { // start selected, but not end
+	else if (end === 'Invalid date') { // start selected, but not end
 
 		$end.val(start); // set end date to start date
 
@@ -333,7 +306,7 @@ app.EventView.validateDateRange = function() {
 	}
 	*/
 	
-	else if (start !== '' && end !== '' && end_date < start_date) { // end date is before start
+	else if (end_date < start_date) { // end date is before start
 
 		// Materialize's validation message won't display, so rolling my own
 
@@ -346,35 +319,18 @@ app.EventView.validateDateRange = function() {
 		return false;
 	}
 
-	else if (end_date.valueOf() === start_date.valueOf() && end_time !== '' && start_time !== '') { // end and start time exist, and event stops and starts the same day
-
-		//set hours and minutes on start and end dates
-
-		end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
-
-		start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
-
-		if (end_date < start_date) { // end (time) is before start (time)
-
-			$end_time_err.html('End time cannot be before start time');
-
-			$end_time_err.css('display', 'block');
-
-			$end_time.addClass('invalid');
-
-			return false;
-		}
-
-		else {
-
-			reset();
-		}
-	}
-
 	else {
 
-		reset();
+		$start_err.css('display', 'none');
+
+		$start.removeClass('invalid');
+
+		$end_err.css('display', 'none');
+
+		$end.removeClass('invalid');
 	}
+
+	app.EventView.validateTimeRange();	
 
 	return true;
 }
@@ -408,6 +364,68 @@ app.EventView.validateName = function(event) {
 	}
 
 	return true;
+}
+
+
+/** Event handler for interactive validation of end time field*/
+
+app.EventView.validateTimeRange = function() {
+
+	if (this.close) {this.close()}; // close picker (if called from dialog); setting closeOnClear true does not work (bug)
+
+
+	// Set up references to DOM
+
+	var start_date = new Date($('#event-start-date').val()),
+
+	end_date = new Date($('#event-end-date').val()),
+
+	start_time = $('#event-start-time').val(),
+
+	$end_time = $('#event-end-time'),
+
+	end_time = $end_time.val(),
+
+	$end_time_err = $('#event-end-time-error');
+
+	
+	if (end_time !== '' && 	start_time !== '' && // end and start time selected
+		!isNaN(end_date.valueOf()) && // end date selected
+		 end_date.valueOf() === start_date.valueOf()) {  //end date same as start date
+		
+		// Set hours and minutes on start and end dates before comparison
+
+		end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
+
+		start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
+
+		console.log(end_date < start_date);
+		
+		if (end_date < start_date) { // end (time) is before start (time)
+
+			$end_time_err.html('End time cannot be before start time');
+
+			$end_time_err.css('display', 'block');
+
+			$end_time.addClass('invalid');
+
+			return false;
+		}
+
+		else {
+
+			$end_time_err.css('display', 'none');
+
+			$end_time.removeClass('invalid');
+		}
+	}
+
+	else {
+
+		$end_time_err.css('display', 'none');
+
+		$end_time.removeClass('invalid');
+	}
 }
 
 /*----------------------------------------------------------------------------------------

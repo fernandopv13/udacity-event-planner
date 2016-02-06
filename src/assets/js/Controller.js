@@ -172,7 +172,7 @@ app.Controller = function() {
 
 	this.onGuestSelected = function(int_guestId) {
 
-		_selectedGuest = app.Person.registry.getObjectById(int_guestId);
+		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
 
 		console.log(int_guestId);
 
@@ -182,9 +182,9 @@ app.Controller = function() {
 	
 	app.Controller.prototype.init = function() {
 
-		this.onAccountSelected(0);
+		this.onAccountSelected(0); //debug
 
-		this.onEventSelected(0);
+		this.onEventSelected(0); // debug
 	};
 
 	
@@ -193,11 +193,7 @@ app.Controller = function() {
 	* Parameter parsing (constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 		
-	// If neeeded, we can simulate polymorphism here by testing named parameters in the
-	// constructor's signature and/or by analysing the 'arguments' array-like collection of
-	// parameters, and branching all or parts of the constructor logic accordingly.
-	//
-	//Probably most useful if kept relatively simple. Else maybe better to create new class.
+	// None so far
 	
 };
 

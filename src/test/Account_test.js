@@ -277,7 +277,7 @@ describe('class Account', function(){
 		});
 
 
-		it('rejects attempt to set default location that is neither a string nor a position', function() {
+		it('rejects attempt to set default location that is neither a string nor a Position', function() {
 
 			try {
 
