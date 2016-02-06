@@ -49,6 +49,30 @@
 				text-align: right;
 				padding-right: 15px;
 			}
+
+			input:not([type]) + label:after,
+			input[type=text] + label:after,
+			input[type=password] + label:after,
+			input[type=email] + label:after,
+			input[type=url] + label:after,
+			input[type=time] + label:after,
+			input[type=date] + label:after,
+			input[type=datetime-local] + label:after,
+			input[type=tel] + label:after,
+			input[type=number] + label:after,
+			input[type=search] + label:after,
+			textarea.materialize-textarea + label:after {
+				font-size: 0.8rem;
+			}
+
+			input[type=text].invalid + label::after {
+				top: 45px;
+			}
+
+			input[type=text]:focus.invalid + label.active::after {
+				top: 65px;
+			}
+
 		</style>
 		
 		
@@ -67,7 +91,7 @@
 					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-name" type="text" class="validate" required>
-							<label for="event-name" data-error="Please enter event name" style="width:100%;">Event Name<span class="required-asterisk">*</span></label>
+							<label for="event-name" data-error="Please enter event name" style="width:100%" class="active" >Event name<span class="required-asterisk">*</span></label>
 						</div>
 					</div>
 					<div class="row">
@@ -129,7 +153,7 @@
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<textarea id="event-description" class="materialize-textarea" length="120"></textarea>
+							<textarea id="event-description" class="materialize-textarea" length="120" maxlength="120"></textarea>
 							<label for="event-description">Description</label>
 						</div>
 					</div>
