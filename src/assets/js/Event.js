@@ -326,10 +326,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 					
 					date_start = date_start.constructor === Date ? date_start : new Date(date_start);
 
-					console.log(date_start);
-
-					console.log(date_end);
-
 					if (_end === undefined || date_start <= _end) {
 
 						_start = date_start;

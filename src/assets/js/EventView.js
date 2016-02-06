@@ -10,7 +10,9 @@ var app = app || {};
 *
 * @constructor
 *
-* @author Ulrik H. Gade, January 2016
+* @author Ulrik H. Gade, February 2016
+*
+* @todo: Set end date to start date when initially selecting start date, supressing end datepicker
 */
 
 app.EventView = function() {
@@ -377,58 +379,6 @@ app.EventView.validateDateRange = function() {
 	return true;
 }
 
-
-/** Event handler for interactive validation of end date field */
-/*
-app.EventView.validateEndDate = function() {
-
-	//this.close(); // close picker; setting closeOnClear true does not work (bug)
-
-	var $start = $('#event-start-date'),
-
-	start = $start.val(),
-
-	$end = $('#event-end-date'),
-
-	end = $end.val(),
-
-	$err = $('#event-end-date-error');
-	
-	
-	if (!isNaN(Date.parse(start))) { // end date exists
-
-		if (new Date(end) < new Date(start)) { // end is before start
-
-			// Materialize's validation message won't display, so rolling my own
-
-			$err.html('End date cannot be before start date');
-
-			$err.css('display', 'block');
-
-			$end.addClass('invalid');
-
-			return false;
-		}
-
-		else { // reset
-
-			$err.css('display', 'none');
-
-			$end.removeClass('invalid');
-		}
-
-	}
-
-	else { // reset
-
-		$err.css('display', 'none');
-
-		$end.removeClass('invalid');
-	}
-
-	return true;
-}
-*/
 /* Event handler for interactive validation of event name field */
 
 app.EventView.validateName = function(event) {
@@ -459,68 +409,6 @@ app.EventView.validateName = function(event) {
 
 	return true;
 }
-
-
-/** Event handler for interactive validation of start date field */
-/*
-app.EventView.validateStartDate = function() {
-
-	//this.close(); // close picker; setting closeOnClear true does not work (bug)
-
-	var $start = $('#event-start-date'),
-
-	start = $start.val(),
-
-	end = $('#event-end-date').val(),
-
-	$err = $('#event-start-date-error');
-	
-	
-	if (!isNaN(Date.parse(end))) { // end date exists
-
-		if (new Date(start) > new Date(end)) { // start is after end
-
-			// Materialize's validation message won't display, so rolling my own
-
-			$err.html('Start date cannot be after end date');
-
-			$err.css('display', 'block');
-
-			$start.addClass('invalid');
-
-			return false;
-		}
-
-		else { // reset
-
-			$err.css('display', 'none');
-
-			$start.removeClass('invalid');
-		}
-
-	}
-
-	else if (start === '') { // empty
-
-			$err.html('Please enter start date');
-
-			$err.css('display', 'block');
-
-			$start.addClass('invalid');
-
-			return false;
-	}
-
-	else { // reset
-
-		$err.css('display', 'none');
-
-		$start.removeClass('invalid');
-	}
-
-	return true;
-}
-*/
 
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor

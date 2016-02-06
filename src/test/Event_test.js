@@ -242,8 +242,6 @@ describe('class Event', function(){
 
 		it('rejects attempt to set start date after end date', function() {
 
-			console.log('test start');
-
 			testEvent.end(new Date(0));
 
 			try {
@@ -257,8 +255,6 @@ describe('class Event', function(){
 			}
 
 			expect(true).toBe(true); // Jasmine may not notice expects in trys
-
-			console.log('test end');
 		});
 
 

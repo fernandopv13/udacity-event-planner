@@ -196,6 +196,70 @@ describe('class Account', function(){
 			expect(testAccount.accountHolder().name()).toBe('Test person');
 		});
 
+		
+		it('can get and set its local storage access permission preference', function() {
+
+			expect(testAccount.localStorageAllowed()).toBe(false);
+
+			expect(testAccount.localStorageAllowed(true)).toBe(true);
+
+			testAccount.localStorageAllowed(false);
+		});
+
+
+		it('rejects attempt to set local storage permission that is not a Boolean', function() {
+
+			try {
+
+				testAccount.localStorageAllowed('not a Boolean');
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+		});
+
+		
+		it('can get and set its default event capacity', function() {
+
+			expect(testAccount.defaultEventCapacity()).toBeGreaterThan(-1);
+
+			expect(testAccount.defaultEventCapacity(25)).toBe(25);
+
+			expect(testAccount.defaultEventCapacity(50)).toBe(50);
+		});
+
+
+		it('rejects attempt to set default event capacity that is not a non-negative integer', function() {
+
+			try {
+
+				testAccount.defaultEventCapacity('not an integer');
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+			try {
+
+				testAccount.defaultEventCapacity(-1);
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+		});
+
+		
+		it('can get and set its default location', function() {
+
+			expect(testAccount.defaultLocation).toBeDefined();
+		});
+
 
 		it('can get its collection of events', function() {
 		

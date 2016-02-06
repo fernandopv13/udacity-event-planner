@@ -44,7 +44,11 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	_accountHolder,
 
-	_events = {};
+	_events = {},
+
+	_localStorageAllowed = false,
+
+	_defaultEventCapacity = 50;
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -57,7 +61,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	*
 	* @return {Person} The person holding the account
 	*
-	* @throws {TypeError} If attempting to set account holder not of class Person
+	* @throws {IllegalArgumentError} If attempting to set account holder not of class Person
 	*/
 	
 	this.accountHolder = function (obj_person) {
@@ -76,7 +80,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 			else {
 				
-				throw new TypeError('Account holder must be a Person')
+				throw new IllegalArgumentError('Account holder must be a Person')
 			}
 		}
 		
@@ -102,27 +106,35 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			throw new IllegalArgumentError('className is read-only');
 		}
 	};
-	
-	
-	/** Gets unique account ID. ID can only be set from within the object itself.
+
+
+	/** Gets or sets default event capacity for the account
 	*
-	* (Method realization required by ISerializable)
+	* @param {int} capacity The default capacity
 	*
-	* @return {int} An integer, if called with no parameters
-	*	
-	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
+	* @return {int} The default capacity
+	*
+	* @throws {IllegalArgumentError} If attempting to set capacity that is not a positive integer
 	*/
 	
-	this.id = function () {
-		
-		if(arguments.length === 0) { return _id;}
-		
-		else {
-			
-			throw new IllegalArgumentError('ID is read-only');
-		}
-	};
+	this.defaultEventCapacity = function (int_capacity) {
 	
+		if (arguments.length > 0) {
+
+			if (typeof int_capacity === 'number' && parseInt(int_capacity) === int_capacity && int_capacity >= 0) {
+			
+				_defaultEventCapacity = int_capacity;
+			}
+
+			else {
+			
+				throw new IllegalArgumentError('Capacity must be a non-negative integer')
+			}
+		}
+		
+		return _defaultEventCapacity;
+	};
+
 	
 	/** Gets or sets email
 	*
@@ -155,6 +167,54 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		return _email;
 	}
+	
+	
+	/** Gets unique account ID. ID can only be set from within the object itself.
+	*
+	* (Method realization required by ISerializable)
+	*
+	* @return {int} An integer, if called with no parameters
+	*	
+	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
+	*/
+	
+	this.id = function () {
+		
+		if(arguments.length === 0) { return _id;}
+		
+		else {
+			
+			throw new IllegalArgumentError('ID is read-only');
+		}
+	};
+	
+
+	/** Gets or sets local storage access permission for the account
+	*
+	* @param {Boolean} Event The event
+	*
+	* @return {allow} The event just added
+	*
+	* @throws {IllegalArgumentError} If attempting to set permission with other than a Boolean
+	*/
+	
+	this.localStorageAllowed = function (Boolean_allow) {
+	
+		if (arguments.length > 0) {
+
+			if (Boolean_allow.constructor === Boolean) {
+			
+				_localStorageAllowed = Boolean_allow;
+			}
+
+			else {
+			
+				throw new IllegalArgumentError('Permission must be a Boolean')
+			}
+		}
+		
+		return _localStorageAllowed;
+	};
 	
 	
 	/** Gets or sets password
