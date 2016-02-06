@@ -37,19 +37,37 @@ app.FourSquare.client_secret = 'ZC303RVAGW2QKHDNWKDUCB2SUZIGVWN2YXPR1TDH1DJEWZ1J
 * @return {Array} An array of FourSquare compact venues
  */
 
-app.FourSquareSearch.prototype.execute = function(callback) {
+app.FourSquareSearch.prototype.execute = function(callback, obj_location) {
 	
 	// Set up request
+
+	var locStr;
+
+	if (obj_location.coords) { // location is a Position object
+
+		locStr = '&ll=' + obj_location.coords.latitude + ',' + obj_location.coords.longitude;
+	}
+
+	else if (obj_location.constructor === String) { // location is a place name
+
+		locStr = '&near=' + obj_location;
+	}
+
+	else { // location is of unknown type
+
+		throw new IllegalArgumentError('Location must be instance of Position or String');
+	}
+	
 	
 	var request = 'https://api.foursquare.com/v2/venues/search'
 				+ '?client_id=' + app.FourSquare.client_id
 				+ '&client_secret=' + app.FourSquare.client_secret
 				+ '&v=' + 20130815
 				+ '&intent=browse'
-				+ '&ll=' + app.defaultLocation.lat() + ',' + app.defaultLocation.lng()
+				+ locStr //'&ll=' + app.defaultLocation.lat() + ',' + app.defaultLocation.lng()
 				+ '&radius=1000'
-				+ '&categoryId=4bf58dd8d48988d16d941735,4bf58dd8d48988d1e0931735' //cafés and coffee shops
-				+ '&limit=' + 25 //max 50
+				+ '&categoryId=4d4b7105d754a06374d81259,4bf58dd8d48988d1f8931735' //restaurants and hotels
+				+ '&limit=' + 50 //max 50
 				;
 	
 	
@@ -63,11 +81,11 @@ app.FourSquareSearch.prototype.execute = function(callback) {
 		
 		success: function(data){ // Request successful, so process response
 		
-			var results = data.response.venues;
+			var venues = data.response.venues;
 					
 			// Sort venues ascending by name
 				
-			results.sort(function(a,b){
+			venues.sort(function(a,b){
 				
 				a = a.name.toLowerCase();
 				
@@ -75,61 +93,16 @@ app.FourSquareSearch.prototype.execute = function(callback) {
 				
 				return a === b ? 0 : +(a > b) || -1;
 			});
-			
-			
-			// Add custom fields and map markers to venues
-			// One big, happy loop to avoid redundant iteration!
-			
-			/*
-			for (var i = 0, len = results.length; i < len; i++) {
-				
-				// Address (for use in list view)
-				
-				results[i].formatted_address = // info may/not be available, so test
-					
-					  (results[i].location.address ? results[i].location.address + ', ': '')
-					
-					+ (results[i].location.city ? results[i].location.city : '');
-				
-				// Category icon and name (for use in infowindow)
-				
-				for (var j = 0, ln = results[i].categories.length; j < ln; j++) {
-					
-					if (results[i].categories[j].primary) {
-						
-						results[i].icon = results[i].categories[j].icon.prefix
-										+ 'bg_44' //may need larger icon for hi-res touch devices
-										+ results[i].categories[j].icon.suffix;
-										
-						results[i].category = results[i].categories[j].name;
-					}
-				}
-				
-				// 'Constructor' (pretend we're constructed locally)
-				
-				//results[i].constructor = app.FourSquareVenue;
-				
-				
-				// Geolocation (for use by map marker)
-				
-				//results[i].geometry = {location: new google.maps.LatLng(results[i].location.lat, results[i].location.lng)};
-				
-				
-				// Map marker
-				
-				//results[i].marker = new app.Marker(results[i]);
-				
-			}
-			*/
-			
-			// Call viewmodel initializer, passing in list of venues
-			
-			callback(results);
+
+
+			callback(venues);
 		},
 		
 		error: function(e) { // request failed, so log error
 			
 			console.log(e);
+
+			callback(null);
 		}
 	});
 }

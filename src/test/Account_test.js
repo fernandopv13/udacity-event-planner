@@ -220,6 +220,30 @@ describe('class Account', function(){
 			}
 		});
 
+
+		it('can get and set its geolocation access permission preference', function() {
+
+			expect(testAccount.geolocationAllowed()).toBe(false);
+
+			expect(testAccount.geolocationAllowed(true)).toBe(true);
+
+			testAccount.geolocationAllowed(false);
+		});
+
+
+		it('rejects attempt to set geolocation permission that is not a Boolean', function() {
+
+			try {
+
+				testAccount.geolocationAllowed('not a Boolean');
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+		});
+
 		
 		it('can get and set its default event capacity', function() {
 

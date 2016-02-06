@@ -35,6 +35,20 @@
 			    display: none;
 			}
 
+			.character-counter {
+				float: right;
+				font-size: 12px;
+				height: 1px;
+			}
+
+			.required-asterisk {
+				padding-left: 0.25em;
+			}
+
+			.form-submit {
+				text-align: right;
+				padding-right: 15px;
+			}
 		</style>
 		
 		
@@ -46,26 +60,27 @@
 
 		<div id="guest-list" class="row"></div>
 
-		<div id="event-form" class="row">
+		<div id="event-form" class="row" novalidate>
 			<form class="col s12">
 				<!--h4 class="collection-header">Barts Big Bash</h4-->
 				<div class="row">
 					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-name" type="text" class="validate" required>
-							<label for="event-name" data-error="Please enter event name" style="width:100%;">Event Name</label>
+							<label for="event-name" data-error="Please enter event name" style="width:100%;">Event Name<span class="required-asterisk">*</span></label>
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<input id="event-location" type="text">
+							<input id="event-location" type="text" list="suggested-locations">
 							<label for="event-location">Location</label>
+							<datalist id="suggested-locations"></datalist>
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s6">
 							<input id="event-start-date" type="text" class="datepicker picker__input" readonly required>
-							<label for="event-start-date" data-error="Please enter start date" style="width:100%">Start date</label>
+							<label for="event-start-date" data-error="Please enter start date" style="width:100%">Start date<span class="required-asterisk">*</span></label>
 							<div id="event-start-date-error" class="customValidate"></div>
 						</div>
 						<div class="input-field col s6">
@@ -103,7 +118,7 @@
 					<div class="row">
 						<div class="input-field col s12">
 							<input id="event-capacity" placeholder="Max. number of guests" type="number" min="0" step="1" value="50" class="validate" required>
-							<label for="event-capacity" data-error="Please enter capacity (min. 0)" class="active" style="width:100%;">Capacity</label>
+							<label for="event-capacity" data-error="Please enter capacity (min. 0)" class="active" style="width:100%;">Capacity<span class="required-asterisk">*</span></label>
 						</div>
 					</div>
 					<div class="row">
@@ -114,23 +129,36 @@
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<textarea id="event-description" class="materialize-textarea" maxlength="250"></textarea>
+							<textarea id="event-description" class="materialize-textarea" length="120"></textarea>
 							<label for="event-description">Description</label>
 						</div>
 					</div>
 					<div class="row">
-						<a id="event-form-submit" class="waves-effect waves-light btn"><i class="material-icons left">check</i>Done</a>
+						<p>
+							<span class="required-asterisk">*</span>
+							indicates a required field
+						</p>
+					</div>
+					<div class="row form-submit">
+						<a id="event-form-cancel" class="waves-effect waves-teal btn-flat">
+							Cancel
+						</a>
+						<a id="event-form-submit" class="waves-effect waves-light btn">
+							<i class="material-icons right">send</i>
+							Done
+						</a>
 					</div>
 				</div>
+
 			</form>
 		</div>
 
 		
 
 		<!-- Library source files -->
-		<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
-		<script type="text/javascript" src="lib/materialize_v0.97.5/bin/materialize.min.js"></script>
-		<script type="text/javascript" src="lib/pickadate.js_v3.5.6/picker.time.js"></script>
+			<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
+			<script type="text/javascript" src="lib/materialize_v0.97.5/bin/materialize.min.js"></script>
+			<script type="text/javascript" src="lib/pickadate.js_v3.5.6/picker.time.js"></script>
 		
 		<!-- App source files -->
 			<script src="assets/js/Object.js"></script>
@@ -150,7 +178,7 @@
 			<script src="assets/js/Event.js"></script>
 			<script src="assets/js/EventView.js"></script>
 			<script src="assets/js/Account.js"></script>
-			<script src="assets/js/FoursquareSearch.js"></script>
+			<script src="assets/js/FourSquareSearch.js"></script>
 			<script src="assets/js/Controller.js"></script>
 			<script src="assets/js/app.js"></script>
 			<script src="test/util/data.js"></script>
@@ -158,10 +186,11 @@
 		<script type="text/javascript">
 			
 			$(document).ready(function() {
-				$('#event-capacity').keyup(app.EventView.validateCapacity);
+				$('#event-location').focus(app.EventView.suggestLocations);
 				$('#event-name').keyup(app.EventView.validateName);
-				//$('#event-start-date').pickadate({onSet: app.EventView.validateStartDate});
-				//$('#event-end-date').pickadate({onSet: app.EventView.validateEndDate});
+				$('#event-capacity').keyup(app.EventView.validateCapacity);
+				$('#event-form-submit').click(app.EventView.submit);
+
 
 				$('.datepicker').pickadate({
 					//closeOnSelect: true, // bug: ineffective

@@ -12,7 +12,11 @@ var app = app || {};
 *
 * @author Ulrik H. Gade, February 2016
 *
-* @todo: Set end date to start date when initially selecting start date, supressing end datepicker
+* @todo Set end date to start date when initially selecting start date, supressing end datepicker
+*
+* @todo Add unit testing of rendering in browser
+*
+* @todo Verify geolocation and remove mock
 */
 
 app.EventView = function() {
@@ -195,7 +199,76 @@ app.EventView.renderList = function(Account_account) {
 
 app.EventView.suggestLocations = function() {
 
+	var account = app.controller.selectedAccount(),
+
+	position = account.defaultLocation(); // set default
+
+
+	// Get device's current location if available and allowed
+
+	if (account.geolocationAllowed()) { // user has granted permission to use geolocation
+
+		if(navigator.geolocation) { // device provides access to geolocation
+
+			navigator.geolocation.getCurrentPosition(
+
+				function(pos) { // success
+
+					position = pos; // override default
+				},
+
+				function(error) { // error
+
+					console.log(error);
+				}
+			)
+
+			// geolocation seems to require access via https
+
+			// don't currently have access to a secure server, so,
+
+			// mock geolocation result for the time being
+
+			position = {
+
+				coords:
+				{
+
+					latitude: 55.6666281,
+
+					longitude: 12.556294
+				},
+
+				timestamp: new Date().valueOf()
+			}
+		}
+	}
+
+	if (position) {// position is defined
+
+		new app.FourSquareSearch().execute(function(venues) { // get venues
+
+			if (venues !== null) { // search succeeded
+
+				var $listElmnt = $('#suggested-locations'), optionElmnt;
+
+				$listElmnt.empty();
+
+				venues.forEach(function(venue) { // build suggest list
+
+					optionElmnt = document.createElement('option');
+
+					optionElmnt.value = venue.name;
+
+					$listElmnt.append(optionElmnt);
+
+				});
+			}
+
+		}, position);	
+	}
 	
+	// else don't provide suggestions
 }
 
 /* Event handler for interactive validation of capacity field */
@@ -226,9 +299,9 @@ app.EventView.validateCapacity = function(event) {
 	// no need to test for non-numbers, not programmatically available from input
 
 	
-	else if (event && event.target.validity.rangeUnderflow) { // negative number
+	else if ($capacity.val() < 0) { // negative number
 
-		if (event.target.labels) { // Chrome (does not update display if setting with jQuery)
+		if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
 
 			event.target.labels[0].dataset.error = 'Capacity cannot be negative';
 		}
@@ -266,7 +339,7 @@ app.EventView.validateCapacity = function(event) {
 
 app.EventView.validateDateRange = function() {
 
-	this.close(); // close picker; setting closeOnClear true does not work (bug)
+	if (this.close) {this.close()}; // close picker if called from dialog; setting closeOnClear true does not work (bug)
 
 	
 	// Set up references to DOM
@@ -283,8 +356,10 @@ app.EventView.validateDateRange = function() {
 
 	$end_err = $('#event-end-date-error');
 
-		
-	if (start_date === 'Invalid Date') { // start not selected
+	
+	// Validate
+
+	if ($start.val() === '') { // start not selected
 
 		$start_err.html('Please select start date');
 
@@ -425,6 +500,23 @@ app.EventView.validateTimeRange = function() {
 		$end_time_err.css('display', 'none');
 
 		$end_time.removeClass('invalid');
+	}
+}
+
+
+app.EventView.submit = function() {
+
+	var valid = app.EventView.validateName() +
+
+				app.EventView.validateDateRange() +
+
+				app.EventView.validateTimeRange() + 
+
+				app.EventView.validateCapacity();
+
+	if (valid) {
+
+		// call controller
 	}
 }
 

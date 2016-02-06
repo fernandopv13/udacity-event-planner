@@ -185,6 +185,10 @@ app.Controller = function() {
 		this.onAccountSelected(0); //debug
 
 		this.onEventSelected(0); // debug
+
+		this.selectedAccount().defaultLocation('Copenhagen'); // debug
+
+		this.selectedAccount().geolocationAllowed(true); //debug
 	};
 
 	

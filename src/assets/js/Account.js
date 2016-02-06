@@ -48,6 +48,8 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	_localStorageAllowed = false,
 
+	_geoLocationAllowed = false,
+
 	_defaultEventCapacity = 50,
 
 	_defaultLocation;
@@ -199,8 +201,35 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		return _email;
 	}
+
+	/** Gets or sets geolocation access permission for the account
+	*
+	* @param {Boolean} Permission The permission
+	*
+	* @return {Boolean} The permission
+	*
+	* @throws {IllegalArgumentError} If attempting to set permission with other than a Boolean
+	*/
 	
+	this.geolocationAllowed = function (Boolean_permission) {
 	
+		if (arguments.length > 0) {
+
+			if (Boolean_permission.constructor === Boolean) {
+			
+				_geoLocationAllowed = Boolean_permission;
+			}
+
+			else {
+			
+				throw new IllegalArgumentError('Permission must be a Boolean')
+			}
+		}
+		
+		return _geoLocationAllowed;
+	};
+
+
 	/** Gets unique account ID. ID can only be set from within the object itself.
 	*
 	* (Method realization required by ISerializable)
@@ -223,20 +252,20 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	/** Gets or sets local storage access permission for the account
 	*
-	* @param {Boolean} Event The event
+	* @param {Boolean} Permission The permission
 	*
-	* @return {allow} The event just added
+	* @return {Boolean} The permission
 	*
 	* @throws {IllegalArgumentError} If attempting to set permission with other than a Boolean
 	*/
 	
-	this.localStorageAllowed = function (Boolean_allow) {
+	this.localStorageAllowed = function (Boolean_permission) {
 	
 		if (arguments.length > 0) {
 
-			if (Boolean_allow.constructor === Boolean) {
+			if (Boolean_permission.constructor === Boolean) {
 			
-				_localStorageAllowed = Boolean_allow;
+				_localStorageAllowed = Boolean_permission;
 			}
 
 			else {
