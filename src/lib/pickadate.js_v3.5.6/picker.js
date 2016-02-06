@@ -328,6 +328,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
                             target.click()
                         }
                     })
+                }
 
                 // Trigger the queued “open” events.
                 return P.trigger( 'open' )
@@ -716,6 +717,7 @@ function PickerConstructor( ELEMENT, NAME, COMPONENT, OPTIONS ) {
 
             // If there’s a click on an actionable element, carry out the actions.
             on( 'click', '[data-pick], [data-nav], [data-clear], [data-close]', function() {
+
                 var $target = $( this ),
                     targetData = $target.data(),
                     targetDisabled = $target.hasClass( CLASSES.navDisabled ) || $target.hasClass( CLASSES.disabled ),

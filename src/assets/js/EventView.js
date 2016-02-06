@@ -79,11 +79,196 @@ app.EventView = function() {
 	};
 	
 
-	/** Render event */
+	/** Render event to form */
 	
 	this.render = function() {
 		
-		// this is where we render the form
+		var formElmt, containerElmnt, rowElmnt, rwElment, datalistElmnt, optionElmnt, elmnt;
+
+		function createRow(arr_classList) { // row div factory
+
+			var rowElmnt = document.createElement('div');
+
+			arr_classList.forEach(function(str_class) {rowElmnt.classList.add(str_class);});
+
+			return rowElmnt;
+		}
+
+
+		function createInput(str_type, str_id, arr_classList, Boolean_required, str_list, Boolean_readonly) { // input factory
+
+			var inputElmnt = document.createElement('input');
+
+			inputElmnt.type = str_type;
+
+			inputElmnt.id = str_id;
+
+			arr_classList.forEach(function(str_class) {inputElmnt.classList.add(str_class);});
+
+			if (Boolean_required) {inputElmnt.required = Boolean_required};
+
+			if (str_list) {inputElmnt.list = str_list};
+
+			if (Boolean_readonly) {inputElmnt.readonly = Boolean_readonly;}
+
+			return inputElmnt;
+		}
+
+
+		function createLabel(str_label, str_for, arr_classList, str_error, Boolean_required) { // label factory
+
+			function createRequiredIndicator() { // label asterisk factory
+
+				var spanElmnt = document.createElement('span');
+
+				spanElmnt.classList.add('required-indicator');
+
+				spanElmnt.innerHTML = '*';
+
+				return spanElmnt;
+			}
+
+			var labelElmnt = document.createElement('label');
+
+			labelElmnt.innerHTML = str_label;
+
+			labelElmnt.for = str_for;
+
+			arr_classList.forEach(function(str_class) {labelElmnt.classList.add(str_class);});
+
+			if (str_error) {labelElmnt.dataset.error = str_error;}
+
+			if (Boolean_required) {labelElmnt.appendChild(createRequiredIndicator());}
+
+			return labelElmnt;
+		}
+
+		function createCustomError(str_id) {
+
+			var customErrElmnt = document.createElement('div');
+
+			customErrElmnt.id = str_id;
+
+			customErrElmnt.classList.add('custom-validate');
+
+			return customErrElmnt;
+		}
+		
+		
+		// Setup up form and container div
+
+			formElmt = document.createElement('form');
+
+			formElmt.classList.add('col');
+
+			formElmt.classList.add('s12');
+
+			formElmt.novalidate = true; // not sure if this is read-only
+
+			containerElmnt = document.createElement('div');
+
+			containerElmnt.classList.add('row');
+
+			formElmt.appendChild(containerElmnt);
+		
+
+		// Add event name field
+
+			rowElmnt = createRow(['input-field', 'col', 's12']);
+
+			rowElmnt.appendChild(createInput('text', 'event-name', ['validate']));
+
+			rowElmnt.appendChild(createLabel('Event Name', 'event-name', ['active'], 'Please enter event name', true);
+
+			containerElmnt.appendChild(rowElmnt);
+
+
+		// Add location field
+
+			rowElmnt = createRow(['input-field', 'col', 's12']);
+
+			rowElmnt.appendChild(createInput('text', 'event-location', [] , false, 'suggested-locations'));
+
+			rowElmnt.appendChild(createLabel('Location', 'event-location', [], 'Please enter event name', false);
+
+			datalistElmnt = document.createElement('datalist');
+
+			datalistElmnt.id = 'suggested-locations';
+
+			rowElmnt.appendChild(datalistElmnt);
+
+			containerElmnt.appendChild(createRow(['row']).appendChild(rowElmnt));
+
+
+		// Add start date and time field
+
+			// Date
+
+				rowElmnt = createRow(['input-field', 'col', 's6']);
+
+				rowElmnt.appendChild(createInput('text', 'event-start-date', ['datepicker', 'picker__input'] , true, '', true));
+
+				rowElmnt.appendChild(createLabel('Start Date', 'event-start-date', [], 'Please enter start date', true);
+
+				rowElmnt.appendChild(createCustomError('event-start-date-error'));
+
+			// Time
+
+				rwElmnt = createRow(['input-field', 'col', 's6']);
+
+				rwElmnt.appendChild(createInput('text', 'event-start-time', ['timepicker', 'picker__input'] , false, '', true));
+
+				rwElmnt.appendChild(createLabel('Start Time', 'event-start-time', [], 'Please enter start time', false);
+
+				rwElmnt.appendChild(createCustomError('event-start-time-error'));
+				
+				
+
+			// Add to container
+
+				elmnt = createRow(['row']);
+
+				elmnt.appendChild(rowElmnt);
+
+				elmnt.appendChild(rwElmnt);
+
+				containerElmnt.appendChild(elmnt);
+
+
+		// Add end date and time field
+
+			// Date
+
+				rowElmnt = createRow(['input-field', 'col', 's6']);
+
+				rowElmnt.appendChild(createInput('text', 'event-end-date', ['datepicker', 'picker__input'] , false, '', true));
+
+				rowElmnt.appendChild(createLabel('End Date', 'event-end-date', [], 'End date cannot be before start date', false);
+
+				rowElmnt.appendChild(createCustomError('event-end-date-error'));
+
+			// Time
+
+				rwElmnt = createRow(['input-field', 'col', 's6']);
+
+				rwElmnt.appendChild(createInput('text', 'event-end-time', ['timepicker', 'picker__input'] , false, '', true));
+
+				rwElmnt.appendChild(createLabel('End Time', 'event-end-time', [], 'Please enter end time', false);
+
+				rwElmnt.appendChild(createCustomError('event-end-time-error'));
+				
+				
+
+			// Add to container
+
+				elmnt = createRow(['row']);
+
+				elmnt.appendChild(rowElmnt);
+
+				elmnt.appendChild(rwElmnt);
+
+				containerElmnt.appendChild(elmnt);
+
 	};
 
 
