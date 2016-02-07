@@ -21,9 +21,15 @@ app.Controller = function() {
 	
 	var _currentView, // viewmodel currently presented in the UI
 
+	
 	_eventView, // viewmodel handling the event form
 
 	_eventListView, // viewmodel handling the event list
+
+	_guestView, // viewmodel handling the guest form
+
+	_guestListView, // viewmodel handling the guest list
+
 
 	_selectedAccount = null, // the currently selected account, or null if none selected
 
@@ -38,18 +44,18 @@ app.Controller = function() {
 
 	/** Gets or sets the currently selected (active) account
 	*
-	* @param {Account} selectedAccount The selected account
+	* @param {Account} selectedAccount The selected account, or null
 	*
-	* @return {Account} The selected account
+	* @return {Account} The selected account, or null
 	*
-	* @throws {IllegalArgumentError} If attempting to set account that is not an Account
+	* @throws {IllegalArgumentError} If attempting to set account that is not an Account, or null
 	*/
 	
 	this.selectedAccount = function (Account_account) {
 	
 		if (arguments.length > 0) {
 
-			if (Account_account.constructor === app.Account) {
+			if (Account_account === null || Account_account.constructor === app.Account) {
 			
 				_selectedAccount = Account_account;
 			}
@@ -66,18 +72,18 @@ app.Controller = function() {
 
 	/** Gets or sets the currently selected Event
 	*
-	* @param {Event} selectedAccount The selected event
+	* @param {Event} selectedAccount The selected event, or null
 	*
-	* @return {Event} The selected event
+	* @return {Event} The selected event, or null
 	*
-	* @throws {IllegalArgumentError} If attempting to set event that is not an Event
+	* @throws {IllegalArgumentError} If attempting to set event that is not an Event, or null
 	*/
 	
 	this.selectedEvent = function (Event_event) {
 	
 		if (arguments.length > 0) {
 
-			if (Event_event.constructor === app.Event) {
+			if (Event_event === null || Event_event.constructor === app.Event) {
 			
 				_selectedEvent = Event_event;
 			}
@@ -94,18 +100,18 @@ app.Controller = function() {
 
 	/** Gets or sets the currently selected guest
 	*
-	* @param {Person} selectedGuest The selected guest
+	* @param {Person} selectedGuest The selected guest, or null
 	*
-	* @return {Person} The selected guest
+	* @return {Person} The selected guest, or null
 	*
-	* @throws {IllegalArgumentError} If attempting to set guest that is not a Person
+	* @throws {IllegalArgumentError} If attempting to set guest that is not a Person, or null
 	*/
 	
 	this.selectedGuest = function (Person_guest) {
 	
 		if (arguments.length > 0) {
 
-			if (Person_guest.constructor === app.Person) {
+			if (Person_guest === null || Person_guest.constructor === app.Person) {
 			
 				_selectedGuest = Person_guest;
 			}
@@ -126,6 +132,7 @@ app.Controller = function() {
 	
 	/** Render guest list to the UI */
 	
+	/*
 	this.renderGuestList = function() {
 
 		var $list = $('#guest-list');
@@ -134,7 +141,7 @@ app.Controller = function() {
 
 		$list.append(_eventViews[0].render('guest-list')); //debug
 	}
-
+	*/
 	
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
@@ -152,7 +159,11 @@ app.Controller = function() {
 
 		this.selectedAccount(app.Account.registry.getObjectById(int_accountId));
 
-		app.EventView.renderList(_selectedAccount);
+		this.selectedEvent(null);
+
+		this.selectedGuest(null);
+
+		this.notifyObservers();
 	};
 
 
@@ -160,11 +171,9 @@ app.Controller = function() {
 
 		this.selectedEvent(app.Event.registry.getObjectById(int_eventId));
 
-		app.PersonView.renderList(_selectedEvent);
+		this.selectedGuest(null);
 
-		_eventView.update(this.selectedEvent());
-
-		// bind event form to event, display form
+		this.notifyObservers();
 	};
 
 
@@ -180,9 +189,7 @@ app.Controller = function() {
 
 		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
 
-		console.log(int_guestId);
-
-		// bind guest form to event, display form
+		this.notifyObservers();
 	};
 
 	
@@ -192,23 +199,38 @@ app.Controller = function() {
 
 			switch (observer.constructor) {
 
+				case app.EventListView:
+
+					observer.update(_selectedAccount);
+
+					break;
+
 				case app.EventView:
 
-					observer.update(_selectedEvent)
+					observer.update(_selectedEvent);
 
-					break
+					break;
+
+				case app.PersonListView:
+
+					observer.update(_selectedEvent);
+
+					break;
 			}
 		});
 	}
+
+
 	app.Controller.prototype.init = function() {
 
-		_eventView = new app.EventView();
+		this.registerObserver(new app.EventView());
 
-		this.registerObserver(_eventView);
+		this.registerObserver(new app.EventListView());
+
+		this.registerObserver(new app.PersonListView()); // guest list
+
 
 		this.onAccountSelected(0); //debug
-
-		this.onEventSelected(0); // debug
 
 		this.selectedAccount().defaultLocation('Copenhagen'); // debug
 
@@ -221,7 +243,7 @@ app.Controller = function() {
 	* Parameter parsing (constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 		
-	// None so far
+	// none so far
 	
 };
 

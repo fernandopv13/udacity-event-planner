@@ -91,177 +91,41 @@ app.EventView = function(Event_event) {
 	* @todo Get character counter to work on description field
 	 */
 	
-	app.EventView.prototype.render = function(event) {
+	app.EventView.prototype.render = function(Event_event) {
 
-		var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
+		var event = Event_event, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
 
-		// Setup up form and container div
+		if (event !== null) {
+			// Setup up form and container div
 
-			formElement =  this.createElement(
-			{
-				element: 'form',			
-				
-				attributes: {novalidate: true},
-				
-				classList: ['col', 's12']
-			});
-
-
-			containerDiv =  this.createElement(
-			{
-				element: 'div',			
-				
-				classList: ['row']
-			});
-			
-
-			formElement.appendChild(containerDiv);
-		
-
-		// Add event name field
-
-			innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
-				
-				classList: ['input-field', 'col', 's12']
-			});
-			
-			
-			innerDiv.appendChild(this.createElement( // input
-			{
-				element: 'input',			
-				
-				attributes: 
+				formElement =  this.createElement(
 				{
-					type: 'text',
+					element: 'form',			
 					
-					id: 'event-name',
+					attributes: {novalidate: true},
 					
-					value: event.name() ? event.name() : '',
-					
-					required: true
-				},
-				
-				classList: ['validate']
-			}));
-			
-			
-			labelElement = this.createElement( // label
-			{	
-				element: 'label',			
-				
-				attributes: {for: 'event-name', required: true},
-				
-				classList: event.name() ? ['form-label', 'active'] : ['form-label'],
-				
-				dataset: {error: 'Please enter event name'},
-				
-				innerHTML: 'Event Name'
-			});
-			
-			labelElement.appendChild(this.createElement( // required field indicator
-			{
-				element: 'span',
-
-				classList: ['required-indicator'],
-
-				innerHTML: '*'
-			}));
-			
-			innerDiv.appendChild(labelElement);
+					classList: ['col', 's12']
+				});
 
 
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
-				
-				classList: ['row']
-			});
-			
-			outerDiv.appendChild(innerDiv);
-			
-			containerDiv.appendChild(outerDiv);
-			
-		
-		// Add location field
-
-			innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
-				
-				classList: ['input-field', 'col', 's12']
-			});
-			
-			
-			innerDiv.appendChild(this.createElement( // input
-			{
-				element: 'input',			
-				
-				attributes:
+				containerDiv =  this.createElement(
 				{
-					type: 'text',
+					element: 'div',			
 					
-					id: 'event-location',
-					
-					value: event.location() ? event.location() : '',
-					
-					list: 'suggested-locations'
-				}
-			}));
-			
-			
-			innerDiv.appendChild(this.createElement( // label
-			{	
-				element: 'label',			
+					classList: ['row']
+				});
 				
-				attributes: {for: 'event-location'},
-				
-				classList: event.location() ? ['form-label', 'active'] : ['form-label'],
-				
-				dataset: {error: 'Please enter event location'},
-				
-				innerHTML: 'Location'
-			}));
-			
-			
-			innerDiv.appendChild(this.createElement( // data list
-			{	
-				element: 'datalist',			
-				
-				attributes: {id: 'suggested-locations'}
-			}));
-			
-			
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
-				
-				classList: ['row']
-			});
-						
-			outerDiv.appendChild(innerDiv);
-			
-			containerDiv.appendChild(outerDiv);			
 
-
-		// Add start date and time field
-
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
-				
-				classList: ['row']
-			});
+				formElement.appendChild(containerDiv);
 			
-			
-			// Date
+
+			// Add event name field
 
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
 					
-					classList: ['input-field', 'col', 's6']
+					classList: ['input-field', 'col', 's12']
 				});
 				
 				
@@ -269,20 +133,18 @@ app.EventView = function(Event_event) {
 				{
 					element: 'input',			
 					
-					attributes:
+					attributes: 
 					{
 						type: 'text',
 						
-						id: 'event-start-date',
+						id: 'event-name',
 						
-						value: event.start() ? event.start().toLocaleDateString() : '',
-						
-						readonly: true,
+						value: event.name() ? event.name() : '',
 						
 						required: true
 					},
 					
-					classList: ['validate', 'datepicker', 'picker__input']
+					classList: ['validate']
 				}));
 				
 				
@@ -290,15 +152,14 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'event-start-date'},
+					attributes: {for: 'event-name', required: true},
 					
-					classList: event.start() ? ['form-label', 'active'] : ['form-label'],
+					classList: event.name() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter start date'},
+					dataset: {error: 'Please enter event name'},
 					
-					innerHTML: 'Start Date'
+					innerHTML: 'Event Name'
 				});
-
 				
 				labelElement.appendChild(this.createElement( // required field indicator
 				{
@@ -310,27 +171,27 @@ app.EventView = function(Event_event) {
 				}));
 				
 				innerDiv.appendChild(labelElement);
-				
-				
-				innerDiv.appendChild(this.createElement( // custom error div
-				{	
-					element: 'div',			
+
+
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
 					
-					attributes: {id: 'event-start-date-error'},
-					
-					classList: ['custom-validate']
-				}));
+					classList: ['row']
+				});
 				
 				outerDiv.appendChild(innerDiv);
 				
+				containerDiv.appendChild(outerDiv);
 				
-			// Time
+			
+			// Add location field
 
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
 					
-					classList: ['input-field', 'col', 's6']
+					classList: ['input-field', 'col', 's12']
 				});
 				
 				
@@ -342,67 +203,321 @@ app.EventView = function(Event_event) {
 					{
 						type: 'text',
 						
-						id: 'event-start-time',
+						id: 'event-location',
 						
-						value: event.start() ? event.start().toLocaleTimeString() : '',
+						value: event.location() ? event.location() : '',
 						
-						readonly: true
-					},
-					
-					classList: ['timepicker', 'picker__input']
+						list: 'suggested-locations'
+					}
 				}));
-								
+				
 				
 				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'event-start-time'},
+					attributes: {for: 'event-location'},
 					
-					classList: event.start() ? ['form-label', 'active'] : ['form-label'],
+					classList: event.location() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter start time'},
+					dataset: {error: 'Please enter event location'},
 					
-					innerHTML: 'Start Time'
+					innerHTML: 'Location'
 				}));
 				
 				
-				innerDiv.appendChild(this.createElement( // custom error div
+				innerDiv.appendChild(this.createElement( // data list
 				{	
-					element: 'div',			
+					element: 'datalist',			
 					
-					attributes: {id: 'event-start-time-error'},
-					
-					classList:['custom-validate']
+					attributes: {id: 'suggested-locations'}
 				}));
 				
 				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
 				outerDiv.appendChild(innerDiv);
 				
-				
-				containerDiv.appendChild(outerDiv); // Add to container
+				containerDiv.appendChild(outerDiv);			
 
 
-		// Add end date and time field
+			// Add start date and time field
 
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
 				
-				classList: ['row']
-			});
 				
-			// Date
+				// Date
+
+					innerDiv =  this.createElement( // inner div
+					{
+						element: 'div',			
+						
+						classList: ['input-field', 'col', 's6']
+					});
+					
+					
+					innerDiv.appendChild(this.createElement( // input
+					{
+						element: 'input',			
+						
+						attributes:
+						{
+							type: 'text',
+							
+							id: 'event-start-date',
+							
+							value: event.start() ? event.start().toLocaleDateString() : '',
+							
+							readonly: true,
+							
+							required: true
+						},
+						
+						classList: ['validate', 'datepicker', 'picker__input']
+					}));
+					
+					
+					labelElement = this.createElement( // label
+					{	
+						element: 'label',			
+						
+						attributes: {for: 'event-start-date'},
+						
+						classList: event.start() ? ['form-label', 'active'] : ['form-label'],
+						
+						dataset: {error: 'Please enter start date'},
+						
+						innerHTML: 'Start Date'
+					});
+
+					
+					labelElement.appendChild(this.createElement( // required field indicator
+					{
+						element: 'span',
+
+						classList: ['required-indicator'],
+
+						innerHTML: '*'
+					}));
+					
+					innerDiv.appendChild(labelElement);
+					
+					
+					innerDiv.appendChild(this.createElement( // custom error div
+					{	
+						element: 'div',			
+						
+						attributes: {id: 'event-start-date-error'},
+						
+						classList: ['custom-validate']
+					}));
+					
+					outerDiv.appendChild(innerDiv);
+					
+					
+				// Time
+
+					innerDiv =  this.createElement( // inner div
+					{
+						element: 'div',			
+						
+						classList: ['input-field', 'col', 's6']
+					});
+					
+					
+					innerDiv.appendChild(this.createElement( // input
+					{
+						element: 'input',			
+						
+						attributes:
+						{
+							type: 'text',
+							
+							id: 'event-start-time',
+							
+							value: event.start() ? event.start().toLocaleTimeString() : '',
+							
+							readonly: true
+						},
+						
+						classList: ['timepicker', 'picker__input']
+					}));
+									
+					
+					innerDiv.appendChild(this.createElement( // label
+					{	
+						element: 'label',			
+						
+						attributes: {for: 'event-start-time'},
+						
+						classList: event.start() ? ['form-label', 'active'] : ['form-label'],
+						
+						dataset: {error: 'Please enter start time'},
+						
+						innerHTML: 'Start Time'
+					}));
+					
+					
+					innerDiv.appendChild(this.createElement( // custom error div
+					{	
+						element: 'div',			
+						
+						attributes: {id: 'event-start-time-error'},
+						
+						classList:['custom-validate']
+					}));
+					
+					
+					outerDiv.appendChild(innerDiv);
+					
+					
+					containerDiv.appendChild(outerDiv); // Add to container
+
+
+			// Add end date and time field
+
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+					
+				// Date
+
+					innerDiv =  this.createElement( // inner div
+					{
+						element: 'div',			
+						
+						classList: ['input-field', 'col', 's6']
+					});
+					
+					
+					innerDiv.appendChild(this.createElement( // input
+					{
+						element: 'input',			
+						
+						attributes:
+						{
+							type: 'text',
+							
+							id: 'event-end-date',
+							
+							value: event.end() ? event.end().toLocaleDateString() : '',
+							
+							readonly: true
+						},
+						
+						classList: ['datepicker', 'picker__input']
+					}));
+					
+					
+					innerDiv.appendChild(this.createElement( // label
+					{	
+						element: 'label',			
+						
+						attributes: {for: 'event-end-date'},
+						
+						classList: event.end() ? ['form-label', 'active'] : ['form-label'],
+						
+						dataset: {error: 'Please enter end date'},
+						
+						innerHTML: 'End Date'
+					}));
+					
+					
+					innerDiv.appendChild(this.createElement( // custom error div
+					{	
+						element: 'div',			
+						
+						attributes: {id: 'event-end-date-error'},
+						
+						classList: ['custom-validate']
+					}));
+					
+					
+					outerDiv.appendChild(innerDiv);
+
+
+				// Time
+					
+					innerDiv =  this.createElement( // inner div
+					{
+						element: 'div',			
+						
+						classList: ['input-field','col', 's6']
+					});
+					
+					
+					innerDiv.appendChild(this.createElement( // input
+					{
+						element: 'input',			
+						
+						attributes:
+						{
+							type: 'text',
+							
+							id: 'event-end-time',
+							
+							value: event.end() ? event.end().toLocaleTimeString() : '',
+							
+							readonly: true
+						},
+						
+						classList: ['timepicker', 'picker__input']
+					}));
+					
+					
+					innerDiv.appendChild(this.createElement( // label
+					{	
+						element: 'label',			
+						
+						attributes: {for: 'event-end-time'},
+						
+						classList: event.end() ? ['form-label', 'active'] : ['form-label'],
+						
+						dataset: {error: 'Please enter end time'},
+						
+						innerHTML: 'End Time'
+					}));
+					
+					
+					innerDiv.appendChild(this.createElement( // custom error div
+					{	
+						element: 'div',			
+						
+						attributes: {id: 'event-end-time-error'},
+						
+						classList: ['custom-validate']
+					}));
+					
+					
+					outerDiv.appendChild(innerDiv);
+
+
+					containerDiv.appendChild(outerDiv);
+
+
+			// Add event type field
 
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
 					
-					classList: ['input-field', 'col', 's6']
+					classList: ['input-field', 'col', 's12']
 				});
 				
-				
-				innerDiv.appendChild(this.createElement( // input
+				innerDiv.appendChild(this.createElement( //input
 				{
 					element: 'input',			
 					
@@ -410,14 +525,12 @@ app.EventView = function(Event_event) {
 					{
 						type: 'text',
 						
-						id: 'event-end-date',
+						id: 'event-type',
 						
-						value: event.end() ? event.end().toLocaleDateString() : '',
+						value: event.type() ? event.type() : '',
 						
-						readonly: true
-					},
-					
-					classList: ['datepicker', 'picker__input']
+						list: 'event-types'
+					}
 				}));
 				
 				
@@ -425,410 +538,298 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'event-end-date'},
+					attributes: {for: 'event-type'},
 					
-					classList: event.end() ? ['form-label', 'active'] : ['form-label'],
+					classList: event.type() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter end date'},
+					dataset: {error: 'Please enter event type'},
 					
-					innerHTML: 'End Date'
+					innerHTML: 'Event Type'
 				}));
 				
 				
-				innerDiv.appendChild(this.createElement( // custom error div
+				innerDiv.appendChild(this.createElement( // data list
 				{	
-					element: 'div',			
+					element: 'datalist',			
 					
-					attributes: {id: 'event-end-date-error'},
-					
-					classList: ['custom-validate']
+					attributes: {id: 'event-types'}
 				}));
 				
 				
-				outerDiv.appendChild(innerDiv);
-
-
-			// Time
-				
-				innerDiv =  this.createElement( // inner div
+				outerDiv =  this.createElement( // outer div
 				{
-					element: 'div',			
+					element: 'div',
 					
-					classList: ['input-field','col', 's6']
+					classList: ['row']
 				});
-				
-				
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'text',
-						
-						id: 'event-end-time',
-						
-						value: event.end() ? event.end().toLocaleTimeString() : '',
-						
-						readonly: true
-					},
-					
-					classList: ['timepicker', 'picker__input']
-				}));
-				
-				
-				innerDiv.appendChild(this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'event-end-time'},
-					
-					classList: event.end() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter end time'},
-					
-					innerHTML: 'End Time'
-				}));
-				
-				
-				innerDiv.appendChild(this.createElement( // custom error div
-				{	
-					element: 'div',			
-					
-					attributes: {id: 'event-end-time-error'},
-					
-					classList: ['custom-validate']
-				}));
-				
+							
 				
 				outerDiv.appendChild(innerDiv);
-
-
+				
 				containerDiv.appendChild(outerDiv);
 
 
-		// Add event type field
+			// Add capacity field
 
-			innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
-				
-				classList: ['input-field', 'col', 's12']
-			});
-			
-			innerDiv.appendChild(this.createElement( //input
-			{
-				element: 'input',			
-				
-				attributes:
+				innerDiv =  this.createElement( // inner div
 				{
-					type: 'text',
+					element: 'div',			
 					
-					id: 'event-type',
-					
-					value: event.type() ? event.type() : '',
-					
-					list: 'event-types'
-				}
-			}));
-			
-			
-			innerDiv.appendChild(this.createElement( // label
-			{	
-				element: 'label',			
+					classList: ['input-field', 'col', 's12']
+				});
 				
-				attributes: {for: 'event-type'},
 				
-				classList: event.type() ? ['form-label', 'active'] : ['form-label'],
-				
-				dataset: {error: 'Please enter event type'},
-				
-				innerHTML: 'Event Type'
-			}));
-			
-			
-			innerDiv.appendChild(this.createElement( // data list
-			{	
-				element: 'datalist',			
-				
-				attributes: {id: 'event-types'}
-			}));
-			
-			
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
-				
-				classList: ['row']
-			});
-						
-			
-			outerDiv.appendChild(innerDiv);
-			
-			containerDiv.appendChild(outerDiv);
-
-
-		// Add capacity field
-
-			innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
-				
-				classList: ['input-field', 'col', 's12']
-			});
-			
-			
-			innerDiv.appendChild(this.createElement( // input
-			{
-				element: 'input',			
-				
-				attributes:
+				innerDiv.appendChild(this.createElement( // input
 				{
-					type: 'number',
+					element: 'input',			
 					
-					id: 'event-capacity',
-					
-					min: 0,
-					
-					step: 1,
-					
-					value: event.capacity() ? event.capacity() : '',
-					
-					required: true
-				},
-				
-				classList: ['validate']
-			}));
-			
-			
-			labelElement = this.createElement( // label
-			{	
-				element: 'label',			
-				
-				attributes: {for: 'event-capacity'},
-				
-				classList: typeof event.capacity() === 'number' ? ['form-label', 'active'] : ['form-label'],
-				
-				dataset: {error: 'Please enter capacity'},
-				
-				innerHTML: 'Capacity'
-			});
-			
-			labelElement.appendChild(this.createElement( // required field indicator
-			{
-				element: 'span',
-
-				classList: ['required-indicator'],
-
-				innerHTML: '*'
-			}));
-			
-			innerDiv.appendChild(labelElement);
-
-			
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
-				
-				classList: ['row']
-			});
+					attributes:
+					{
+						type: 'number',
 						
-			outerDiv.appendChild(innerDiv);
-			
-			containerDiv.appendChild(outerDiv);
-
-
-		// Add host field
-
-			innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
+						id: 'event-capacity',
+						
+						min: 0,
+						
+						step: 1,
+						
+						value: event.capacity() ? event.capacity() : '',
+						
+						required: true
+					},
+					
+					classList: ['validate']
+				}));
 				
-				classList: ['input-field', 'col', 's12']
-			});
-			
-			
-			innerDiv.appendChild(this.createElement( // input
-			{
-				element: 'input',			
 				
-				attributes:
+				labelElement = this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'event-capacity'},
+					
+					classList: typeof event.capacity() === 'number' ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter capacity'},
+					
+					innerHTML: 'Capacity'
+				});
+				
+				labelElement.appendChild(this.createElement( // required field indicator
 				{
-					type: 'text',
-					
-					id: 'event-host',
-					
-					value: event.host() && event.host().name()? event.host().name() : '',
-				},
-				
-				classList: ['validate']
-			}));
-			
-			
-			innerDiv.appendChild(this.createElement( // label
-			{	
-				element: 'label',			
-				
-				attributes: {for: 'event-host'},
-				
-				classList: event.host() && event.host().name() ? ['form-label', 'active'] : ['form-label'],
-				
-				dataset: {error: 'Please enter host'},
-				
-				innerHTML: 'Host'
-			}));
-			
-			
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
-				
-				classList: ['row']
-			});
-						
-			
-			outerDiv.appendChild(innerDiv);
-			
-			containerDiv.appendChild(outerDiv);
+					element: 'span',
 
-		
-		// Add description field
+					classList: ['required-indicator'],
 
-			innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
+					innerHTML: '*'
+				}));
 				
-				classList: ['input-field', 'col', 's12']
-			});
-			
-			
-			innerDiv.appendChild(this.createElement( // input
-			{
-				element: 'textarea',			
+				innerDiv.appendChild(labelElement);
+
 				
-				attributes:
+				outerDiv =  this.createElement( // outer div
 				{
-					id: 'event-description',
+					element: 'div',
 					
-					value: event.description() ? event.description() : '',
+					classList: ['row']
+				});
+							
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+
+
+			// Add host field
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
 					
-					length: 120,
+					classList: ['input-field', 'col', 's12']
+				});
+				
+				
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
 					
-					maxlength: 120
-				},
-				
-				classList: ['materialize-textarea']
-			}));
-			
-			
-			innerDiv.appendChild(this.createElement( // label
-			{	
-				element: 'label',			
-				
-				attributes:	{for: 'event-description'},
-				
-				classList: event.description() ? ['form-label', 'active'] : ['form-label'],
-				
-				dataset: {error: 'Please enter description'},
-				
-				innerHTML: 'Description'
-			}));
-			
-			
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
-				
-				classList: ['row']
-			});
-			
+					attributes:
+					{
+						type: 'text',
 						
-			outerDiv.appendChild(innerDiv);
-			
-			containerDiv.appendChild(outerDiv);
-
-
-		// Add requirement indicator (asterisk) explanation
-
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',			
-				
-				classList: ['row']
-			});
-			
-			outerDiv.appendChild(this.createElement({
-			
-				element: 'p',
-				
-				classList: ['required-indicator'],
+						id: 'event-host',
+						
+						value: event.host() && event.host().name()? event.host().name() : '',
+					},
 					
-				innerHTML: '* indicates a required field'
-			}));
-			
-			
-			containerDiv.appendChild(outerDiv);
-
-		
-		// Add submit and cancel buttons
-
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',			
+					classList: ['validate']
+				}));
 				
-				classList: ['row', 'form-submit']
-			});
+				
+				innerDiv.appendChild(this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'event-host'},
+					
+					classList: event.host() && event.host().name() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter host'},
+					
+					innerHTML: 'Host'
+				}));
+				
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
+				
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+
 			
+			// Add description field
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
+				
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'textarea',			
+					
+					attributes:
+					{
+						id: 'event-description',
+						
+						value: event.description() ? event.description() : '',
+						
+						length: 120,
+						
+						maxlength: 120
+					},
+					
+					classList: ['materialize-textarea']
+				}));
+				
+				
+				innerDiv.appendChild(this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes:	{for: 'event-description'},
+					
+					classList: event.description() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter description'},
+					
+					innerHTML: 'Description'
+				}));
+				
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+				
+							
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+
+
+			// Add requirement indicator (asterisk) explanation
+
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				});
+				
+				outerDiv.appendChild(this.createElement({
+				
+					element: 'p',
+					
+					classList: ['required-indicator'],
+						
+					innerHTML: '* indicates a required field'
+				}));
+				
+				
+				containerDiv.appendChild(outerDiv);
+
 			
-			outerDiv.appendChild(this.createElement({ // cancel button
-				
-				element: 'a',
-				
-				attributes: {id: 'event-form-cancel'},
-				
-				classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+			// Add submit and cancel buttons
 
-				innerHTML: 'Cancel'
-			}));
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row', 'form-submit']
+				});
+				
+				
+				outerDiv.appendChild(this.createElement({ // cancel button
+					
+					element: 'a',
+					
+					attributes: {id: 'event-form-cancel'},
+					
+					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+
+					innerHTML: 'Cancel'
+				}));
+				
+				
+				buttonElement =  this.createElement({ // submit button
+					
+					element: 'a',
+					
+					attributes: {id: 'event-form-submit'},
+					
+					classList: ['waves-effect', 'waves-light', 'btn'],
+
+					innerHTML: 'Done'
+				});
+				
+				
+				buttonElement.appendChild(this.createElement({ // 'send' icon
+					
+					element: 'i',
+					
+					classList: ['material-icons', 'right'],
+					
+					innerHTML: 'send'
+				}));
+				
+				
+				outerDiv.appendChild(buttonElement);
+
+				containerDiv.appendChild(outerDiv);
+
 			
-			
-			buttonElement =  this.createElement({ // submit button
-				
-				element: 'a',
-				
-				attributes: {id: 'event-form-submit'},
-				
-				classList: ['waves-effect', 'waves-light', 'btn'],
+			// Update DOM
 
-				innerHTML: 'Done'
-			});
-			
-			
-			buttonElement.appendChild(this.createElement({ // 'send' icon
-				
-				element: 'i',
-				
-				classList: ['material-icons', 'right'],
-				
-				innerHTML: 'send'
-			}));
-			
-			
-			outerDiv.appendChild(buttonElement);
+				var $formDiv = $('#event-form');
 
-			containerDiv.appendChild(outerDiv);
+				$formDiv.empty();
 
-		
-		// Update DOM
-
-			var $form = $('#event-form');
-
-			$form.empty();
-
-			$form.append(formElement);
+				$formDiv.append(formElement);
 
 
-		// (Re)assign event handlers to form elements
+			// (Re)assign event handlers to form elements
 
 			$('textarea#description').characterCounter();
 
@@ -856,6 +857,22 @@ app.EventView = function(Event_event) {
 			$('#event-capacity').keyup(this.validateCapacity);
 
 			$('#event-form-submit').click(this.submit);
+		}
+
+		else {
+
+			var $formDiv = $('#event-form');
+
+			$formDiv.empty();
+
+			$formDiv.append(this.createElement(
+			{
+
+				element: 'p',
+
+				innerHTML: 'No event selected. Please select or create an event in order to edit details.'
+			}));
+		}
 	};
 
 

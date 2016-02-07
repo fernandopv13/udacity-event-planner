@@ -1,27 +1,23 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class EventListView Implements IViewable IObserver
+* public class PersonListView Implements IViewable IObserver
 ******************************************************************************/
 
 var app = app || {};
 
-/** @classdesc ViewObject for event list(s). Renders list in UI, and captures UI events in list.
+/** @classdesc ViewObject for person list(s). Renders list in UI, and captures UI events in list.
 *
 * @constructor
 *
 * @author Ulrik H. Gade, February 2016
-*
-* @todo Add unit testing (of rendering in browser)
 */
 
-app.EventListView = function(Event_event) {
+app.PersonListView = function() {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
-	
-	//var _event, // (Event) The event in the data model this EventView is observing
 	
 	var _implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
 
@@ -39,14 +35,14 @@ app.EventListView = function(Event_event) {
 	
 	// none so far
 
+	
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
 	// none so far
 	
-	
-	
+		
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
@@ -69,35 +65,67 @@ app.EventListView = function(Event_event) {
 
 	/** Respond to tap/click on event in events list */
 	
-	app.EventView.prototype.onclick = function(int_eventId) {
+	app.PersonListView.prototype.onclick = function(int_personId) {
 		
-		app.controller.onEventSelected(int_eventId);
+		app.controller.onGuestSelected(int_personId);
 	};
 	
 
-	/** Renders collection of events in an account to list in the UI
+	/** Renders guest list for an event in the UI
 	*
-	* @param {Account} Account The currently selected Account
+	* @param {Event} The event whose guest list we want to render
 	 */
 
-	app.EventListView.prototype.render = function(Account_account) {
+	app.PersonListView.prototype.render = function(Event_event) {
 		
-		function renderListItem(Event_event) {
-
+		function renderListItem(Person_guest) {
+			
 			var listElmnt = document.createElement('li');
 			
 			listElmnt.classList.add('collection-item');
+
+			listElmnt.classList.add('avatar');
 			
-			listElmnt.id = 'event-list-id-' + Event_event.id();
-			
-			
-			var divElmnt = document.createElement('div');
-			
-			divElmnt.innerHTML = (Event_event.name() ? Event_event.name() : 'Unnamed event') + ' (' + Event_event.guests().length + ')';
-			
-			divElmnt.onclick = function(e) {app.controller.onEventSelected(Event_event.id());};
+			listElmnt.id = 'guest-list-id-' + Person_guest.id();
+
+			listElmnt.onclick = function(e) {app.controller.onGuestSelected(Person_guest.id());};
 			
 			
+			var avatarElmnt;
+
+			if (Person_guest.imgUrl()) { // use existing image
+
+				avatarElmnt = document.createElement('img');
+
+				avatarElmnt.classList.add('circle');
+
+				avatarElmnt.src = Person_guest.imgUrl();
+
+				avatarElmnt.alt = Person_guest.name();
+			}
+
+			else { // use generic avatar
+
+				avatarElmnt = document.createElement('i');
+
+				avatarElmnt.classList.add('material-icons');
+
+				avatarElmnt.classList.add('circle');
+
+				avatarElmnt.innerHTML = 'account_circle'
+			}
+
+
+			var spanElmnt = document.createElement('span');
+			
+			spanElmnt.innerHTML = Person_guest.name() ? Person_guest.name() : '';
+			
+			
+			var pElmnt = document.createElement('p');
+
+			pElmnt.innerHTML = Person_guest.email() && Person_guest.email().address() ? Person_guest.email().address() : '';
+
+
 			var anchorElmnt = document.createElement('a');
 			
 			anchorElmnt.classList.add('secondary-content');
@@ -105,26 +133,30 @@ app.EventListView = function(Event_event) {
 			anchorElmnt.href = '#!';
 			
 			
-			var iconElement = document.createElement('i');
+			var iconElmnt = document.createElement('i');
 			
-			iconElement.classList.add('material-icons');
+			iconElmnt.classList.add('material-icons');
 			
-			iconElement.innerHTML = 'chevron_right';
+			iconElmnt.innerHTML = 'chevron_right';
 
 			
-			listElmnt.appendChild(divElmnt);
+			listElmnt.appendChild(avatarElmnt);
+
+			listElmnt.appendChild(spanElmnt);
+
+			listElmnt.appendChild(pElmnt);
+
+			listElmnt.appendChild(anchorElmnt);
 			
-			divElmnt.appendChild(anchorElmnt);
-			
-			anchorElmnt.appendChild(iconElement);
-			
-			
+			anchorElmnt.appendChild(iconElmnt);
+
+
 			return listElmnt;
 		}
 
 		
 		var UlElement = document.createElement('ul'); // generate list
-		
+
 		UlElement.classList.add('collection');
 
 		UlElement.classList.add('with-header');
@@ -134,18 +166,18 @@ app.EventListView = function(Event_event) {
 
 		headerElmnt.classList.add('collection-header');
 
-		headerElmnt.innerHTML = 'My Events';
+		headerElmnt.innerHTML = 'Guest List';
 
 		UlElement.appendChild(headerElmnt);
 
 		
-		if (Account_account !== null) { // we have an account
+		if (Event_event !== null) {
 
-			var events = Account_account.events() // generate list items
-			
-			for (var prop in events) {
+			var guests = Event_event.guests()
 
-				UlElement.appendChild(renderListItem(events[prop]));
+			for (var prop in guests) { // generate list items
+
+				UlElement.appendChild(renderListItem(guests[prop]));
 			}
 		}
 
@@ -155,46 +187,49 @@ app.EventListView = function(Event_event) {
 
 				element: 'p',
 
-				innerHTML: 'No account selected. Please select or create an account in order to see events.'
+				innerHTML: 'No event selected. Please select or create an event in order to see guests.'
 			}));
 		}
+
 		
-		var $list = $('#event-list'); // update DOM
+		var $list = $('#guest-list');  // update DOM
 
 		$list.empty();
 
 		$list.append(UlElement);
 	};
 
+
+	/** Update event presentation when model has changed */
 	
-	/** Updates event list presentation when notified by controller of change */
-	
-	app.EventListView.prototype.update = function(IModelable_Account) {
+	app.PersonListView.prototype.update = function(Imodelable_Event) {
 		
-		this.render(IModelable_Account);
+		this.render(Imodelable_Event);
 	};
-
-
+	
 	/*----------------------------------------------------------------------------------------
 	* Parameter parsing (constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 		
-	// none so far
+	// If neeeded, we can simulate polymorphism here by testing named parameters in the
+	// constructor's signature and/or by analysing the 'arguments' array-like collection of
+	// parameters, and branching all or parts of the constructor logic accordingly.
+	//
+	//Probably most useful if kept relatively simple. Else maybe better to create new class.
 	
 };
 
 
 /*----------------------------------------------------------------------------------------
-* Public static members
+* Public class (static) members
 *---------------------------------------------------------------------------------------*/
 
-// none so far
 
 
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.EventView);
+void app.InterfaceHelper.mixInto(app.IObserver, app.PersonListView);
 
-void app.InterfaceHelper.mixInto(app.IViewable, app.EventView);
+void app.InterfaceHelper.mixInto(app.IViewable, app.PersonListView);
