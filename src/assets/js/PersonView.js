@@ -1,12 +1,12 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class EventView Implements IObservable IObserver IViewable
+* public class PersonView Implements IObservable IObserver IViewable
 ******************************************************************************/
 
 var app = app || {};
 
-/** @classdesc ViewObject for individual events. Renders event in UI, and captures UI events on event.
+/** @classdesc ViewObject for individual persons. Renders person in UI, and captures UI events on person.
 *
 * @constructor
 *
@@ -14,14 +14,10 @@ var app = app || {};
 *
 * @author Ulrik H. Gade, February 2016
 *
-* @todo Set end date to start date when initially selecting start date, supressing end datepicker
-*
-* @todo Add unit testing of rendering in browser
-*
-* @todo Verify geolocation and remove mock
+* @todo 
 */
 
-app.EventView = function(Event_event) {
+app.PersonView = function(Person_person) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
@@ -56,12 +52,12 @@ app.EventView = function(Event_event) {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Cancels entries in, and navigation to, event form
+	/** Cancels entries in, and navigation to, person form
 	*
 	* @todo Everything(!)
 	*/
 
-	app.EventView.prototype.cancel = function() {
+	app.PersonView.prototype.cancel = function() {
 
 		// do something!
 	}
@@ -87,34 +83,35 @@ app.EventView = function(Event_event) {
 	*
 	* Overrides default method in IObservable.
 	*
-	* @param {Event} The Event passing data in the form onto the observers
+	* @param {Person} The Person passing data in the form onto the observers
 	*
 	* @return void
 	 */
+
 	/*
-	app.EventView.prototype.notifyObservers = function(IModelable_event, int_objId) {
+	app.PersonView.prototype.notifyObservers = function(IModelable_person, int_objId) {
 
 		this.observers.forEach(function(observer) {
 
-			observer.update(IModelable_event, int_objId);
+			observer.update(IModelable_person, int_objId);
 		});
 	};
 	*/
 
-	/** (Re)renders event to form in UI
+	/** (Re)renders person to form in UI
 	*
-	* @param {Event} The event from which to present data in the form
+	* @param {Person} The person from which to present data in the form
 	*
 	* @return void
 	*
 	* @todo Get character counter to work on description field
 	 */
 	
-	app.EventView.prototype.render = function(Event_event) {
+	app.PersonView.prototype.render = function(Person_person) {
 
-		var event = Event_event, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
+		var person = Person_person, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
 
-		if (event !== null) {
+		if (person !== null) {
 			// Setup up form and container div
 
 				formElement =  this.createElement(
@@ -138,16 +135,16 @@ app.EventView = function(Event_event) {
 				formElement.appendChild(containerDiv);
 			
 
-			// Add hidden event id field
+			// Add hidden person id field
 
 			containerDiv.appendChild(this.createElement({
 
 				element: 'input',
 
-				attributes: {id: 'event-id', type: 'hidden', value: Event_event.id()}
+				attributes: {id: 'person-id', type: 'hidden', value: Person_person.id()}
 			}))
 
-			// Add event name field
+			// Add person name field
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -165,9 +162,9 @@ app.EventView = function(Event_event) {
 					{
 						type: 'text',
 						
-						id: 'event-name',
+						id: 'person-name',
 						
-						value: event.name() ? event.name() : '',
+						value: person.name() ? person.name() : '',
 						
 						required: true
 					},
@@ -180,13 +177,13 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'event-name', required: true},
+					attributes: {for: 'person-name', required: true},
 					
-					classList: event.name() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.name() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter event name'},
+					dataset: {error: 'Please enter person name'},
 					
-					innerHTML: 'Event Name'
+					innerHTML: 'Person Name'
 				});
 				
 				labelElement.appendChild(this.createElement( // required field indicator
@@ -231,9 +228,9 @@ app.EventView = function(Event_event) {
 					{
 						type: 'text',
 						
-						id: 'event-location',
+						id: 'person-location',
 						
-						value: event.location() ? event.location() : '',
+						value: person.location() ? person.location() : '',
 						
 						list: 'suggested-locations'
 					}
@@ -244,11 +241,11 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'event-location'},
+					attributes: {for: 'person-location'},
 					
-					classList: event.location() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.location() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter event location'},
+					dataset: {error: 'Please enter person location'},
 					
 					innerHTML: 'Location'
 				}));
@@ -302,9 +299,9 @@ app.EventView = function(Event_event) {
 						{
 							type: 'text',
 							
-							id: 'event-start-date',
+							id: 'person-start-date',
 							
-							value: event.start() ? event.start().toLocaleDateString() : '',
+							value: person.start() ? person.start().toLocaleDateString() : '',
 							
 							readonly: true,
 							
@@ -319,9 +316,9 @@ app.EventView = function(Event_event) {
 					{	
 						element: 'label',			
 						
-						attributes: {for: 'event-start-date'},
+						attributes: {for: 'person-start-date'},
 						
-						classList: event.start() ? ['form-label', 'active'] : ['form-label'],
+						classList: person.start() ? ['form-label', 'active'] : ['form-label'],
 						
 						dataset: {error: 'Please enter start date'},
 						
@@ -345,7 +342,7 @@ app.EventView = function(Event_event) {
 					{	
 						element: 'div',			
 						
-						attributes: {id: 'event-start-date-error'},
+						attributes: {id: 'person-start-date-error'},
 						
 						classList: ['custom-validate']
 					}));
@@ -371,9 +368,9 @@ app.EventView = function(Event_event) {
 						{
 							type: 'text',
 							
-							id: 'event-start-time',
+							id: 'person-start-time',
 							
-							value: event.start() ? event.start().toLocaleTimeString() : '',
+							value: person.start() ? person.start().toLocaleTimeString() : '',
 							
 							readonly: true
 						},
@@ -386,9 +383,9 @@ app.EventView = function(Event_event) {
 					{	
 						element: 'label',			
 						
-						attributes: {for: 'event-start-time'},
+						attributes: {for: 'person-start-time'},
 						
-						classList: event.start() ? ['form-label', 'active'] : ['form-label'],
+						classList: person.start() ? ['form-label', 'active'] : ['form-label'],
 						
 						dataset: {error: 'Please enter start time'},
 						
@@ -400,7 +397,7 @@ app.EventView = function(Event_event) {
 					{	
 						element: 'div',			
 						
-						attributes: {id: 'event-start-time-error'},
+						attributes: {id: 'person-start-time-error'},
 						
 						classList:['custom-validate']
 					}));
@@ -439,9 +436,9 @@ app.EventView = function(Event_event) {
 						{
 							type: 'text',
 							
-							id: 'event-end-date',
+							id: 'person-end-date',
 							
-							value: event.end() ? event.end().toLocaleDateString() : '',
+							value: person.end() ? person.end().toLocaleDateString() : '',
 							
 							readonly: true
 						},
@@ -454,9 +451,9 @@ app.EventView = function(Event_event) {
 					{	
 						element: 'label',			
 						
-						attributes: {for: 'event-end-date'},
+						attributes: {for: 'person-end-date'},
 						
-						classList: event.end() ? ['form-label', 'active'] : ['form-label'],
+						classList: person.end() ? ['form-label', 'active'] : ['form-label'],
 						
 						dataset: {error: 'Please enter end date'},
 						
@@ -468,7 +465,7 @@ app.EventView = function(Event_event) {
 					{	
 						element: 'div',			
 						
-						attributes: {id: 'event-end-date-error'},
+						attributes: {id: 'person-end-date-error'},
 						
 						classList: ['custom-validate']
 					}));
@@ -495,9 +492,9 @@ app.EventView = function(Event_event) {
 						{
 							type: 'text',
 							
-							id: 'event-end-time',
+							id: 'person-end-time',
 							
-							value: event.end() ? event.end().toLocaleTimeString() : '',
+							value: person.end() ? person.end().toLocaleTimeString() : '',
 							
 							readonly: true
 						},
@@ -510,9 +507,9 @@ app.EventView = function(Event_event) {
 					{	
 						element: 'label',			
 						
-						attributes: {for: 'event-end-time'},
+						attributes: {for: 'person-end-time'},
 						
-						classList: event.end() ? ['form-label', 'active'] : ['form-label'],
+						classList: person.end() ? ['form-label', 'active'] : ['form-label'],
 						
 						dataset: {error: 'Please enter end time'},
 						
@@ -524,7 +521,7 @@ app.EventView = function(Event_event) {
 					{	
 						element: 'div',			
 						
-						attributes: {id: 'event-end-time-error'},
+						attributes: {id: 'person-end-time-error'},
 						
 						classList: ['custom-validate']
 					}));
@@ -536,7 +533,7 @@ app.EventView = function(Event_event) {
 					containerDiv.appendChild(outerDiv);
 
 
-			// Add event type field
+			// Add person type field
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -553,11 +550,11 @@ app.EventView = function(Event_event) {
 					{
 						type: 'text',
 						
-						id: 'event-type',
+						id: 'person-type',
 						
-						value: event.type() ? event.type() : '',
+						value: person.type() ? person.type() : '',
 						
-						list: 'event-types'
+						list: 'person-types'
 					}
 				}));
 				
@@ -566,13 +563,13 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'event-type'},
+					attributes: {for: 'person-type'},
 					
-					classList: event.type() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.type() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter event type'},
+					dataset: {error: 'Please enter person type'},
 					
-					innerHTML: 'Event Type'
+					innerHTML: 'Person Type'
 				}));
 				
 				
@@ -580,7 +577,7 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'datalist',			
 					
-					attributes: {id: 'event-types'}
+					attributes: {id: 'person-types'}
 				}));
 				
 				
@@ -615,13 +612,13 @@ app.EventView = function(Event_event) {
 					{
 						type: 'number',
 						
-						id: 'event-capacity',
+						id: 'person-capacity',
 						
 						min: 0,
 						
 						step: 1,
 						
-						value: event.capacity() ? event.capacity() : '',
+						value: person.capacity() ? person.capacity() : '',
 						
 						required: true
 					},
@@ -634,9 +631,9 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'event-capacity'},
+					attributes: {for: 'person-capacity'},
 					
-					classList: typeof event.capacity() === 'number' ? ['form-label', 'active'] : ['form-label'],
+					classList: typeof person.capacity() === 'number' ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter capacity'},
 					
@@ -685,9 +682,9 @@ app.EventView = function(Event_event) {
 					{
 						type: 'text',
 						
-						id: 'event-host',
+						id: 'person-host',
 						
-						value: event.host() && event.host().name()? event.host().name() : '',
+						value: person.host() && person.host().name()? person.host().name() : '',
 					},
 					
 					classList: ['validate']
@@ -698,9 +695,9 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'event-host'},
+					attributes: {for: 'person-host'},
 					
-					classList: event.host() && event.host().name() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.host() && person.host().name() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter host'},
 					
@@ -737,9 +734,9 @@ app.EventView = function(Event_event) {
 					
 					attributes:
 					{
-						id: 'event-description',
+						id: 'person-description',
 						
-						value: event.description() ? event.description() : '',
+						value: person.description() ? person.description() : '',
 						
 						length: 120,
 						
@@ -754,9 +751,9 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'label',			
 					
-					attributes:	{for: 'event-description'},
+					attributes:	{for: 'person-description'},
 					
-					classList: event.description() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.description() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter description'},
 					
@@ -813,7 +810,7 @@ app.EventView = function(Event_event) {
 					
 					element: 'a',
 					
-					attributes: {id: 'event-form-cancel'},
+					attributes: {id: 'person-form-cancel'},
 					
 					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
 
@@ -825,7 +822,7 @@ app.EventView = function(Event_event) {
 					
 					element: 'a',
 					
-					attributes: {id: 'event-form-submit'},
+					attributes: {id: 'person-form-submit'},
 					
 					classList: ['waves-effect', 'waves-light', 'btn'],
 
@@ -850,14 +847,14 @@ app.EventView = function(Event_event) {
 			
 			// Update DOM
 
-				var $formDiv = $('#event-form');
+				var $formDiv = $('#person-form');
 
 				$formDiv.empty();
 
 				$formDiv.append(formElement);
 
 
-			// (Re)assign event handlers to form elements
+			// (Re)assign person handlers to form elements
 
 				$('textarea#description').characterCounter();
 
@@ -877,19 +874,19 @@ app.EventView = function(Event_event) {
 				});
 
 				
-				$('#event-location').focus(this.suggestLocations);
+				$('#person-location').focus(this.suggestLocations);
 
 				
-				$('#event-name').keyup(this.validateName);
+				$('#person-name').keyup(this.validateName);
 
-				$('#event-capacity').keyup(this.validateCapacity);
+				$('#person-capacity').keyup(this.validateCapacity);
 
-				$('#event-form-submit').click(function() {this.submit();}.bind(this));
+				$('#person-form-submit').click(function() {this.submit();}.bind(this));
 		}
 
 		else { // present default message
 
-			var $formDiv = $('#event-form');
+			var $formDiv = $('#person-form');
 
 			$formDiv.empty();
 
@@ -898,22 +895,22 @@ app.EventView = function(Event_event) {
 
 				element: 'p',
 
-				innerHTML: 'No event selected. Please select or create an event in order to edit details.'
+				innerHTML: 'No person selected. Please select or create an person in order to edit details.'
 			}));
 		}
 	};
 
 
-	/** Submits event form to controller if it passes all validations
+	/** Submits person form to controller if it passes all validations
 	*
 	* @return {Boolean} true if validation and is succesful, otherwise false
 	*
 	* @todo Fix host hack
 	*/
 
-	app.EventView.prototype.submit = function() {
+	app.PersonView.prototype.submit = function() {
 
-		// Event handler binds to this, so reference works here
+		// Person handler binds to this, so reference works here
 		
 		if (this.validateName() && // Submit results if all validations pass
 
@@ -923,23 +920,23 @@ app.EventView = function(Event_event) {
 
 			this.validateCapacity()) { 
 
-			// Nofity observers by passing them a new Event with the data from the form
+			// Nofity observers by passing them a new Person with the data from the form
 
 			this.notifyObservers(
 				
-				parseInt($('#event-id').val()),
+				parseInt($('#person-id').val()),
 
-				new app.Event(
+				new app.Person(
 
-					$('#event-name').val(),
+					$('#person-name').val(),
 
-					$('#event-type').val(),
+					$('#person-type').val(),
 
 					function() { // start date
 
-						var start_date = $('#event-start-date').val();
+						var start_date = $('#person-start-date').val();
 
-						var start_time = $('#event-start-time').val();
+						var start_time = $('#person-start-time').val();
 
 						if (start_date !== '') {
 
@@ -958,9 +955,9 @@ app.EventView = function(Event_event) {
 
 					function() { // end date
 
-						var end_date = $('#event-end-date').val();
+						var end_date = $('#person-end-date').val();
 
-						var end_time = $('#event-end-time').val();
+						var end_time = $('#person-end-time').val();
 
 						if (end_date !== '') {
 
@@ -977,16 +974,16 @@ app.EventView = function(Event_event) {
 						return undefined;
 					}(),
 
-					$('#event-location').val(),
+					$('#person-location').val(),
 
-					$('#event-description').val(),
+					$('#person-description').val(),
 
 					function() { // host (hack)
 
-						new app.Organization($('#event-host').val())
+						new app.Organization($('#person-host').val())
 					}(),
 
-					parseInt($('#event-capacity').val())
+					parseInt($('#person-capacity').val())
 				)
 			);
 			
@@ -997,14 +994,14 @@ app.EventView = function(Event_event) {
 	}
 
 
-	/** Suggests venues for event based on device's location (if available)
+	/** Suggests venues for person based on device's location (if available)
 	*
 	* @return {void} Directly updates location datalist in the DOM
 	*
 	* @todo Add address info to venue display
 	*/
 
-	app.EventView.prototype.suggestLocations = function() {
+	app.PersonView.prototype.suggestLocations = function() {
 
 		var account = app.controller.selectedAccount(),
 
@@ -1079,28 +1076,28 @@ app.EventView = function(Event_event) {
 	}
 
 
-	/** Updates event presentation when notified by controller of change */
+	/** Updates person presentation when notified by controller of change */
 	
-	app.EventView.prototype.update = function(IModelable_event) {
+	app.PersonView.prototype.update = function(IModelable_person) {
 		
-		this.render(IModelable_event);
+		this.render(IModelable_person);
 	};
 	
 
-	/* Event handler for interactive validation of capacity field
+	/* Person handler for interactive validation of capacity field
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.EventView.prototype.validateCapacity = function(event) {
+	app.PersonView.prototype.validateCapacity = function(person) {
 		
-		var $capacity = $('#event-capacity');
+		var $capacity = $('#person-capacity');
 
 		if ($capacity.val() === '') { // empty
 
-			if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
 
-				event.target.labels[0].dataset.error = 'Please enter capacity';
+				person.target.labels[0].dataset.error = 'Please enter capacity';
 
 			}
 
@@ -1120,9 +1117,9 @@ app.EventView = function(Event_event) {
 		
 		else if ($capacity.val() < 0) { // negative number
 
-			if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
 
-				event.target.labels[0].dataset.error = 'Capacity cannot be negative';
+				person.target.labels[0].dataset.error = 'Capacity cannot be negative';
 			}
 
 			else { // Other browsers (updates value but not display, falls back on value in HTML)
@@ -1139,9 +1136,9 @@ app.EventView = function(Event_event) {
 
 			$capacity.removeClass('invalid');
 
-			if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
 
-				event.target.labels[0].dataset.error = 'Please enter capacity'; // can't get jQuery.data() to work
+				person.target.labels[0].dataset.error = 'Please enter capacity'; // can't get jQuery.data() to work
 			}
 
 			else { // Other browsers (updates value but not display, falls back on value in HTML)
@@ -1154,29 +1151,29 @@ app.EventView = function(Event_event) {
 	}
 
 
-	/** Event handler for interactive validation of start and end date fields
+	/** Person handler for interactive validation of start and end date fields
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
-	app.EventView.prototype.validateDateRange = function() {
+	app.PersonView.prototype.validateDateRange = function() {
 
 		if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
 
 		
 		// Set up references to DOM
 
-			var $start = $('#event-start-date'),
+			var $start = $('#person-start-date'),
 
 			start_date = new Date($start.val()),
 
-			$start_err = $('#event-start-date-error'),
+			$start_err = $('#person-start-date-error'),
 
-			$end = $('#event-end-date'),
+			$end = $('#person-end-date'),
 
 			end_date = new Date($end.val()),
 
-			$end_err = $('#event-end-date-error');
+			$end_err = $('#person-end-date-error');
 
 		
 		// Validate
@@ -1229,33 +1226,33 @@ app.EventView = function(Event_event) {
 
 		// Cascade validation to start/end times
 
-			 // 'this' refers to date picker here, not eventview, so invoke method using full path
+			 // 'this' refers to date picker here, not personview, so invoke method using full path
 			
-			app.EventView.prototype.validateTimeRange();
+			app.PersonView.prototype.validateTimeRange();
 
 		return true;
 	}
 
 
-	/* Event handler for interactive validation of event name field
+	/* Person handler for interactive validation of person name field
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
-	app.EventView.prototype.validateName = function(event) {
+	app.PersonView.prototype.validateName = function(person) {
 
-		var $name = $('#event-name');
+		var $name = $('#person-name');
 
 		if ($name.val() === '') { // empty
 		
-			if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
 
-				event.target.labels[0].dataset.error = 'Please enter event name';
+				person.target.labels[0].dataset.error = 'Please enter person name';
 			}
 
 			else { // Other browsers (updated value may not display, falls back on value in HTML)
 
-				$name.next('label').data('error', 'Please enter event name');
+				$name.next('label').data('error', 'Please enter person name');
 			}
 
 			$name.addClass('invalid');
@@ -1272,29 +1269,29 @@ app.EventView = function(Event_event) {
 	}
 
 
-	/** Event handler for interactive validation of start and end time fields
+	/** Person handler for interactive validation of start and end time fields
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	 */
 
-	app.EventView.prototype.validateTimeRange = function() {
+	app.PersonView.prototype.validateTimeRange = function() {
 
 		if (this.close) {this.close()} // close picker (if called from dialog); setting closeOnClear true does not work (bug)
 
 
 		// Set up references to DOM
 
-		var start_date = new Date($('#event-start-date').val()),
+		var start_date = new Date($('#person-start-date').val()),
 
-		end_date = new Date($('#event-end-date').val()),
+		end_date = new Date($('#person-end-date').val()),
 
-		start_time = $('#event-start-time').val(),
+		start_time = $('#person-start-time').val(),
 
-		$end_time = $('#event-end-time'),
+		$end_time = $('#person-end-time'),
 
 		end_time = $end_time.val(),
 
-		$end_time_err = $('#event-end-time-error');
+		$end_time_err = $('#person-end-time-error');
 
 		
 		if (end_time !== '' && 	start_time !== '' && // end and start time selected
@@ -1356,8 +1353,8 @@ app.EventView = function(Event_event) {
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IObservable, app.EventView);
+void app.InterfaceHelper.mixInto(app.IObservable, app.PersonView);
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.EventView);
+void app.InterfaceHelper.mixInto(app.IObserver, app.PersonView);
 
-void app.InterfaceHelper.mixInto(app.IViewable, app.EventView);
+void app.InterfaceHelper.mixInto(app.IViewable, app.PersonView);

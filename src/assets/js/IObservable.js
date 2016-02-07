@@ -47,14 +47,20 @@ app.IObservable = function() {
 
 /** Notifies observers that object state has been changed
 *
-* @return {Array} Array of IObservers
+* @param {int} Id The Id of the object that triggered the notification
+*
+* @param {Object} Object an object carrying information about the event triggering the notification
+*
+* @return void
 */
 
-app.IObservable.prototype.default_notifyObservers = function(int_objId) {
+app.IObservable.prototype.default_notifyObservers = function(int_objId, Object_obj) {
 
 	this.observers.forEach(function(observer) {
 
-		observer.update(this, int_objId);
+		Object_obj = Object_obj ? Object_obj : this;
+
+		observer.update(Object_obj, int_objId);
 		
 	}.bind(this));
 };
