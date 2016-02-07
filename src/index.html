@@ -90,98 +90,7 @@
 
 		<div id="guest-list" class="row"></div>
 
-		<div id="event-form" class="row" >
-			<form class="col s12" novalidate>
-				<!--h4 class="collection-header">Barts Big Bash</h4-->
-				<div class="row">
-					<div class="row">
-						<div class="input-field col s12">
-							<input id="event-name" type="text" class="validate" value="Web site launch party" required>
-							<label for="event-name" data-error="Please enter event name" style="width:100%" class="active" >Event name<span class="required-asterisk">*</span></label>
-						</div>
-					</div>
-					<div class="row">
-						<div class="input-field col s12">
-							<input id="event-location" type="text" list="suggested-locations">
-							<label for="event-location">Location</label>
-							<datalist id="suggested-locations"></datalist>
-						</div>
-					</div>
-					<div class="row">
-						<div class="input-field col s6">
-							<input id="event-start-date" type="text" class="datepicker picker__input" readonly required>
-							<label for="event-start-date" data-error="Please enter start date" style="width:100%">Start date<span class="required-asterisk">*</span></label>
-							<div id="event-start-date-error" class="custom-validate"></div>
-						</div>
-						<div class="input-field col s6">
-							<input id="event-start-time" type="text" class="timepicker picker__input" readonly required>
-							<label for="event-start-time" data-error="Please enter start time" style="width:100%">Start time</label>
-							<div id="event-start-time-error" class="customValidate"></div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="input-field col s6">
-							<input id="event-end-date" type="text" class="datepicker picker__input" readonly required>
-							<label for="event-end-date" data-error="End date cannot be before start date" style="width:100%;">End date</label>
-							<div id="event-end-date-error" class="customValidate"></div>
-						</div>
-						<div class="input-field col s6">
-							<input id="event-end-time" type="text" class="timepicker picker__input" readonly required>
-							<label for="event-end-time" data-error="Please enter end time" style="width:100%">End time</label>
-							<div id="event-end-time-error" class="customValidate"></div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="input-field col s12">
-							<input id="event-type" list="event-types" type="text">
-							<label for="event-type">Event Type</label>
-							<datalist id="event-types">
-								<option value="Anniversary"></option>
-								<option value="Birthday"></option>
-								<option value="Family gathering"></option>
-								<option value="Party"></option>
-								<option value="Religious festival"></option>
-								<option value="Wedding"></option>
-							</datalist>
-						</div>
-					</div>
-					<div class="row">
-						<div class="input-field col s12">
-							<input id="event-capacity" placeholder="Max. number of guests" type="number" min="0" step="1" value="50" class="validate" required>
-							<label for="event-capacity" data-error="Please enter capacity (min. 0)" class="active" style="width:100%;">Capacity<span class="required-asterisk">*</span></label>
-						</div>
-					</div>
-					<div class="row">
-						<div class="input-field col s12">
-							<input id="event-host" type="text" class="validate">
-							<label for="event-host">Host</label>
-						</div>
-					</div>
-					<div class="row">
-						<div class="input-field col s12">
-							<textarea id="event-description" class="materialize-textarea" length="120" maxlength="120"></textarea>
-							<label for="event-description">Description</label>
-						</div>
-					</div>
-					<div class="row">
-						<p>
-							<span class="required-indicator">*</span>
-							indicates a required field
-						</p>
-					</div>
-					<div class="row form-submit">
-						<a id="event-form-cancel" class="waves-effect waves-teal btn-flat">
-							Cancel
-						</a>
-						<a id="event-form-submit" class="waves-effect waves-light btn">
-							<i class="material-icons right">send</i>
-							Done
-						</a>
-					</div>
-				</div>
-
-			</form>
-		</div>
+		<div id="event-form" class="row"></div>
 
 		
 
@@ -217,6 +126,7 @@
 		<script type="text/javascript">
 			
 			$(document).ready(function() {
+				/*
 				$('#event-location').focus(app.EventView.suggestLocations);
 				$('#event-name').keyup(app.EventView.validateName);
 				$('#event-capacity').keyup(app.EventView.validateCapacity);
@@ -237,6 +147,7 @@
 					format: 'H:i',
 					onSet: app.EventView.validateTimeRange
 				});
+				*/
 			});
 
 			window.onload = function() {

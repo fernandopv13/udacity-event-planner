@@ -160,6 +160,8 @@ app.Controller = function() {
 
 		app.PersonView.renderList(_selectedEvent);
 
+		_eventView.update(this.selectedEvent());
+
 		// bind event form to event, display form
 	};
 

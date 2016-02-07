@@ -34,26 +34,7 @@ app.EventView = function(Event_event) {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
-	/** Gets and sets the event */
-
-	/*
-	this.event = function(Event_event) {
-
-		if(Event_event) {
-
-			if (Event_event.constructor === app.Event) {
-
-				_event = Event_event;
-			}
-
-			else {
-
-				throw new IllegalArgumentError('Event must be instance of Event');
-			}
-		}
-
-		return _event;
-	}*/
+	// none so far
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -98,11 +79,18 @@ app.EventView = function(Event_event) {
 	};
 	
 
-	/** Render event to form */
+	/** (Re)renders event to form in UI
+	*
+	* @param {Event} The event from which to present data in the form
+	*
+	* @return void
+	*
+	* @todo Get character counter to work on description field
+	 */
 	
-	this.render = function(event) {
-		
-		var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
+	app.EventView.prototype.render = function(event) {
+
+		var formElement, containerDiv, innerDiv, outerDiv, classList, labelElement, buttonElement, iconElement;
 
 		// Setup up form and container div
 
@@ -156,13 +144,15 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
+			classList = ['form-label']; if (event.name()) {classList.push('active');}
+			
 			labelElement = this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-name', required: true},
 				
-				classList: ['active', 'form-label'],
+				classList: classList,
 				
 				dataset: {error: 'Please enter event name'},
 				
@@ -220,13 +210,15 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
+			classList = ['form-label']; if (event.location()) {classList.push('active');}
+
 			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-location'},
 				
-				classList: ['form-label'],
+				classList: classList,
 				
 				dataset: {error: 'Please enter event location'},
 				
@@ -295,13 +287,15 @@ app.EventView = function(Event_event) {
 				}));
 				
 				
+				classList = ['form-label']; if (event.start()) {classList.push('active');}
+
 				labelElement = this.createElement( // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'event-start-date'},
 					
-					classList: ['form-label'],
+					classList: classList,
 					
 					dataset: {error: 'Please enter start date'},
 					
@@ -362,13 +356,15 @@ app.EventView = function(Event_event) {
 				}));
 								
 				
+				classList = ['form-label']; if (event.start()) {classList.push('active');}
+
 				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'event-start-time'},
 					
-					classList: ['form-label'],
+					classList: classList,
 					
 					dataset: {error: 'Please enter start time'},
 					
@@ -401,7 +397,7 @@ app.EventView = function(Event_event) {
 				classList: ['row']
 			});
 				
-				// Date
+			// Date
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -430,13 +426,15 @@ app.EventView = function(Event_event) {
 				}));
 				
 				
+				classList = ['form-label']; if (event.end()) {classList.push('active');}
+
 				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'event-end-date'},
 					
-					classList: ['form-label'],
+					classList: classList,
 					
 					dataset: {error: 'Please enter end date'},
 					
@@ -486,13 +484,15 @@ app.EventView = function(Event_event) {
 				}));
 				
 				
+				classList = ['form-label']; if (event.end()) {classList.push('active');}
+
 				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'event-end-time'},
 					
-					classList: ['form-label'],
+					classList: classList,
 					
 					dataset: {error: 'Please enter end time'},
 					
@@ -542,13 +542,15 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
+			classList = ['form-label']; if (event.type()) {classList.push('active');}
+
 			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-type'},
 				
-				classList: ['active','form-label'],
+				classList: classList,
 				
 				dataset: {error: 'Please enter event type'},
 				
@@ -609,13 +611,16 @@ app.EventView = function(Event_event) {
 				classList: ['validate']
 			}));
 			
+			
+			classList = ['form-label']; if (event.capacity()) {classList.push('active');}
+
 			labelElement = this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-capacity'},
 				
-				classList: ['form-label'],
+				classList: classList,
 				
 				dataset: {error: 'Please enter capacity'},
 				
@@ -666,20 +671,22 @@ app.EventView = function(Event_event) {
 					
 					id: 'event-host',
 					
-					value: event.host() ? event.host().name() : '',
+					value: event.host() && event.host().name()? event.host().name() : '',
 				},
 				
 				classList: ['validate']
 			}));
 			
 			
+			classList = ['form-label']; if (event.host() && event.host().name()) {classList.push('active');}
+
 			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-host'},
 				
-				classList: ['form-label'],
+				classList: classList,
 				
 				dataset: {error: 'Please enter host'},
 				
@@ -699,6 +706,7 @@ app.EventView = function(Event_event) {
 			
 			containerDiv.appendChild(outerDiv);
 
+		
 		// Add description field
 
 			innerDiv =  this.createElement( // inner div
@@ -711,12 +719,10 @@ app.EventView = function(Event_event) {
 			
 			innerDiv.appendChild(this.createElement( // input
 			{
-				element: 'input',			
+				element: 'textarea',			
 				
 				attributes:
 				{
-					type: 'textarea',
-					
 					id: 'event-description',
 					
 					value: event.description() ? event.description() : '',
@@ -730,13 +736,15 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
+			classList = ['form-label']; if (event.description()) {classList.push('active');}
+
 			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes:	{for: 'event-description'},
 				
-				classList: ['form-label'],
+				classList: classList,
 				
 				dataset: {error: 'Please enter description'},
 				
@@ -795,7 +803,9 @@ app.EventView = function(Event_event) {
 				
 				attributes: {id: 'event-form-cancel'},
 				
-				classList: ['waves-effect', 'waves-teal', 'btn-flat']
+				classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+
+				innerHTML: 'Cancel'
 			}));
 			
 			
@@ -805,7 +815,9 @@ app.EventView = function(Event_event) {
 				
 				attributes: {id: 'event-form-submit'},
 				
-				classList: ['waves-effect', 'waves-light', 'btn']
+				classList: ['waves-effect', 'waves-light', 'btn'],
+
+				innerHTML: 'Done'
 			});
 			
 			
@@ -823,8 +835,46 @@ app.EventView = function(Event_event) {
 
 			containerDiv.appendChild(outerDiv);
 
+		
+		// Update DOM
 
-		return formElement;
+			var $form = $('#event-form');
+
+			$form.empty();
+
+			$form.append(formElement);
+
+			console.log(formElement);
+
+
+		// (Re)assign event handlers to form elements
+
+			$('textarea#description').characterCounter();
+
+			$('.datepicker').pickadate({
+				//closeOnSelect: true, // bug: ineffective
+				closeOnClear: true,
+				onSet: app.EventView.validateDateRange,
+				selectMonths: true, // Creates a dropdown to control month
+				selectYears: 15 // Creates a dropdown of 15 years to control year
+			});
+
+			$('.timepicker').pickatime({
+				//closeOnSelect: true, // bug: ineffective
+				closeOnClear: true,
+				format: 'H:i',
+				onSet: app.EventView.validateTimeRange
+			});
+
+			
+			$('#event-location').focus(app.EventView.suggestLocations);
+
+			
+			$('#event-name').keyup(app.EventView.validateName);
+
+			$('#event-capacity').keyup(app.EventView.validateCapacity);
+
+			$('#event-form-submit').click(app.EventView.submit);
 	};
 
 
@@ -832,7 +882,7 @@ app.EventView = function(Event_event) {
 	
 	app.EventView.prototype.update = function(IModelable_event) {
 		
-		this.render(event);
+		this.render(IModelable_event);
 	};
 	
 	/*----------------------------------------------------------------------------------------
@@ -929,6 +979,11 @@ app.EventView.renderList = function(Account_account) {
 	$list.append(ULElmnt);
 };
 
+
+/** Suggest venues for event based on device's location (if available).
+*
+* Directly updates location datalist in the DOM.
+*/
 
 app.EventView.suggestLocations = function() {
 
@@ -1207,8 +1262,6 @@ app.EventView.validateTimeRange = function() {
 
 		start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
 
-		console.log(end_date < start_date);
-		
 		if (end_date < start_date) { // end (time) is before start (time)
 
 			$end_time_err.html('End time cannot be before start time');

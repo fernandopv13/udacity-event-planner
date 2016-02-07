@@ -103,10 +103,7 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 	
 		for (prop in obj_specs.attributes) {
 			
-			if (obj_specs.attributes[prop]) {
-			
-				element.setAttribute(prop, obj_specs.attributes[prop]);
-			}
+			element.setAttribute(prop, obj_specs.attributes[prop]);
 		}
 	}
 	
