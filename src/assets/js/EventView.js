@@ -90,7 +90,7 @@ app.EventView = function(Event_event) {
 	
 	app.EventView.prototype.render = function(event) {
 
-		var formElement, containerDiv, innerDiv, outerDiv, classList, labelElement, buttonElement, iconElement;
+		var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
 
 		// Setup up form and container div
 
@@ -144,15 +144,13 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
-			classList = ['form-label']; if (event.name()) {classList.push('active');}
-			
 			labelElement = this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-name', required: true},
 				
-				classList: classList,
+				classList: event.name() ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter event name'},
 				
@@ -210,15 +208,13 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
-			classList = ['form-label']; if (event.location()) {classList.push('active');}
-
 			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-location'},
 				
-				classList: classList,
+				classList: event.location() ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter event location'},
 				
@@ -283,19 +279,17 @@ app.EventView = function(Event_event) {
 						required: true
 					},
 					
-					classList: ['datepicker', 'picker__input']
+					classList: ['validate', 'datepicker', 'picker__input']
 				}));
 				
 				
-				classList = ['form-label']; if (event.start()) {classList.push('active');}
-
 				labelElement = this.createElement( // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'event-start-date'},
 					
-					classList: classList,
+					classList: event.start() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter start date'},
 					
@@ -356,15 +350,13 @@ app.EventView = function(Event_event) {
 				}));
 								
 				
-				classList = ['form-label']; if (event.start()) {classList.push('active');}
-
 				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'event-start-time'},
 					
-					classList: classList,
+					classList: event.start() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter start time'},
 					
@@ -426,15 +418,13 @@ app.EventView = function(Event_event) {
 				}));
 				
 				
-				classList = ['form-label']; if (event.end()) {classList.push('active');}
-
 				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'event-end-date'},
 					
-					classList: classList,
+					classList: event.end() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter end date'},
 					
@@ -484,15 +474,13 @@ app.EventView = function(Event_event) {
 				}));
 				
 				
-				classList = ['form-label']; if (event.end()) {classList.push('active');}
-
 				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'event-end-time'},
 					
-					classList: classList,
+					classList: event.end() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter end time'},
 					
@@ -542,15 +530,13 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
-			classList = ['form-label']; if (event.type()) {classList.push('active');}
-
 			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-type'},
 				
-				classList: classList,
+				classList: event.type() ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter event type'},
 				
@@ -612,15 +598,13 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
-			classList = ['form-label']; if (event.capacity()) {classList.push('active');}
-
 			labelElement = this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-capacity'},
 				
-				classList: classList,
+				classList: typeof event.capacity() === 'number' ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter capacity'},
 				
@@ -678,15 +662,13 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
-			classList = ['form-label']; if (event.host() && event.host().name()) {classList.push('active');}
-
 			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes: {for: 'event-host'},
 				
-				classList: classList,
+				classList: event.host() && event.host().name() ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter host'},
 				
@@ -736,15 +718,13 @@ app.EventView = function(Event_event) {
 			}));
 			
 			
-			classList = ['form-label']; if (event.description()) {classList.push('active');}
-
 			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
 				attributes:	{for: 'event-description'},
 				
-				classList: classList,
+				classList: event.description() ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter description'},
 				
@@ -861,7 +841,7 @@ app.EventView = function(Event_event) {
 				//closeOnSelect: true, // bug: ineffective
 				closeOnClear: true,
 				format: 'H:i',
-				onSet: app.EventView.validateTimeRange
+				onSet: this.validateTimeRange
 			});
 
 			
@@ -872,13 +852,41 @@ app.EventView = function(Event_event) {
 
 			$('#event-capacity').keyup(this.validateCapacity);
 
-			$('#event-form-submit').click(app.EventView.submit);
+			$('#event-form-submit').click(this.submit);
 	};
 
 
-	/** Suggest venues for event based on device's location (if available).
+	/** Submits event form if it passes all validations
 	*
-	* Directly updates location datalist in the DOM.
+	* @return {Boolean} true if validation and is succesful, otherwise false
+	*/
+
+	app.EventView.prototype.submit = function() {
+
+		// 'this' refers to the form element here, so using full paths to methods.
+		// This should be OK, as none of the validators operate directly on the eventview.
+
+		var valid = app.EventView.prototype.validateName() +
+
+					app.EventView.prototype.validateDateRange() +
+
+					//app.EventView.prototype.EventView.validateTimeRange() + 
+
+					app.EventView.prototype.validateCapacity();
+
+		if (valid) {
+
+			// call controller
+
+		}
+
+		return valid;
+	}
+
+
+	/** Suggests venues for event based on device's location (if available)
+	*
+	* @return {void} Directly updates location datalist in the DOM
 	*
 	* @todo Add address info to venue display
 	*/
@@ -966,7 +974,10 @@ app.EventView = function(Event_event) {
 	};
 	
 
-	/* Event handler for interactive validation of capacity field */
+	/* Event handler for interactive validation of capacity field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
 
 	app.EventView.prototype.validateCapacity = function(event) {
 		
@@ -1030,8 +1041,11 @@ app.EventView = function(Event_event) {
 	}
 
 
-	/** Event handler for interactive validation of start and end date fields */
-
+	/** Event handler for interactive validation of start and end date fields
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+	
 	app.EventView.prototype.validateDateRange = function() {
 
 		if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
@@ -1039,31 +1053,31 @@ app.EventView = function(Event_event) {
 		
 		// Set up references to DOM
 
-		var $start = $('#event-start-date'),
+			var $start = $('#event-start-date'),
 
-		start_date = new Date($start.val()),
+			start_date = new Date($start.val()),
 
-		$start_err = $('#event-start-date-error'),
+			$start_err = $('#event-start-date-error'),
 
-		$end = $('#event-end-date'),
+			$end = $('#event-end-date'),
 
-		end_date = new Date($end.val()),
+			end_date = new Date($end.val()),
 
-		$end_err = $('#event-end-date-error');
+			$end_err = $('#event-end-date-error');
 
 		
 		// Validate
 
-		if ($start.val() === '') { // start not selected
+			if ($start.val() === '') { // start not selected
 
-			$start_err.html('Please select start date');
+				$start_err.html('Please select start date');
 
-			$start_err.css('display', 'block');
+				$start_err.css('display', 'block');
 
-			$start.addClass('invalid');
+				$start.addClass('invalid');
 
-			return false;
-		}
+				return false;
+			}
 
 		/* focus causes end datepicker to open, no time to resolve, skip for now
 		else if (end === 'Invalid date') { // start selected, but not end
@@ -1100,13 +1114,22 @@ app.EventView = function(Event_event) {
 			$end.removeClass('invalid');
 		}
 
-		app.EventView.validateTimeRange();	
+		// Cascade validation to start/end times
 
+			 // 'this' refers to date picker here, not eventview, so invoke method using full path
+			
+			app.EventView.prototype.validateTimeRange();
+
+		
 		return true;
 	}
 
-	/* Event handler for interactive validation of event name field */
 
+	/* Event handler for interactive validation of event name field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+	
 	app.EventView.prototype.validateName = function(event) {
 
 		var $name = $('#event-name');
@@ -1134,6 +1157,69 @@ app.EventView = function(Event_event) {
 		}
 
 		return true;
+	}
+
+
+	/** Event handler for interactive validation of start and end time fields
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	 */
+
+	app.EventView.prototype.validateTimeRange = function() {
+
+		if (this.close) {this.close()} // close picker (if called from dialog); setting closeOnClear true does not work (bug)
+
+
+		// Set up references to DOM
+
+		var start_date = new Date($('#event-start-date').val()),
+
+		end_date = new Date($('#event-end-date').val()),
+
+		start_time = $('#event-start-time').val(),
+
+		$end_time = $('#event-end-time'),
+
+		end_time = $end_time.val(),
+
+		$end_time_err = $('#event-end-time-error');
+
+		
+		if (end_time !== '' && 	start_time !== '' && // end and start time selected
+			!isNaN(end_date.valueOf()) && // end date selected
+			 end_date.valueOf() === start_date.valueOf()) {  //end date same as start date
+			
+			// Set hours and minutes on start and end dates before comparison
+
+			end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
+
+			start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
+
+			if (end_date < start_date) { // end (time) is before start (time)
+
+				$end_time_err.html('End time cannot be before start time');
+
+				$end_time_err.css('display', 'block');
+
+				$end_time.addClass('invalid');
+
+				return false;
+			}
+
+			else {
+
+				$end_time_err.css('display', 'none');
+
+				$end_time.removeClass('invalid');
+			}
+		}
+
+		else {
+
+			$end_time_err.css('display', 'none');
+
+			$end_time.removeClass('invalid');
+		}
 	}
 
 
@@ -1231,82 +1317,6 @@ app.EventView.renderList = function(Account_account) {
 	$list.append(ULElmnt);
 };
 
-
-/** Event handler for interactive validation of end time field*/
-
-app.EventView.validateTimeRange = function() {
-
-	if (this.close) {this.close()} // close picker (if called from dialog); setting closeOnClear true does not work (bug)
-
-
-	// Set up references to DOM
-
-	var start_date = new Date($('#event-start-date').val()),
-
-	end_date = new Date($('#event-end-date').val()),
-
-	start_time = $('#event-start-time').val(),
-
-	$end_time = $('#event-end-time'),
-
-	end_time = $end_time.val(),
-
-	$end_time_err = $('#event-end-time-error');
-
-	
-	if (end_time !== '' && 	start_time !== '' && // end and start time selected
-		!isNaN(end_date.valueOf()) && // end date selected
-		 end_date.valueOf() === start_date.valueOf()) {  //end date same as start date
-		
-		// Set hours and minutes on start and end dates before comparison
-
-		end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
-
-		start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
-
-		if (end_date < start_date) { // end (time) is before start (time)
-
-			$end_time_err.html('End time cannot be before start time');
-
-			$end_time_err.css('display', 'block');
-
-			$end_time.addClass('invalid');
-
-			return false;
-		}
-
-		else {
-
-			$end_time_err.css('display', 'none');
-
-			$end_time.removeClass('invalid');
-		}
-	}
-
-	else {
-
-		$end_time_err.css('display', 'none');
-
-		$end_time.removeClass('invalid');
-	}
-}
-
-
-app.EventView.prototype.submit = function() {
-
-	var valid = this.validateName() +
-
-				this.validateDateRange() +
-
-				app.EventView.validateTimeRange() + 
-
-				this.validateCapacity();
-
-	if (valid) {
-
-		// call controller
-	}
-}
 
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
