@@ -55,6 +55,17 @@ app.EventView = function(Event_event) {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
+	/** Cancels entries in, and navigation to, event form
+	*
+	* @todo Everything(!)
+	*/
+
+	app.EventView.prototype.cancel = function() {
+
+		// do something!
+	}
+
+
 	/** Returns true if class implements the interface passed in (by function reference)
 	*
 	* (Method realization required by ISerializable.)
@@ -68,14 +79,6 @@ app.EventView = function(Event_event) {
 	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
-	};
-	
-
-	/** Respond to tap/click on event in events list */
-	
-	app.EventView.prototype.onclick = function(int_eventId) {
-		
-		app.controller.onEventSelected(int_eventId);
 	};
 	
 
@@ -966,7 +969,7 @@ app.EventView = function(Event_event) {
 	}
 
 
-	/** Update event presentation when model has changed */
+	/** Updates event presentation when notified by controller of change */
 	
 	app.EventView.prototype.update = function(IModelable_event) {
 		
@@ -1236,87 +1239,7 @@ app.EventView = function(Event_event) {
 * Public static methods
 *---------------------------------------------------------------------------------------*/
 
-/** Renders collection of events in account to list in UI
-*
-* Static method because no single instance has knowledge of the full collection.
-*
-* @param {Account} Account The currently selected Account
- */
-
-app.EventView.renderList = function(Account_account) {
-	
-	function renderListItem(Event_event) {
-
-		var listElmnt = document.createElement('li');
-		
-		listElmnt.classList.add('collection-item');
-		
-		listElmnt.id = 'event-list-id-' + Event_event.id();
-		
-		
-		var divElmnt = document.createElement('div');
-		
-		divElmnt.innerHTML = (Event_event.name() ? Event_event.name() : 'Unnamed event') + ' (' + Event_event.guests().length + ')';
-		
-		divElmnt.onclick = function(e) {app.controller.onEventSelected(Event_event.id());};
-		
-		
-		var anchorElmnt = document.createElement('a');
-		
-		anchorElmnt.classList.add('secondary-content');
-
-		anchorElmnt.href = '#!';
-		
-		
-		var iconElement = document.createElement('i');
-		
-		iconElement.classList.add('material-icons');
-		
-		iconElement.innerHTML = 'chevron_right';
-
-		
-		listElmnt.appendChild(divElmnt);
-		
-		divElmnt.appendChild(anchorElmnt);
-		
-		anchorElmnt.appendChild(iconElement);
-		
-		
-		return listElmnt;
-	}
-
-	
-	var ULElmnt = document.createElement('ul'); // generate list
-	
-	ULElmnt.classList.add('collection');
-
-	ULElmnt.classList.add('with-header');
-
-
-	var headerElmnt = document.createElement('h4'); // generate header
-
-	headerElmnt.classList.add('collection-header');
-
-	headerElmnt.innerHTML = 'My Events';
-
-	ULElmnt.appendChild(headerElmnt);
-
-	
-	var events = Account_account.events() // generate list items
-	
-	for (var prop in events) {
-
-		ULElmnt.appendChild(renderListItem(events[prop]));
-	}
-
-	
-	var $list = $('#event-list'); // update DOM
-
-	$list.empty();
-
-	$list.append(ULElmnt);
-};
-
+// none so far
 
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor

@@ -19,7 +19,9 @@ app.Controller = function() {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _eventView, // viewmodel handling the event form
+	var _currentView, // viewmodel currently presented in the UI
+
+	_eventView, // viewmodel handling the event form
 
 	_eventListView, // viewmodel handling the event list
 
@@ -184,9 +186,25 @@ app.Controller = function() {
 	};
 
 	
+	this.notifyObservers = function() {
+
+		this.observers.forEach(function(observer) {
+
+			switch (observer.constructor) {
+
+				case app.EventView:
+
+					observer.update(_selectedEvent)
+
+					break
+			}
+		});
+	}
 	app.Controller.prototype.init = function() {
 
 		_eventView = new app.EventView();
+
+		this.registerObserver(_eventView);
 
 		this.onAccountSelected(0); //debug
 
