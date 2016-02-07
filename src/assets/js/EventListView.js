@@ -85,61 +85,116 @@ app.EventListView = function(Event_event) {
 
 	app.EventListView.prototype.render = function(Account_account) {
 		
-		function renderListItem(Event_event) {
+		function renderListItem(Event_event, self) {
 
-			var listElmnt = document.createElement('li');
-			
-			listElmnt.classList.add('collection-item');
-			
-			listElmnt.id = 'event-list-id-' + Event_event.id();
-			
-			
-			var divElmnt = document.createElement('div');
-			
-			divElmnt.innerHTML = (Event_event.name() ? Event_event.name() : 'Unnamed event') + ' (' + Event_event.guests().length + ')';
-			
-			divElmnt.onclick = function(e) {app.controller.onEventSelected(Event_event.id());};
-			
-			
-			var anchorElmnt = document.createElement('a');
-			
-			anchorElmnt.classList.add('secondary-content');
+			var listElmnt = self.createElement({
 
-			anchorElmnt.href = '#!';
+				element: 'li',
+
+				attributes: {id: 'event-list-id-' + Event_event.id()},
+
+				classList: ['collection-item']
+			});
+
+			//var listElmnt = document.createElement('li');
+			
+			//listElmnt.classList.add('collection-item');
+			
+			//listElmnt.id = 'event-list-id-' + Event_event.id();
 			
 			
-			var iconElement = document.createElement('i');
+			//var divElmnt = document.createElement('div');
 			
-			iconElement.classList.add('material-icons');
+			//divElmnt.innerHTML = (Event_event.name() ? Event_event.name() : 'Unnamed event') + ' (' + Event_event.guests().length + ')';
 			
-			iconElement.innerHTML = 'chevron_right';
+			var divElmnt = self.createElement({
+
+				element: 'div',
+
+				innerHTML: (Event_event.name() ? Event_event.name() : 'Unnamed event') + ' (' + Event_event.guests().length + ')',
+
+				listeners:
+				{
+					click: function(e) {app.controller.onEventSelected(Event_event.id());}
+				}
+			});
+
+			//divElmnt.onclick = function(e) {app.controller.onEventSelected(Event_event.id());};
+			
+			
+			var anchorElmnt = self.createElement({
+
+				element: 'a',
+
+				attributes: {href: '#!'},
+
+				classList: ['secondary-content']
+
+			});
+
+			//var anchorElmnt = document.createElement('a');
+			
+			//anchorElmnt.classList.add('secondary-content');
+
+			//anchorElmnt.href = '#!';
+			
+
+			anchorElmnt.appendChild(self.createElement({ // icon
+
+				element: 'i',
+
+				classList: ['material-icons'],
+
+				innerHTML: 'chevron_right'
+			}));
+			
+			//var iconElement = document.createElement('i');
+			
+			//iconElement.classList.add('material-icons');
+			
+			//iconElement.innerHTML = 'chevron_right';
 
 			
 			listElmnt.appendChild(divElmnt);
 			
 			divElmnt.appendChild(anchorElmnt);
 			
-			anchorElmnt.appendChild(iconElement);
+			//anchorElmnt.appendChild(iconElement);
 			
 			
 			return listElmnt;
 		}
 
+		var UlElement = this.createElement({
+
+			element: 'ul',
+
+			classList: ['collection', 'with-header']
+		});
+
+		//var UlElement = document.createElement('ul'); // generate list
 		
-		var UlElement = document.createElement('ul'); // generate list
-		
-		UlElement.classList.add('collection');
+		//UlElement.classList.add('collection');
 
-		UlElement.classList.add('with-header');
+		//UlElement.classList.add('with-header');
 
 
-		var headerElmnt = document.createElement('h4'); // generate header
+		UlElement.appendChild(this.createElement({
 
-		headerElmnt.classList.add('collection-header');
+			element: 'h4',
 
-		headerElmnt.innerHTML = 'My Events';
+			classList: ['collection-header'],
 
-		UlElement.appendChild(headerElmnt);
+			innerHTML: 'My Events'
+		}));
+
+		//var headerElmnt = document.createElement('h4'); // generate header
+
+		//headerElmnt.classList.add('collection-header');
+
+		//headerElmnt.innerHTML = 'My Events';
+
+		//UlElement.appendChild(headerElmnt);
 
 		
 		if (Account_account !== null) { // we have an account
@@ -148,7 +203,7 @@ app.EventListView = function(Event_event) {
 			
 			for (var prop in events) {
 
-				UlElement.appendChild(renderListItem(events[prop]));
+				UlElement.appendChild(renderListItem(events[prop], this));
 			}
 		}
 

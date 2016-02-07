@@ -1341,7 +1341,7 @@ app.EventView = function(Event_event) {
 	* Parameter parsing (constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 		
-	// None so far
+	// none so far
 	
 };
 

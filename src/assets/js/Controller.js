@@ -264,6 +264,8 @@ app.Controller = function() {
 		this.selectedAccount().defaultLocation('Copenhagen'); // debug
 
 		this.selectedAccount().geolocationAllowed(true); //debug
+
+		this.selectedAccount().localStorageAllowed(true); //debug
 	};
 
 	this.update = function(IModelable_obj, int_objId) {

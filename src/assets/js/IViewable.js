@@ -94,7 +94,13 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 		},
 		
 		innerHTML: 'Hello world'
-	}
+
+		listeners:
+		{
+			onclick: function() {},
+
+			onblur: function() {}
+		}
 	*/
 
 	var element = document.createElement(obj_specs.element), prop;
@@ -126,6 +132,14 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 	if (obj_specs.innerHTML) {
 		
 		element.innerHTML = obj_specs.innerHTML;
+	}
+
+	if (obj_specs.listeners) {
+	
+		for (prop in obj_specs.listeners) {
+			
+			element.addEventListener(prop, obj_specs.listeners[prop]);
+		}
 	}
 
 	return element;

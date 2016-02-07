@@ -528,7 +528,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 
 
-	/** Updates event when notified of change by observable (controller).
+	/** Updates event when notified of change by observable (controller). Autosaves to local storage if available.
 	*
 	* (Method realization required by IObserver)
 	*
@@ -555,7 +555,9 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			throw new IllegalArgumentError('Objects IDs don\'t match');
 		}
 
-		else { // update using accessors
+		else {
+
+			// Update using accessors for validation
 
 			this.name(Event_event.name());
 
@@ -570,6 +572,15 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			this.description(Event_event.description());
 
 			this.capacity(Event_event.capacity());
+
+			// Write new state to local storage, if available
+
+			var account = app.controller.selectedAccount();
+
+			if (account.localStorageAllowed() && window.localStorage) {
+
+				this.writeObject();
+			}
 
 			return true;
 		}
