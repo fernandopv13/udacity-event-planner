@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class Controller Implements IObserver IObservable IViewable
+* public class Controller Implements IObserver IObservable
 ******************************************************************************/
 
 var app = app || {};
@@ -19,7 +19,7 @@ app.Controller = function() {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IViewable, app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
+	var _implements = [app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
 
 
 	 _currentView, // viewmodel currently presented in the UI
@@ -280,6 +280,10 @@ app.Controller = function() {
 
 					event.update(IModelable_obj, int_objId);
 
+					// Refresh all views
+
+					this.notifyObservers();
+
 					break;
 			}
 		}
@@ -306,5 +310,3 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 void app.InterfaceHelper.mixInto(app.IObservable, app.Controller);
 
 void app.InterfaceHelper.mixInto(app.IObserver, app.Controller);
-
-//void app.InterfaceHelper.mixInto(app.IViewable, app.Controller);

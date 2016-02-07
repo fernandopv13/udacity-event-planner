@@ -157,6 +157,7 @@ describe('class Event', function(){
 			
 			expect(testEvent.start()).toBe(testDate);
 		});
+
 		
 		it('can set and get its start date and time (using string)', function() {
 		
@@ -166,6 +167,15 @@ describe('class Event', function(){
 			
 			expect(testEvent.start().toString()).toBe(testDate);
 		});
+
+
+		it('can reset its start date and time using null or the empty string', function() {
+		
+			expect(testEvent.start(null)).toBe(null);
+
+			expect(testEvent.start('')).toBe(null);
+		});
+
 		
 		it('rejects attempt to set start that is not a valid Date (object or string)', function() {
 		
@@ -181,7 +191,7 @@ describe('class Event', function(){
 			catch(e)
 			{
 				
-				expect(e.message).toBe('Start must be Date');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 			
 			expect(testEvent.start()).toEqual(oldDate);
@@ -207,6 +217,15 @@ describe('class Event', function(){
 			expect(testEvent.end().toString()).toBe(testDate);
 		});
 		
+		
+		it('can reset its end date and time using null or the empty string', function() {
+		
+			expect(testEvent.end(null)).toBe(null);
+
+			expect(testEvent.end('')).toBe(null);
+		});
+
+
 		it('rejects attempt to set end that is not a valid Date (object or string)', function() {
 		
 			var oldDate = testEvent.end();
@@ -541,6 +560,14 @@ describe('class Event', function(){
 		});
 
 		
+		// IObserver testing
+
+		xit('can update itself when notified of change by Observable', function() {
+
+
+		});
+
+
 		// ISerializable testing
 
 		it('can get its class name', function() {

@@ -167,28 +167,30 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		if (arguments.length !== 0) {
 			
-			if (date_end !== null) {
+			if (date_end == null || date_end === '') {
+
+				_end = null;
+			}
 				
-				if (date_end.constructor === Date || !isNaN(Date.parse(date_end))) { // date as Date or string (mostly used to parse in from JSON)
-					
-					date_end = date_end.constructor === Date ? date_end : new Date(date_end);
+			else if (date_end.constructor === Date || !isNaN(Date.parse(date_end))) { // date as Date or string (mostly used to parse in from JSON)
+				
+				date_end = date_end.constructor === Date ? date_end : new Date(date_end);
 
-					if (date_end >= _start) { // false if _start is undefined
+				if (date_end >= _start) { // false if _start is undefined
 
-						_end = date_end;
-					}
-
-					else {
-
-						throw new IllegalArgumentError('End must be after start');
-					}
+					_end = date_end;
 				}
 
 				else {
-					
-					throw new IllegalArgumentError('End must be Date');
+
+					throw new IllegalArgumentError('End must be after start');
 				}
-			} // silently ignore null
+			}
+
+			else {
+				
+				throw new IllegalArgumentError('End must be Date or null');
+			}
 		}
 		
 		return _end;
@@ -322,28 +324,30 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		if (arguments.length !== 0) {
 			
-			if (date_start !== null) {
+			if (date_start === null || date_start === '') {
+
+				_start = null;
+			}
 				
-				if (date_start.constructor === Date || !isNaN(Date.parse(date_start))) { // date as Date or string (mostly used to parse in from JSONdefault)
-					
-					date_start = date_start.constructor === Date ? date_start : new Date(date_start);
+			else if (date_start.constructor === Date || !isNaN(Date.parse(date_start))) { // date as Date or string (mostly used to parse in from JSONdefault)
+				
+				date_start = date_start.constructor === Date ? date_start : new Date(date_start);
 
-					if (_end === undefined || date_start <= _end) {
+				if (!_end || date_start <= _end) {
 
-						_start = date_start;
-					}
-
-					else {
-
-						throw new IllegalArgumentError('Start must be before end');
-					}
+					_start = date_start;
 				}
-				
+
 				else {
-					
-					throw new IllegalArgumentError('Start must be Date');
+
+					throw new IllegalArgumentError('Start must be before end');
 				}
-			} // silently ignore null
+			}
+			
+			else {
+				
+				throw new IllegalArgumentError('Start must be Date or null');
+			}
 		}
 		
 		return _start;
@@ -557,9 +561,9 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 
 			this.type(Event_event.type());
 
-			if (false) {this.start(Event_event.start());}
+			this.start(Event_event.start() ? Event_event.start() : null);
 
-			if (false) {this.end(Event_event.end());}
+			this.end(Event_event.end() ? Event_event.end() : null);
 
 			this.location(Event_event.location());
 
