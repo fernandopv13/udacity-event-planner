@@ -19,7 +19,9 @@ app.Controller = function() {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _eventViews = [],
+	var _eventView, // viewmodel handling the event form
+
+	_eventListView, // viewmodel handling the event list
 
 	_selectedAccount = null, // the currently selected account, or null if none selected
 
@@ -181,6 +183,8 @@ app.Controller = function() {
 
 	
 	app.Controller.prototype.init = function() {
+
+		_eventView = new app.EventView();
 
 		this.onAccountSelected(0); //debug
 

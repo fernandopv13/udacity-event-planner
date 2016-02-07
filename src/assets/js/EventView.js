@@ -19,15 +19,15 @@ var app = app || {};
 * @todo Verify geolocation and remove mock
 */
 
-app.EventView = function() {
+app.EventView = function(Event_event) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _event, // (Event) The event in the data model this EventView is observing
+	//var _event, // (Event) The event in the data model this EventView is observing
 	
-	_implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -36,6 +36,7 @@ app.EventView = function() {
 
 	/** Gets and sets the event */
 
+	/*
 	this.event = function(Event_event) {
 
 		if(Event_event) {
@@ -52,7 +53,8 @@ app.EventView = function() {
 		}
 
 		return _event;
-	}
+	}*/
+
 	
 	/*----------------------------------------------------------------------------------------
 	* Private instance methods (may depend on accessors, so declare after them)
@@ -98,7 +100,7 @@ app.EventView = function() {
 
 	/** Render event to form */
 	
-	this.render = function() {
+	this.render = function(event) {
 		
 		var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
 
@@ -145,7 +147,7 @@ app.EventView = function() {
 					
 					id: 'event-name',
 					
-					value: _event.name() ? _event.name() : '',
+					value: event.name() ? event.name() : '',
 					
 					required: true
 				},
@@ -211,7 +213,7 @@ app.EventView = function() {
 					
 					id: 'event-location',
 					
-					value: _event.location() ? _event.location() : '',
+					value: event.location() ? event.location() : '',
 					
 					list: 'suggested-locations'
 				}
@@ -282,7 +284,7 @@ app.EventView = function() {
 						
 						id: 'event-start-date',
 						
-						value: _event.start() ? _event.start().toLocaleDateString() : '',
+						value: event.start() ? event.start().toLocaleDateString() : '',
 						
 						readonly: true,
 						
@@ -351,7 +353,7 @@ app.EventView = function() {
 						
 						id: 'event-start-time',
 						
-						value: _event.start() ? _event.start().toLocaleTimeString() : '',
+						value: event.start() ? event.start().toLocaleTimeString() : '',
 						
 						readonly: true
 					},
@@ -419,7 +421,7 @@ app.EventView = function() {
 						
 						id: 'event-end-date',
 						
-						value: _event.end() ? _event.end().toLocaleDateString() : '',
+						value: event.end() ? event.end().toLocaleDateString() : '',
 						
 						readonly: true
 					},
@@ -475,7 +477,7 @@ app.EventView = function() {
 						
 						id: 'event-end-time',
 						
-						value: _event.end() ? _event.end().toLocaleTimeString() : '',
+						value: event.end() ? event.end().toLocaleTimeString() : '',
 						
 						readonly: true
 					},
@@ -533,7 +535,7 @@ app.EventView = function() {
 					
 					id: 'event-type',
 					
-					value: _event.type() ? _event.type() : '',
+					value: event.type() ? event.type() : '',
 					
 					list: 'event-types'
 				}
@@ -599,7 +601,7 @@ app.EventView = function() {
 					
 					step: 1,
 					
-					value: _event.capacity() ? _event.capacity() : '',
+					value: event.capacity() ? event.capacity() : '',
 					
 					required: true
 				},
@@ -664,7 +666,7 @@ app.EventView = function() {
 					
 					id: 'event-host',
 					
-					value: _event.host() ? _event.host().name() : '',
+					value: event.host() ? event.host().name() : '',
 				},
 				
 				classList: ['validate']
@@ -717,7 +719,7 @@ app.EventView = function() {
 					
 					id: 'event-description',
 					
-					value: _event.description() ? _event.description() : '',
+					value: event.description() ? event.description() : '',
 					
 					length: 120,
 					
@@ -828,9 +830,9 @@ app.EventView = function() {
 
 	/** Update event presentation when model has changed */
 	
-	app.EventView.prototype.update = function() {
+	app.EventView.prototype.update = function(IModelable_event) {
 		
-		this.render();
+		this.render(event);
 	};
 	
 	/*----------------------------------------------------------------------------------------
@@ -843,7 +845,7 @@ app.EventView = function() {
 
 
 /*----------------------------------------------------------------------------------------
-* Public class (static) members
+* Public static methods
 *---------------------------------------------------------------------------------------*/
 
 /** Renders collection of events in account to list in UI
@@ -927,10 +929,6 @@ app.EventView.renderList = function(Account_account) {
 	$list.append(ULElmnt);
 };
 
-
-/*----------------------------------------------------------------------------------------
-* Public static methods
-*---------------------------------------------------------------------------------------*/
 
 app.EventView.suggestLocations = function() {
 
