@@ -49,3 +49,98 @@ app.IViewable = function() {
 	
 	throw new InstantiationError(this.constructor.constructorErrorMessage);
 }
+
+/*----------------------------------------------------------------------------------------
+* Default methods (must be defined outside main function/class body)
+*---------------------------------------------------------------------------------------*/
+
+/** Creates HTML element based on specs provided in JSON object
+*
+* @param {Object} JSON object literal containing specs of element to be created. Se comments in code for an example.
+*
+* @return {HTMLElement} HTML element
+*/
+
+app.IViewable.prototype.default_createElement = function(obj_specs) {
+
+	/* Sample specification object using all current features:
+
+	{
+		element: 'input', // the type of element required
+
+		attributes: // an arbitrary collection of name-value pairs
+		{
+			type: 'text',
+
+			id: 'demo-element',
+
+			required: true
+		},
+
+		classList: // an arbitrary list of strings
+		[
+			'row',
+
+			'col',
+
+			's12'
+		],
+
+		dataset: // an arbitrary collection of name-value pairs
+		{
+			success: 'You made it!',
+
+			error: 'Please try again'
+		},
+		
+		innerHTML: 'Hello world'
+	}
+	*/
+
+	var element = document.createElement(obj_specs.element);
+				
+	if (obj_specs.attributes) {
+	
+		for (var prop in obj_specs.attributes) {
+			
+			if (obj_specs.attributes[prop]) {
+			
+				element.setAttribute(prop, obj_specs.attributes[prop]);
+			}
+		}
+	}
+	
+	if (obj_specs.classList) {
+		
+		obj_specs.classList.forEach(function(str_class) {
+			
+			element.classList.add(str_class);
+		});
+	}
+	
+	if (obj_specs.dataset) {
+	
+		for (var prop in obj_specs.dataset) {
+			
+			element.dataset[prop] = obj_specs.dataset[prop];
+		}
+	}
+	
+	if (obj_specs.innerHTML) {
+		
+		element.innerHTML = obj_specs.innerHTML;
+	}
+	
+	if (obj_specs.element === 'label' && obj_specs.attributes && obj_specs.attributes.required) {
+		
+		var spanElmnt = document.createElement('span');
+		
+		spanElmnt.classList.add('required-indicator');
+		
+		spanElmnt.innerHTML = '*';
+		
+		element.appendChild(spanElmnt);
+	}
+	
+	return element;
+};

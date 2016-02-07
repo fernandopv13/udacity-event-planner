@@ -44,6 +44,12 @@
 			.required-indicator {
 				padding-left: 0.25em;
 			}
+			
+			
+			.form-label {
+				width: 100%;
+			}
+
 
 			.form-submit {
 				text-align: right;
@@ -90,7 +96,7 @@
 				<div class="row">
 					<div class="row">
 						<div class="input-field col s12">
-							<input id="event-name" type="text" class="validate" required>
+							<input id="event-name" type="text" class="validate" value="Web site launch party" required>
 							<label for="event-name" data-error="Please enter event name" style="width:100%" class="active" >Event name<span class="required-asterisk">*</span></label>
 						</div>
 					</div>
@@ -159,7 +165,7 @@
 					</div>
 					<div class="row">
 						<p>
-							<span class="required-asterisk">*</span>
+							<span class="required-indicator">*</span>
 							indicates a required field
 						</p>
 					</div>

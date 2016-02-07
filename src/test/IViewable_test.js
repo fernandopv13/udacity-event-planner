@@ -48,4 +48,49 @@ describe('Interface IViewable', function(){
 			expect(e.message).toEqual(app.IViewable.prototype.render.errorMessage);
 		}
 	});
+
+
+	it('defines a default createElement() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_createElement).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_createElement).toBe('function');
+	});
+	
+
+	it('can create a new DOM element', function(){
+
+		var testElement = app.IViewable.prototype.default_createElement(
+		{
+
+			element: 'div',
+
+			attributes: {id: 'test-div'},
+
+			classList: ['row', 'col', 's12'],
+
+			dataset: {success: 'great success', error: 'better luck next time'},
+
+			innerHTML: 'my div'
+		});
+
+		expect(testElement.constructor).toBe(HTMLDivElement);
+
+		expect(testElement.id).toBe('test-div');
+
+		expect(testElement.className.indexOf('row')).toBeGreaterThan(-1);
+
+		expect(testElement.className.indexOf('col')).toBeGreaterThan(-1);
+
+		expect(testElement.className.indexOf('s12')).toBeGreaterThan(-1);
+
+		expect(testElement.dataset.success).toBe('great success');
+
+		expect(testElement.dataset.error).toBe('better luck next time');
+
+		expect(testElement.innerHTML).toBe('my div');
+	});
+
 });
