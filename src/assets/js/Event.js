@@ -4,14 +4,14 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Event implements ISerializable
+* public class Event implements IObservable IObserver ISerializable
 **********************************************************************************************/
 
 /** @classdesc Holds information about an event.
 *
 * @constructor
 *
-* @implements ISerializable
+* @implements IObservable IObserver ISerializable
 *
 * @param {String} name The name of the event
 *
@@ -63,7 +63,9 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 	_description,
 	
-	_host;
+	_host,
+
+	_implements = [app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 		
 
 		
@@ -309,11 +311,11 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	*
 	* @description Takes a single parameter when setting: either a Date object or a valid date string.
 	*
-	* @param {Date} start The date and time when the event starts (Date representation)
+	* @param {Date} start The date and time when the event starts, or null (Date representation)
 	*
-	* @param {String} start The date and time when the event starts (String representation)
+	* @param {String} start The date and time when the event starts, or the empty string (String representation)
 	*
-	* @return {Date} The date and time when the event starts
+	* @return {Date} The date and time when the event starts, or null
 	*/
 	
 	this.start = function(date_start) {
@@ -436,6 +438,22 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		return ret;
 	};
 
+	
+	/** Returns true if class implements the interface passed in (by function reference)
+	*
+	* (Method realization required by ISerializable.)
+	*
+	* @param {Function} interface The interface we wish to determine if this class implements
+	*
+	* @return {Boolean} instanceof True if class implements interface, otherwise false
+	*	
+	*/
+	
+	this.isInstanceOf = function (func_interface) {
+		
+		return _implements.indexOf(func_interface) > -1;
+	};
+
 
 	/** Re-establishes references to complex members after they have been deserialized
 	*
@@ -504,6 +522,56 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		return ret;
 	};
+
+
+	/** Updates event when notified of change by observable (controller).
+	*
+	* (Method realization required by IObserver)
+	*
+	* @param {Event} event Object holding the data to update this event with
+	*
+	* @return {Boolean} true if copy was successful, else error or false
+	*
+	* @throws {IllegalArgumentError} If provided data object is not an instance of Event
+	*
+	* @throws {IllegalArgumentError} If provided data object has different id to that of event
+	*
+	* @throws {IllegalArgumentError} If something else goes wrong when setting the data
+	*/
+
+	app.Event.prototype.update = function(Event_event, int_objId) {
+
+		if (Event_event.constructor !== app.Event) { // wrong class
+
+			throw new IllegalArgumentError('Object must be instance of Event');
+		}
+
+		else if (this.id() !== int_objId) { // id mismatch
+
+			throw new IllegalArgumentError('Objects IDs don\'t match');
+		}
+
+		else { // update using accessors
+
+			this.name(Event_event.name());
+
+			this.type(Event_event.type());
+
+			if (false) {this.start(Event_event.start());}
+
+			if (false) {this.end(Event_event.end());}
+
+			this.location(Event_event.location());
+
+			this.description(Event_event.description());
+
+			this.capacity(Event_event.capacity());
+
+			return true;
+		}
+
+		return false;
+	}
 
 	
 	/** Converts event to JSON object
@@ -616,6 +684,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 *---------------------------------------------------------------------------------------*/
 
 void app.InterfaceHelper.mixInto(app.IObservable, app.Event);
+
+void app.InterfaceHelper.mixInto(app.IObserver, app.Event);
 
 void app.InterfaceHelper.mixInto(app.ISerializable, app.Event);
 

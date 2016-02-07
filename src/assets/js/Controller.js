@@ -268,15 +268,17 @@ app.Controller = function() {
 
 	this.update = function(IModelable_obj, int_objId) {
 
-		console.log(arguments);
-
 		if (IModelable_obj.constructor) {
 
 			switch (IModelable_obj.constructor)	{
 
 				case app.Event:
 
-					// do something
+					// Update event in datamodel
+
+					var event = app.Event.registry.getObjectById(int_objId);
+
+					event.update(IModelable_obj, int_objId);
 
 					break;
 			}

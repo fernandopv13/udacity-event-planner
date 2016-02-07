@@ -1,12 +1,14 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class EventListView Implements IViewable IObserver
+* public class EventListView Implements IObservable IObserver IViewable
 ******************************************************************************/
 
 var app = app || {};
 
 /** @classdesc ViewObject for event list(s). Renders list in UI, and captures UI events in list.
+*
+* @implements IObservable IObserver IViewable
 *
 * @constructor
 *
@@ -23,7 +25,7 @@ app.EventListView = function(Event_event) {
 	
 	//var _event, // (Event) The event in the data model this EventView is observing
 	
-	var _implements = [app.IViewable, app.IObservable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IObservable, app.IObserver, app.IViewable]; // list of interfaces implemented by this class (by function reference);
 
 	
 	/*----------------------------------------------------------------------------------------

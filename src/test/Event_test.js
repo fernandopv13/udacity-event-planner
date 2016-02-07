@@ -83,6 +83,12 @@ describe('class Event', function(){
 	});
 
 
+	it('implements the IObserver interface', function() { // uses Interface.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Event, app.IObserver)).toBe(true);
+	});
+
+
 	it('implements the ISerializable interface', function() { // uses Interface.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Event, app.ISerializable)).toBe(true);

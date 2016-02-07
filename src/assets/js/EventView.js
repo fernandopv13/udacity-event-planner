@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class EventView Implements IViewable IObserver
+* public class EventView Implements IObservable IObserver IViewable
 ******************************************************************************/
 
 var app = app || {};
@@ -9,6 +9,8 @@ var app = app || {};
 /** @classdesc ViewObject for individual events. Renders event in UI, and captures UI events on event.
 *
 * @constructor
+*
+* @implements IObservable IObserver IViewable
 *
 * @author Ulrik H. Gade, February 2016
 *
@@ -25,7 +27,7 @@ app.EventView = function(Event_event) {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IViewable, app.IObservable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IObservable, app.IObserver, app.IViewable]; // list of interfaces implemented by this class (by function reference);
 
 	
 	/*----------------------------------------------------------------------------------------

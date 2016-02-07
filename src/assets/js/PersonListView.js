@@ -8,6 +8,8 @@ var app = app || {};
 
 /** @classdesc ViewObject for person list(s). Renders list in UI, and captures UI events in list.
 *
+* @implements IObservable IObserver IViewable
+*
 * @constructor
 *
 * @author Ulrik H. Gade, February 2016
@@ -19,7 +21,7 @@ app.PersonListView = function() {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IViewable, app.IObservable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IObservable, app.IObserver, app.IViewable]; // list of interfaces implemented by this class (by function reference);
 
 	
 	/*----------------------------------------------------------------------------------------
