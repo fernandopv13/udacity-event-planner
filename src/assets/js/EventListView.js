@@ -87,7 +87,7 @@ app.EventListView = function(Event_event) {
 		
 		function renderListItem(Event_event, self) {
 
-			var listElmnt = self.createElement({
+			var listElmnt = self.createElement({ // li
 
 				element: 'li',
 
@@ -96,18 +96,8 @@ app.EventListView = function(Event_event) {
 				classList: ['collection-item']
 			});
 
-			//var listElmnt = document.createElement('li');
-			
-			//listElmnt.classList.add('collection-item');
-			
-			//listElmnt.id = 'event-list-id-' + Event_event.id();
-			
-			
-			//var divElmnt = document.createElement('div');
-			
-			//divElmnt.innerHTML = (Event_event.name() ? Event_event.name() : 'Unnamed event') + ' (' + Event_event.guests().length + ')';
-			
-			var divElmnt = self.createElement({
+
+			var divElmnt = self.createElement({ // div
 
 				element: 'div',
 
@@ -119,10 +109,8 @@ app.EventListView = function(Event_event) {
 				}
 			});
 
-			//divElmnt.onclick = function(e) {app.controller.onEventSelected(Event_event.id());};
-			
-			
-			var anchorElmnt = self.createElement({
+						
+			var anchorElmnt = self.createElement({ // anchor
 
 				element: 'a',
 
@@ -132,13 +120,7 @@ app.EventListView = function(Event_event) {
 
 			});
 
-			//var anchorElmnt = document.createElement('a');
 			
-			//anchorElmnt.classList.add('secondary-content');
-
-			//anchorElmnt.href = '#!';
-			
-
 			anchorElmnt.appendChild(self.createElement({ // icon
 
 				element: 'i',
@@ -148,18 +130,10 @@ app.EventListView = function(Event_event) {
 				innerHTML: 'chevron_right'
 			}));
 			
-			//var iconElement = document.createElement('i');
-			
-			//iconElement.classList.add('material-icons');
-			
-			//iconElement.innerHTML = 'chevron_right';
-
-			
+						
 			listElmnt.appendChild(divElmnt);
 			
 			divElmnt.appendChild(anchorElmnt);
-			
-			//anchorElmnt.appendChild(iconElement);
 			
 			
 			return listElmnt;
@@ -172,12 +146,6 @@ app.EventListView = function(Event_event) {
 			classList: ['collection', 'with-header']
 		});
 
-		//var UlElement = document.createElement('ul'); // generate list
-		
-		//UlElement.classList.add('collection');
-
-		//UlElement.classList.add('with-header');
-
 
 		UlElement.appendChild(this.createElement({
 
@@ -188,15 +156,7 @@ app.EventListView = function(Event_event) {
 			innerHTML: 'My Events'
 		}));
 
-		//var headerElmnt = document.createElement('h4'); // generate header
-
-		//headerElmnt.classList.add('collection-header');
-
-		//headerElmnt.innerHTML = 'My Events';
-
-		//UlElement.appendChild(headerElmnt);
-
-		
+				
 		if (Account_account !== null) { // we have an account
 
 			var events = Account_account.events() // generate list items

@@ -81,97 +81,179 @@ app.PersonListView = function() {
 
 	app.PersonListView.prototype.render = function(Event_event) {
 		
-		function renderListItem(Person_guest) {
+		function renderListItem(Person_guest, self) {
 			
-			var listElmnt = document.createElement('li');
-			
-			listElmnt.classList.add('collection-item');
+			var listElmnt = self.createElement({
 
-			listElmnt.classList.add('avatar');
-			
-			listElmnt.id = 'guest-list-id-' + Person_guest.id();
+				element: 'li',
 
-			listElmnt.onclick = function(e) {app.controller.onGuestSelected(Person_guest.id());};
-			
-			
-			var avatarElmnt;
+				attributes: {id: 'guest-list-id-' + Person_guest.id()},
 
+				classList: ['collection-item', 'avatar'],
+
+				listeners:
+				{
+					click: function(e) {app.controller.onGuestSelected(Person_guest.id());}
+				}
+			});
+
+			//var listElmnt = document.createElement('li');
+			
+			//listElmnt.classList.add('collection-item');
+
+			//listElmnt.classList.add('avatar');
+			
+			//listElmnt.id = 'guest-list-id-' + Person_guest.id();
+
+			//listElmnt.onclick = function(e) {app.controller.onGuestSelected(Person_guest.id());};
+			
+			
 			if (Person_guest.imgUrl()) { // use existing image
 
-				avatarElmnt = document.createElement('img');
+				listElmnt.appendChild(self.createElement({
 
-				avatarElmnt.classList.add('circle');
+					element: 'img',
 
-				avatarElmnt.src = Person_guest.imgUrl();
+					attributes:
+					{
+						src: Person_guest.imgUrl(),
 
-				avatarElmnt.alt = Person_guest.name();
+						alt: Person_guest.name()
+					},
+
+					classList: ['circle']
+				}));
+
+				//avatarElmnt = document.createElement('img');
+
+				//avatarElmnt.classList.add('circle');
+
+				//avatarElmnt.src = Person_guest.imgUrl();
+
+				//avatarElmnt.alt = Person_guest.name();
 			}
 
 			else { // use generic avatar
 
-				avatarElmnt = document.createElement('i');
+				listElmnt.appendChild(self.createElement({
 
-				avatarElmnt.classList.add('material-icons');
+					element: 'i',
 
-				avatarElmnt.classList.add('circle');
+					classList: ['circle', 'material-icons'],
 
-				avatarElmnt.innerHTML = 'account_circle'
+					innerHTML: 'account_circle'
+				}));
+
+				//avatarElmnt = document.createElement('i');
+
+				//avatarElmnt.classList.add('material-icons');
+
+				//avatarElmnt.classList.add('circle');
+
+				//avatarElmnt.innerHTML = 'account_circle'
 			}
 
 
-			var spanElmnt = document.createElement('span');
-			
-			spanElmnt.innerHTML = Person_guest.name() ? Person_guest.name() : '';
-			
-			
-			var pElmnt = document.createElement('p');
+			listElmnt.appendChild(self.createElement({
 
-			pElmnt.innerHTML = Person_guest.email() && Person_guest.email().address() ? Person_guest.email().address() : '';
+				element: 'span',
+
+				innerHTML: Person_guest.name() ? Person_guest.name() : ''
+			}));
+
+			//var spanElmnt = document.createElement('span');
+			
+			//spanElmnt.innerHTML = Person_guest.name() ? Person_guest.name() : '';
+			
+			
+			listElmnt.appendChild(self.createElement({
+
+				element: 'p',
+
+				innerHTML: Person_guest.email() && Person_guest.email().address() ? Person_guest.email().address() : ''
+			}));
+
+			//var pElmnt = document.createElement('p');
+
+			//pElmnt.innerHTML = Person_guest.email() && Person_guest.email().address() ? Person_guest.email().address() : '';
 
 
-			var anchorElmnt = document.createElement('a');
-			
-			anchorElmnt.classList.add('secondary-content');
+			var anchorElmnt = self.createElement({
 
-			anchorElmnt.href = '#!';
+				element: 'a',
+
+				attributes: {href: '#!'},
+
+				classList: ['secondary-content']
+			});
+
+
+			//var anchorElmnt = document.createElement('a');
+			
+			//anchorElmnt.classList.add('secondary-content');
+
+			//anchorElmnt.href = '#!';
 			
 			
-			var iconElmnt = document.createElement('i');
+			anchorElmnt.appendChild(self.createElement({
+
+				element: 'i',
+
+				classList: ['material-icons'],
+
+				innerHTML: 'chevron_right'
+			}));
+
+			//var iconElmnt = document.createElement('i');
 			
-			iconElmnt.classList.add('material-icons');
+			//iconElmnt.classList.add('material-icons');
 			
-			iconElmnt.innerHTML = 'chevron_right';
+			//iconElmnt.innerHTML = 'chevron_right';
 
 			
-			listElmnt.appendChild(avatarElmnt);
+			//listElmnt.appendChild(avatarElmnt);
 
-			listElmnt.appendChild(spanElmnt);
+			//listElmnt.appendChild(spanElmnt);
 
-			listElmnt.appendChild(pElmnt);
+			//listElmnt.appendChild(pElmnt);
 
 			listElmnt.appendChild(anchorElmnt);
 			
-			anchorElmnt.appendChild(iconElmnt);
-
-
+			//anchorElmnt.appendChild(iconElmnt);
+			
 			return listElmnt;
 		}
 
 		
-		var UlElement = document.createElement('ul'); // generate list
+		var UlElement = this.createElement({
 
-		UlElement.classList.add('collection');
+			element: 'ul',
 
-		UlElement.classList.add('with-header');
+			classList: ['collection', 'with-header']
+		});
 
+		//var UlElement = document.createElement('ul'); // generate list
 
-		var headerElmnt = document.createElement('h4'); // generate header
+		//UlElement.classList.add('collection');
 
-		headerElmnt.classList.add('collection-header');
+		//UlElement.classList.add('with-header');
 
-		headerElmnt.innerHTML = 'Guest List';
+		UlElement.appendChild(this.createElement({
 
-		UlElement.appendChild(headerElmnt);
+			element: 'h4',
+
+			classList: ['collection-header'],
+
+			innerHTML: 'Guest List'
+		}));
+
+		//var headerElmnt = document.createElement('h4'); // generate header
+
+		//headerElmnt.classList.add('collection-header');
+
+		//headerElmnt.innerHTML = 'Guest List';
+
+		//UlElement.appendChild(headerElmnt);
 
 		
 		if (Event_event !== null) {
@@ -180,7 +262,7 @@ app.PersonListView = function() {
 
 			for (var prop in guests) { // generate list items
 
-				UlElement.appendChild(renderListItem(guests[prop]));
+				UlElement.appendChild(renderListItem(guests[prop], this));
 			}
 		}
 
