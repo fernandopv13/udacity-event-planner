@@ -226,6 +226,13 @@ app.Controller = function() {
 					observer.update(_selectedEvent);
 
 					break;
+
+				case app.PersonView:
+
+					observer.update(_selectedGuest);
+
+					break;
+
 			}
 		});
 	}
@@ -233,7 +240,14 @@ app.Controller = function() {
 
 	app.Controller.prototype.init = function() {
 
-		// Create views and setup observers
+		// Create views and set up observers
+
+		_eventListView = new app.EventListView();
+
+		this.registerObserver(_eventListView);
+
+		_eventListView.registerObserver(this);
+
 
 		_eventView = new app.EventView();
 
@@ -242,13 +256,6 @@ app.Controller = function() {
 		_eventView.registerObserver(this);
 
 		
-		_eventListView = new app.EventListView();
-
-		this.registerObserver(_eventListView);
-
-		_eventListView.registerObserver(this);
-
-
 		_guestListView = new app.PersonListView();
 
 		this.registerObserver(_guestListView);
@@ -256,7 +263,11 @@ app.Controller = function() {
 		_guestListView.registerObserver(this);
 
 		
-		// add guest view (form) here when ready
+		_guestView = new app.PersonView();
+
+		this.registerObserver(_guestView);
+
+		_guestView.registerObserver(this);
 
 		
 		// Set some defaults until account creation/selection is ready
@@ -276,6 +287,12 @@ app.Controller = function() {
 
 			switch (Object_obj.constructor)	{
 
+				case app.EventListView: // item click in event list
+
+					this.onEventSelected(int_objId);
+
+					break;
+
 				case app.Event: // submission from the event form
 
 					// Update event in datamodel
@@ -290,17 +307,29 @@ app.Controller = function() {
 
 					break;
 
-				case app.EventListView: // item click in event list
-
-					this.onEventSelected(int_objId);
-
-					break;
-
 				case app.PersonListView: // item click in guest list
 
 					this.onGuestSelected(int_objId);
 
 					break;
+
+				case app.Person: // submission from the guest form
+
+					// Update person in datamodel
+
+					var person = app.Person.registry.getObjectById(int_objId);
+
+					console.log(person.name());
+
+					person.update(Object_obj, int_objId);
+
+					// Refresh all views
+
+					this.notifyObservers();
+
+					break;
+
+				
 			}
 		}
 	}

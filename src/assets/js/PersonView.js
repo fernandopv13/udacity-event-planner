@@ -141,10 +141,10 @@ app.PersonView = function(Person_person) {
 
 				element: 'input',
 
-				attributes: {id: 'person-id', type: 'hidden', value: Person_person.id()}
-			}))
+				attributes: {id: 'guest-id', type: 'hidden', value: Person_person.id()}
+			}));
 
-			// Add person name field
+			// Add guest name field
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -162,7 +162,7 @@ app.PersonView = function(Person_person) {
 					{
 						type: 'text',
 						
-						id: 'person-name',
+						id: 'guest-name',
 						
 						value: person.name() ? person.name() : '',
 						
@@ -177,13 +177,13 @@ app.PersonView = function(Person_person) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'person-name', required: true},
+					attributes: {for: 'guest-name'},
 					
 					classList: person.name() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter person name'},
+					dataset: {error: 'Please enter guest name'},
 					
-					innerHTML: 'Person Name'
+					innerHTML: 'Guest Name'
 				});
 				
 				labelElement.appendChild(this.createElement( // required field indicator
@@ -210,7 +210,7 @@ app.PersonView = function(Person_person) {
 				containerDiv.appendChild(outerDiv);
 				
 			
-			// Add location field
+			// Add email field
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -219,45 +219,50 @@ app.PersonView = function(Person_person) {
 					classList: ['input-field', 'col', 's12']
 				});
 				
-				
+
 				innerDiv.appendChild(this.createElement( // input
 				{
 					element: 'input',			
 					
 					attributes:
 					{
-						type: 'text',
+						type: 'email',
 						
-						id: 'person-location',
+						id: 'guest-email',
 						
-						value: person.location() ? person.location() : '',
-						
-						list: 'suggested-locations'
-					}
+						value: person.email() && person.email().address() ? person.email().address() : '',
+
+						required: 'true'
+					},
+					
+					classList: ['validate']
 				}));
 				
 				
-				innerDiv.appendChild(this.createElement( // label
+				labelElement = this.createElement( // label
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'person-location'},
+					attributes: {for: 'guest-email'},
 					
-					classList: person.location() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.email() && person.email().address() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter person location'},
+					dataset: {error: 'Please enter email'},
 					
-					innerHTML: 'Location'
+					innerHTML: 'Email'
+				});
+				
+				labelElement.appendChild(this.createElement( // required field indicator
+				{
+					element: 'span',
+
+					classList: ['required-indicator'],
+
+					innerHTML: '*'
 				}));
-				
-				
-				innerDiv.appendChild(this.createElement( // data list
-				{	
-					element: 'datalist',			
-					
-					attributes: {id: 'suggested-locations'}
-				}));
-				
+
+				innerDiv.appendChild(labelElement);
+
 				
 				outerDiv =  this.createElement( // outer div
 				{
@@ -266,274 +271,13 @@ app.PersonView = function(Person_person) {
 					classList: ['row']
 				});
 							
+				
 				outerDiv.appendChild(innerDiv);
 				
-				containerDiv.appendChild(outerDiv);			
+				containerDiv.appendChild(outerDiv);
 
 
-			// Add start date and time field
-
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-				
-				
-				// Date
-
-					innerDiv =  this.createElement( // inner div
-					{
-						element: 'div',			
-						
-						classList: ['input-field', 'col', 's6']
-					});
-					
-					
-					innerDiv.appendChild(this.createElement( // input
-					{
-						element: 'input',			
-						
-						attributes:
-						{
-							type: 'text',
-							
-							id: 'person-start-date',
-							
-							value: person.start() ? person.start().toLocaleDateString() : '',
-							
-							readonly: true,
-							
-							required: true
-						},
-						
-						classList: ['validate', 'datepicker', 'picker__input']
-					}));
-					
-					
-					labelElement = this.createElement( // label
-					{	
-						element: 'label',			
-						
-						attributes: {for: 'person-start-date'},
-						
-						classList: person.start() ? ['form-label', 'active'] : ['form-label'],
-						
-						dataset: {error: 'Please enter start date'},
-						
-						innerHTML: 'Start Date'
-					});
-
-					
-					labelElement.appendChild(this.createElement( // required field indicator
-					{
-						element: 'span',
-
-						classList: ['required-indicator'],
-
-						innerHTML: '*'
-					}));
-					
-					innerDiv.appendChild(labelElement);
-					
-					
-					innerDiv.appendChild(this.createElement( // custom error div
-					{	
-						element: 'div',			
-						
-						attributes: {id: 'person-start-date-error'},
-						
-						classList: ['custom-validate']
-					}));
-					
-					outerDiv.appendChild(innerDiv);
-					
-					
-				// Time
-
-					innerDiv =  this.createElement( // inner div
-					{
-						element: 'div',			
-						
-						classList: ['input-field', 'col', 's6']
-					});
-					
-					
-					innerDiv.appendChild(this.createElement( // input
-					{
-						element: 'input',			
-						
-						attributes:
-						{
-							type: 'text',
-							
-							id: 'person-start-time',
-							
-							value: person.start() ? person.start().toLocaleTimeString() : '',
-							
-							readonly: true
-						},
-						
-						classList: ['timepicker', 'picker__input']
-					}));
-									
-					
-					innerDiv.appendChild(this.createElement( // label
-					{	
-						element: 'label',			
-						
-						attributes: {for: 'person-start-time'},
-						
-						classList: person.start() ? ['form-label', 'active'] : ['form-label'],
-						
-						dataset: {error: 'Please enter start time'},
-						
-						innerHTML: 'Start Time'
-					}));
-					
-					
-					innerDiv.appendChild(this.createElement( // custom error div
-					{	
-						element: 'div',			
-						
-						attributes: {id: 'person-start-time-error'},
-						
-						classList:['custom-validate']
-					}));
-					
-					
-					outerDiv.appendChild(innerDiv);
-					
-					
-					containerDiv.appendChild(outerDiv); // Add to container
-
-
-			// Add end date and time field
-
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-					
-				// Date
-
-					innerDiv =  this.createElement( // inner div
-					{
-						element: 'div',			
-						
-						classList: ['input-field', 'col', 's6']
-					});
-					
-					
-					innerDiv.appendChild(this.createElement( // input
-					{
-						element: 'input',			
-						
-						attributes:
-						{
-							type: 'text',
-							
-							id: 'person-end-date',
-							
-							value: person.end() ? person.end().toLocaleDateString() : '',
-							
-							readonly: true
-						},
-						
-						classList: ['datepicker', 'picker__input']
-					}));
-					
-					
-					innerDiv.appendChild(this.createElement( // label
-					{	
-						element: 'label',			
-						
-						attributes: {for: 'person-end-date'},
-						
-						classList: person.end() ? ['form-label', 'active'] : ['form-label'],
-						
-						dataset: {error: 'Please enter end date'},
-						
-						innerHTML: 'End Date'
-					}));
-					
-					
-					innerDiv.appendChild(this.createElement( // custom error div
-					{	
-						element: 'div',			
-						
-						attributes: {id: 'person-end-date-error'},
-						
-						classList: ['custom-validate']
-					}));
-					
-					
-					outerDiv.appendChild(innerDiv);
-
-
-				// Time
-					
-					innerDiv =  this.createElement( // inner div
-					{
-						element: 'div',			
-						
-						classList: ['input-field','col', 's6']
-					});
-					
-					
-					innerDiv.appendChild(this.createElement( // input
-					{
-						element: 'input',			
-						
-						attributes:
-						{
-							type: 'text',
-							
-							id: 'person-end-time',
-							
-							value: person.end() ? person.end().toLocaleTimeString() : '',
-							
-							readonly: true
-						},
-						
-						classList: ['timepicker', 'picker__input']
-					}));
-					
-					
-					innerDiv.appendChild(this.createElement( // label
-					{	
-						element: 'label',			
-						
-						attributes: {for: 'person-end-time'},
-						
-						classList: person.end() ? ['form-label', 'active'] : ['form-label'],
-						
-						dataset: {error: 'Please enter end time'},
-						
-						innerHTML: 'End Time'
-					}));
-					
-					
-					innerDiv.appendChild(this.createElement( // custom error div
-					{	
-						element: 'div',			
-						
-						attributes: {id: 'person-end-time-error'},
-						
-						classList: ['custom-validate']
-					}));
-					
-					
-					outerDiv.appendChild(innerDiv);
-
-
-					containerDiv.appendChild(outerDiv);
-
-
-			// Add person type field
+			// Add job title field
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -550,11 +294,9 @@ app.PersonView = function(Person_person) {
 					{
 						type: 'text',
 						
-						id: 'person-type',
+						id: 'person-jobtitle',
 						
-						value: person.type() ? person.type() : '',
-						
-						list: 'person-types'
+						value: person.jobTitle() ? person.jobTitle() : ''
 					}
 				}));
 				
@@ -563,21 +305,13 @@ app.PersonView = function(Person_person) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'person-type'},
+					attributes: {for: 'person-jobtitle'},
 					
-					classList: person.type() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.jobTitle() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter person type'},
+					dataset: {error: 'Please enter job title'},
 					
-					innerHTML: 'Person Type'
-				}));
-				
-				
-				innerDiv.appendChild(this.createElement( // data list
-				{	
-					element: 'datalist',			
-					
-					attributes: {id: 'person-types'}
+					innerHTML: 'Job Title'
 				}));
 				
 				
@@ -594,77 +328,7 @@ app.PersonView = function(Person_person) {
 				containerDiv.appendChild(outerDiv);
 
 
-			// Add capacity field
-
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'number',
-						
-						id: 'person-capacity',
-						
-						min: 0,
-						
-						step: 1,
-						
-						value: person.capacity() ? person.capacity() : '',
-						
-						required: true
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'person-capacity'},
-					
-					classList: typeof person.capacity() === 'number' ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter capacity'},
-					
-					innerHTML: 'Capacity'
-				});
-				
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
-
-					classList: ['required-indicator'],
-
-					innerHTML: '*'
-				}));
-				
-				innerDiv.appendChild(labelElement);
-
-				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
-
-
-			// Add host field
+			// Add employer field
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -682,12 +346,12 @@ app.PersonView = function(Person_person) {
 					{
 						type: 'text',
 						
-						id: 'person-host',
+						id: 'guest-employer',
 						
-						value: person.host() && person.host().name()? person.host().name() : '',
-					},
-					
-					classList: ['validate']
+						value: person.employer() ? person.employer().name() : '',
+						
+						list: 'suggested-employers'
+					}
 				}));
 				
 				
@@ -695,13 +359,21 @@ app.PersonView = function(Person_person) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'person-host'},
+					attributes: {for: 'guest-employer'},
 					
-					classList: person.host() && person.host().name() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.employer().name() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter host'},
+					dataset: {error: 'Please enter employer'},
 					
-					innerHTML: 'Host'
+					innerHTML: 'Employer'
+				}));
+				
+				
+				innerDiv.appendChild(this.createElement( // data list
+				{	
+					element: 'datalist',			
+					
+					attributes: {id: 'suggested-employers'}
 				}));
 				
 				
@@ -712,14 +384,21 @@ app.PersonView = function(Person_person) {
 					classList: ['row']
 				});
 							
-				
 				outerDiv.appendChild(innerDiv);
 				
-				containerDiv.appendChild(outerDiv);
+				containerDiv.appendChild(outerDiv);			
 
+	
+			// Add birthday field
+
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
 			
-			// Add description field
-
+			
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -730,20 +409,20 @@ app.PersonView = function(Person_person) {
 				
 				innerDiv.appendChild(this.createElement( // input
 				{
-					element: 'textarea',			
+					element: 'input',			
 					
 					attributes:
 					{
-						id: 'person-description',
+						type: 'text',
 						
-						value: person.description() ? person.description() : '',
+						id: 'guest-birthday',
 						
-						length: 120,
+						value: person.birthday() ? person.birthday().toLocaleDateString() : '',
 						
-						maxlength: 120
+						readonly: true
 					},
 					
-					classList: ['materialize-textarea']
+					classList: ['validate', 'datepicker', 'picker__input']
 				}));
 				
 				
@@ -751,27 +430,29 @@ app.PersonView = function(Person_person) {
 				{	
 					element: 'label',			
 					
-					attributes:	{for: 'person-description'},
+					attributes: {for: 'guest-birthday'},
 					
-					classList: person.description() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.birthday() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter description'},
+					dataset: {error: 'Please enter birthday'},
 					
-					innerHTML: 'Description'
+					innerHTML: 'Birthday'
+				}));
+
+				
+				innerDiv.appendChild(this.createElement( // custom error div
+				{	
+					element: 'div',			
+					
+					attributes: {id: 'guest-birthday-error'},
+					
+					classList: ['custom-validate']
 				}));
 				
 				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-				
-							
 				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
+			
+				containerDiv.appendChild(outerDiv); // Add to container
 
 
 			// Add requirement indicator (asterisk) explanation
@@ -810,7 +491,7 @@ app.PersonView = function(Person_person) {
 					
 					element: 'a',
 					
-					attributes: {id: 'person-form-cancel'},
+					attributes: {id: 'guest-form-cancel'},
 					
 					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
 
@@ -822,7 +503,7 @@ app.PersonView = function(Person_person) {
 					
 					element: 'a',
 					
-					attributes: {id: 'person-form-submit'},
+					attributes: {id: 'guest-form-submit'},
 					
 					classList: ['waves-effect', 'waves-light', 'btn'],
 
@@ -847,46 +528,37 @@ app.PersonView = function(Person_person) {
 			
 			// Update DOM
 
-				var $formDiv = $('#person-form');
+				var $formDiv = $('#guest-form');
 
 				$formDiv.empty();
 
 				$formDiv.append(formElement);
 
+				console.log(formElement);
 
-			// (Re)assign person handlers to form elements
 
-				$('textarea#description').characterCounter();
+			// (Re)assign event handlers to form elements
 
 				$('.datepicker').pickadate({
 					//closeOnSelect: true, // bug: ineffective
 					closeOnClear: true,
-					onSet: this.validateDateRange,
+					onSet: function() {this.close()},
 					selectMonths: true, // Creates a dropdown to control month
 					selectYears: 15 // Creates a dropdown of 15 years to control year
 				});
 
-				$('.timepicker').pickatime({
-					//closeOnSelect: true, // bug: ineffective
-					closeOnClear: true,
-					format: 'H:i',
-					onSet: this.validateTimeRange
-				});
+				
+				//$('#guest-location').focus(this.suggestLocations);
 
 				
-				$('#person-location').focus(this.suggestLocations);
+				$('#guest-name').keyup(this.validateName);
 
-				
-				$('#person-name').keyup(this.validateName);
-
-				$('#person-capacity').keyup(this.validateCapacity);
-
-				$('#person-form-submit').click(function() {this.submit();}.bind(this));
+				$('#guest-form-submit').click(function() {this.submit();}.bind(this));
 		}
 
 		else { // present default message
 
-			var $formDiv = $('#person-form');
+			var $formDiv = $('#guest-form');
 
 			$formDiv.empty();
 
@@ -895,7 +567,7 @@ app.PersonView = function(Person_person) {
 
 				element: 'p',
 
-				innerHTML: 'No person selected. Please select or create an person in order to edit details.'
+				innerHTML: 'No guest selected. Please select or create a guest in order to edit details.'
 			}));
 		}
 	};
@@ -912,78 +584,25 @@ app.PersonView = function(Person_person) {
 
 		// Person handler binds to this, so reference works here
 		
-		if (this.validateName() && // Submit results if all validations pass
-
-			this.validateDateRange() &&
-
-			this.validateTimeRange() &&
-
-			this.validateCapacity()) { 
+		if (this.validateName()) { // Submit results if all validations pass
 
 			// Nofity observers by passing them a new Person with the data from the form
 
 			this.notifyObservers(
 				
-				parseInt($('#person-id').val()),
+				parseInt($('#guest-id').val()),
 
 				new app.Person(
 
-					$('#person-name').val(),
+					$('#guest-name').val(),
 
-					$('#person-type').val(),
+					new app.Organization($('#guest-employer').val()), //hack
 
-					function() { // start date
+					$('#guest-jobTitle').val(),
 
-						var start_date = $('#person-start-date').val();
+					new app.Email($('#guest-email').val()),
 
-						var start_time = $('#person-start-time').val();
-
-						if (start_date !== '') {
-
-							start_date = new Date(start_date);
-
-							if (start_time !== '') {
-
-								start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
-							}
-
-							return start_date;
-						}
-
-						return undefined;
-					}(),
-
-					function() { // end date
-
-						var end_date = $('#person-end-date').val();
-
-						var end_time = $('#person-end-time').val();
-
-						if (end_date !== '') {
-
-							end_date = new Date(end_date);
-
-							if (end_time !== '') {
-
-								end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
-							}
-
-							return end_date;
-						}
-
-						return undefined;
-					}(),
-
-					$('#person-location').val(),
-
-					$('#person-description').val(),
-
-					function() { // host (hack)
-
-						new app.Organization($('#person-host').val())
-					}(),
-
-					parseInt($('#person-capacity').val())
+					new Date($('#guest-birthday').val())
 				)
 			);
 			
@@ -994,89 +613,7 @@ app.PersonView = function(Person_person) {
 	}
 
 
-	/** Suggests venues for person based on device's location (if available)
-	*
-	* @return {void} Directly updates location datalist in the DOM
-	*
-	* @todo Add address info to venue display
-	*/
-
-	app.PersonView.prototype.suggestLocations = function() {
-
-		var account = app.controller.selectedAccount(),
-
-		position = account.defaultLocation(); // set default
-
-
-		// Get device's current location if available and allowed
-
-		if (account.geolocationAllowed()) { // user has granted permission to use geolocation
-
-			if(navigator.geolocation) { // device provides access to geolocation
-
-				navigator.geolocation.getCurrentPosition(
-
-					function(pos) { // success
-
-						position = pos; // override default
-					},
-
-					function(error) { // error
-
-						console.log(error);
-					}
-				)
-
-				// geolocation seems to require access via https
-
-				// don't currently have access to a secure server, so,
-
-				// mock geolocation result for the time being
-
-				position = {
-
-					coords:
-					{
-
-						latitude: 55.6666281,
-
-						longitude: 12.556294
-					},
-
-					timestamp: new Date().valueOf()
-				}
-			}
-		}
-
-		if (position) {// position is defined
-
-			new app.FourSquareSearch().execute(function(venues) { // get venues
-
-				if (venues !== null) { // search succeeded
-
-					var $listElmnt = $('#suggested-locations'), optionElmnt;
-
-					$listElmnt.empty();
-
-					venues.forEach(function(venue) { // build suggest list
-
-						optionElmnt = document.createElement('option');
-
-						optionElmnt.value = venue.name;
-
-						$listElmnt.append(optionElmnt);
-
-					});
-				}
-
-			}, position);	
-		}
-		
-		// else don't provide suggestions
-	}
-
-
-	/** Updates person presentation when notified by controller of change */
+	/** Updates guest presentation when notified by controller of change */
 	
 	app.PersonView.prototype.update = function(IModelable_person) {
 		
@@ -1084,175 +621,25 @@ app.PersonView = function(Person_person) {
 	};
 	
 
-	/* Person handler for interactive validation of capacity field
-	*
-	* @return {Boolean} true if validation is succesful, otherwise false
-	*/
-
-	app.PersonView.prototype.validateCapacity = function(person) {
-		
-		var $capacity = $('#person-capacity');
-
-		if ($capacity.val() === '') { // empty
-
-			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				person.target.labels[0].dataset.error = 'Please enter capacity';
-
-			}
-
-			else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-				$capacity.next('label').data('error', 'Please enter capacity');
-			}
-			
-			$capacity.addClass('invalid');
-
-			return false;
-		}
-
-
-		// no need to test for non-numbers, not programmatically available from input
-
-		
-		else if ($capacity.val() < 0) { // negative number
-
-			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				person.target.labels[0].dataset.error = 'Capacity cannot be negative';
-			}
-
-			else { // Other browsers (updates value but not display, falls back on value in HTML)
-
-				$capacity.next('label').data('error', 'Capacity cannot be negative');
-			}
-			
-			$capacity.addClass('invalid');
-
-			return false;
-		}
-		
-		else { // valid
-
-			$capacity.removeClass('invalid');
-
-			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				person.target.labels[0].dataset.error = 'Please enter capacity'; // can't get jQuery.data() to work
-			}
-
-			else { // Other browsers (updates value but not display, falls back on value in HTML)
-
-				$capacity.next('label').data('error', 'Please enter capacity');
-			}
-		}
-
-		return true;
-	}
-
-
-	/** Person handler for interactive validation of start and end date fields
-	*
-	* @return {Boolean} true if validation is succesful, otherwise false
-	*/
-	
-	app.PersonView.prototype.validateDateRange = function() {
-
-		if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
-
-		
-		// Set up references to DOM
-
-			var $start = $('#person-start-date'),
-
-			start_date = new Date($start.val()),
-
-			$start_err = $('#person-start-date-error'),
-
-			$end = $('#person-end-date'),
-
-			end_date = new Date($end.val()),
-
-			$end_err = $('#person-end-date-error');
-
-		
-		// Validate
-
-			if ($start.val() === '') { // start not selected
-
-				$start_err.html('Please select start date');
-
-				$start_err.css('display', 'block');
-
-				$start.addClass('invalid');
-
-				return false;
-			}
-
-		/* focus causes end datepicker to open, no time to resolve, skip for now
-		else if (end === 'Invalid date') { // start selected, but not end
-
-			$end.val(start); // set end date to start date
-
-			$end.addClass('active');
-
-			$end.trigger('focus');
-		}
-		*/
-		
-		else if (end_date < start_date) { // end date is before start
-
-			// Materialize's validation message won't display, so rolling my own
-
-			$end_err.html('End date cannot be before start date');
-
-			$end_err.css('display', 'block');
-
-			$end.addClass('invalid');
-
-			return false;
-		}
-
-		else {
-
-			$start_err.css('display', 'none');
-
-			$start.removeClass('invalid');
-
-			$end_err.css('display', 'none');
-
-			$end.removeClass('invalid');
-		}
-
-		// Cascade validation to start/end times
-
-			 // 'this' refers to date picker here, not personview, so invoke method using full path
-			
-			app.PersonView.prototype.validateTimeRange();
-
-		return true;
-	}
-
-
-	/* Person handler for interactive validation of person name field
+	/* Event handler for interactive validation of person name field
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
 	app.PersonView.prototype.validateName = function(person) {
 
-		var $name = $('#person-name');
+		var $name = $('#guest-name');
 
 		if ($name.val() === '') { // empty
 		
 			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
 
-				person.target.labels[0].dataset.error = 'Please enter person name';
+				person.target.labels[0].dataset.error = 'Please enter guest name';
 			}
 
 			else { // Other browsers (updated value may not display, falls back on value in HTML)
 
-				$name.next('label').data('error', 'Please enter person name');
+				$name.next('label').data('error', 'Please enter guest name');
 			}
 
 			$name.addClass('invalid');
@@ -1263,71 +650,6 @@ app.PersonView = function(Person_person) {
 		else {
 
 			$name.removeClass('invalid');
-		}
-
-		return true;
-	}
-
-
-	/** Person handler for interactive validation of start and end time fields
-	*
-	* @return {Boolean} true if validation is succesful, otherwise false
-	 */
-
-	app.PersonView.prototype.validateTimeRange = function() {
-
-		if (this.close) {this.close()} // close picker (if called from dialog); setting closeOnClear true does not work (bug)
-
-
-		// Set up references to DOM
-
-		var start_date = new Date($('#person-start-date').val()),
-
-		end_date = new Date($('#person-end-date').val()),
-
-		start_time = $('#person-start-time').val(),
-
-		$end_time = $('#person-end-time'),
-
-		end_time = $end_time.val(),
-
-		$end_time_err = $('#person-end-time-error');
-
-		
-		if (end_time !== '' && 	start_time !== '' && // end and start time selected
-			!isNaN(end_date.valueOf()) && // end date selected
-			 end_date.valueOf() === start_date.valueOf()) {  //end date same as start date
-			
-			// Set hours and minutes on start and end dates before comparison
-
-			end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
-
-			start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
-
-			if (end_date < start_date) { // end (time) is before start (time)
-
-				$end_time_err.html('End time cannot be before start time');
-
-				$end_time_err.css('display', 'block');
-
-				$end_time.addClass('invalid');
-
-				return false;
-			}
-
-			else {
-
-				$end_time_err.css('display', 'none');
-
-				$end_time.removeClass('invalid');
-			}
-		}
-
-		else {
-
-			$end_time_err.css('display', 'none');
-
-			$end_time.removeClass('invalid');
 		}
 
 		return true;
