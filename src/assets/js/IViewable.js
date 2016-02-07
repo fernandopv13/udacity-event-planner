@@ -63,7 +63,7 @@ app.IViewable = function() {
 
 app.IViewable.prototype.default_createElement = function(obj_specs) {
 
-	/* Sample specification object using all current features:
+	/* Sample specification object using all currently supported features:
 
 	{
 		element: 'input', // the type of element required
@@ -97,11 +97,11 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 	}
 	*/
 
-	var element = document.createElement(obj_specs.element);
+	var element = document.createElement(obj_specs.element), prop;
 				
 	if (obj_specs.attributes) {
 	
-		for (var prop in obj_specs.attributes) {
+		for (prop in obj_specs.attributes) {
 			
 			if (obj_specs.attributes[prop]) {
 			
@@ -120,7 +120,7 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 	
 	if (obj_specs.dataset) {
 	
-		for (var prop in obj_specs.dataset) {
+		for (prop in obj_specs.dataset) {
 			
 			element.dataset[prop] = obj_specs.dataset[prop];
 		}
@@ -130,17 +130,6 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 		
 		element.innerHTML = obj_specs.innerHTML;
 	}
-	
-	if (obj_specs.element === 'label' && obj_specs.attributes && obj_specs.attributes.required) {
-		
-		var spanElmnt = document.createElement('span');
-		
-		spanElmnt.classList.add('required-indicator');
-		
-		spanElmnt.innerHTML = '*';
-		
-		element.appendChild(spanElmnt);
-	}
-	
+
 	return element;
 };

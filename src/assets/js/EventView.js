@@ -100,132 +100,11 @@ app.EventView = function() {
 	
 	this.render = function() {
 		
-		var formElmt, containerElmnt, rowElmnt, rwElmnt, datalistElmnt, optionElmnt, iconElmnt, elmnt, inputElmnt;
+		var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
 
-		/*
-		function createElement(obj_specs) {
-			
-			var element = document.createElement(obj_specs.element);
-						
-			if (obj_specs.attributes) {
-			
-				for (var prop in obj_specs.attributes) {
-					
-					if (obj_specs.attributes[prop]) {
-					
-						element.setAttribute(prop, obj_specs.attributes[prop]);
-					}
-				}
-			}
-			
-			if (obj_specs.classList) {
-				
-				obj_specs.classList.forEach(function(str_class) {
-					
-					element.classList.add(str_class);
-				});
-			}
-			
-			if (obj_specs.dataset) {
-			
-				for (var prop in obj_specs.dataset) {
-					
-					element.dataset[prop] = obj_specs.dataset[prop];
-				}
-			}
-			
-			if (obj_specs.innerHTML) {
-				
-				element.innerHTML = obj_specs.innerHTML;
-			}
-			
-			if (obj_specs.element === 'label' && obj_specs.attributes && obj_specs.attributes.required) {
-				
-				var spanElmnt = document.createElement('span');
-				
-				spanElmnt.classList.add('required-indicator');
-				
-				spanElmnt.innerHTML = '*';
-				
-				element.appendChild(spanElmnt);
-			}
-			
-			return element;
-		}
-		*/
-		
-		/*
-		function createRow(arr_classList) { // row div factory
-
-			var rowElmnt = document.createElement('div');
-
-			arr_classList.forEach(function(str_class) {rowElmnt.classList.add(str_class);});
-
-			return rowElmnt;
-		}
-
-		function createInput(str_type, str_id, arr_classList, Boolean_required, str_list, Boolean_readonly) { // input factory
-
-			var inputElmnt = document.createElement('input');
-
-			inputElmnt.type = str_type;
-
-			inputElmnt.id = str_id;
-
-			arr_classList.forEach(function(str_class) {inputElmnt.classList.add(str_class);});
-
-			if (Boolean_required) {inputElmnt.required = Boolean_required};
-
-			if (str_list) {inputElmnt.setAttribute('list', str_list);}
-
-			if (Boolean_readonly) {inputElmnt.setAttribute('readonly', Boolean_readonly);}
-
-			return inputElmnt;
-		}
-
-		function createRequiredIndicator() { // label asterisk factory
-
-					var spanElmnt = document.createElement('span');
-
-					spanElmnt.classList.add('required-indicator');
-
-					spanElmnt.innerHTML = '*';
-
-					return spanElmnt;
-		}
-
-		function createLabel(str_label, str_for, arr_classList, str_error, Boolean_required) { // label factory
-
-			var labelElmnt = document.createElement('label');
-
-			labelElmnt.innerHTML = str_label;
-
-			labelElmnt.setAttribute('for', str_for);
-
-			arr_classList.forEach(function(str_class) {labelElmnt.classList.add(str_class);});
-
-			if (str_error) {labelElmnt.dataset.error = str_error;}
-
-			if (Boolean_required) {labelElmnt.appendChild(createRequiredIndicator());}
-
-			return labelElmnt;
-		}
-
-		function createCustomError(str_id) { // custom error div factory
-
-			var customErrElmnt = document.createElement('div');
-
-			customErrElmnt.id = str_id;
-
-			customErrElmnt.classList.add('custom-validate');
-
-			return customErrElmnt;
-		}
-		*/
-		
 		// Setup up form and container div
 
-			formElmt =  this.createElement(
+			formElement =  this.createElement(
 			{
 				element: 'form',			
 				
@@ -233,33 +112,22 @@ app.EventView = function() {
 				
 				classList: ['col', 's12']
 			});
-			
-			//formElmt = document.createElement('form');
 
-			//formElmt.classList.add('col');
 
-			//formElmt.classList.add('s12');
-
-			//formElmt.novalidate = true; // not sure if this is read-only
-
-			containerElmnt =  this.createElement(
+			containerDiv =  this.createElement(
 			{
 				element: 'div',			
 				
 				classList: ['row']
 			});
 			
-			
-			//containerElmnt = document.createElement('div');
 
-			//containerElmnt.classList.add('row');
-
-			formElmt.appendChild(containerElmnt);
+			formElement.appendChild(containerDiv);
 		
 
 		// Add event name field
 
-			rowElmnt =  this.createElement( // inner div
+			innerDiv =  this.createElement( // inner div
 			{
 				element: 'div',			
 				
@@ -267,7 +135,7 @@ app.EventView = function() {
 			});
 			
 			
-			rowElmnt.appendChild(this.createElement( // input
+			innerDiv.appendChild(this.createElement( // input
 			{
 				element: 'input',			
 				
@@ -286,7 +154,7 @@ app.EventView = function() {
 			}));
 			
 			
-			rowElmnt.appendChild(this.createElement( // label
+			labelElement = this.createElement( // label
 			{	
 				element: 'label',			
 				
@@ -297,36 +165,35 @@ app.EventView = function() {
 				dataset: {error: 'Please enter event name'},
 				
 				innerHTML: 'Event Name'
+			});
+			
+			labelElement.appendChild(this.createElement( // required field indicator
+			{
+				element: 'span',
+
+				classList: ['required-indicator'],
+
+				innerHTML: '*'
 			}));
 			
-			
-			elmnt =  this.createElement( // outer div
+			innerDiv.appendChild(labelElement);
+
+
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',
 				
 				classList: ['row']
 			});
 			
-						
-			elmnt.appendChild(rowElmnt);
+			outerDiv.appendChild(innerDiv);
 			
-			containerElmnt.appendChild(elmnt);
-			
-			//rowElmnt = createRow(['input-field', 'col', 's12']);
-
-			//elmnt = createInput('text', 'event-name', ['validate'], true);			
-			
-			//if (_event.name()) {elmnt.setAttribute('value', _event.name())};
-
-			//rowElmnt.appendChild(createLabel('Event Name', 'event-name', ['form-label', 'active'], 'Please enter event name', true));
-
-			//elmnt = create(['row']);
-			
+			containerDiv.appendChild(outerDiv);
 			
 		
 		// Add location field
 
-			rowElmnt =  this.createElement( // inner div
+			innerDiv =  this.createElement( // inner div
 			{
 				element: 'div',			
 				
@@ -334,7 +201,7 @@ app.EventView = function() {
 			});
 			
 			
-			rowElmnt.appendChild(this.createElement( // input
+			innerDiv.appendChild(this.createElement( // input
 			{
 				element: 'input',			
 				
@@ -351,7 +218,7 @@ app.EventView = function() {
 			}));
 			
 			
-			rowElmnt.appendChild(this.createElement( // label
+			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
@@ -365,7 +232,7 @@ app.EventView = function() {
 			}));
 			
 			
-			rowElmnt.appendChild(this.createElement( // data list
+			innerDiv.appendChild(this.createElement( // data list
 			{	
 				element: 'datalist',			
 				
@@ -373,38 +240,21 @@ app.EventView = function() {
 			}));
 			
 			
-			elmnt =  this.createElement( // outer div
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',
 				
 				classList: ['row']
 			});
 						
-			elmnt.appendChild(rowElmnt);
+			outerDiv.appendChild(innerDiv);
 			
-			containerElmnt.appendChild(elmnt);
-			
-			//rowElmnt = createRow(['input-field', 'col', 's12']);
-
-			//elmnt = createInput('text', 'event-location', [] , false, 'suggested-locations');
-
-			//if (_event.location()) {elmnt.setAttribute('value', _event.location())}; rowElmnt.appendChild(elmnt);
-
-			//rowElmnt.appendChild(createLabel('Location', 'event-location', ['form-label'], 'Please enter event location', false));
-
-			//datalistElmnt = document.createElement('datalist');
-
-			//datalistElmnt.id = 'suggested-locations';
-
-			//rowElmnt.appendChild(datalistElmnt);
-
-			//elmnt = createRow(['row']);
-			
+			containerDiv.appendChild(outerDiv);			
 
 
 		// Add start date and time field
 
-			elmnt =  this.createElement( // outer div
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',
 				
@@ -414,7 +264,7 @@ app.EventView = function() {
 			
 			// Date
 
-				rowElmnt =  this.createElement( // inner div
+				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
 					
@@ -422,7 +272,7 @@ app.EventView = function() {
 				});
 				
 				
-				rowElmnt.appendChild(this.createElement( // input
+				innerDiv.appendChild(this.createElement( // input
 				{
 					element: 'input',			
 					
@@ -443,7 +293,7 @@ app.EventView = function() {
 				}));
 				
 				
-				rowElmnt.appendChild(this.createElement( // label
+				labelElement = this.createElement( // label
 				{	
 					element: 'label',			
 					
@@ -454,10 +304,22 @@ app.EventView = function() {
 					dataset: {error: 'Please enter start date'},
 					
 					innerHTML: 'Start Date'
+				});
+
+				
+				labelElement.appendChild(this.createElement( // required field indicator
+				{
+					element: 'span',
+
+					classList: ['required-indicator'],
+
+					innerHTML: '*'
 				}));
 				
+				innerDiv.appendChild(labelElement);
 				
-				rowElmnt.appendChild(this.createElement( // custom error div
+				
+				innerDiv.appendChild(this.createElement( // custom error div
 				{	
 					element: 'div',			
 					
@@ -466,24 +328,12 @@ app.EventView = function() {
 					classList: ['custom-validate']
 				}));
 				
-				elmnt.appendChild(rowElmnt);
-				
-				//rowElmnt = createRow(['input-field', 'col', 's6']);
-
-				//elmnt =createInput('text', 'event-start-date', ['datepicker', 'picker__input'] , true, '', true);
-
-				//if (_event.start()) {elmnt.setAttribute('value', _event.start().toLocaleDateString());}
-
-				//rowElmnt.appendChild(elmnt);
-
-				//rowElmnt.appendChild(createLabel('Start Date', 'event-start-date', ['form-label'], 'Please enter start date', true));
-
-				//rowElmnt.appendChild(createCustomError('event-start-date-error'));
+				outerDiv.appendChild(innerDiv);
 				
 				
 			// Time
 
-				rowElmnt =  this.createElement( // inner div
+				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
 					
@@ -491,7 +341,7 @@ app.EventView = function() {
 				});
 				
 				
-				rowElmnt.appendChild(this.createElement( // input
+				innerDiv.appendChild(this.createElement( // input
 				{
 					element: 'input',			
 					
@@ -510,7 +360,7 @@ app.EventView = function() {
 				}));
 								
 				
-				rowElmnt.appendChild(this.createElement( // label
+				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
@@ -524,7 +374,7 @@ app.EventView = function() {
 				}));
 				
 				
-				rowElmnt.appendChild(this.createElement( // custom error div
+				innerDiv.appendChild(this.createElement( // custom error div
 				{	
 					element: 'div',			
 					
@@ -534,35 +384,15 @@ app.EventView = function() {
 				}));
 				
 				
-				elmnt.appendChild(rowElmnt);
-				
-				//rwElmnt = createRow(['input-field', 'col', 's6']);
-
-				//elmnt = createInput('text', 'event-start-time', ['timepicker', 'picker__input'] , false, '', true);
-
-				//if (_event.start()) {elmnt.setAttribute('value', _event.start().toLocaleTimeString());}
-
-				//rwElmnt.appendChild(elmnt);
-
-				//rwElmnt.appendChild(createLabel('Start Time', 'event-start-time', ['form-label'], 'Please enter start time', false));
-
-				//rwElmnt.appendChild(createCustomError('event-start-time-error'));
+				outerDiv.appendChild(innerDiv);
 				
 				
-			// Add to container
-
-				//elmnt = createRow(['row']);
-
-				//elmnt.appendChild(rowElmnt);
-
-				//elmnt.appendChild(rwElmnt);
-
-				containerElmnt.appendChild(elmnt);
+				containerDiv.appendChild(outerDiv); // Add to container
 
 
 		// Add end date and time field
 
-			elmnt =  this.createElement( // outer div
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',
 				
@@ -571,7 +401,7 @@ app.EventView = function() {
 				
 				// Date
 
-				rowElmnt =  this.createElement( // inner div
+				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
 					
@@ -579,7 +409,7 @@ app.EventView = function() {
 				});
 				
 				
-				rowElmnt.appendChild(this.createElement( // input
+				innerDiv.appendChild(this.createElement( // input
 				{
 					element: 'input',			
 					
@@ -598,7 +428,7 @@ app.EventView = function() {
 				}));
 				
 				
-				rowElmnt.appendChild(this.createElement( // label
+				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
@@ -612,7 +442,7 @@ app.EventView = function() {
 				}));
 				
 				
-				rowElmnt.appendChild(this.createElement( // custom error div
+				innerDiv.appendChild(this.createElement( // custom error div
 				{	
 					element: 'div',			
 					
@@ -622,24 +452,12 @@ app.EventView = function() {
 				}));
 				
 				
-				elmnt.appendChild(rowElmnt);
-				/*
-				rowElmnt = createRow(['input-field', 'col', 's6']);
+				outerDiv.appendChild(innerDiv);
 
-				elmnt = createInput('text', 'event-end-date', ['datepicker', 'picker__input'] , false, '', true);
-
-				if (_event.end()) {elmnt.setAttribute('value', _event.end().toLocaleDateString());}
-
-				rowElmnt.appendChild(elmnt);
-
-				rowElmnt.appendChild(createLabel('End Date', 'event-end-date', ['form-label'], 'End date cannot be before start date', false));
-
-				rowElmnt.appendChild(createCustomError('event-end-date-error'));
-				*/
 
 			// Time
 				
-				rowElmnt =  this.createElement( // inner div
+				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
 					
@@ -647,7 +465,7 @@ app.EventView = function() {
 				});
 				
 				
-				rowElmnt.appendChild(this.createElement( // input
+				innerDiv.appendChild(this.createElement( // input
 				{
 					element: 'input',			
 					
@@ -666,7 +484,7 @@ app.EventView = function() {
 				}));
 				
 				
-				rowElmnt.appendChild(this.createElement( // label
+				innerDiv.appendChild(this.createElement( // label
 				{	
 					element: 'label',			
 					
@@ -680,7 +498,7 @@ app.EventView = function() {
 				}));
 				
 				
-				rowElmnt.appendChild(this.createElement( // custom error div
+				innerDiv.appendChild(this.createElement( // custom error div
 				{	
 					element: 'div',			
 					
@@ -690,43 +508,22 @@ app.EventView = function() {
 				}));
 				
 				
-				elmnt.appendChild(rowElmnt);
-				/*
-				rwElmnt = createRow(['input-field', 'col', 's6']);
+				outerDiv.appendChild(innerDiv);
 
-				elmnt = createInput('text', 'event-end-time', ['timepicker', 'picker__input'] , false, '', true);
 
-				if (_event.end()) {elmnt.setAttribute('value', _event.end().toLocaleTimeString());}
-
-				rwElmnt.appendChild(elmnt);
-
-				rwElmnt.appendChild(createLabel('End Time', 'event-end-time', ['form-label'], 'Please enter end time', false));
-
-				rwElmnt.appendChild(createCustomError('event-end-time-error'));
-				*/
-				
-
-			// Add to container
-
-				////elmnt = createRow(['row']);
-
-				//elmnt.appendChild(rowElmnt);
-
-				//elmnt.appendChild(rwElmnt);
-
-				containerElmnt.appendChild(elmnt);
+				containerDiv.appendChild(outerDiv);
 
 
 		// Add event type field
 
-			rowElmnt =  this.createElement( // inner div
+			innerDiv =  this.createElement( // inner div
 			{
 				element: 'div',			
 				
 				classList: ['input-field', 'col', 's12']
 			});
 			
-			rowElmnt.appendChild(this.createElement( //input
+			innerDiv.appendChild(this.createElement( //input
 			{
 				element: 'input',			
 				
@@ -743,7 +540,7 @@ app.EventView = function() {
 			}));
 			
 			
-			rowElmnt.appendChild(this.createElement( // label
+			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
@@ -757,7 +554,7 @@ app.EventView = function() {
 			}));
 			
 			
-			rowElmnt.appendChild(this.createElement( // data list
+			innerDiv.appendChild(this.createElement( // data list
 			{	
 				element: 'datalist',			
 				
@@ -765,7 +562,7 @@ app.EventView = function() {
 			}));
 			
 			
-			elmnt =  this.createElement( // outer div
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',
 				
@@ -773,42 +570,14 @@ app.EventView = function() {
 			});
 						
 			
-			elmnt.appendChild(rowElmnt);
+			outerDiv.appendChild(innerDiv);
 			
-			//containerElmnt.appendChild(elmnt);
-			
-			//rowElmnt = createRow(['input-field', 'col', 's12']);
-
-			//elmnt = createInput('text', 'event-type', [], false, 'event-types');
-
-			//if(_event.type()) {elment.setAttribute('value', _event.type());}; rowElmnt.appendChild(elmnt);
-
-			//rowElmnt.appendChild(createLabel('Event Type', 'event-type', ['form-label'], 'Please enter event type', false));
-
-			//datalistElmnt = document.createElement('datalist');
-
-			//datalistElmnt.id = 'event-types';
-
-			/*['Anniversary', 'Birthday', 'Family reunion', 'Party', 'Religious festival', 'Wedding'].forEach(function(eventType) {
-
-				optionElmnt = document.createElement('option');
-
-				optionElmnt.value = eventType;
-
-				datalistElmnt.appendChild(optionElmnt);
-			});
-
-			rowElmnt.appendChild(datalistElmnt);
-			*/
-
-			//elmnt = createRow(['row']); elmnt.appendChild(rowElmnt);
-			
-			containerElmnt.appendChild(elmnt);
+			containerDiv.appendChild(outerDiv);
 
 
 		// Add capacity field
 
-			rowElmnt =  this.createElement( // inner div
+			innerDiv =  this.createElement( // inner div
 			{
 				element: 'div',			
 				
@@ -816,7 +585,7 @@ app.EventView = function() {
 			});
 			
 			
-			rowElmnt.appendChild(this.createElement( // input
+			innerDiv.appendChild(this.createElement( // input
 			{
 				element: 'input',			
 				
@@ -838,8 +607,7 @@ app.EventView = function() {
 				classList: ['validate']
 			}));
 			
-			
-			rowElmnt.appendChild(this.createElement( // label
+			labelElement = this.createElement( // label
 			{	
 				element: 'label',			
 				
@@ -850,39 +618,35 @@ app.EventView = function() {
 				dataset: {error: 'Please enter capacity'},
 				
 				innerHTML: 'Capacity'
+			});
+			
+			labelElement.appendChild(this.createElement( // required field indicator
+			{
+				element: 'span',
+
+				classList: ['required-indicator'],
+
+				innerHTML: '*'
 			}));
 			
+			innerDiv.appendChild(labelElement);
+
 			
-			elmnt =  this.createElement( // outer div
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',
 				
 				classList: ['row']
 			});
 						
-			elmnt.appendChild(rowElmnt);
+			outerDiv.appendChild(innerDiv);
 			
-			containerElmnt.appendChild(elmnt);
-			
-			/*
-			rowElmnt = createRow(['input-field', 'col', 's12']);
+			containerDiv.appendChild(outerDiv);
 
-			elmnt = createInput('number', 'event-capacity', ['validate'], true);
-
-			elmnt.min = 0; elmnt.step = 1;
-
-			if (_event.capacity() > -1) {elmnt.setAttribute('value', _event.capacity());};
-
-			rowElmnt.appendChild(elmnt);
-
-			rowElmnt.appendChild(createLabel('Event Capacity', 'event-capacity', ['form-label', 'active'], 'Please enter capacity (zero or more)', true));
-
-			elmnt = createRow(['row']); elmnt.appendChild(rowElmnt); containerElmnt.appendChild(elmnt);
-			*/
 
 		// Add host field
 
-			rowElmnt =  this.createElement( // inner div
+			innerDiv =  this.createElement( // inner div
 			{
 				element: 'div',			
 				
@@ -890,7 +654,7 @@ app.EventView = function() {
 			});
 			
 			
-			rowElmnt.appendChild(this.createElement( // input
+			innerDiv.appendChild(this.createElement( // input
 			{
 				element: 'input',			
 				
@@ -907,7 +671,7 @@ app.EventView = function() {
 			}));
 			
 			
-			rowElmnt.appendChild(this.createElement( // label
+			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
@@ -921,7 +685,7 @@ app.EventView = function() {
 			}));
 			
 			
-			elmnt =  this.createElement( // outer div
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',
 				
@@ -929,28 +693,13 @@ app.EventView = function() {
 			});
 						
 			
-			elmnt.appendChild(rowElmnt);
+			outerDiv.appendChild(innerDiv);
 			
-			containerElmnt.appendChild(elmnt);
-			
-			/*
-			rowElmnt = createRow(['input-field', 'col', 's12']);
-
-			elmnt = createInput('text', 'event-host', ['validate'], false);
-
-			if(_event.host().name()) {elmnt.setAttribute('value', _event.host().name());}
-
-			rowElmnt.appendChild(elmnt);
-
-			rowElmnt.appendChild(createLabel('Event Host', 'event-host', ['form-label'], 'Please enter host', false));
-
-			elmnt = createRow(['row']); elmnt.appendChild(rowElmnt); containerElmnt.appendChild(elmnt);
-			*/
-
+			containerDiv.appendChild(outerDiv);
 
 		// Add description field
 
-			rowElmnt =  this.createElement( // inner div
+			innerDiv =  this.createElement( // inner div
 			{
 				element: 'div',			
 				
@@ -958,7 +707,7 @@ app.EventView = function() {
 			});
 			
 			
-			rowElmnt.appendChild(this.createElement( // input
+			innerDiv.appendChild(this.createElement( // input
 			{
 				element: 'input',			
 				
@@ -979,7 +728,7 @@ app.EventView = function() {
 			}));
 			
 			
-			rowElmnt.appendChild(this.createElement( // label
+			innerDiv.appendChild(this.createElement( // label
 			{	
 				element: 'label',			
 				
@@ -993,7 +742,7 @@ app.EventView = function() {
 			}));
 			
 			
-			elmnt =  this.createElement( // outer div
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',
 				
@@ -1001,39 +750,21 @@ app.EventView = function() {
 			});
 			
 						
-			elmnt.appendChild(rowElmnt);
+			outerDiv.appendChild(innerDiv);
 			
-			containerElmnt.appendChild(elmnt);
-			
-			/*
-			rowElmnt = createRow(['input-field', 'col', 's12']);
-
-			elmnt = createInput('textarea', 'event-description', ['materialize-textarea'], false);
-
-			elmnt.setAttribute('length', 120); elmnt.setAttribute('maxlength', 120);
-
-			if (_event.description()) {elmnt.setAttribute('value', _event.description())}
-
-			rowElmnt.appendChild(elmnt);
-
-			rowElmnt.appendChild(createLabel('Event Description', 'event-description', ['form-label'], 'Please enter description', false));
-
-			elmnt = createRow(['row']); elmnt.appendChild(rowElmnt); containerElmnt.appendChild(elmnt);
-			*/
+			containerDiv.appendChild(outerDiv);
 
 
 		// Add requirement indicator (asterisk) explanation
 
-			rowElmnt =  this.createElement( // outer div
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',			
 				
 				classList: ['row']
 			});
 			
-			//rowElmnt = createRow(['row']);
-
-			rowElmnt.appendChild(this.createElement({
+			outerDiv.appendChild(this.createElement({
 			
 				element: 'p',
 				
@@ -1043,12 +774,12 @@ app.EventView = function() {
 			}));
 			
 			
-			containerElmnt.appendChild(rowElmnt);
+			containerDiv.appendChild(outerDiv);
 
 		
 		// Add submit and cancel buttons
 
-			rowElmnt =  this.createElement( // outer div
+			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',			
 				
@@ -1056,7 +787,7 @@ app.EventView = function() {
 			});
 			
 			
-			rowElmnt.appendChild(this.createElement({ // cancel button
+			outerDiv.appendChild(this.createElement({ // cancel button
 				
 				element: 'a',
 				
@@ -1066,7 +797,7 @@ app.EventView = function() {
 			}));
 			
 			
-			elmnt =  this.createElement({ // submit button
+			buttonElement =  this.createElement({ // submit button
 				
 				element: 'a',
 				
@@ -1076,7 +807,7 @@ app.EventView = function() {
 			});
 			
 			
-			elmnt.appendChild(this.createElement({
+			buttonElement.appendChild(this.createElement({ // 'send' icon
 				
 				element: 'i',
 				
@@ -1086,50 +817,12 @@ app.EventView = function() {
 			}));
 			
 			
-			rowElmnt.appendChild(elmnt);
-			
-			/*rowElmnt = createRow(['row', 'form-submit']);
+			outerDiv.appendChild(buttonElement);
 
-			elmnt = document.createElement('a'); // cancel button
-
-			elmnt.id = 'event-form-cancel';
-
-			elmnt.classList.add('waves-effect');
-
-			elmnt.classList.add('waves-teal');
-
-			elmnt.classList.add('btn-flat');
-
-			rowElmnt.appendChild(elmnt);
-
-			elmnt = document.createElement('a'); // submit button
-
-			elmnt.id = 'event-form-submit';
-
-			elmnt.classList.add('waves-effect');
-
-			elmnt.classList.add('waves-light');
-
-			elmnt.classList.add('btn');
-
-			iconElmnt = document.createElement('i');
-
-			iconElmnt.classList.add('material-icons');
-
-			iconElmnt.classList.add('right');
-
-			iconElmnt.innerHTML = 'send';
-
-			elmnt.appendChild(iconElmnt);
-
-			rowElmnt.appendChild(elmnt);
-			*/
-
-			containerElmnt.appendChild(rowElmnt);
+			containerDiv.appendChild(outerDiv);
 
 
-		return formElmt;
-
+		return formElement;
 	};
 
 
@@ -1185,18 +878,18 @@ app.EventView.renderList = function(Account_account) {
 		anchorElmnt.href = '#!';
 		
 		
-		var iconElmnt = document.createElement('i');
+		var iconElement = document.createElement('i');
 		
-		iconElmnt.classList.add('material-icons');
+		iconElement.classList.add('material-icons');
 		
-		iconElmnt.innerHTML = 'chevron_right';
+		iconElement.innerHTML = 'chevron_right';
 
 		
 		listElmnt.appendChild(divElmnt);
 		
 		divElmnt.appendChild(anchorElmnt);
 		
-		anchorElmnt.appendChild(iconElmnt);
+		anchorElmnt.appendChild(iconElement);
 		
 		
 		return listElmnt;
@@ -1381,7 +1074,7 @@ app.EventView.validateCapacity = function(event) {
 
 app.EventView.validateDateRange = function() {
 
-	if (this.close) {this.close()}; // close picker if called from dialog; setting closeOnClear true does not work (bug)
+	if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
 
 	
 	// Set up references to DOM
@@ -1488,7 +1181,7 @@ app.EventView.validateName = function(event) {
 
 app.EventView.validateTimeRange = function() {
 
-	if (this.close) {this.close()}; // close picker (if called from dialog); setting closeOnClear true does not work (bug)
+	if (this.close) {this.close()} // close picker (if called from dialog); setting closeOnClear true does not work (bug)
 
 
 	// Set up references to DOM
