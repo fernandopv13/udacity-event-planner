@@ -97,17 +97,7 @@ app.PersonListView = function() {
 				}
 			});
 
-			//var listElmnt = document.createElement('li');
-			
-			//listElmnt.classList.add('collection-item');
-
-			//listElmnt.classList.add('avatar');
-			
-			//listElmnt.id = 'guest-list-id-' + Person_guest.id();
-
-			//listElmnt.onclick = function(e) {app.controller.onGuestSelected(Person_guest.id());};
-			
-			
+						
 			if (Person_guest.imgUrl()) { // use existing image
 
 				listElmnt.appendChild(self.createElement({
@@ -123,14 +113,6 @@ app.PersonListView = function() {
 
 					classList: ['circle']
 				}));
-
-				//avatarElmnt = document.createElement('img');
-
-				//avatarElmnt.classList.add('circle');
-
-				//avatarElmnt.src = Person_guest.imgUrl();
-
-				//avatarElmnt.alt = Person_guest.name();
 			}
 
 			else { // use generic avatar
@@ -143,14 +125,6 @@ app.PersonListView = function() {
 
 					innerHTML: 'account_circle'
 				}));
-
-				//avatarElmnt = document.createElement('i');
-
-				//avatarElmnt.classList.add('material-icons');
-
-				//avatarElmnt.classList.add('circle');
-
-				//avatarElmnt.innerHTML = 'account_circle'
 			}
 
 
@@ -161,11 +135,7 @@ app.PersonListView = function() {
 				innerHTML: Person_guest.name() ? Person_guest.name() : ''
 			}));
 
-			//var spanElmnt = document.createElement('span');
-			
-			//spanElmnt.innerHTML = Person_guest.name() ? Person_guest.name() : '';
-			
-			
+						
 			listElmnt.appendChild(self.createElement({
 
 				element: 'p',
@@ -173,11 +143,7 @@ app.PersonListView = function() {
 				innerHTML: Person_guest.email() && Person_guest.email().address() ? Person_guest.email().address() : ''
 			}));
 
-			//var pElmnt = document.createElement('p');
-
-			//pElmnt.innerHTML = Person_guest.email() && Person_guest.email().address() ? Person_guest.email().address() : '';
-
-
+			
 			var anchorElmnt = self.createElement({
 
 				element: 'a',
@@ -188,13 +154,6 @@ app.PersonListView = function() {
 			});
 
 
-			//var anchorElmnt = document.createElement('a');
-			
-			//anchorElmnt.classList.add('secondary-content');
-
-			//anchorElmnt.href = '#!';
-			
-			
 			anchorElmnt.appendChild(self.createElement({
 
 				element: 'i',
@@ -204,22 +163,8 @@ app.PersonListView = function() {
 				innerHTML: 'chevron_right'
 			}));
 
-			//var iconElmnt = document.createElement('i');
-			
-			//iconElmnt.classList.add('material-icons');
-			
-			//iconElmnt.innerHTML = 'chevron_right';
-
-			
-			//listElmnt.appendChild(avatarElmnt);
-
-			//listElmnt.appendChild(spanElmnt);
-
-			//listElmnt.appendChild(pElmnt);
-
 			listElmnt.appendChild(anchorElmnt);
 			
-			//anchorElmnt.appendChild(iconElmnt);
 			
 			return listElmnt;
 		}
@@ -232,12 +177,7 @@ app.PersonListView = function() {
 			classList: ['collection', 'with-header']
 		});
 
-		//var UlElement = document.createElement('ul'); // generate list
-
-		//UlElement.classList.add('collection');
-
-		//UlElement.classList.add('with-header');
-
+		
 		UlElement.appendChild(this.createElement({
 
 			element: 'h4',
@@ -247,15 +187,7 @@ app.PersonListView = function() {
 			innerHTML: 'Guest List'
 		}));
 
-		//var headerElmnt = document.createElement('h4'); // generate header
-
-		//headerElmnt.classList.add('collection-header');
-
-		//headerElmnt.innerHTML = 'Guest List';
-
-		//UlElement.appendChild(headerElmnt);
-
-		
+				
 		if (Event_event !== null) {
 
 			var guests = Event_event.guests()

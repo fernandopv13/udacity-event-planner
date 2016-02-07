@@ -268,25 +268,29 @@ app.Controller = function() {
 		this.selectedAccount().localStorageAllowed(true); //debug
 	};
 
-	this.update = function(IModelable_obj, int_objId) {
+	this.update = function(Object_obj, int_objId) {
 
-		if (IModelable_obj.constructor) {
+		if (Object_obj.constructor) {
 
-			switch (IModelable_obj.constructor)	{
+			switch (Object_obj.constructor)	{
 
-				case app.Event:
+				case app.Event: // submission from the event form
 
 					// Update event in datamodel
 
 					var event = app.Event.registry.getObjectById(int_objId);
 
-					event.update(IModelable_obj, int_objId);
+					event.update(Object_obj, int_objId);
 
 					// Refresh all views
 
 					this.notifyObservers();
 
 					break;
+
+				case app.EventListView: // item click in event list
+
+					this.onEventSelected(int_objId);
 			}
 		}
 	}
