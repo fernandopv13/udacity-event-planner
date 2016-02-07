@@ -75,6 +75,7 @@ app.PersonListView = function() {
 	* @return void
 	 */
 
+	/*
 	app.PersonListView.prototype.notifyObservers = function(int_objId) {
 
 		this.observers.forEach(function(observer) {
@@ -83,7 +84,7 @@ app.PersonListView = function() {
 
 		}.bind(this));
 	};
-
+	*/
 
 	/** Respond to tap/click on event in events list */
 	

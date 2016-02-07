@@ -79,6 +79,7 @@ app.EventListView = function(Event_event) {
 	* @return void
 	 */
 
+	/*
 	app.EventListView.prototype.notifyObservers = function(int_objId) {
 
 		this.observers.forEach(function(observer) {
@@ -87,6 +88,7 @@ app.EventListView = function(Event_event) {
 
 		}.bind(this));
 	};
+	*/
 
 
 	/** Respond to tap/click on event in events list */

@@ -50,13 +50,13 @@ app.IObservable = function() {
 * @return {Array} Array of IObservers
 */
 
-app.IObservable.prototype.default_notifyObservers = function() {
+app.IObservable.prototype.default_notifyObservers = function(int_objId) {
 
 	this.observers.forEach(function(observer) {
 
-			observer.update(this);
+		observer.update(this, int_objId);
 		
-		}.bind(this));
+	}.bind(this));
 };
 
 
