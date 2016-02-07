@@ -198,8 +198,6 @@ app.Controller = function() {
 		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
 
 		this.notifyObservers();
-
-		console.log(_selectedGuest.name()); // debug
 	};
 
 	
@@ -283,6 +281,10 @@ app.Controller = function() {
 
 	this.update = function(Object_obj, int_objId) {
 
+		// All callers pass in the id of the data object concerned.
+		// Forms also pass in an object holding the data to be used for updating.
+		// The data object is of the same class as the model object it updates.
+
 		if (Object_obj.constructor) {
 
 			switch (Object_obj.constructor)	{
@@ -318,8 +320,6 @@ app.Controller = function() {
 					// Update person in datamodel
 
 					var person = app.Person.registry.getObjectById(int_objId);
-
-					console.log(person.name());
 
 					person.update(Object_obj, int_objId);
 

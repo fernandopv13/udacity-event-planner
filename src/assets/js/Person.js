@@ -328,6 +328,64 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	}
 	
 	
+	/** Updates person when notified of change by observable (controller). Autosaves to local storage if available.
+	*
+	* (Method realization required by IObserver)
+	*
+	* @param {Person} person Object holding the data to update this person with
+	*
+	* @return {Boolean} true if copy was successful, else error or false
+	*
+	* @throws {IllegalArgumentError} If provided data object is not an instance of Event
+	*
+	* @throws {IllegalArgumentError} If provided data object has different id to that of event
+	*
+	* @throws {IllegalArgumentError} If something else goes wrong when setting the data
+	*/
+
+	app.Person.prototype.update = function(Person_person, int_objId) {
+
+		if (Person_person.constructor !== app.Person) { // wrong class
+
+			throw new IllegalArgumentError('Object must be instance of Person');
+		}
+
+		else if (this.id() !== int_objId) { // id mismatch
+
+			throw new IllegalArgumentError('Objects IDs don\'t match');
+		}
+
+		else {
+
+			// Update using accessors for validation
+
+			this.name(Person_person.name());
+
+			this.employer(Person_person.employer());
+
+			this.jobTitle(Person_person.jobTitle());
+
+			this.email().address(Person_person.email().address ? Person_person.email().address() : null);
+
+			this.birthday(Person_person.birthday() ? Person_person.birthday() : null);
+
+			
+			// Write new state to local storage, if available
+
+			var account = app.controller.selectedAccount();
+
+			if (account.localStorageAllowed() && window.localStorage) {
+
+				this.writeObject();
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+
 	/** Converts person to JSON object
 	*
 	* (Method realization required by ISerializable.)
