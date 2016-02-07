@@ -70,35 +70,6 @@ app.EventListView = function(Event_event) {
 	};
 	
 
-	/** Notifies observers that item in list has been activated (i.e. tapped/clicked).
-	*
-	* Overrides default method in IObservable.
-	*
-	* @param {int} Id The Id of the object that was activated
-	*
-	* @return void
-	 */
-
-	/*
-	app.EventListView.prototype.notifyObservers = function(int_objId) {
-
-		this.observers.forEach(function(observer) {
-
-			observer.update(this, int_objId);
-
-		}.bind(this));
-	};
-	*/
-
-
-	/** Respond to tap/click on event in events list */
-	
-	app.EventView.prototype.onclick = function(int_eventId) {
-		
-		app.controller.onEventSelected(int_eventId);
-	};
-	
-
 	/** Renders collection of events in an account to list in the UI
 	*
 	* @param {Account} Account The currently selected Account

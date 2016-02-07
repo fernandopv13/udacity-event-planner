@@ -66,34 +66,6 @@ app.PersonListView = function() {
 	};
 	
 
-	/** Notifies observers that item in list has been activated (i.e. tapped/clicked).
-	*
-	* Overrides default method in IObservable.
-	*
-	* @param {int} Id The Id of the object that was activated
-	*
-	* @return void
-	 */
-
-	/*
-	app.PersonListView.prototype.notifyObservers = function(int_objId) {
-
-		this.observers.forEach(function(observer) {
-
-			observer.update(this, int_objId);
-
-		}.bind(this));
-	};
-	*/
-
-	/** Respond to tap/click on event in events list */
-	
-	app.PersonListView.prototype.onclick = function(int_personId) {
-		
-		app.controller.onGuestSelected(int_personId);
-	};
-	
-
 	/** Renders guest list for an event in the UI
 	*
 	* @param {Event} The event whose guest list we want to render
