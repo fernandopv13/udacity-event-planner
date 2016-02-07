@@ -844,8 +844,6 @@ app.EventView = function(Event_event) {
 
 			$form.append(formElement);
 
-			console.log(formElement);
-
 
 		// (Re)assign event handlers to form elements
 
@@ -854,7 +852,7 @@ app.EventView = function(Event_event) {
 			$('.datepicker').pickadate({
 				//closeOnSelect: true, // bug: ineffective
 				closeOnClear: true,
-				onSet: app.EventView.validateDateRange,
+				onSet: this.validateDateRange,
 				selectMonths: true, // Creates a dropdown to control month
 				selectYears: 15 // Creates a dropdown of 15 years to control year
 			});
@@ -867,15 +865,97 @@ app.EventView = function(Event_event) {
 			});
 
 			
-			$('#event-location').focus(app.EventView.suggestLocations);
+			$('#event-location').focus(this.suggestLocations);
 
 			
-			$('#event-name').keyup(app.EventView.validateName);
+			$('#event-name').keyup(this.validateName);
 
-			$('#event-capacity').keyup(app.EventView.validateCapacity);
+			$('#event-capacity').keyup(this.validateCapacity);
 
 			$('#event-form-submit').click(app.EventView.submit);
 	};
+
+
+	/** Suggest venues for event based on device's location (if available).
+	*
+	* Directly updates location datalist in the DOM.
+	*
+	* @todo Add address info to venue display
+	*/
+
+	app.EventView.prototype.suggestLocations = function() {
+
+		var account = app.controller.selectedAccount(),
+
+		position = account.defaultLocation(); // set default
+
+
+		// Get device's current location if available and allowed
+
+		if (account.geolocationAllowed()) { // user has granted permission to use geolocation
+
+			if(navigator.geolocation) { // device provides access to geolocation
+
+				navigator.geolocation.getCurrentPosition(
+
+					function(pos) { // success
+
+						position = pos; // override default
+					},
+
+					function(error) { // error
+
+						console.log(error);
+					}
+				)
+
+				// geolocation seems to require access via https
+
+				// don't currently have access to a secure server, so,
+
+				// mock geolocation result for the time being
+
+				position = {
+
+					coords:
+					{
+
+						latitude: 55.6666281,
+
+						longitude: 12.556294
+					},
+
+					timestamp: new Date().valueOf()
+				}
+			}
+		}
+
+		if (position) {// position is defined
+
+			new app.FourSquareSearch().execute(function(venues) { // get venues
+
+				if (venues !== null) { // search succeeded
+
+					var $listElmnt = $('#suggested-locations'), optionElmnt;
+
+					$listElmnt.empty();
+
+					venues.forEach(function(venue) { // build suggest list
+
+						optionElmnt = document.createElement('option');
+
+						optionElmnt.value = venue.name;
+
+						$listElmnt.append(optionElmnt);
+
+					});
+				}
+
+			}, position);	
+		}
+		
+		// else don't provide suggestions
+	}
 
 
 	/** Update event presentation when model has changed */
@@ -885,6 +965,178 @@ app.EventView = function(Event_event) {
 		this.render(IModelable_event);
 	};
 	
+
+	/* Event handler for interactive validation of capacity field */
+
+	app.EventView.prototype.validateCapacity = function(event) {
+		
+		var $capacity = $('#event-capacity');
+
+		if ($capacity.val() === '') { // empty
+
+			if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+				event.target.labels[0].dataset.error = 'Please enter capacity';
+
+			}
+
+			else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+				$capacity.next('label').data('error', 'Please enter capacity');
+			}
+			
+			$capacity.addClass('invalid');
+
+			return false;
+		}
+
+
+		// no need to test for non-numbers, not programmatically available from input
+
+		
+		else if ($capacity.val() < 0) { // negative number
+
+			if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+				event.target.labels[0].dataset.error = 'Capacity cannot be negative';
+			}
+
+			else { // Other browsers (updates value but not display, falls back on value in HTML)
+
+				$capacity.next('label').data('error', 'Capacity cannot be negative');
+			}
+			
+			$capacity.addClass('invalid');
+
+			return false;
+		}
+		
+		else { // valid
+
+			$capacity.removeClass('invalid');
+
+			if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+				event.target.labels[0].dataset.error = 'Please enter capacity'; // can't get jQuery.data() to work
+			}
+
+			else { // Other browsers (updates value but not display, falls back on value in HTML)
+
+				$capacity.next('label').data('error', 'Please enter capacity');
+			}
+		}
+
+		return true;
+	}
+
+
+	/** Event handler for interactive validation of start and end date fields */
+
+	app.EventView.prototype.validateDateRange = function() {
+
+		if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
+
+		
+		// Set up references to DOM
+
+		var $start = $('#event-start-date'),
+
+		start_date = new Date($start.val()),
+
+		$start_err = $('#event-start-date-error'),
+
+		$end = $('#event-end-date'),
+
+		end_date = new Date($end.val()),
+
+		$end_err = $('#event-end-date-error');
+
+		
+		// Validate
+
+		if ($start.val() === '') { // start not selected
+
+			$start_err.html('Please select start date');
+
+			$start_err.css('display', 'block');
+
+			$start.addClass('invalid');
+
+			return false;
+		}
+
+		/* focus causes end datepicker to open, no time to resolve, skip for now
+		else if (end === 'Invalid date') { // start selected, but not end
+
+			$end.val(start); // set end date to start date
+
+			$end.addClass('active');
+
+			$end.trigger('focus');
+		}
+		*/
+		
+		else if (end_date < start_date) { // end date is before start
+
+			// Materialize's validation message won't display, so rolling my own
+
+			$end_err.html('End date cannot be before start date');
+
+			$end_err.css('display', 'block');
+
+			$end.addClass('invalid');
+
+			return false;
+		}
+
+		else {
+
+			$start_err.css('display', 'none');
+
+			$start.removeClass('invalid');
+
+			$end_err.css('display', 'none');
+
+			$end.removeClass('invalid');
+		}
+
+		app.EventView.validateTimeRange();	
+
+		return true;
+	}
+
+	/* Event handler for interactive validation of event name field */
+
+	app.EventView.prototype.validateName = function(event) {
+
+		var $name = $('#event-name');
+
+		if ($name.val() === '') { // empty
+		
+			if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+				event.target.labels[0].dataset.error = 'Please enter event name';
+			}
+
+			else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+				$name.next('label').data('error', 'Please enter event name');
+			}
+
+			$name.addClass('invalid');
+
+			return false;
+		}
+
+		else {
+
+			$name.removeClass('invalid');
+		}
+
+		return true;
+	}
+
+
 	/*----------------------------------------------------------------------------------------
 	* Parameter parsing (constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
@@ -980,256 +1232,6 @@ app.EventView.renderList = function(Account_account) {
 };
 
 
-/** Suggest venues for event based on device's location (if available).
-*
-* Directly updates location datalist in the DOM.
-*/
-
-app.EventView.suggestLocations = function() {
-
-	var account = app.controller.selectedAccount(),
-
-	position = account.defaultLocation(); // set default
-
-
-	// Get device's current location if available and allowed
-
-	if (account.geolocationAllowed()) { // user has granted permission to use geolocation
-
-		if(navigator.geolocation) { // device provides access to geolocation
-
-			navigator.geolocation.getCurrentPosition(
-
-				function(pos) { // success
-
-					position = pos; // override default
-				},
-
-				function(error) { // error
-
-					console.log(error);
-				}
-			)
-
-			// geolocation seems to require access via https
-
-			// don't currently have access to a secure server, so,
-
-			// mock geolocation result for the time being
-
-			position = {
-
-				coords:
-				{
-
-					latitude: 55.6666281,
-
-					longitude: 12.556294
-				},
-
-				timestamp: new Date().valueOf()
-			}
-		}
-	}
-
-	if (position) {// position is defined
-
-		new app.FourSquareSearch().execute(function(venues) { // get venues
-
-			if (venues !== null) { // search succeeded
-
-				var $listElmnt = $('#suggested-locations'), optionElmnt;
-
-				$listElmnt.empty();
-
-				venues.forEach(function(venue) { // build suggest list
-
-					optionElmnt = document.createElement('option');
-
-					optionElmnt.value = venue.name;
-
-					$listElmnt.append(optionElmnt);
-
-				});
-			}
-
-		}, position);	
-	}
-	
-	// else don't provide suggestions
-}
-
-/* Event handler for interactive validation of capacity field */
-
-app.EventView.validateCapacity = function(event) {
-	
-	var $capacity = $('#event-capacity');
-
-	if ($capacity.val() === '') { // empty
-
-		if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-			event.target.labels[0].dataset.error = 'Please enter capacity';
-
-		}
-
-		else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-			$capacity.next('label').data('error', 'Please enter capacity');
-		}
-		
-		$capacity.addClass('invalid');
-
-		return false;
-	}
-
-
-	// no need to test for non-numbers, not programmatically available from input
-
-	
-	else if ($capacity.val() < 0) { // negative number
-
-		if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-			event.target.labels[0].dataset.error = 'Capacity cannot be negative';
-		}
-
-		else { // Other browsers (updates value but not display, falls back on value in HTML)
-
-			$capacity.next('label').data('error', 'Capacity cannot be negative');
-		}
-		
-		$capacity.addClass('invalid');
-
-		return false;
-	}
-	
-	else { // valid
-
-		$capacity.removeClass('invalid');
-
-		if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-			event.target.labels[0].dataset.error = 'Please enter capacity'; // can't get jQuery.data() to work
-		}
-
-		else { // Other browsers (updates value but not display, falls back on value in HTML)
-
-			$capacity.next('label').data('error', 'Please enter capacity');
-		}
-	}
-
-	return true;
-}
-
-
-/** Event handler for interactive validation of start and end date fields */
-
-app.EventView.validateDateRange = function() {
-
-	if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
-
-	
-	// Set up references to DOM
-
-	var $start = $('#event-start-date'),
-
-	start_date = new Date($start.val()),
-
-	$start_err = $('#event-start-date-error'),
-
-	$end = $('#event-end-date'),
-
-	end_date = new Date($end.val()),
-
-	$end_err = $('#event-end-date-error');
-
-	
-	// Validate
-
-	if ($start.val() === '') { // start not selected
-
-		$start_err.html('Please select start date');
-
-		$start_err.css('display', 'block');
-
-		$start.addClass('invalid');
-
-		return false;
-	}
-
-	/* focus causes end datepicker to open, no time to resolve, skip for now
-	else if (end === 'Invalid date') { // start selected, but not end
-
-		$end.val(start); // set end date to start date
-
-		$end.addClass('active');
-
-		$end.trigger('focus');
-	}
-	*/
-	
-	else if (end_date < start_date) { // end date is before start
-
-		// Materialize's validation message won't display, so rolling my own
-
-		$end_err.html('End date cannot be before start date');
-
-		$end_err.css('display', 'block');
-
-		$end.addClass('invalid');
-
-		return false;
-	}
-
-	else {
-
-		$start_err.css('display', 'none');
-
-		$start.removeClass('invalid');
-
-		$end_err.css('display', 'none');
-
-		$end.removeClass('invalid');
-	}
-
-	app.EventView.validateTimeRange();	
-
-	return true;
-}
-
-/* Event handler for interactive validation of event name field */
-
-app.EventView.validateName = function(event) {
-
-	var $name = $('#event-name');
-
-	if ($name.val() === '') { // empty
-	
-		if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-			event.target.labels[0].dataset.error = 'Please enter event name';
-		}
-
-		else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-			$name.next('label').data('error', 'Please enter event name');
-		}
-
-		$name.addClass('invalid');
-
-		return false;
-	}
-
-	else {
-
-		$name.removeClass('invalid');
-	}
-
-	return true;
-}
-
-
 /** Event handler for interactive validation of end time field*/
 
 app.EventView.validateTimeRange = function() {
@@ -1290,15 +1292,15 @@ app.EventView.validateTimeRange = function() {
 }
 
 
-app.EventView.submit = function() {
+app.EventView.prototype.submit = function() {
 
-	var valid = app.EventView.validateName() +
+	var valid = this.validateName() +
 
-				app.EventView.validateDateRange() +
+				this.validateDateRange() +
 
 				app.EventView.validateTimeRange() + 
 
-				app.EventView.validateCapacity();
+				this.validateCapacity();
 
 	if (valid) {
 
