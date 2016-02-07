@@ -198,6 +198,8 @@ app.Controller = function() {
 		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
 
 		this.notifyObservers();
+
+		console.log(_selectedGuest.name()); // debug
 	};
 
 	
@@ -291,6 +293,14 @@ app.Controller = function() {
 				case app.EventListView: // item click in event list
 
 					this.onEventSelected(int_objId);
+
+					break;
+
+				case app.PersonListView: // item click in guest list
+
+					this.onGuestSelected(int_objId);
+
+					break;
 			}
 		}
 	}

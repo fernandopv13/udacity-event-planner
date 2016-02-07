@@ -74,7 +74,7 @@ app.EventListView = function(Event_event) {
 	*
 	* Overrides default method in IObservable.
 	*
-	* @param {int} ID The ID of the object that was activated
+	* @param {int} Id The Id of the object that was activated
 	*
 	* @return void
 	 */
@@ -84,9 +84,10 @@ app.EventListView = function(Event_event) {
 		this.observers.forEach(function(observer) {
 
 			observer.update(this, int_objId);
-			
+
 		}.bind(this));
 	};
+
 
 	/** Respond to tap/click on event in events list */
 	
@@ -124,8 +125,6 @@ app.EventListView = function(Event_event) {
 				listeners:
 				{
 					click: function(e) {self.notifyObservers(Event_event.id());}
-
-					//click: function(e) {app.controller.onEventSelected(Event_event.id());}
 				}
 			});
 

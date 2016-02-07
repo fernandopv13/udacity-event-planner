@@ -66,6 +66,25 @@ app.PersonListView = function() {
 	};
 	
 
+	/** Notifies observers that item in list has been activated (i.e. tapped/clicked).
+	*
+	* Overrides default method in IObservable.
+	*
+	* @param {int} Id The Id of the object that was activated
+	*
+	* @return void
+	 */
+
+	app.PersonListView.prototype.notifyObservers = function(int_objId) {
+
+		this.observers.forEach(function(observer) {
+
+			observer.update(this, int_objId);
+
+		}.bind(this));
+	};
+
+
 	/** Respond to tap/click on event in events list */
 	
 	app.PersonListView.prototype.onclick = function(int_personId) {
@@ -93,7 +112,9 @@ app.PersonListView = function() {
 
 				listeners:
 				{
-					click: function(e) {app.controller.onGuestSelected(Person_guest.id());}
+					click: function(e) {self.notifyObservers(Person_guest.id());}
+
+					//click: function(e) {app.controller.onGuestSelected(Person_guest.id());}
 				}
 			});
 
