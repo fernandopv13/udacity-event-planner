@@ -9,6 +9,11 @@
 
 describe('class EventView', function(){
 	
+	it('implements the IObservable interface', function() { // uses Interface.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.EventView, app.IObserver)).toBe(true);
+	});
+
 	it('implements the IObserver interface', function() { // uses Interface.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.EventView, app.IObserver)).toBe(true);

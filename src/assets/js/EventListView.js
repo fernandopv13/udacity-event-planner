@@ -23,7 +23,7 @@ app.EventListView = function(Event_event) {
 	
 	//var _event, // (Event) The event in the data model this EventView is observing
 	
-	var _implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IViewable, app.IObservable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -43,7 +43,8 @@ app.EventListView = function(Event_event) {
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	// none so far
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
+							//any way in order to expose collection to default IObservable methods
 	
 	
 	
@@ -195,6 +196,8 @@ app.EventListView = function(Event_event) {
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.EventView);
+void app.InterfaceHelper.mixInto(app.IObservable, app.EventListView);
 
-void app.InterfaceHelper.mixInto(app.IViewable, app.EventView);
+void app.InterfaceHelper.mixInto(app.IObserver, app.EventListView);
+
+void app.InterfaceHelper.mixInto(app.IViewable, app.EventListView);

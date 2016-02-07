@@ -25,9 +25,7 @@ app.EventView = function(Event_event) {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	//var _event, // (Event) The event in the data model this EventView is observing
-	
-	var _implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IViewable, app.IObservable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -35,22 +33,23 @@ app.EventView = function(Event_event) {
 	*---------------------------------------------------------------------------------------*/
 
 	// none so far
-
 	
+
 	/*----------------------------------------------------------------------------------------
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
 	// none so far
 
+
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	// none so far
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
+							//any way in order to expose collection to default IObservable methods
 	
-	
-	
+
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
@@ -81,6 +80,24 @@ app.EventView = function(Event_event) {
 		return _implements.indexOf(func_interface) > -1;
 	};
 	
+
+	/** Notifies observers that form has been updated (i.e. submitted).
+	*
+	* Overrides default method in IObservable.
+	*
+	* @param {Event} The Event passing data in the form onto the observers
+	*
+	* @return void
+	 */
+
+	app.EventView.prototype.notifyObservers = function(IModelable_event, int_objId) {
+
+		this.observers.forEach(function(observer) {
+
+			observer.update(IModelable_event, int_objId);
+		});
+	};
+
 
 	/** (Re)renders event to form in UI
 	*
@@ -118,6 +135,15 @@ app.EventView = function(Event_event) {
 
 				formElement.appendChild(containerDiv);
 			
+
+			// Add hidden event id field
+
+			containerDiv.appendChild(this.createElement({
+
+				element: 'input',
+
+				attributes: {id: 'event-id', type: 'hidden', value: Event_event.id()}
+			}))
 
 			// Add event name field
 
@@ -831,35 +857,35 @@ app.EventView = function(Event_event) {
 
 			// (Re)assign event handlers to form elements
 
-			$('textarea#description').characterCounter();
+				$('textarea#description').characterCounter();
 
-			$('.datepicker').pickadate({
-				//closeOnSelect: true, // bug: ineffective
-				closeOnClear: true,
-				onSet: this.validateDateRange,
-				selectMonths: true, // Creates a dropdown to control month
-				selectYears: 15 // Creates a dropdown of 15 years to control year
-			});
+				$('.datepicker').pickadate({
+					//closeOnSelect: true, // bug: ineffective
+					closeOnClear: true,
+					onSet: this.validateDateRange,
+					selectMonths: true, // Creates a dropdown to control month
+					selectYears: 15 // Creates a dropdown of 15 years to control year
+				});
 
-			$('.timepicker').pickatime({
-				//closeOnSelect: true, // bug: ineffective
-				closeOnClear: true,
-				format: 'H:i',
-				onSet: this.validateTimeRange
-			});
+				$('.timepicker').pickatime({
+					//closeOnSelect: true, // bug: ineffective
+					closeOnClear: true,
+					format: 'H:i',
+					onSet: this.validateTimeRange
+				});
 
-			
-			$('#event-location').focus(this.suggestLocations);
+				
+				$('#event-location').focus(this.suggestLocations);
 
-			
-			$('#event-name').keyup(this.validateName);
+				
+				$('#event-name').keyup(this.validateName);
 
-			$('#event-capacity').keyup(this.validateCapacity);
+				$('#event-capacity').keyup(this.validateCapacity);
 
-			$('#event-form-submit').click(this.submit);
+				$('#event-form-submit').click(function() {this.submit();}.bind(this));
 		}
 
-		else {
+		else { // present default message
 
 			var $formDiv = $('#event-form');
 
@@ -876,31 +902,96 @@ app.EventView = function(Event_event) {
 	};
 
 
-	/** Submits event form if it passes all validations
+	/** Submits event form to controller if it passes all validations
 	*
 	* @return {Boolean} true if validation and is succesful, otherwise false
+	*
+	* @todo Fix host hack
 	*/
 
 	app.EventView.prototype.submit = function() {
 
-		// 'this' refers to the form element here, so using full paths to methods.
-		// This should be OK, as none of the validators operate directly on the eventview.
+		// Event handler binds to this, so reference works here
+		
+		if (this.validateName() && // Submit results if all validations pass
 
-		var valid = app.EventView.prototype.validateName() +
+			this.validateDateRange() &&
 
-					app.EventView.prototype.validateDateRange() +
+			this.validateTimeRange() &&
 
-					//app.EventView.prototype.EventView.validateTimeRange() + 
+			this.validateCapacity()) { 
 
-					app.EventView.prototype.validateCapacity();
+			// Nofity observers by passing them a new Event with the data from the form
 
-		if (valid) {
+			this.notifyObservers(
+				
+				new app.Event(
 
-			// call controller
+					$('#event-name').val(),
 
+					$('#event-type').val(),
+
+					function() { // start date
+
+						var start_date = $('#event-start-date').val();
+
+						var start_time = $('#event-start-time').val();
+
+						if (start_date !== '') {
+
+							start_date = new Date(start_date);
+
+							if (start_time !== '') {
+
+								start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
+							}
+
+							return start_date;
+						}
+
+						return undefined;
+					}(),
+
+					function() { // end date
+
+						var end_date = $('#event-end-date').val();
+
+						var end_time = $('#event-end-time').val();
+
+						if (end_date !== '') {
+
+							end_date = new Date(end_date);
+
+							if (end_time !== '') {
+
+								end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
+							}
+
+							return end_date;
+						}
+
+						return undefined;
+					}(),
+
+					$('#event-location').val(),
+
+					$('#event-description').val(),
+
+					function() { // host (hack)
+
+						new app.Organization($('#event-host').val())
+					}(),
+
+					parseInt($('#event-capacity').val())
+				),
+				
+				parseInt($('#event-id').val())
+			);
+			
+			return true;
 		}
 
-		return valid;
+		return false;
 	}
 
 
@@ -1140,7 +1231,6 @@ app.EventView = function(Event_event) {
 			
 			app.EventView.prototype.validateTimeRange();
 
-		
 		return true;
 	}
 
@@ -1240,6 +1330,8 @@ app.EventView = function(Event_event) {
 
 			$end_time.removeClass('invalid');
 		}
+
+		return true;
 	}
 
 
@@ -1261,6 +1353,8 @@ app.EventView = function(Event_event) {
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
+
+void app.InterfaceHelper.mixInto(app.IObservable, app.EventView);
 
 void app.InterfaceHelper.mixInto(app.IObserver, app.EventView);
 

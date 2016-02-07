@@ -19,7 +19,7 @@ app.PersonListView = function() {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IViewable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IViewable, app.IObservable, app.IObserver]; // list of interfaces implemented by this class (by function reference);
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -40,7 +40,8 @@ app.PersonListView = function() {
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	// none so far
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
+							//any way in order to expose collection to default IObservable methods
 	
 		
 	/*----------------------------------------------------------------------------------------
@@ -229,6 +230,8 @@ app.PersonListView = function() {
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
+
+void app.InterfaceHelper.mixInto(app.IObservable, app.PersonListView);
 
 void app.InterfaceHelper.mixInto(app.IObserver, app.PersonListView);
 

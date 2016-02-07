@@ -19,7 +19,10 @@ app.Controller = function() {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _currentView, // viewmodel currently presented in the UI
+	var _implements = [app.IViewable, app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
+
+
+	 _currentView, // viewmodel currently presented in the UI
 
 	
 	_eventView, // viewmodel handling the event form
@@ -130,18 +133,7 @@ app.Controller = function() {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Render guest list to the UI */
-	
-	/*
-	this.renderGuestList = function() {
-
-		var $list = $('#guest-list');
-
-		$list.empty();
-
-		$list.append(_eventViews[0].render('guest-list')); //debug
-	}
-	*/
+	// none so far
 	
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
@@ -155,6 +147,22 @@ app.Controller = function() {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
+	/** Returns true if class implements the interface passed in (by function reference)
+	*
+	* (Method realization required by ISerializable.)
+	*
+	* @param {Function} interface The interface we wish to determine if this class implements
+	*
+	* @return {Boolean} instanceof True if class implements interface, otherwise false
+	*	
+	*/
+	
+	this.isInstanceOf = function (func_interface) {
+		
+		return _implements.indexOf(func_interface) > -1;
+	};
+
+
 	this.onAccountSelected = function(int_accountId) {
 
 		this.selectedAccount(app.Account.registry.getObjectById(int_accountId));
@@ -179,7 +187,7 @@ app.Controller = function() {
 
 	this.onGuestListSelected = function() {
 
-		app.personView.render(_selectedEvent.guests());
+		//app.personView.render(_selectedEvent.guests());
 
 		// bind guest form to event, display form
 	};
@@ -223,12 +231,33 @@ app.Controller = function() {
 
 	app.Controller.prototype.init = function() {
 
-		this.registerObserver(new app.EventView());
+		// Create views and setup observers
 
-		this.registerObserver(new app.EventListView());
+		_eventView = new app.EventView();
 
-		this.registerObserver(new app.PersonListView()); // guest list
+		this.registerObserver(_eventView);
 
+		_eventView.registerObserver(this);
+
+		
+		_eventListView = new app.EventListView();
+
+		this.registerObserver(_eventListView);
+
+		_eventListView.registerObserver(this);
+
+
+		_guestListView = new app.PersonListView();
+
+		this.registerObserver(_guestListView);
+
+		_guestListView.registerObserver(this);
+
+		
+		// add guest view (form) here when ready
+
+		
+		// Set some defaults until account creation/selection is ready
 
 		this.onAccountSelected(0); //debug
 
@@ -237,7 +266,22 @@ app.Controller = function() {
 		this.selectedAccount().geolocationAllowed(true); //debug
 	};
 
-	
+	this.update = function(IModelable_obj, int_objId) {
+
+		console.log(arguments);
+
+		if (IModelable_obj.constructor) {
+
+			switch (IModelable_obj.constructor)	{
+
+				case app.Event:
+
+					// do something
+
+					break;
+			}
+		}
+	}
 	
 	/*----------------------------------------------------------------------------------------
 	* Parameter parsing (constructor 'polymorphism')
@@ -261,4 +305,4 @@ void app.InterfaceHelper.mixInto(app.IObservable, app.Controller);
 
 void app.InterfaceHelper.mixInto(app.IObserver, app.Controller);
 
-void app.InterfaceHelper.mixInto(app.IViewable, app.Controller);
+//void app.InterfaceHelper.mixInto(app.IViewable, app.Controller);

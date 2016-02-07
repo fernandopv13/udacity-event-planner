@@ -15,7 +15,7 @@ describe('class Controller', function(){
 	});
 
 
-	xit('implements the IObserver interface', function() { // uses Interface.js
+	it('implements the IObserver interface', function() { // uses Interface.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Controller, app.IObserver)).toBe(true);
 	});
