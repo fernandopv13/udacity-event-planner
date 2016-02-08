@@ -97,7 +97,9 @@ app.EventListView = function(Event_event) {
 
 				listeners:
 				{
-					click: function(e) {self.notifyObservers(Event_event.id());}
+					//click: function(e) {self.notifyObservers(Event_event.id());}
+
+					click: function(e) {self.notifyObservers(self, Event_event.id());}
 				}
 			});
 

@@ -295,13 +295,124 @@ app.Controller = function() {
 		this.selectedAccount().localStorageAllowed(true); //debug
 	};
 
+	
+	/** Update in response to notifications from either UI or data model
+	*
+	* Uses JS style 'polymorphism' to decide what to do when invoked.
+	*
+	* @param {Object} obj Reference to an IModelable or an IViewable.
+	*
+	* @param {int} id Object id (optional). If following an IViewable, handled as a click in a list of same IViewables. If following an IModelable, handled as submission of update to IModelable with same id.
+	*
+	* @return {void}
+	*
+	* @throws {IllegalMethodError} If obj is neither an IModelable nor an IViewable
+	*/
+
 	this.update = function(Object_obj, int_objId) {
 
-		// All callers pass in the id of the data object concerned.
-		// Forms also pass in an object holding the data to be used for updating.
-		// The data object is of the same class as the model object it updates.
+		/*
+		Update implements JS version of method polymorphism, i.e. parsing function parameters.
+		
+		Supported method 'signatures' are as follows:
 
-		if (Object_obj.constructor) {
+		- update(IViewable, int): Click received in list of objects of same class as IViewable
+
+		- update(IModelable, int): Submission received from form representing IModelable of same class and id
+
+		- update(IModelable): Update received from data model. Object represents itself.
+		*/
+
+		if (arguments.length > 1) { // id provided
+
+			int_objId = parseInt(int_objId);
+
+			if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
+
+				var sourceObj = Object_obj.constructor.registry.getObjectById(int_objId);
+
+				switch (Object_obj.constructor)	{
+
+					case app.Account: // account form
+
+						// do something
+
+						break;
+
+					case app.Event: // event form
+
+						// Update event in datamodel
+
+						//var event = app.Event.registry.getObjectById(int_objId);
+
+						//event.update(Object_obj, int_objId);
+
+						sourceObj.update(Object_obj, int_objId);
+
+						// Refresh all views
+
+						this.notifyObservers();
+
+						break;
+
+					case app.Person: // guest form
+
+						// Update person in datamodel
+
+						//var person = app.Person.registry.getObjectById(int_objId);
+
+						sourceObj.update(Object_obj, int_objId);
+
+						// Refresh all views
+
+						this.notifyObservers();
+
+						break;
+				}
+			}
+
+			else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
+
+				switch (Object_obj.constructor)	{
+
+				//case app.AccountListView // account list
+
+					//this.onAccountSelected();
+
+					//break;
+
+				case app.EventListView: // event list
+
+					this.onEventSelected(int_objId);
+
+					break;
+				
+				case app.PersonListView: // guest list
+
+					this.onGuestSelected(int_objId);
+
+					break;
+				}
+			}
+
+			else { // wrong type
+
+				throw new IllegalArgumentError('Expected IModelable or IViewable');
+			}
+		
+		}
+
+		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
+
+			//this.notifyObservers();
+		}
+
+		else { // wrong type
+
+			throw new IllegalArgumentError('Expected IModelable');
+		}
+
+		/*if (Object_obj.constructor) {
 
 			switch (Object_obj.constructor)	{
 
@@ -311,7 +422,7 @@ app.Controller = function() {
 
 					//break;
 
-				//case app.AccountView //account form
+				//case app.AccountView // account form
 
 					//
 
@@ -359,7 +470,7 @@ app.Controller = function() {
 
 				
 			}
-		}
+		}*/
 	}
 	
 	/*----------------------------------------------------------------------------------------

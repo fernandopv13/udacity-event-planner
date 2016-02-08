@@ -4,14 +4,14 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /***********************************************************
-* public class Person implements IHost ISerializable
+* public class Person implements IHost, IModelable (i.e. IObservable IObserver), ISerializable
 ***********************************************************/
 
 /** @classdesc Describes a person who may host and/or participate in an event.
 *
 * @constructor
 *
-* @implements IHost, ISerializable
+* @implements IHost, IModelable, ISerializable
 *
 * @param {String} name The full name of the person
 *
@@ -40,8 +40,6 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 		
 	var	_className = 'Person', // (String) Name of this class
 
-	_implements = [app.IHost, app.ISerializable], // list of interfaces implemented by this class (by function reference)
-	
 	_id, // (int) Unique person ID obtaining from Person object registry
 	
 	_name,
@@ -54,9 +52,11 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 
 	_birthday,
 
-	_imgUrl; // URL to avatar image for person
+	_imgUrl, // URL to avatar image for person
 	
-
+	_implements = [app.IHost, app.IModelable, app.IObservable, app.IObserver, app.ISerializable]; // list of interfaces implemented by this class (by function reference)
+	
+	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
@@ -475,6 +475,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 *---------------------------------------------------------------------------------------*/
 
 void app.InterfaceHelper.mixInto(app.IHost, app.Person);
+
+void app.InterfaceHelper.mixInto(app.IModelable, app.Person);
+
+void app.InterfaceHelper.mixInto(app.IObservable, app.Person);
+
+void app.InterfaceHelper.mixInto(app.IObserver, app.Person);
 
 void app.InterfaceHelper.mixInto(app.ISerializable, app.Person);
 

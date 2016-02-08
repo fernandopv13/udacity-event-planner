@@ -4,14 +4,14 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Event implements IObservable IObserver ISerializable
+* public class Event implements IModelable (i.e. IObservable IObserver), ISerializable
 **********************************************************************************************/
 
 /** @classdesc Holds information about an event.
 *
 * @constructor
 *
-* @implements IObservable IObserver ISerializable
+* @implements IModelable ISerializable
 *
 * @param {String} name The name of the event
 *
@@ -65,7 +65,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 	_host,
 
-	_implements = [app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+	_implements = [app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 		
 
 		
@@ -697,6 +697,8 @@ app.Event.registry = new app.ObjectRegistry(app.Event, 'Event');
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
+
+void app.InterfaceHelper.mixInto(app.IModelable, app.Event);
 
 void app.InterfaceHelper.mixInto(app.IObservable, app.Event);
 

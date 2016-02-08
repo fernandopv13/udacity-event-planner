@@ -940,8 +940,6 @@ app.EventView = function(Event_event) {
 
 			this.notifyObservers(
 				
-				parseInt($('#event-id').val()),
-
 				new app.Event(
 
 					$('#event-name').val(),
@@ -997,7 +995,9 @@ app.EventView = function(Event_event) {
 					new app.Organization($('#event-host').val()), //hack
 					
 					parseInt($('#event-capacity').val())
-				)
+				),
+
+				parseInt($('#event-id').val())
 			);
 
 			return true;

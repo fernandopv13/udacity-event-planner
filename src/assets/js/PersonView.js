@@ -588,8 +588,6 @@ app.PersonView = function(Person_person) {
 
 			this.notifyObservers(
 				
-				parseInt($('#guest-id').val()),
-
 				new app.Person(
 
 					$('#guest-name').val(),
@@ -601,7 +599,9 @@ app.PersonView = function(Person_person) {
 					new app.Email($('#guest-email').val()),
 
 					new Date($('#guest-birthday').val())
-				)
+				),
+
+				parseInt($('#guest-id').val())
 			);
 			
 			return true;

@@ -85,7 +85,9 @@ app.PersonListView = function() {
 
 				listeners:
 				{
-					click: function(e) {self.notifyObservers(Person_guest.id());}
+					click: function(e) {self.notifyObservers(self, Person_guest.id());}
+
+					//click: function(e) {self.notifyObservers(Person_guest.id());}
 
 					//click: function(e) {app.controller.onGuestSelected(Person_guest.id());}
 				}

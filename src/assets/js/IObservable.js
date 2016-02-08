@@ -54,7 +54,7 @@ app.IObservable = function() {
 * @return void
 */
 
-app.IObservable.prototype.default_notifyObservers = function(int_objId, Object_obj) {
+app.IObservable.prototype.default_notifyObservers = function(Object_obj, int_objId) {
 
 	this.observers.forEach(function(observer) {
 
