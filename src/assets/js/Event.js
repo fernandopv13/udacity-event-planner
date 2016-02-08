@@ -68,7 +68,13 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	_implements = [app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 		
 
-		
+	/*----------------------------------------------------------------------------------------
+	* Public instance fields (non-encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+	
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	
+	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
@@ -381,13 +387,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 	
 	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
-	
-	
-	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
@@ -581,6 +580,10 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 
 				this.writeObject();
 			}
+
+			// Notify observers (i.e. controller)
+
+			this.notifyObservers(this);
 
 			return true;
 		}

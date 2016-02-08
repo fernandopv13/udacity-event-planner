@@ -42,6 +42,12 @@ app.Email = function(str_address) {
 	_isValid = null; // (Boolean) true if email's validity, true or false, has been set (i.e. verified) manually. A null value indicates that the address has not been verified.
 	
 	
+	/*----------------------------------------------------------------------------------------
+	* Public instance fields (non-encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+	
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	
 	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields

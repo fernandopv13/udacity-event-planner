@@ -253,7 +253,7 @@ app.Controller = function() {
 
 	app.Controller.prototype.init = function() {
 
-		// Create views and set up observers
+		// Create views and set up bindings
 
 			// Add account views here when ready
 
@@ -285,13 +285,18 @@ app.Controller = function() {
 
 			_guestView.registerObserver(this);
 
-		// Register controller as observer of every object in data model
+
+		// Register controller as observer of every object in the data model
 
 			app.registry.getObjectList().forEach(function(registry){
 
-				
-			});
+				var objList = registry.getObjectList();
 
+				for (var prop in objList) {
+
+					objList[prop].registerObserver(app.controller);
+				}
+			});
 
 
 		// Set some defaults until account creation/selection is ready
@@ -333,7 +338,7 @@ app.Controller = function() {
 		- update(IModelable): Update received from data model. Object represents itself.
 		*/
 
-		if (arguments.length > 1) { // id provided
+		if (arguments.length > 1 && typeof arguments[1] !== 'undefined') { // id provided
 
 			//int_objId = parseInt(int_objId);
 
@@ -405,6 +410,8 @@ app.Controller = function() {
 		}
 
 		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
+
+			console.log(Object_obj.name());
 
 			this.notifyObservers();
 		}
