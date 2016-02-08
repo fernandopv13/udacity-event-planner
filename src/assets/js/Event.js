@@ -167,7 +167,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		if (arguments.length !== 0) {
 			
-			if (date_end == null || date_end === '') {
+			if (date_end === null || date_end === '') {
 
 				_end = null;
 			}
@@ -665,7 +665,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
 		if (str_name) {this.name(str_name)}
-				
+		
 		if (str_type) {this.type(str_type)}
 		
 		if (date_start) {this.start(date_start)}
@@ -673,11 +673,11 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		if (date_end) {this.end(date_end)}
 		
 		if (int_capacity >= 0) {this.capacity(int_capacity)}
-		
+
 		if (str_location) {this.location(str_location)}
-		
-		if (str_description) {this.description()}
-		
+
+		if (str_description) {this.description(str_description)}
+
 		if (ihost_host) {this.host(ihost_host)}
 	}
 

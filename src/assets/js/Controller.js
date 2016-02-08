@@ -207,25 +207,37 @@ app.Controller = function() {
 
 			switch (observer.constructor) {
 
-				case app.EventListView:
+				//case app.AccountListView //account list
+
+					//
+
+					//break;
+
+				//case app.AccountView //account form
+
+					//
+
+					//break;
+
+				case app.EventListView: // event list
 
 					observer.update(_selectedAccount);
 
 					break;
 
-				case app.EventView:
+				case app.EventView: // event form
 
 					observer.update(_selectedEvent);
 
 					break;
 
-				case app.PersonListView:
+				case app.PersonListView: // guest list
 
 					observer.update(_selectedEvent);
 
 					break;
 
-				case app.PersonView:
+				case app.PersonView: // guest form
 
 					observer.update(_selectedGuest);
 
@@ -240,28 +252,32 @@ app.Controller = function() {
 
 		// Create views and set up observers
 
-		_eventListView = new app.EventListView();
+		
+		// add account views here when ready
+
+
+		_eventListView = new app.EventListView(); // event list
 
 		this.registerObserver(_eventListView);
 
 		_eventListView.registerObserver(this);
 
 
-		_eventView = new app.EventView();
+		_eventView = new app.EventView(); // event form
 
 		this.registerObserver(_eventView);
 
 		_eventView.registerObserver(this);
 
 		
-		_guestListView = new app.PersonListView();
+		_guestListView = new app.PersonListView(); // guest list
 
 		this.registerObserver(_guestListView);
 
 		_guestListView.registerObserver(this);
 
 		
-		_guestView = new app.PersonView();
+		_guestView = new app.PersonView(); // guest form
 
 		this.registerObserver(_guestView);
 
@@ -288,6 +304,18 @@ app.Controller = function() {
 		if (Object_obj.constructor) {
 
 			switch (Object_obj.constructor)	{
+
+				//case app.AccountListView //account list
+
+					//this.onAccountSelected();
+
+					//break;
+
+				//case app.AccountView //account form
+
+					//
+
+					//break;
 
 				case app.EventListView: // item click in event list
 

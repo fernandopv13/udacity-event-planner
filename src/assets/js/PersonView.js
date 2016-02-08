@@ -109,7 +109,7 @@ app.PersonView = function(Person_person) {
 	
 	app.PersonView.prototype.render = function(Person_person) {
 
-		var person = Person_person, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
+		var person = Person_person, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
 		if (person !== null) {
 			// Setup up form and container div
@@ -528,13 +528,11 @@ app.PersonView = function(Person_person) {
 			
 			// Update DOM
 
-				var $formDiv = $('#guest-form');
+				$formDiv = $('#guest-form');
 
 				$formDiv.empty();
 
 				$formDiv.append(formElement);
-
-				console.log(formElement);
 
 
 			// (Re)assign event handlers to form elements
@@ -558,7 +556,7 @@ app.PersonView = function(Person_person) {
 
 		else { // present default message
 
-			var $formDiv = $('#guest-form');
+			$formDiv = $('#guest-form');
 
 			$formDiv.empty();
 

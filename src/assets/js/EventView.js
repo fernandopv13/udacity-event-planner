@@ -112,7 +112,7 @@ app.EventView = function(Event_event) {
 	
 	app.EventView.prototype.render = function(Event_event) {
 
-		var event = Event_event, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement;
+		var event = Event_event, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
 		if (event !== null) {
 			// Setup up form and container div
@@ -180,7 +180,7 @@ app.EventView = function(Event_event) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'event-name', required: true},
+					attributes: {for: 'event-name'},
 					
 					classList: event.name() ? ['form-label', 'active'] : ['form-label'],
 					
@@ -375,14 +375,16 @@ app.EventView = function(Event_event) {
 							
 							value: event.start() ? event.start().toLocaleTimeString() : '',
 							
-							readonly: true
+							readonly: true,
+
+							required: true
 						},
 						
-						classList: ['timepicker', 'picker__input']
+						classList: ['validate', 'timepicker', 'picker__input']
 					}));
 									
 					
-					innerDiv.appendChild(this.createElement( // label
+					labelElement = this.createElement( // label
 					{	
 						element: 'label',			
 						
@@ -393,9 +395,20 @@ app.EventView = function(Event_event) {
 						dataset: {error: 'Please enter start time'},
 						
 						innerHTML: 'Start Time'
+					});
+					
+					labelElement.appendChild(this.createElement( // required field indicator
+					{
+						element: 'span',
+
+						classList: ['required-indicator'],
+
+						innerHTML: '*'
 					}));
 					
-					
+					innerDiv.appendChild(labelElement);
+
+
 					innerDiv.appendChild(this.createElement( // custom error div
 					{	
 						element: 'div',			
@@ -850,7 +863,7 @@ app.EventView = function(Event_event) {
 			
 			// Update DOM
 
-				var $formDiv = $('#event-form');
+				$formDiv = $('#event-form');
 
 				$formDiv.empty();
 
@@ -889,7 +902,7 @@ app.EventView = function(Event_event) {
 
 		else { // present default message
 
-			var $formDiv = $('#event-form');
+			$formDiv = $('#event-form');
 
 			$formDiv.empty();
 
@@ -923,7 +936,7 @@ app.EventView = function(Event_event) {
 
 			this.validateCapacity()) { 
 
-			// Nofity observers by passing them a new Event with the data from the form
+			// Notify observers by passing them a new Event with the data from the form
 
 			this.notifyObservers(
 				
@@ -935,7 +948,7 @@ app.EventView = function(Event_event) {
 
 					$('#event-type').val(),
 
-					function() { // start date
+					(function() { // start date
 
 						var start_date = $('#event-start-date').val();
 
@@ -953,10 +966,10 @@ app.EventView = function(Event_event) {
 							return start_date;
 						}
 
-						return undefined;
-					}(),
+						return null;
+					})(),
 
-					function() { // end date
+					(function() { // end date
 
 						var end_date = $('#event-end-date').val();
 
@@ -974,22 +987,19 @@ app.EventView = function(Event_event) {
 							return end_date;
 						}
 
-						return undefined;
-					}(),
+						return null;
+					})(),
 
 					$('#event-location').val(),
 
 					$('#event-description').val(),
 
-					function() { // host (hack)
-
-						new app.Organization($('#event-host').val())
-					}(),
-
+					new app.Organization($('#event-host').val()), //hack
+					
 					parseInt($('#event-capacity').val())
 				)
 			);
-			
+
 			return true;
 		}
 
@@ -1163,6 +1173,7 @@ app.EventView = function(Event_event) {
 
 		if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
 
+		var ret;
 		
 		// Set up references to DOM
 
@@ -1183,13 +1194,13 @@ app.EventView = function(Event_event) {
 
 			if ($start.val() === '') { // start not selected
 
-				$start_err.html('Please select start date');
+				$start_err.html('Please enter start date');
 
 				$start_err.css('display', 'block');
 
 				$start.addClass('invalid');
 
-				return false;
+				ret = false;
 			}
 
 		/* focus causes end datepicker to open, no time to resolve, skip for now
@@ -1207,13 +1218,13 @@ app.EventView = function(Event_event) {
 
 			// Materialize's validation message won't display, so rolling my own
 
-			$end_err.html('End date cannot be before start date');
+			$end_err.html('Please enter end date on or after start date');
 
 			$end_err.css('display', 'block');
 
 			$end.addClass('invalid');
 
-			return false;
+			ret = false;
 		}
 
 		else {
@@ -1225,15 +1236,21 @@ app.EventView = function(Event_event) {
 			$end_err.css('display', 'none');
 
 			$end.removeClass('invalid');
+
+			ret = true;
 		}
 
 		// Cascade validation to start/end times
 
 			 // 'this' refers to date picker here, not eventview, so invoke method using full path
 			
-			app.EventView.prototype.validateTimeRange();
+			app.EventView.prototype.validateStartTime();
 
-		return true;
+			app.EventView.prototype.validateEndTime();
+
+			//app.EventView.prototype.validateTimeRange();
+
+		return ret;
 	}
 
 
@@ -1272,6 +1289,75 @@ app.EventView = function(Event_event) {
 	}
 
 
+	/** Validates start time field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+
+	app.EventView.prototype.validateEndTime = function() {
+
+		var $end_time = $('#event-end-time'),
+
+		$end_time_err = $('#event-end-time-error');
+
+
+		if ($('#event-end-date').val() !== '' && $end_time.val() === '') {
+
+			$end_time_err.html('Please enter end time');
+
+			$end_time_err.css('display', 'block');
+
+			$end_time.addClass('invalid');
+		}
+
+		else {
+
+			$end_time_err.css('display', 'none');
+
+			$end_time.removeClass('invalid');
+
+			return true;
+		}
+
+		return false;
+	};
+
+
+	/** Validates start time field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	 */
+
+	app.EventView.prototype.validateStartTime = function() {
+
+		// Set up references to DOM
+
+		var $start_time = $('#event-start-time'),
+
+		$start_time_err = $('#event-start-time-error');
+
+		if ($start_time.val() === '') {
+
+			$start_time_err.html('Please enter start time');
+
+			$start_time_err.css('display', 'block');
+
+			$start_time.addClass('invalid');
+		}
+
+		else {
+
+			$start_time_err.css('display', 'none');
+
+			$start_time.removeClass('invalid');
+
+			return true;
+		}
+
+		return false;
+	};
+
+
 	/** Event handler for interactive validation of start and end time fields
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
@@ -1280,15 +1366,17 @@ app.EventView = function(Event_event) {
 	app.EventView.prototype.validateTimeRange = function() {
 
 		if (this.close) {this.close()} // close picker (if called from dialog); setting closeOnClear true does not work (bug)
-
-
-		// Set up references to DOM
+		
 
 		var start_date = new Date($('#event-start-date').val()),
 
 		end_date = new Date($('#event-end-date').val()),
 
-		start_time = $('#event-start-time').val(),
+		$start_time = $('#event-start-time'),
+
+		start_time = $start_time.val(),
+
+		$start_time_err = $('#event-start-time-error'),
 
 		$end_time = $('#event-end-time'),
 
@@ -1297,19 +1385,35 @@ app.EventView = function(Event_event) {
 		$end_time_err = $('#event-end-time-error');
 
 		
-		if (end_time !== '' && 	start_time !== '' && // end and start time selected
-			!isNaN(end_date.valueOf()) && // end date selected
-			 end_date.valueOf() === start_date.valueOf()) {  //end date same as start date
-			
-			// Set hours and minutes on start and end dates before comparison
 
-			end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
+		if (app.EventView.prototype.validateStartTime()) { // start time entered
 
-			start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
+			if (app.EventView.prototype.validateEndTime()) { // end date and time entered
 
-			if (end_date < start_date) { // end (time) is before start (time)
+				if (end_date.valueOf() === start_date.valueOf()) { // start and end dates match
+					
+					// Set hours and minutes on start and end dates before comparison
 
-				$end_time_err.html('End time cannot be before start time');
+					end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
+
+					start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
+
+					if (end_date < start_date) { // end (time) is before start (time)
+
+						$end_time_err.html('Please enter end time after start time');
+
+						$end_time_err.css('display', 'block');
+
+						$end_time.addClass('invalid');
+
+						return false;
+					}
+				}
+			}
+
+			else { // end time missing
+
+				$end_time_err.html('Please enter end time');
 
 				$end_time_err.css('display', 'block');
 
@@ -1317,21 +1421,28 @@ app.EventView = function(Event_event) {
 
 				return false;
 			}
-
-			else {
-
-				$end_time_err.css('display', 'none');
-
-				$end_time.removeClass('invalid');
-			}
 		}
 
-		else {
+		else { // start time missing
 
-			$end_time_err.css('display', 'none');
+			$start_time_err.html('Please enter start time');
 
-			$end_time.removeClass('invalid');
+			$start_time_err.css('display', 'block');
+
+			$start_time.addClass('invalid');
+
+			void app.EventView.prototype.validateEndTime();
+
+			return false;
 		}
+
+		$start_time_err.css('display', 'none');
+
+		$start_time.removeClass('invalid');
+
+		$end_time_err.css('display', 'none');
+
+		$end_time.removeClass('invalid');
 
 		return true;
 	}

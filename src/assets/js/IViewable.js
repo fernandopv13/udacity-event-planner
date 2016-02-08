@@ -15,8 +15,6 @@ var app = app || {}; // create a simple namespace for the module
 *
 * @throws {InstantiationError} If attempting to instantiate interface
 *
-* @throws {AbstractMethodError} If attempting to invoke (abstract) method signature
-*
 * @author Ulrik H. Gade, January 2016
 *
 * @todo: Figure out how to get jsDoc to show (all) the method signature(s)
@@ -28,17 +26,21 @@ app.IViewable = function() {
 	* Method signatures
 	*---------------------------------------------------------------------------------------*/
 	
-	/** (Re)render on demand
+	/** Update (i.e. render) on demand.
+	*
+	* @param {IModelable} obj Reference to the data model object to be rendered in the UI.
 	*
 	* @return {void}
+	*
+	* @throws {AbstractMethodError} If attempting to invoke (abstract method signature)
 	*/
 
-	app.IViewable.prototype.render = function() {
+	app.IViewable.prototype.update = function(IModelable) {
 		
-		throw new AbstractMethodError(app.IViewable.prototype.render.errorMessage);
+		throw new AbstractMethodError(app.IViewable.prototype.update.errorMessage);
 	};
 	
-	this.constructor.prototype.render.errorMessage = 'Method signature "render()" must be realized in derived classes';
+	this.constructor.prototype.update.errorMessage = 'Method signature "update()" must be realized in implementing classes';
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -63,7 +65,7 @@ app.IViewable = function() {
 
 app.IViewable.prototype.default_createElement = function(obj_specs) {
 
-	/* Sample specification object using all currently supported features:
+	/* Sample JSON specification object using all currently supported features:
 
 	{
 		element: 'input', // the type of element required
@@ -97,9 +99,9 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 
 		listeners:
 		{
-			onclick: function() {},
+			click: function() {},
 
-			onblur: function() {}
+			blur: function() {}
 		}
 	*/
 
@@ -143,4 +145,21 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 	}
 
 	return element;
+};
+
+
+/** Tests if object implements IViewable
+*
+* Default method for IViewables that only need to report that they are indeed IVewables.
+*
+* Override if more advanced behaviour is required.
+*
+* @param {Function} interface The interface we wish to determine if this object implements
+*
+* @return {Boolean} true if object implements interface, otherwise false
+*/
+
+app.IViewable.prototype.default_isInstanceOf = function (Function_interface) {
+	
+	return Function_interface === app.IViewable;
 };

@@ -24,28 +24,28 @@ describe('Interface IViewable', function(){
 	});
 	
 
-	it('defines a render() method signature', function() {
+	it('defines an update() method signature', function() {
 			
 		// verify that method signature exists
 		
-		expect(app.IViewable.prototype.render).toBeDefined();
+		expect(app.IViewable.prototype.update).toBeDefined();
 		
-		expect(typeof app.IViewable.prototype.render).toBe('function');
+		expect(typeof app.IViewable.prototype.update).toBe('function');
 	});
 		
 	
-	it('throws an error if render() is invoked', function() {
+	it('throws an error if update() is invoked', function() {
 			
 		// verify that method invokation throws error
 		
 		try {
 		
-			app.IViewable.prototype.render();
+			app.IViewable.prototype.update();
 		}
 		
 		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
 		
-			expect(e.message).toEqual(app.IViewable.prototype.render.errorMessage);
+			expect(e.message).toEqual(app.IViewable.prototype.update.errorMessage);
 		}
 	});
 
@@ -93,4 +93,27 @@ describe('Interface IViewable', function(){
 		expect(testElement.innerHTML).toBe('my div');
 	});
 
+
+	it('defines a default isInstanceOf() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_isInstanceOf).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_isInstanceOf).toBe('function');
+	});
+
+
+	it('can tell if an object is an instance of IViewable', function() {
+			
+		// verify that method signature exists
+		
+		var obj = new Object();
+
+		obj.isInstanceOf = app.IViewable.prototype.default_isInstanceOf;
+
+		expect(obj.isInstanceOf(app.IViewable)).toBe(true);
+
+		expect(obj.isInstanceOf(Array)).toBe(false);
+	});
 });
