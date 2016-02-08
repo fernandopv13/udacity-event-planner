@@ -4,10 +4,18 @@ var app = app || {}; // create a simple namespace for the module
 
 
 /*********************************************************************************************
-* public Interface IViewable
+* public Interface IViewable extends IObserable, IObserver
 *********************************************************************************************/
 
-/** @classdesc Presents information in the UI.
+/** @classdesc Presents information from the data model in the UI. Handles all UI related work.
+*
+* Extension of IObservable and IObserver implemented as mixins in realizing classes, using interfaceHelper.js.
+*
+* IViewables must only notify observers as a direct result of user actions in the UI. Otherwise the MVC objects will likely enter an infinite update loop.
+*
+* @extends IObservable
+*
+* @extends IObserver
 *
 * @constructor
 *
@@ -15,7 +23,7 @@ var app = app || {}; // create a simple namespace for the module
 *
 * @throws {InstantiationError} If attempting to instantiate interface
 *
-* @author Ulrik H. Gade, January 2016
+* @author Ulrik H. Gade, February 2016
 *
 * @todo: Figure out how to get jsDoc to show (all) the method signature(s)
 */
@@ -150,9 +158,9 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 
 /** Tests if object implements IViewable
 *
-* Default method for IViewables that only need to report that they are indeed IVewables.
+* Default method for IViewables that only need to be able to report that they are indeed IViewables.
 *
-* Override if more advanced behaviour is required.
+* Override in realizing classes if more advanced behaviour is required.
 *
 * @param {Function} interface The interface we wish to determine if this object implements
 *
