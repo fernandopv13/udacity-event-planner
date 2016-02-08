@@ -3,15 +3,15 @@
 var app = app || {}; // create a simple namespace for the app
 
 
-/***********************************************************
-* public class Organization implements IHost ISerializable
-***********************************************************/
+/**********************************************************************************************
+* public class IHost implements IModelable (i.e. IObservable IObserver), ISerializable
+**********************************************************************************************/
 
 /** @classdesc Describes an organization that may host an event.
 *
 * @constructor
 *
-* @implements IHost, ISerializable
+* @implements IHost, IModelable, ISerializable
 *
 * @param {String} name The organization's name
 *
@@ -31,11 +31,11 @@ app.Organization = function(str_name) {
 		
 	var	_className = 'Organization', // (String) Name of this class
 	
-	_implements = [app.IHost, app.ISerializable], // list of interfaces implemented by this class (by function reference)
-
 	_id, // (int) Unique organization ID obtaining from Organization object registry
 	
-	_name;
+	_name,
+
+	_implements = [app.IHost, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -235,6 +235,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 *---------------------------------------------------------------------------------------*/
 
 void app.InterfaceHelper.mixInto(app.IHost, app.Organization);
+
+void app.InterfaceHelper.mixInto(app.IModelable, app.Organization);
+
+void app.InterfaceHelper.mixInto(app.IObservable, app.Organization);
+
+void app.InterfaceHelper.mixInto(app.IObserver, app.Organization);
 
 void app.InterfaceHelper.mixInto(app.ISerializable, app.Organization);
 

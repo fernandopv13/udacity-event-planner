@@ -3,15 +3,15 @@
 var app = app || {}; // create a simple namespace for the app
 
 
-/***********************************************************
-* public class Password implements ISerializable
-***********************************************************/
+/**********************************************************************************************
+* public class Password implements IModelable (i.e. IObservable IObserver), ISerializable
+**********************************************************************************************/
 
 /** @classdesc Describes a password.
 *
 * @constructor
 *
-* @implements ISerializable
+* @implements IModelable ISerializable
 *
 * @return {Password} A password
 *
@@ -37,8 +37,10 @@ app.Password = function(str_password) {
 	
 	_id, // (int) Unique password ID obtained from Password object registry
 	
-	_password; // (String) A string containing the password address.
-	
+	_password, // (String) A string containing the password address.
+
+	_implements = [app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+		
 	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
@@ -157,6 +159,22 @@ app.Password = function(str_password) {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
+	/** Returns true if class implements the interface passed in (by function reference)
+	*
+	* (Method realization required by ISerializable.)
+	*
+	* @param {Function} interface The interface we wish to determine if this class implements
+	*
+	* @return {Boolean} instanceof True if class implements interface, otherwise false
+	*	
+	*/
+	
+	this.isInstanceOf = function (func_interface) {
+		
+		return _implements.indexOf(func_interface) > -1;
+	};
+
+
 	/** Re-establishes references to complex members after they have been deserialized
 	*
 	* (Method realization required by ISerializable.)
@@ -309,6 +327,12 @@ app.Password.hasIllegalCharacters = function(str_password) {return str_password.
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
+
+void app.InterfaceHelper.mixInto(app.IModelable, app.Password);
+
+void app.InterfaceHelper.mixInto(app.IObservable, app.Password);
+
+void app.InterfaceHelper.mixInto(app.IObserver, app.Password);
 
 void app.InterfaceHelper.mixInto(app.ISerializable, app.Password);
 

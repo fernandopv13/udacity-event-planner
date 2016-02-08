@@ -3,15 +3,15 @@
 var app = app || {}; // create a simple namespace for the app
 
 
-/***********************************************************
-* public class Email implements ISerializable
-***********************************************************/
+/**********************************************************************************************
+* public class Email implements IModelable (i.e. IObservable IObserver), ISerializable
+**********************************************************************************************/
 
 /** @classdesc Describes an email address.
 *
 * @constructor
 *
-* @implements ISerializable
+* @implements IModelable ISerializable
 *
 * @return {Email} An email
 *
@@ -182,6 +182,23 @@ app.Email = function(str_address) {
 		return _isValid !== null ? true : false;
 	};
 	
+
+	/** Returns true if class implements the interface passed in (by function reference)
+	*
+	* (Method realization required by ISerializable.)
+	*
+	* @param {Function} interface The interface we wish to determine if this class implements
+	*
+	* @return {Boolean} instanceof True if class implements interface, otherwise false
+	*	
+	*/
+	
+	this.isInstanceOf = function (func_interface) {
+		
+		return _implements.indexOf(func_interface) > -1;
+	};
+
+
 	
 	/** Re-establishes references to complex members after they have been deserialized
 	*
@@ -267,6 +284,12 @@ app.Email.registry = new app.ObjectRegistry(app.Email, 'Email');
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
+
+void app.InterfaceHelper.mixInto(app.IModelable, app.Email);
+
+void app.InterfaceHelper.mixInto(app.IObservable, app.Email);
+
+void app.InterfaceHelper.mixInto(app.IObserver, app.Email);
 
 void app.InterfaceHelper.mixInto(app.ISerializable, app.Email);
 

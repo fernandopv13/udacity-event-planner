@@ -247,52 +247,62 @@ app.Controller = function() {
 		});
 	}
 
+	/** Initializes the controller
+	*
+	*/
 
 	app.Controller.prototype.init = function() {
 
 		// Create views and set up observers
 
-		
-		// add account views here when ready
+			// Add account views here when ready
 
 
-		_eventListView = new app.EventListView(); // event list
+			_eventListView = new app.EventListView(); // event list
 
-		this.registerObserver(_eventListView);
+			this.registerObserver(_eventListView);
 
-		_eventListView.registerObserver(this);
+			_eventListView.registerObserver(this);
 
 
-		_eventView = new app.EventView(); // event form
+			_eventView = new app.EventView(); // event form
 
-		this.registerObserver(_eventView);
+			this.registerObserver(_eventView);
 
-		_eventView.registerObserver(this);
+			_eventView.registerObserver(this);
 
-		
-		_guestListView = new app.PersonListView(); // guest list
+			
+			_guestListView = new app.PersonListView(); // guest list
 
-		this.registerObserver(_guestListView);
+			this.registerObserver(_guestListView);
 
-		_guestListView.registerObserver(this);
+			_guestListView.registerObserver(this);
 
-		
-		_guestView = new app.PersonView(); // guest form
+			
+			_guestView = new app.PersonView(); // guest form
 
-		this.registerObserver(_guestView);
+			this.registerObserver(_guestView);
 
-		_guestView.registerObserver(this);
+			_guestView.registerObserver(this);
 
-		
+		// Register controller as observer of every object in data model
+
+			app.registry.getObjectList().forEach(function(registry){
+
+				
+			});
+
+
+
 		// Set some defaults until account creation/selection is ready
 
-		this.onAccountSelected(0); //debug
+			this.onAccountSelected(0); //debug
 
-		this.selectedAccount().defaultLocation('Copenhagen'); // debug
+			this.selectedAccount().defaultLocation('Copenhagen'); // debug
 
-		this.selectedAccount().geolocationAllowed(true); //debug
+			this.selectedAccount().geolocationAllowed(true); //debug
 
-		this.selectedAccount().localStorageAllowed(true); //debug
+			this.selectedAccount().localStorageAllowed(true); //debug
 	};
 
 	
@@ -325,12 +335,17 @@ app.Controller = function() {
 
 		if (arguments.length > 1) { // id provided
 
-			int_objId = parseInt(int_objId);
+			//int_objId = parseInt(int_objId);
 
 			if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
 
 				var sourceObj = Object_obj.constructor.registry.getObjectById(int_objId);
 
+				sourceObj.update(Object_obj, parseInt(int_objId));
+
+				//this.notifyObservers();
+
+				/*
 				switch (Object_obj.constructor)	{
 
 					case app.Account: // account form
@@ -341,15 +356,7 @@ app.Controller = function() {
 
 					case app.Event: // event form
 
-						// Update event in datamodel
-
-						//var event = app.Event.registry.getObjectById(int_objId);
-
-						//event.update(Object_obj, int_objId);
-
 						sourceObj.update(Object_obj, int_objId);
-
-						// Refresh all views
 
 						this.notifyObservers();
 
@@ -357,29 +364,24 @@ app.Controller = function() {
 
 					case app.Person: // guest form
 
-						// Update person in datamodel
-
-						//var person = app.Person.registry.getObjectById(int_objId);
-
 						sourceObj.update(Object_obj, int_objId);
-
-						// Refresh all views
 
 						this.notifyObservers();
 
 						break;
 				}
+				*/
 			}
 
 			else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
 
 				switch (Object_obj.constructor)	{
 
-				//case app.AccountListView // account list
+				case app.AccountListView: // account list
 
-					//this.onAccountSelected();
+					this.onAccountSelected();
 
-					//break;
+					break;
 
 				case app.EventListView: // event list
 
@@ -404,73 +406,13 @@ app.Controller = function() {
 
 		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
 
-			//this.notifyObservers();
+			this.notifyObservers();
 		}
 
 		else { // wrong type
 
 			throw new IllegalArgumentError('Expected IModelable');
 		}
-
-		/*if (Object_obj.constructor) {
-
-			switch (Object_obj.constructor)	{
-
-				//case app.AccountListView //account list
-
-					//this.onAccountSelected();
-
-					//break;
-
-				//case app.AccountView // account form
-
-					//
-
-					//break;
-
-				case app.EventListView: // item click in event list
-
-					this.onEventSelected(int_objId);
-
-					break;
-
-				case app.Event: // submission from the event form
-
-					// Update event in datamodel
-
-					var event = app.Event.registry.getObjectById(int_objId);
-
-					event.update(Object_obj, int_objId);
-
-					// Refresh all views
-
-					this.notifyObservers();
-
-					break;
-
-				case app.PersonListView: // item click in guest list
-
-					this.onGuestSelected(int_objId);
-
-					break;
-
-				case app.Person: // submission from the guest form
-
-					// Update person in datamodel
-
-					var person = app.Person.registry.getObjectById(int_objId);
-
-					person.update(Object_obj, int_objId);
-
-					// Refresh all views
-
-					this.notifyObservers();
-
-					break;
-
-				
-			}
-		}*/
 	}
 	
 	/*----------------------------------------------------------------------------------------

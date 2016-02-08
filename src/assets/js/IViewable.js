@@ -34,7 +34,7 @@ app.IViewable = function() {
 	* Method signatures
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Update (i.e. render) on demand.
+	/** Update (i.e. render) UI on demand.
 	*
 	* @param {IModelable} obj Reference to the data model object to be rendered in the UI.
 	*
