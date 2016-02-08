@@ -25,6 +25,8 @@ app.Controller = function() {
 	 _currentView, // viewmodel currently presented in the UI
 
 	
+	_accountView, // viewmodel handling the account form
+
 	_eventView, // viewmodel handling the event form
 
 	_eventListView, // viewmodel handling the event list
@@ -207,17 +209,17 @@ app.Controller = function() {
 
 			switch (observer.constructor) {
 
-				//case app.AccountListView //account list
+				//case app.AccountListView // account list
 
 					//
 
 					//break;
 
-				//case app.AccountView //account form
+				case app.AccountView: // account form
 
-					//
+					observer.update(_selectedAccount);
 
-					//break;
+					break;
 
 				case app.EventListView: // event list
 
@@ -242,7 +244,6 @@ app.Controller = function() {
 					observer.update(_selectedGuest);
 
 					break;
-
 			}
 		});
 	}
@@ -255,7 +256,11 @@ app.Controller = function() {
 
 		// Create views and set up bindings
 
-			// Add account views here when ready
+			_accountView = new app.AccountView(); // account form
+
+			this.registerObserver(_accountView);
+
+			_accountView.registerObserver(this);
 
 
 			_eventListView = new app.EventListView(); // event list
@@ -340,42 +345,11 @@ app.Controller = function() {
 
 		if (arguments.length > 1 && typeof arguments[1] !== 'undefined') { // id provided
 
-			//int_objId = parseInt(int_objId);
-
 			if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
 
 				var sourceObj = Object_obj.constructor.registry.getObjectById(int_objId);
 
 				sourceObj.update(Object_obj, parseInt(int_objId));
-
-				//this.notifyObservers();
-
-				/*
-				switch (Object_obj.constructor)	{
-
-					case app.Account: // account form
-
-						// do something
-
-						break;
-
-					case app.Event: // event form
-
-						sourceObj.update(Object_obj, int_objId);
-
-						this.notifyObservers();
-
-						break;
-
-					case app.Person: // guest form
-
-						sourceObj.update(Object_obj, int_objId);
-
-						this.notifyObservers();
-
-						break;
-				}
-				*/
 			}
 
 			else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
@@ -410,8 +384,6 @@ app.Controller = function() {
 		}
 
 		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
-
-			console.log(Object_obj.name());
 
 			this.notifyObservers();
 		}

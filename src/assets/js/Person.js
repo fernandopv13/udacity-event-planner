@@ -386,6 +386,10 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 				this.writeObject();
 			}
 
+			// Notify observers (i.e. controller)
+
+			this.notifyObservers();
+
 			return true;
 		}
 
