@@ -673,8 +673,6 @@ app.AccountView = function(Account_account) {
 
 				$formDiv.append(formElement);
 
-				console.log(formElement);
-
 
 			// (Re)assign account handlers to form elements
 

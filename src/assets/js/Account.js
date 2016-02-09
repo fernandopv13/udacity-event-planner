@@ -50,7 +50,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	_geoLocationAllowed = false,
 
-	_defaultEventCapacity = 50,
+	_defaultCapacity = 50,
 
 	_defaultLocation,
 
@@ -129,7 +129,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 			if (typeof int_capacity === 'number' && parseInt(int_capacity) === int_capacity && int_capacity >= 0) {
 			
-				_defaultEventCapacity = int_capacity;
+				_defaultCapacity = int_capacity;
 			}
 
 			else {
@@ -138,7 +138,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			}
 		}
 		
-		return _defaultEventCapacity;
+		return _defaultCapacity;
 	};
 
 

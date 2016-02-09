@@ -21,9 +21,8 @@ app.Controller = function() {
 	
 	var _implements = [app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
 
-
-	 _currentView, // viewmodel currently presented in the UI
-
+	/*
+	_currentView, // viewmodel currently presented in the UI
 	
 	_accountView, // viewmodel handling the account form
 
@@ -35,14 +34,16 @@ app.Controller = function() {
 
 	_guestListView, // viewmodel handling the guest list
 
-
+	*/
 	_selectedAccount = null, // the currently selected account, or null if none selected
 
 	_selectedEvent = null, // the currently selected event, or null if none selected
 
-	_selectedGuest = null; // the currently selected guest, or null if none selected
+	_selectedGuest = null, // the currently selected guest, or null if none selected
 
+	_views // collection of views we need to keep track of
 
+		
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
@@ -173,7 +174,7 @@ app.Controller = function() {
 
 		this.selectedGuest(null);
 
-		this.notifyObservers();
+		this.notifyObservers(_selectedAccount);
 	};
 
 
@@ -183,7 +184,7 @@ app.Controller = function() {
 
 		this.selectedGuest(null);
 
-		this.notifyObservers();
+		this.notifyObservers(_selectedEvent);
 	};
 
 
@@ -199,11 +200,16 @@ app.Controller = function() {
 
 		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
 
-		this.notifyObservers();
+		this.notifyObservers(_selectedGuest);
 	};
 
-	
-	this.notifyObservers = function() {
+
+	/** Notifies observes (views) of change to the data model
+	*
+	* @param {IModelable} Reference to the data model object that caused the update
+	*/
+
+	this.notifyObservers = function(IModelable) {
 
 		this.observers.forEach(function(observer) {
 
@@ -248,47 +254,34 @@ app.Controller = function() {
 		});
 	}
 
+
 	/** Initializes the controller
 	*
 	*/
 
 	app.Controller.prototype.init = function() {
 
-		// Create views and set up bindings
+		// Create views and apply bindings
 
-			_accountView = new app.AccountView(); // account form
+			_views =
+			{
+				accountView: new app.AccountView(), // account form
 
-			this.registerObserver(_accountView);
+				eventListView: new app.EventListView(), // event list
 
-			_accountView.registerObserver(this);
+				eventView: new app.EventView(), // event form
 
+				guestListView: new app.PersonListView(), // guest list
 
-			_eventListView = new app.EventListView(); // event list
+				guestView: new app.PersonView() // guest form
+			}
 
-			this.registerObserver(_eventListView);
+			for (var prop in _views) {
 
-			_eventListView.registerObserver(this);
+				this.registerObserver(_views[prop]);
 
-
-			_eventView = new app.EventView(); // event form
-
-			this.registerObserver(_eventView);
-
-			_eventView.registerObserver(this);
-
-			
-			_guestListView = new app.PersonListView(); // guest list
-
-			this.registerObserver(_guestListView);
-
-			_guestListView.registerObserver(this);
-
-			
-			_guestView = new app.PersonView(); // guest form
-
-			this.registerObserver(_guestView);
-
-			_guestView.registerObserver(this);
+				_views[prop].registerObserver(this);
+			}
 
 
 		// Register controller as observer of every object in the data model
@@ -304,7 +297,7 @@ app.Controller = function() {
 			});
 
 
-		// Set some defaults until account creation/selection is ready
+		// Set some defaults to use until account creation/selection is ready
 
 			this.onAccountSelected(0); //debug
 
@@ -356,24 +349,18 @@ app.Controller = function() {
 
 				switch (Object_obj.constructor)	{
 
-				case app.AccountListView: // account list
+					case app.EventListView: // event list
 
-					this.onAccountSelected();
+						this.onEventSelected(int_objId);
 
-					break;
+						break;
+					
+					case app.PersonListView: // guest list
 
-				case app.EventListView: // event list
+						this.onGuestSelected(int_objId);
 
-					this.onEventSelected(int_objId);
-
-					break;
-				
-				case app.PersonListView: // guest list
-
-					this.onGuestSelected(int_objId);
-
-					break;
-				}
+						break;
+					}
 			}
 
 			else { // wrong type
