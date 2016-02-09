@@ -267,7 +267,7 @@ app.Controller = function() {
 
 			_views =
 			{
-				accountView: new app.AccountView(), // account form
+				accountView: new app.AccountView(), // account form (email, password and prefs)
 
 				eventListView: new app.EventListView(), // event list
 
@@ -275,7 +275,7 @@ app.Controller = function() {
 
 				guestListView: new app.PersonListView(), // guest list
 
-				guestView: new app.PersonView() // guest form
+				guestView: new app.PersonView() // guest/account holder form
 			}
 
 			for (var prop in _views) {
