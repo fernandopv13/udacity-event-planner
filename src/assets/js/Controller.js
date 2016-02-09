@@ -6,11 +6,13 @@
 
 var app = app || {};
 
-/** @classdesc The 'octopus' connecting the datamodel and the UI of the app
+/** @classdesc The 'C' part of our MVC framework.
+*
+* The 'octopus' controlling the workflow, and mediating messages between data and UI, in the app.
 *
 * @constructor
 *
-* @author Ulrik H. Gade, January 2016
+* @author Ulrik H. Gade, February 2016
 */
 
 app.Controller = function() {

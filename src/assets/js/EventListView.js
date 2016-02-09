@@ -1,14 +1,14 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class EventListView Implements IObservable IObserver IViewable
+* public class EventListView Implements IViewable
 ******************************************************************************/
 
 var app = app || {};
 
 /** @classdesc ViewObject for event list(s). Renders list in UI, and captures UI events in list.
 *
-* @implements IObservable IObserver IViewable
+* @implements IViewable
 *
 * @constructor
 *

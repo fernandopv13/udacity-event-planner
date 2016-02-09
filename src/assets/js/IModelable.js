@@ -7,7 +7,9 @@ var app = app || {}; // create a simple namespace for the module
 * public Interface IModelable extends IObserable, IObserver
 *********************************************************************************************/
 
-/** @classdesc Holds information about data in the app.
+/** @classdesc Main interface for the 'M' part of our MVC framework.
+*
+* Holds information about data in the app.
 *
 * Extension of IObservable and IObserver implemented as mixins in realizing classes, using interfaceHelper.js.
 *

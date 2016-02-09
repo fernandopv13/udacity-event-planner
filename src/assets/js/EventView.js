@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class EventView Implements IObservable IObserver IViewable
+* public class EventView Implements IViewable
 ******************************************************************************/
 
 var app = app || {};
@@ -10,7 +10,7 @@ var app = app || {};
 *
 * @constructor
 *
-* @implements IObservable IObserver IViewable
+* @implements IViewable
 *
 * @author Ulrik H. Gade, February 2016
 *

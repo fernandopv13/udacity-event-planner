@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /**********************************************************************************************
-* public class AccountView Implements IObservable IObserver IViewable
+* public class AccountView Implements IViewable
 **********************************************************************************************/
 
 var app = app || {};
@@ -10,7 +10,7 @@ var app = app || {};
 *
 * @constructor
 *
-* @implements IObservable IObserver IViewable
+* @implements IViewable
 *
 * @author Ulrik H. Gade, February 2016
 *
@@ -109,8 +109,13 @@ app.AccountView = function(Account_account) {
 	
 	app.AccountView.prototype.render = function(Account_account) {
 
-		var account = Account_account, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
+		var account = Account_account,
 
+		accountHolder = account.accountHolder(),
+
+		formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
+
+		
 		if (account !== null) {
 			
 			// Setup up form and container div
@@ -135,6 +140,35 @@ app.AccountView = function(Account_account) {
 
 				formElement.appendChild(containerDiv);
 			
+
+			// Add heading
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				});
+
+				containerDiv.appendChild(outerDiv);
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['col', 's12']
+				});
+
+				innerDiv.appendChild(this.createElement({
+
+					element: 'h4',
+
+					innerHTML: 'Account Settings'
+
+				}));
+
+				outerDiv.appendChild(innerDiv);
+
 
 			// Add hidden account id field
 
@@ -213,6 +247,450 @@ app.AccountView = function(Account_account) {
 				containerDiv.appendChild(outerDiv);
 
 
+			// Add password field
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
+
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
+					
+					attributes:
+					{
+						type: 'text',
+						
+						id: 'account-password',
+						
+						value: account.password() && account.password().password() ? account.password().password() : '',
+
+						required: 'true'
+					},
+					
+					classList: ['validate']
+				}));
+				
+				
+				labelElement = this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'account-password'},
+					
+					classList: account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter password'},
+					
+					innerHTML: 'Password'
+				});
+				
+				labelElement.appendChild(this.createElement( // required field indicator
+				{
+					element: 'span',
+
+					classList: ['required-indicator'],
+
+					innerHTML: '*'
+				}));
+
+				innerDiv.appendChild(labelElement);
+
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
+				
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+
+
+			// Add password confirmation field
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
+
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
+					
+					attributes:
+					{
+						type: 'text',
+						
+						id: 'account-password-confirmation',
+						
+						value: account.password() && account.password().password() ? account.password().password() : '',
+
+						required: 'true'
+					},
+					
+					classList: ['validate']
+				}));
+				
+				
+				labelElement = this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'account-password-confirmation'},
+					
+					classList: account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please confirm password'},
+					
+					innerHTML: 'Confirm Password'
+				});
+				
+				labelElement.appendChild(this.createElement( // required field indicator
+				{
+					element: 'span',
+
+					classList: ['required-indicator'],
+
+					innerHTML: '*'
+				}));
+
+				innerDiv.appendChild(labelElement);
+
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
+				
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+
+
+			// Add account holder name field
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
+				
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
+					
+					attributes: 
+					{
+						type: 'text',
+						
+						id: 'account-holder-name',
+						
+						value: accountHolder && accountHolder.name() ? accountHolder.name() : '',
+						
+						required: true
+					},
+					
+					classList: ['validate']
+				}));
+				
+				
+				labelElement = this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'account-holder-name'},
+					
+					classList: accountHolder && accountHolder.name() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter account-holder name'},
+					
+					innerHTML: 'Name'
+				});
+				
+				labelElement.appendChild(this.createElement( // required field indicator
+				{
+					element: 'span',
+
+					classList: ['required-indicator'],
+
+					innerHTML: '*'
+				}));
+				
+				innerDiv.appendChild(labelElement);
+
+
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+				
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+				
+			
+			// Add email field
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
+
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
+					
+					attributes:
+					{
+						type: 'email',
+						
+						id: 'account-holder-email',
+						
+						value: accountHolder && accountHolder.email() && accountHolder.email().address() ? accountHolder.email().address() : '',
+
+						required: 'true'
+					},
+					
+					classList: ['validate']
+				}));
+				
+				
+				labelElement = this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'account-holder-email'},
+					
+					classList: accountHolder && accountHolder.email() && accountHolder.email().address() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter email'},
+					
+					innerHTML: 'Email'
+				});
+				
+				labelElement.appendChild(this.createElement( // required field indicator
+				{
+					element: 'span',
+
+					classList: ['required-indicator'],
+
+					innerHTML: '*'
+				}));
+
+				innerDiv.appendChild(labelElement);
+
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
+				
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+
+
+			// Add job title field
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
+				innerDiv.appendChild(this.createElement( //input
+				{
+					element: 'input',			
+					
+					attributes:
+					{
+						type: 'text',
+						
+						id: 'account-holder-jobtitle',
+						
+						value: accountHolder && accountHolder.jobTitle() ? accountHolder.jobTitle() : ''
+					}
+				}));
+				
+				
+				innerDiv.appendChild(this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'account-holder-jobtitle'},
+					
+					classList: accountHolder && accountHolder.jobTitle() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter job title'},
+					
+					innerHTML: 'Job Title'
+				}));
+				
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
+				
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+
+
+			// Add employer field
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
+				
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
+					
+					attributes:
+					{
+						type: 'text',
+						
+						id: 'account-holder-employer',
+						
+						value: accountHolder && accountHolder.employer() && accountHolder.employer().name() ? accountHolder.employer().name() : '',
+						
+						list: 'suggested-employers'
+					}
+				}));
+				
+				
+				innerDiv.appendChild(this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'account-holder-employer'},
+					
+					classList: accountHolder && accountHolder.employer() && accountHolder.employer().name() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter employer'},
+					
+					innerHTML: 'Employer'
+				}));
+				
+				
+				innerDiv.appendChild(this.createElement( // data list
+				{	
+					element: 'datalist',			
+					
+					attributes: {id: 'suggested-employers'}
+				}));
+				
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);			
+
+	
+			// Add birthday field
+
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+			
+			
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
+				
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
+					
+					attributes:
+					{
+						type: 'text',
+						
+						id: 'account-holder-birthday',
+						
+						value: accountHolder && accountHolder.birthday() ? accountHolder.birthday().toLocaleDateString() : '',
+						
+						readonly: true
+					},
+					
+					classList: ['validate', 'datepicker', 'picker__input']
+				}));
+				
+				
+				innerDiv.appendChild(this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'account-holder-birthday'},
+					
+					classList: accountHolder && accountHolder.birthday() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter birthday'},
+					
+					innerHTML: 'Birthday'
+				}));
+
+				
+				innerDiv.appendChild(this.createElement( // custom error div
+				{	
+					element: 'div',			
+					
+					attributes: {id: 'account-holder-birthday-error'},
+					
+					classList: ['custom-validate']
+				}));
+				
+				
+				outerDiv.appendChild(innerDiv);
+			
+				containerDiv.appendChild(outerDiv); // Add to container
+
 			// Add account holder field
 
 				innerDiv =  this.createElement( // inner div
@@ -264,7 +742,7 @@ app.AccountView = function(Account_account) {
 				containerDiv.appendChild(outerDiv);
 
 
-			// Add local storage permission field
+			// Add default event capacity field
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -272,6 +750,162 @@ app.AccountView = function(Account_account) {
 					
 					classList: ['input-field', 'col', 's12']
 				});
+				
+				
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
+					
+					attributes:
+					{
+						type: 'number',
+						
+						id: 'account-capacity',
+						
+						min: 0,
+						
+						step: 1,
+						
+						value: account.defaultEventCapacity() >= 0 ? account.defaultEventCapacity() : '',
+						
+						required: true
+					},
+					
+					classList: ['validate']
+				}));
+				
+				
+				labelElement = this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'account-capacity'},
+					
+					classList: account.defaultEventCapacity() >= 0 ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter default event capacity'},
+					
+					innerHTML: 'Default event capacity'
+				});
+				
+				labelElement.appendChild(this.createElement( // required field indicator
+				{
+					element: 'span',
+
+					classList: ['required-indicator'],
+
+					innerHTML: '*'
+				}));
+				
+				innerDiv.appendChild(labelElement);
+
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+
+
+			// Add default location field
+
+				/*
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
+				
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
+					
+					attributes:
+					{
+						type: 'text',
+						
+						id: 'account-location',
+						
+						value: account.location() ? account.location : ''
+					},
+					
+					classList: ['validate']
+				}));
+				
+				
+				innerDiv.appendChild(this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'account-location'},
+					
+					classList: account.location() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter default location'},
+					
+					innerHTML: 'Default location'
+				}));
+				
+
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+			
+				outerDiv.appendChild(innerDiv);
+			
+				containerDiv.appendChild(outerDiv); // add to container
+				*/
+
+
+			// Add local storage permission field
+
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+
+				
+				innerDiv =  this.createElement( // inner div for main switch label
+				{
+					element: 'div',			
+					
+					classList: ['col', 's7']
+				});
+
+				outerDiv.appendChild(innerDiv);
+
+
+				innerDiv.appendChild(this.createElement( // main switch label
+				{	
+					element: 'span',
+
+					classList: ['form-label', 'input-switch-label'],
+
+					innerHTML: 'Allow local storage'
+
+				}));
+
+				
+				innerDiv =  this.createElement( // inner div for switch widget
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's5']
+				});
+
+				outerDiv.appendChild(innerDiv);
 				
 				
 				switchElement = this.createElement( // switch div
@@ -344,37 +978,76 @@ app.AccountView = function(Account_account) {
 				spanElement.appendChild(labelElement);
 
 
-				switchElement.appendChild(this.createElement( // main switch label
+				innerDiv =  this.createElement( // inner div for description of switch
+				{
+					element: 'div',			
+					
+					classList: ['col', 's12']
+				});
+
+				outerDiv.appendChild(innerDiv);
+
+
+				innerDiv.appendChild(this.createElement( // description
 				{	
-					element: 'span',
+					element: 'p',
 
-					classList: ['form-label', 'input-switch-label'],
+					classList: ['form-label', 'input-switch-description'],
 
-					innerHTML: 'Allow app to access storage on this device'
+					innerHTML: 'Allow local storage if you want to be able to work with your events on this device when you\'re offline.'
 
 				}));
 
-								
+				innerDiv.appendChild(this.createElement({ // divider
+
+					element: 'div',
+
+					classList: ['divider']
+				}));
+
+
+				containerDiv.appendChild(outerDiv);			
+
+			
+			// Add geolocation permission field
+
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',
 					
 					classList: ['row']
 				});
-							
-				outerDiv.appendChild(innerDiv);
+
 				
-				containerDiv.appendChild(outerDiv);			
-
-			
-			// Add geolocation permission field
-
-				innerDiv =  this.createElement( // inner div
+				innerDiv =  this.createElement( // inner div for main switch label
 				{
 					element: 'div',			
 					
-					classList: ['input-field', 'col', 's12']
+					classList: ['col', 's7']
 				});
+
+				outerDiv.appendChild(innerDiv);
+
+
+				innerDiv.appendChild(this.createElement( // main switch label
+				{	
+					element: 'span',
+
+					classList: ['form-label', 'input-switch-label'],
+
+					innerHTML: 'Allow geolocation'
+
+				}));
+
+				
+				innerDiv =  this.createElement( // inner div for switch widget
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's5']
+				});
+
+				outerDiv.appendChild(innerDiv);
 				
 				
 				switchElement = this.createElement( // switch div
@@ -446,154 +1119,38 @@ app.AccountView = function(Account_account) {
 
 				spanElement.appendChild(labelElement);
 
-
-				switchElement.appendChild(this.createElement( // main switch label
-				{	
-					element: 'span',
-
-					classList: ['form-label', 'input-switch-label'],
-
-					innerHTML: 'Allow app to access location of this device'
-
-				}));
-
-								
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				outerDiv.appendChild(innerDiv);
 				
-				containerDiv.appendChild(outerDiv);	
-			
-			// Add default location field
-
-				/*
-				innerDiv =  this.createElement( // inner div
+				innerDiv =  this.createElement( // inner div for description of switch
 				{
 					element: 'div',			
 					
-					classList: ['input-field', 'col', 's12']
+					classList: ['col', 's12']
 				});
-				
-				
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'text',
-						
-						id: 'account-location',
-						
-						value: account.location() ? account.location : ''
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				innerDiv.appendChild(this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-location'},
-					
-					classList: account.location() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter default location'},
-					
-					innerHTML: 'Default location'
-				}));
-				
 
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-			
 				outerDiv.appendChild(innerDiv);
-			
-				containerDiv.appendChild(outerDiv); // add to container
-				*/
 
-			
-			// Add default event capacity field
 
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'number',
-						
-						id: 'account-capacity',
-						
-						min: 0,
-						
-						step: 1,
-						
-						value: account.defaultEventCapacity() >= 0 ? account.defaultEventCapacity() : '',
-						
-						required: true
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
+				innerDiv.appendChild(this.createElement( // description
 				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-capacity'},
-					
-					classList: account.defaultEventCapacity() >= 0 ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter default event capacity'},
-					
-					innerHTML: 'Default event capacity'
-				});
-				
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
+					element: 'p',
 
-					classList: ['required-indicator'],
+					classList: ['form-label', 'input-switch-description'],
 
-					innerHTML: '*'
+					innerHTML: 'Allow geolocation if you want to the app to suggest event venues and other useful information based on the location of this device.'
+
 				}));
-				
-				innerDiv.appendChild(labelElement);
 
-				
-				outerDiv =  this.createElement( // outer div
-				{
+				innerDiv.appendChild(this.createElement({ // divider
+
 					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				outerDiv.appendChild(innerDiv);
-				
+
+					classList: ['divider']
+				}));
+
+
 				containerDiv.appendChild(outerDiv);
 
-
+			
 			// Add requirement indicator (asterisk) explanation
 
 				outerDiv =  this.createElement( // outer div

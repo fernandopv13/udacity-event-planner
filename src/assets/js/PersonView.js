@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class PersonView Implements IObservable IObserver IViewable
+* public class PersonView Implements IViewable
 ******************************************************************************/
 
 var app = app || {};
@@ -10,7 +10,7 @@ var app = app || {};
 *
 * @constructor
 *
-* @implements IObservable IObserver IViewable
+* @implements IViewable
 *
 * @author Ulrik H. Gade, February 2016
 *
@@ -325,7 +325,7 @@ app.PersonView = function(Person_person) {
 					{
 						type: 'text',
 						
-						id: 'person-jobtitle',
+						id: 'guest-jobtitle',
 						
 						value: person.jobTitle() ? person.jobTitle() : ''
 					}
@@ -336,7 +336,7 @@ app.PersonView = function(Person_person) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'person-jobtitle'},
+					attributes: {for: 'guest-jobtitle'},
 					
 					classList: person.jobTitle() ? ['form-label', 'active'] : ['form-label'],
 					
