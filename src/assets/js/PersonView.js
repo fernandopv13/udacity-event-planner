@@ -135,6 +135,36 @@ app.PersonView = function(Person_person) {
 				formElement.appendChild(containerDiv);
 			
 
+			// Add heading
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				});
+
+				containerDiv.appendChild(outerDiv);
+
+				
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['col', 's12']
+				});
+
+				innerDiv.appendChild(this.createElement({
+
+					element: 'h4',
+
+					innerHTML: 'Edit Guest'
+
+				}));
+
+				outerDiv.appendChild(innerDiv);
+
+
 			// Add hidden person id field
 
 			containerDiv.appendChild(this.createElement({
@@ -144,6 +174,7 @@ app.PersonView = function(Person_person) {
 				attributes: {id: 'guest-id', type: 'hidden', value: Person_person.id()}
 			}));
 
+			
 			// Add guest name field
 
 				innerDiv =  this.createElement( // inner div

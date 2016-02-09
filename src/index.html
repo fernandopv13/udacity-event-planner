@@ -86,7 +86,62 @@
 
 	<body>
 
-		<!-- Placeholders for dynamically generated main content views -->
+		<!-- Navbar -->
+		
+		<div class="navbar-fixed">
+			
+			<!-- 'More' dropdown -->
+
+			<ul id="nav-account-dropdown" class="dropdown-content">
+
+				<li><a href="#!">Settings</a></li>
+
+				<li><a href="#!">Sign out</a></li>
+
+				<li><a href="#!">About</a></li>
+
+			</ul>
+
+			<nav>
+
+				<div class="nav-wrapper">
+
+					<a href="#!" class="brand-logo">Meetup Planner</a>
+
+					<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+
+					<ul class="right hide-on-med-and-down">
+
+						<li><a href="!#"><i class="material-icons left">search</i>Search</a></li>
+
+						<li><a class="dropdown-button" href="#!" data-activates="nav-account-dropdown"><i class="material-icons left">account_circle</i>Account</a></li>
+
+					</ul>
+
+					<ul class="side-nav" id="mobile-demo">
+
+						<li><a href="#!"><i class="material-icons left">search</i>Search</a></li>
+
+						<li><a href="#!"><i class="material-icons left">account_circle</i>Account</a></li>
+
+						<li><a href="#!"><i class="material-icons left">info</i>About</a></li>
+
+						<li><a href="#!"><i class="material-icons left"><i class="material-icons">power_settings_new</i></i>Sign out</a></li>
+
+					</ul>
+
+				</div>
+
+			</nav>
+
+		</div>
+		
+		
+		<!-- Page content -->
+		
+		<div class="container"> 
+			
+			<!-- Placeholders for dynamically generated main content views -->
 
 			<div id="signup-form" class="row"></div>
 
@@ -104,6 +159,7 @@
 
 			<div id="guest-form" class="row"></div>
 		
+		</div>
 
 		<!-- Library source files -->
 			<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
@@ -140,17 +196,18 @@
 
 		<script type="text/javascript">
 			
-			/*
 			$(document).ready(function() {
-				
+
+				$(".button-collapse").sideNav();
 			});
 
-			*/
-
 			window.onload = function() {
+				
 				app.init();	
 			};
+
 		</script>
 
 	</body>
+
 </html>

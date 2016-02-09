@@ -60,7 +60,17 @@ app.IObservable.prototype.default_notifyObservers = function(Object_obj, int_obj
 
 		Object_obj = Object_obj ? Object_obj : this;
 
-		observer.update(Object_obj, int_objId);
+		if (arguments.length > 1) { // id present
+
+			observer.update(Object_obj, int_objId);
+		}
+
+		else {
+
+			observer.update(Object_obj);
+		}
+
+		
 		
 	}.bind(this));
 };

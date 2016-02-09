@@ -136,16 +136,45 @@ app.EventView = function(Event_event) {
 				
 
 				formElement.appendChild(containerDiv);
+
 			
+			// Add heading
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				});
+
+				containerDiv.appendChild(outerDiv);
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['col', 's12']
+				});
+
+				innerDiv.appendChild(this.createElement({
+
+					element: 'h4',
+
+					innerHTML: 'Edit Event'
+
+				}));
+
+				outerDiv.appendChild(innerDiv);
+
 
 			// Add hidden event id field
 
-			containerDiv.appendChild(this.createElement({
+				containerDiv.appendChild(this.createElement({
 
-				element: 'input',
+					element: 'input',
 
-				attributes: {id: 'event-id', type: 'hidden', value: Event_event.id()}
-			}))
+					attributes: {id: 'event-id', type: 'hidden', value: Event_event.id()}
+				}))
 
 			// Add event name field
 
