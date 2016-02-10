@@ -9,13 +9,37 @@
 
 describe('class Organization', function(){
 	
-	it('implements the IHost interface', function() { //uses Interface.js
+	it('implements the IHost interface', function() { //uses InterfaceTester.js
 			
 			expect(app.InterfaceTester.isImplementationOf(app.Organization, app.IHost)).toBe(true);
 	});
+
+
+	it('implements the IInterfaceable interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Organization, app.IInterfaceable)).toBe(true);
+	});
+
+	
+	it('implements the IModelable interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Organization, app.IModelable)).toBe(true);
+	});
+
+
+	it('implements the IObservable interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Organization, app.IObservable)).toBe(true);
+	});
+
+
+	xit('implements the IObserver interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Organization, app.IObserver)).toBe(true);
+	});
 	
 	
-	it('implements the ISerializable interface', function() { // uses Interface.js
+	it('implements the ISerializable interface', function() { // uses InterfaceTester.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Organization, app.ISerializable)).toBe(true);
 	});
@@ -86,6 +110,18 @@ describe('class Organization', function(){
 			expect(testOrg.isInstanceOf(app.ISerializable)).toBe(true);
 
 			expect(testOrg.isInstanceOf(Error)).toBe(false);
+		});
+
+
+		// IInterfaceable testing
+
+		it('can tell if it is an implementation of a custom app interface', function() {
+
+			expect(testOrg.isInstanceOf(app.IInterfaceable)).toBe(true);
+
+			expect(testOrg.isInstanceOf(app.IModelable)).toBe(true);
+
+			expect(testOrg.isInstanceOf(Array)).toBe(false);
 		});
 		
 		

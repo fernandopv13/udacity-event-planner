@@ -70,6 +70,7 @@ app.IInterfaceable = function() {
 *
 * @throws {InvalidArgumentError} If not passing in interface and class as function references
 *
+* @todo Refactor interface parameter to array to simplify syntax in calling classes
 */
 
 app.IInterfaceable.mixInto = function(Func_interface, Func_class, obj_classInstance) { // beginning caps in functions to please jshint

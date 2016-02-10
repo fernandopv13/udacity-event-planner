@@ -48,11 +48,35 @@ describe('class Person', function(){
 	});
 		
 	
-	it('implements the ISerializable interface', function() { // uses Interface.js
+	it('implements the IInterfaceable interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Person, app.IInterfaceable)).toBe(true);
+	});
+
+	
+	it('implements the IModelable interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Person, app.IModelable)).toBe(true);
+	});
+
+
+	it('implements the IObservable interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Person, app.IObservable)).toBe(true);
+	});
+
+
+	it('implements the IObserver interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Person, app.IObserver)).toBe(true);
+	});
+
+
+	it('implements the ISerializable interface', function() { // uses InterfaceTester.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Person, app.ISerializable)).toBe(true);
 	});
-		
+
 		
 	it('can be instantiated with no parameters', function() {
 		
@@ -264,6 +288,18 @@ describe('class Person', function(){
 			expect(testPerson.isInstanceOf(app.ISerializable)).toBe(true);
 
 			expect(testPerson.isInstanceOf(Error)).toBe(false);
+		});
+		
+
+		// IInterfaceable testing
+
+		it('can tell if it is an implementation of a custom app interface', function() {
+
+			expect(testPerson.isInstanceOf(app.IInterfaceable)).toBe(true);
+
+			expect(testPerson.isInstanceOf(app.IModelable)).toBe(true);
+
+			expect(testPerson.isInstanceOf(Array)).toBe(false);
 		});
 		
 

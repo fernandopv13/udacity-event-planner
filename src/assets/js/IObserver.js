@@ -28,22 +28,17 @@ app.IObserver = function() {
 	* Method signatures
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Report whether instance of an interface
+	/** Updates object when notified of change by observable (controller). Autosaves to local storage if available.
 	*
-	* @return {Boolean}
-	*/
-	
-	app.IObserver.prototype.isInstanceOf = function() {
-		
-		throw new AbstractMethodError(app.IObserver.prototype.isInstanceOf.errorMessage);
-	};
-	
-	this.constructor.prototype.isInstanceOf.errorMessage = 'Method signature "update()" must be realized in derived classes';
-	
-	
-	/** Receive and act upon notification from observable
+	* @param {Object} obj Temporary object holding the data to update this object with
 	*
-	* @return {void}
+	* @return {Boolean} true if copy was successful, else error or false
+	*
+	* @throws {IllegalArgumentError} If provided data object is not an instance of the target object's class
+	*
+	* @throws {IllegalArgumentError} If provided data object has different id to that of target object
+	*
+	* @throws {IllegalArgumentError} If something else goes wrong when setting the data
 	*/
 
 	app.IObserver.prototype.update = function() {

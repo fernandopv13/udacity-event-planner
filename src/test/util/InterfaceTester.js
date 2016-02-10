@@ -27,12 +27,15 @@ app.InterfaceTester = function() {};
 * Checks if one class (function) complies with the interface defined by
 * the non-inherited methods of another 'class' (function),
 * in both cases using pseudo-classical class notation.
+* For now, supports instance methods, but not static interface methods.
 *
 * @param {Function} implementer The function that 'claims' to implement the interface
 *
 * @param {Function} interface The function that defines the interface.
 *
 * @return {Boolean} true if the implementer implements all the own methods of the interface
+*
+* @todo: Revisit options for Java-like support for static interface methods
 */
 
 app.InterfaceTester.isImplementationOf = function (func_implementer, func_interface) {
@@ -42,7 +45,7 @@ app.InterfaceTester.isImplementationOf = function (func_implementer, func_interf
 	
 	function _doCheck(target, source) {
 		
-		var testObj =  typeof source === 'function' ? target : new target(); // verify statics against class, others against instance
+		var testObj = typeof source === 'function' ? target : new target(); // verify statics against class, others against instance
 	
 		for (var prop in source) { // Run through the methods defined by the interface
 		
@@ -63,7 +66,7 @@ app.InterfaceTester.isImplementationOf = function (func_implementer, func_interf
 	
 	// Verify implementation using _doCheck helper
 	
-	return 	_doCheck(func_implementer, func_interface.prototype) && // instance methods defined on prototype
+	return 	_doCheck(func_implementer, func_interface.prototype) // instance methods defined on prototype
 			
-			_doCheck(func_implementer, func_interface);  // static methods
+			 //&& _doCheck(func_implementer, func_interface);  // static methods
 };

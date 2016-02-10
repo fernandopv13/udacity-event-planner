@@ -4,14 +4,18 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Password implements IModelable (i.e. IObservable IObserver), ISerializable
+* public class Password implements IInterfaceable, IModelable, ISerializable
 **********************************************************************************************/
 
 /** @classdesc Describes a password.
 *
 * @constructor
 *
-* @implements IModelable ISerializable
+* @implements IInterfaceable
+*
+* @implements IModelable
+*
+* @implements  ISerializable
 *
 * @return {Password} A password
 *
@@ -39,7 +43,7 @@ app.Password = function(str_password) {
 	
 	_password, // (String) A string containing the password address.
 
-	_implements = [app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+	_implements = [app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 		
 	
 	/*----------------------------------------------------------------------------------------
@@ -168,19 +172,14 @@ app.Password = function(str_password) {
 	
 	/** Returns true if class implements the interface passed in (by function reference)
 	*
-	* (Method realization required by ISerializable.)
-	*
-	* @param {Function} interface The interface we wish to determine if this class implements
-	*
-	* @return {Boolean} instanceof True if class implements interface, otherwise false
-	*	
+	* (See IInterfaceable for further documentation.)
 	*/
 	
 	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
-
+	
 
 	/** Re-establishes references to complex members after they have been deserialized
 	*
@@ -194,6 +193,19 @@ app.Password = function(str_password) {
 		return true;
 	}
 	
+	/** Updates password when notified of change by observable (controller). Autosaves to local storage if available.
+	*
+	* (See IObserver for further documentation.)
+	*
+	* @param {Password} password Object holding the data to update this event with
+	*
+	* @return {Boolean} true if copy was successful, else error or false
+	*
+	* @todo Not implemented
+	*/
+
+	//app.Password.prototype.update = function(Password_password, int_objId) {}
+
 	
 	/** Converts password to JSON object
 	*
@@ -335,12 +347,14 @@ app.Password.hasIllegalCharacters = function(str_password) {return str_password.
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IModelable, app.Password);
+void app.IInterfaceable.mixInto(app.IInterfaceable, app.Password);
 
-void app.InterfaceHelper.mixInto(app.IObservable, app.Password);
+void app.IInterfaceable.mixInto(app.IModelable, app.Password);
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.Password);
+void app.IInterfaceable.mixInto(app.IObservable, app.Password);
 
-void app.InterfaceHelper.mixInto(app.ISerializable, app.Password);
+void app.IInterfaceable.mixInto(app.IObserver, app.Password);
+
+void app.IInterfaceable.mixInto(app.ISerializable, app.Password);
 
 app.Password.registry.clear(); // remove object created by mixInto()

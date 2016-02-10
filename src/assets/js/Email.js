@@ -4,15 +4,19 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Email implements IModelable (i.e. IObservable IObserver), ISerializable
+* public class Email implements IInterfaceable, IModelable, ISerializable
 **********************************************************************************************/
 
 /** @classdesc Describes an email address.
 *
 * @constructor
 *
-* @implements IModelable ISerializable
+* @implements IInterfaceable
 *
+* @implements IModelable
+*
+* @implements ISerializable
+**
 * @return {Email} An email
 *
 * @param {String} address A string containing the email address. If present, creates new Object from scratch.
@@ -39,9 +43,11 @@ app.Email = function(str_address) {
 	
 	_address, // (String) A string containing the email address.
 	
-	_isValid = null; // (Boolean) true if email's validity, true or false, has been set (i.e. verified) manually. A null value indicates that the address has not been verified.
+	_isValid = null, // (Boolean) true if email's validity, true or false, has been set (i.e. verified) manually. A null value indicates that the address has not been verified.
 	
-	
+	_implements = [app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+
+
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
@@ -191,12 +197,7 @@ app.Email = function(str_address) {
 
 	/** Returns true if class implements the interface passed in (by function reference)
 	*
-	* (Method realization required by ISerializable.)
-	*
-	* @param {Function} interface The interface we wish to determine if this class implements
-	*
-	* @return {Boolean} instanceof True if class implements interface, otherwise false
-	*	
+	* (See IInterfaceable for further documentation.)
 	*/
 	
 	this.isInstanceOf = function (func_interface) {
@@ -218,6 +219,20 @@ app.Email = function(str_address) {
 		return true;
 	}
 	
+
+	/** Updates email when notified of change by observable (controller). Autosaves to local storage if available.
+	*
+	* (See IObserver for further documentation.)
+	*
+	* @param {Email} email Object holding the data to update this email with
+	*
+	* @return {Boolean} true if copy was successful, else error or false
+	*
+	* @todo Not implemented
+	*/
+
+	//app.Email.prototype.update = function(Email_email, int_objId) {}
+
 	
 	/** Converts email to JSON object
 	*
@@ -291,12 +306,14 @@ app.Email.registry = new app.ObjectRegistry(app.Email, 'Email');
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IModelable, app.Email);
+void app.IInterfaceable.mixInto(app.IInterfaceable, app.Email);
 
-void app.InterfaceHelper.mixInto(app.IObservable, app.Email);
+void app.IInterfaceable.mixInto(app.IModelable, app.Email);
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.Email);
+void app.IInterfaceable.mixInto(app.IObservable, app.Email);
 
-void app.InterfaceHelper.mixInto(app.ISerializable, app.Email);
+void app.IInterfaceable.mixInto(app.IObserver, app.Email);
+
+void app.IInterfaceable.mixInto(app.ISerializable, app.Email);
 
 app.Email.registry.clear(); // remove object created by mixInto()

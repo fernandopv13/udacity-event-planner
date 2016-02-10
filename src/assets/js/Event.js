@@ -4,14 +4,18 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Event implements IModelable (i.e. IObservable IObserver), ISerializable
+* public class Event implements IInterfaceable, IModelable, ISerializable
 **********************************************************************************************/
 
 /** @classdesc Holds information about an event.
 *
 * @constructor
 *
-* @implements IModelable ISerializable
+* @implements IInterfaceable
+*
+* @implements IModelable
+*
+* @implements ISerializable
 *
 * @param {String} name The name of the event
 *
@@ -65,7 +69,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 	_host,
 
-	_implements = [app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+	_implements = [app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 		
 
 	/*----------------------------------------------------------------------------------------
@@ -444,12 +448,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 	/** Returns true if class implements the interface passed in (by function reference)
 	*
-	* (Method realization required by ISerializable.)
-	*
-	* @param {Function} interface The interface we wish to determine if this class implements
-	*
-	* @return {Boolean} instanceof True if class implements interface, otherwise false
-	*	
+	* (See IInterfaceable for further documentation.)
 	*/
 	
 	this.isInstanceOf = function (func_interface) {
@@ -527,19 +526,13 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 
 
-	/** Updates event when notified of change by observable (controller). Autosaves to local storage if available.
+	/** Updates account when notified of change by observable (controller). Autosaves to local storage if available.
 	*
-	* (Method realization required by IObserver)
+	* (See IObserver for further documentation.)
 	*
 	* @param {Event} event Object holding the data to update this event with
 	*
 	* @return {Boolean} true if copy was successful, else error or false
-	*
-	* @throws {IllegalArgumentError} If provided data object is not an instance of Event
-	*
-	* @throws {IllegalArgumentError} If provided data object has different id to that of event
-	*
-	* @throws {IllegalArgumentError} If something else goes wrong when setting the data
 	*/
 
 	app.Event.prototype.update = function(Event_event, int_objId) {
@@ -701,12 +694,14 @@ app.Event.registry = new app.ObjectRegistry(app.Event, 'Event');
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IModelable, app.Event);
+void app.IInterfaceable.mixInto(app.IInterfaceable, app.Event);
 
-void app.InterfaceHelper.mixInto(app.IObservable, app.Event);
+void app.IInterfaceable.mixInto(app.IModelable, app.Event);
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.Event);
+void app.IInterfaceable.mixInto(app.IObservable, app.Event);
 
-void app.InterfaceHelper.mixInto(app.ISerializable, app.Event);
+void app.IInterfaceable.mixInto(app.IObserver, app.Event);
+
+void app.IInterfaceable.mixInto(app.ISerializable, app.Event);
 
 app.Event.registry.clear(); // remove objects created by mixInto()

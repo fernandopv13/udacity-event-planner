@@ -3,15 +3,21 @@
 var app = app || {}; // create a simple namespace for the app
 
 
-/***********************************************************
-* public class Person implements IHost, IModelable (i.e. IObservable IObserver), ISerializable
-***********************************************************/
+/**********************************************************************************************
+* public class Perosn implements IInterfaceable, IModelable, ISerializable
+**********************************************************************************************/
 
 /** @classdesc Describes a person who may host and/or participate in an event.
 *
 * @constructor
 *
-* @implements IHost, IModelable, ISerializable
+* @implements IHost
+*
+* @implements IInterfaceable
+*
+* @implements IModelable
+*
+* @implements ISerializable
 *
 * @param {String} name The full name of the person
 *
@@ -54,7 +60,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 
 	_imgUrl, // URL to avatar image for person
 	
-	_implements = [app.IHost, app.IModelable, app.IObservable, app.IObserver, app.ISerializable]; // list of interfaces implemented by this class (by function reference)
+	_implements = [app.IHost, app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable]; // list of interfaces implemented by this class (by function reference)
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -298,12 +304,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 
 	/** Returns true if class implements the interface passed in (by function reference)
 	*
-	* (Method realization required by ISerializable.)
-	*
-	* @param {Function} interface The interface we wish to determine if this class implements
-	*
-	* @return {Boolean} instanceof True if class implements interface, otherwise false
-	*	
+	* (See IInterfaceable for further documentation.)
 	*/
 	
 	this.isInstanceOf = function (func_interface) {
@@ -337,17 +338,13 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	
 	/** Updates person when notified of change by observable (controller). Autosaves to local storage if available.
 	*
-	* (Method realization required by IObserver)
+	* (See IObserver for further documentation.)
 	*
 	* @param {Person} person Object holding the data to update this person with
 	*
 	* @return {Boolean} true if copy was successful, else error or false
 	*
-	* @throws {IllegalArgumentError} If provided data object is not an instance of Event
-	*
-	* @throws {IllegalArgumentError} If provided data object has different id to that of event
-	*
-	* @throws {IllegalArgumentError} If something else goes wrong when setting the data
+	* @todo Not implemented
 	*/
 
 	app.Person.prototype.update = function(Person_person, int_objId) {
@@ -485,14 +482,14 @@ app.Person.registry = new app.ObjectRegistry(app.Person, 'Person');
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IHost, app.Person);
+void app.IInterfaceable.mixInto(app.IInterfaceable, app.Person);
 
-void app.InterfaceHelper.mixInto(app.IModelable, app.Person);
+void app.IInterfaceable.mixInto(app.IModelable, app.Person);
 
-void app.InterfaceHelper.mixInto(app.IObservable, app.Person);
+void app.IInterfaceable.mixInto(app.IObservable, app.Person);
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.Person);
+void app.IInterfaceable.mixInto(app.IObserver, app.Person);
 
-void app.InterfaceHelper.mixInto(app.ISerializable, app.Person);
+void app.IInterfaceable.mixInto(app.ISerializable, app.Person);
 
 app.Person.registry.clear(); // remove objects created by mixInto()

@@ -28,13 +28,31 @@ describe('class Account', function(){
 	app.Email = app.Email || function() {};
 			
 	
-	it('implements the IObservable interface', function() { // uses Interface.js
+	it('implements the IInterfaceable interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Account, app.IInterfaceable)).toBe(true);
+	});
+
+	
+	it('implements the IModelable interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Account, app.IModelable)).toBe(true);
+	});
+
+
+	it('implements the IObservable interface', function() { // uses InterfaceTester.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Account, app.IObservable)).toBe(true);
 	});
 
 
-	it('implements the ISerializable interface', function() { // uses Interface.js
+	xit('implements the IObserver interface', function() { // uses InterfaceTester.js
+		
+			expect(app.InterfaceTester.isImplementationOf(app.Account, app.IObserver)).toBe(true);
+	});
+
+
+	it('implements the ISerializable interface', function() { // uses InterfaceTester.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Account, app.ISerializable)).toBe(true);
 	});
@@ -393,6 +411,18 @@ describe('class Account', function(){
 		});
 
 		
+		// IInterfaceable testing
+
+		it('can tell if it is an implementation of a custom app interface', function() {
+
+			expect(testAccount.isInstanceOf(app.IInterfaceable)).toBe(true);
+
+			expect(testAccount.isInstanceOf(app.IModelable)).toBe(true);
+
+			expect(testAccount.isInstanceOf(Array)).toBe(false);
+		});
+
+
 		// IObservable testing
 
 		it('can register an observer', function(){

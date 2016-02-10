@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /**********************************************************************************************
-* public class Account implements IModelable (i.e. IObservable IObserver), ISerializable
+* public class Account implements IInterfaceable, IModelable, ISerializable
 **********************************************************************************************/
 
 var app = app || {};
@@ -11,7 +11,11 @@ var app = app || {};
 *
 * @constructor
 *
-* @implements IModelable ISerializable
+* @implements IInterfaceable
+*
+* @implements IModelable
+*
+* @implements ISerializable
 *
 * @param {Email} email Email identifying the account
 *
@@ -54,7 +58,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	_defaultLocation,
 
-	_implements = [app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+	_implements = [app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -383,20 +387,13 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	/** Returns true if class implements the interface passed in (by function reference)
 	*
-	* (Method realization required by ISerializable.)
-	*
-	* @param {Function} interface The interface we wish to determine if this class implements
-	*
-	* @return {Boolean} instanceof True if class implements interface, otherwise false
-	*
-	* @todo Cover this with unit test(s)
+	* (See IInterfaceable for further documentation.)
 	*/
 	
 	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
-
 
 
 	/** Removes event from account
@@ -464,13 +461,27 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	}
 	
 	
-	/** Converts Person state to JSON object
+	/** Updates account when notified of change by observable (controller). Autosaves to local storage if available.
+	*
+	* (See IObserver for further documentation.)
+	*
+	* @param {Account} account Object holding the data to update this event with
+	*
+	* @return {Boolean} true if copy was successful, else error or false
+	*
+	* @todo Not implemented
+	*/
+
+	//app.Account.prototype.update = function(Account_account, int_objId) {}
+
+
+	/** Converts Account state to JSON object
 	*
 	* (Method realization required by ISerializable.)
 	*
-	* @return {Object} JSON object representation of person (used to override default behaviour of JSON.stringify())
+	* @return {Object} JSON object representation of account (used to override default behaviour of JSON.stringify())
 	*/
-	
+
 	this.toJSON = function() { // we need private access so no prototype inheritance here
 		
 		return {
@@ -546,12 +557,14 @@ app.Account.registry = new app.ObjectRegistry(app.Account, 'Account');
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IModelable, app.Account);
+void app.IInterfaceable.mixInto(app.IInterfaceable, app.Account);
 
-void app.InterfaceHelper.mixInto(app.IObservable, app.Account);
+void app.IInterfaceable.mixInto(app.IModelable, app.Account);
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.Account);
+void app.IInterfaceable.mixInto(app.IObservable, app.Account);
 
-void app.InterfaceHelper.mixInto(app.ISerializable, app.Account);
+void app.IInterfaceable.mixInto(app.IObserver, app.Account);
+
+void app.IInterfaceable.mixInto(app.ISerializable, app.Account);
 
 app.Account.registry.clear(); // remove objects created by mixInto()

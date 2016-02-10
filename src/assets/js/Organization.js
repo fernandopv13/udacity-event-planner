@@ -4,14 +4,20 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class IHost implements IModelable (i.e. IObservable IObserver), ISerializable
+* public class IHost implements IHost, IInterfaceable, IModelable, ISerializable
 **********************************************************************************************/
 
 /** @classdesc Describes an organization that may host an event.
 *
 * @constructor
 *
-* @implements IHost, IModelable, ISerializable
+* @implements IHost
+*
+* @implements IInterfaceable
+*
+* @implements IModelable
+*
+* @implements ISerializable
 *
 * @param {String} name The organization's name
 *
@@ -35,7 +41,7 @@ app.Organization = function(str_name) {
 	
 	_name,
 
-	_implements = [app.IHost, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+	_implements = [app.IHost, app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -167,6 +173,20 @@ app.Organization = function(str_name) {
 		return true;
 	}
 	
+
+	/** Updates Organization when notified of change by observable (controller). Autosaves to local storage if available.
+	*
+	* (See IObserver for further documentation.)
+	*
+	* @param {Organization} organization Object holding the data to update this event with
+	*
+	* @return {Boolean} true if copy was successful, else error or false
+	*
+	* @todo Not implemented
+	*/
+
+	//app.Organization.prototype.update = function(Account_account, int_objId) {}
+
 		
 	/** Converts Organization to JSON object
 	*
@@ -241,14 +261,14 @@ app.Organization.registry = new app.ObjectRegistry(app.Organization, 'Organizati
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IHost, app.Organization);
+void app.IInterfaceable.mixInto(app.IInterfaceable, app.Organization);
 
-void app.InterfaceHelper.mixInto(app.IModelable, app.Organization);
+void app.IInterfaceable.mixInto(app.IModelable, app.Organization);
 
-void app.InterfaceHelper.mixInto(app.IObservable, app.Organization);
+void app.IInterfaceable.mixInto(app.IObservable, app.Organization);
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.Organization);
+void app.IInterfaceable.mixInto(app.IObserver, app.Organization);
 
-void app.InterfaceHelper.mixInto(app.ISerializable, app.Organization);
+void app.IInterfaceable.mixInto(app.ISerializable, app.Organization);
 
 app.Organization.registry.clear(); // remove objects created by mixInto()
