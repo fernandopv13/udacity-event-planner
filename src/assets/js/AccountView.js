@@ -1048,8 +1048,8 @@ app.AccountView = function(Account_account) {
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IObservable, app.AccountView);
+void app.IInterfaceable.mixInto(app.IObservable, app.AccountView);
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.AccountView);
+void app.IInterfaceable.mixInto(app.IObserver, app.AccountView);
 
-void app.InterfaceHelper.mixInto(app.IViewable, app.AccountView);
+void app.IInterfaceable.mixInto(app.IViewable, app.AccountView);

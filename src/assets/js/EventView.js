@@ -1496,8 +1496,8 @@ app.EventView = function(Event_event) {
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.IObservable, app.EventView);
+void app.IInterfaceable.mixInto(app.IObservable, app.EventView);
 
-void app.InterfaceHelper.mixInto(app.IObserver, app.EventView);
+void app.IInterfaceable.mixInto(app.IObserver, app.EventView);
 
-void app.InterfaceHelper.mixInto(app.IViewable, app.EventView);
+void app.IInterfaceable.mixInto(app.IViewable, app.EventView);

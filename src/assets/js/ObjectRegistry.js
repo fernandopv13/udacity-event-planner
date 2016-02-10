@@ -451,4 +451,4 @@ app.ObjectRegistry.count = 0;
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.InterfaceHelper.mixInto(app.ISerializable, app.ObjectRegistry);
+void app.IInterfaceable.mixInto(app.ISerializable, app.ObjectRegistry);
