@@ -19,7 +19,8 @@ var app = app || {}; // create a simple namespace for the module
 *
 * @author Ulrik H. Gade, January 2016
 *
-* @todo: Figure out how to get jsDoc to show (all) the method signature(s)
+* @todo: Refactor to expect accessor method for private observers collection,
+* rather than directly accessing a public observers attribute.
 */
 
 app.IObservable = function() {
