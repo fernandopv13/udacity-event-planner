@@ -11,7 +11,7 @@ function TestObserver() {
 
 	this.isUpdated = false;
 
-	this.isInstanceOf = function(fnc) {return fnc === app.IObserver;};
+	this.isInstanceOf = this.isInstanceOf || function(fnc) {return fnc === app.IObserver;};
 
 	this.update = function() {this.isUpdated = true;};
 }
@@ -560,10 +560,96 @@ describe('class Event', function(){
 		});
 
 		
+		// IInterfaceable testing
+
+		it('can tell if it is an implementation of a custom app interface', function() {
+
+			expect(testEvent.isInstanceOf(app.IInterfaceable)).toBe(true);
+
+			expect(testEvent.isInstanceOf(app.IModelable)).toBe(true);
+
+			expect(testEvent.isInstanceOf(Array)).toBe(false);
+		});
+
+
 		// IObserver testing
 
-		xit('can update itself when notified of change by Observable', function() {
+		it('can update itself when notified of change by Observable', function() {
 
+			var id = testEvent.id();
+
+			var tmpEvent = new app.Event(
+
+				'Birthday party',
+				
+				'Celebration of life',
+				
+				new Date(2500000),
+				
+				new Date(2500001),
+				
+				'Starbucks',
+				
+				'Just testing',
+				
+				new app.Organization('ACME Corp Inc'),
+				
+				5
+			);
+
+			expect(testEvent.id()).toEqual(id);
+
+			expect(testEvent.name()).not.toEqual(tmpEvent.name());
+
+			expect(testEvent.type()).not.toEqual(tmpEvent.type());
+
+			expect(testEvent.start()).not.toEqual(tmpEvent.start());
+
+			expect(testEvent.end()).not.toEqual(tmpEvent.end());
+
+			expect(testEvent.location()).not.toEqual(tmpEvent.location());
+
+			expect(testEvent.description()).not.toEqual(tmpEvent.description());
+
+			expect(testEvent.capacity()).not.toEqual(tmpEvent.capacity());
+
+			expect(testEvent.host().id()).not.toEqual(tmpEvent.host().id());
+
+
+			testEvent.name(tmpEvent.name());
+
+			testEvent.type(tmpEvent.type());
+
+			testEvent.start(tmpEvent.start());
+
+			testEvent.end(tmpEvent.end());
+
+			testEvent.location(tmpEvent.location());
+
+			testEvent.description(tmpEvent.description());
+
+			testEvent.capacity(tmpEvent.capacity());
+
+			testEvent.host(tmpEvent.host());
+
+
+			expect(testEvent.id()).toEqual(id);
+
+			expect(testEvent.name()).toEqual(tmpEvent.name());
+
+			expect(testEvent.type()).toEqual(tmpEvent.type());
+
+			expect(testEvent.start()).toEqual(tmpEvent.start());
+
+			expect(testEvent.end()).toEqual(tmpEvent.end());
+
+			expect(testEvent.location()).toEqual(tmpEvent.location());
+
+			expect(testEvent.description()).toEqual(tmpEvent.description());
+
+			expect(testEvent.capacity()).toEqual(tmpEvent.capacity());
+
+			expect(testEvent.host().id()).toEqual(tmpEvent.host().id());
 
 		});
 

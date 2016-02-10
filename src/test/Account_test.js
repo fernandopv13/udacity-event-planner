@@ -17,7 +17,7 @@ function TestObserver() {
 
 	this.isUpdated = false;
 
-	this.isInstanceOf = function(fnc) {return fnc === app.IObserver;};
+	this.isInstanceOf = this.isInstanceOf || function(fnc) {return fnc === app.IObserver;};
 
 	this.update = function() {this.isUpdated = true;};
 }

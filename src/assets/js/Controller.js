@@ -45,6 +45,14 @@ app.Controller = function() {
 
 	_views // collection of views we need to keep track of
 
+	
+	/*----------------------------------------------------------------------------------------
+	* Public instance fields (non-encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+	
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
+							//any way in order to expose collection to default IObservable methods
+	
 		
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
@@ -139,13 +147,6 @@ app.Controller = function() {
 	*---------------------------------------------------------------------------------------*/
 	
 	// none so far
-	
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
-							//any way in order to expose collection to default IObservable methods
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -257,7 +258,7 @@ app.Controller = function() {
 	}
 
 
-	/** Initializes the controller
+	/** Sets up the MVC collaborators to observe/be observed by each other as required.
 	*
 	*/
 
@@ -282,7 +283,7 @@ app.Controller = function() {
 
 				this.registerObserver(_views[prop]);
 
-				_views[prop].registerObserver(this);
+				_views[prop].registerObserver(app.controller);
 			}
 
 
@@ -294,9 +295,10 @@ app.Controller = function() {
 
 				for (var prop in objList) {
 
-					objList[prop].registerObserver(app.controller);
+					objList[prop].registerObserver(this);
 				}
-			});
+
+			}.bind(this)); // make sure 'this' references controller correctly within loop
 
 
 		// Set some defaults to use until account creation/selection is ready
@@ -395,7 +397,9 @@ app.Controller = function() {
 /*----------------------------------------------------------------------------------------
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
-		
+
+// none so far
+
 
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor

@@ -267,14 +267,6 @@ describe('class Person', function(){
 		
 		// IHost testing
 
-		it('can tell if it is an instance of IHost', function() {
-
-			expect(testPerson.isInstanceOf(app.IHost)).toBe(true);
-
-			expect(testPerson.isInstanceOf(Error)).toBe(false);
-		});
-		
-		
 		it('can set and get its IHost hostName', function() {
 			
 			testPerson.hostName('testHostName');
@@ -297,7 +289,7 @@ describe('class Person', function(){
 
 			expect(testPerson.isInstanceOf(app.IInterfaceable)).toBe(true);
 
-			expect(testPerson.isInstanceOf(app.IModelable)).toBe(true);
+			expect(testPerson.isInstanceOf(app.IHost)).toBe(true);
 
 			expect(testPerson.isInstanceOf(Array)).toBe(false);
 		});

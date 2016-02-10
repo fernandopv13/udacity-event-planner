@@ -114,7 +114,7 @@ app.IObservable.prototype.default_registerObserver = function(IObserver_observer
 *
 * @param {IObserver} observer Object implementing IObserver interface
 *
-* @return {Boolean} The removed object if succesfull, otherwise null
+* @return {IObserver} The removed object if succesfull, otherwise null
 *
 * @throws {IllegalArgumentError} If observer is not an instance of IObserver
 *

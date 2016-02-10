@@ -271,26 +271,22 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Writes (serializes) registry and its contents to local storage */
+	/** Re-establishes references to complex members after they have been deserialized.
+	*
+	* (Method realization required by ISerializable.)
+	*/
 	
-	this.writeObject = function() {
-		
-		// Store registry object itself, calling default method as if own method
-		
-		app.ISerializable.prototype.default_writeObject.call(this);
-		
-		
-		// Store registry contents
+	this.onDeserialized = function() {
 		
 		for (var prop in _objectList) {
 			
-			_objectList[prop].writeObject();
+			_objectList[prop].onDeserialized();
 		}
 		
 		return true;
 	}
 	
-	
+		
 	/** Reads (deserializes) registry object itself from local storage */
 	
 	this.readObject = function() {
@@ -341,22 +337,6 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 	};
 	
 	
-	/** Re-establishes references to complex members after they have been deserialized.
-	*
-	* (Method realization required by ISerializable.)
-	*/
-	
-	this.onDeserialized = function() {
-		
-		for (var prop in _objectList) {
-			
-			_objectList[prop].onDeserialized();
-		}
-		
-		return true;
-	}
-	
-	
 	/** Converts registry contents to JSON objects
 	*
 	* (Method realization required by ISerializable.)
@@ -392,6 +372,25 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 		};
 	};
 	
+	
+	/** Writes (serializes) registry and its contents to local storage */
+	
+	this.writeObject = function() {
+		
+		// Store registry object itself, calling default method as if own method
+		
+		app.ISerializable.prototype.default_writeObject.call(this);
+		
+		
+		// Store registry contents
+		
+		for (var prop in _objectList) {
+			
+			_objectList[prop].writeObject();
+		}
+		
+		return true;
+	}
 	
 	/*----------------------------------------------------------------------------------------
 	* * Parameter parsing (constructor 'polymorphism')

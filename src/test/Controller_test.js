@@ -2,9 +2,9 @@
 
 /* Jasmine.js unit test suite for Controller class in meetup even planner application
 *
-*  This suite is designed to be able to be run as independently as possible from other tests
-*  and/or functionality. UI and other integration testing is done seperately.
-
+* This suite relies heavily on the rest of the MVC framework to be coded and working.
+*
+* Trying to create mocks for all the Model and View classes would far too burdensome.
 */
 
 describe('class Controller', function(){
@@ -37,9 +37,15 @@ describe('class Controller', function(){
 		});
 
 		
-		xit('can initialize', function() {
+		it('can initialize', function() {
 
+			app.init();
 
+			testController.init();
+
+			expect(app.controller.observers.length).toBeGreaterThan(0); // IViewables registered with controller
+
+			expect(app.Event.registry.getObjectById(0).removeObserver(testController)).toBe(testController); // controller registered with IModelables
 		});
 
 
@@ -107,5 +113,18 @@ describe('class Controller', function(){
 				expect(e.name).toBe('IllegalArgumentError');
 			}
 		});
+
+
+		// IInterfaceable testing
+
+		it('can tell if it is an implementation of a custom app interface', function() {
+
+			expect(testController.isInstanceOf(app.IObservable)).toBe(true);
+
+			expect(testController.isInstanceOf(app.IObserver)).toBe(true);
+
+			expect(testController.isInstanceOf(Array)).toBe(false);
+		});
+
 	});
 });

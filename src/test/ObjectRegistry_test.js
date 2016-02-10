@@ -39,6 +39,11 @@ describe('class ObjectRegistry', function(){
 			
 			this.id = function() {return this._id};
 			
+			this.onDeserialized = function() {
+
+				deSerializedCounter++;
+			};
+
 			this.toJSON = function() {
 				
 				return {
@@ -59,6 +64,8 @@ describe('class ObjectRegistry', function(){
 		app.TestType.registry = new app.ObjectRegistry(app.TestType, 'TestType');
 		
 		var testRegistry = app.TestType.registry;
+
+		var deSerializedCounter;
 		
 		
 		beforeEach(function() {
@@ -66,6 +73,8 @@ describe('class ObjectRegistry', function(){
 			app.TestType.registry.clear();// = new app.ObjectRegistry(app.TestType, 'TestType');
 		
 			app.TestType.cnt = 0;
+
+			deSerializedCounter = 0;
 		});
 		
 		
@@ -696,9 +705,26 @@ describe('class ObjectRegistry', function(){
 		});
 		
 				
-		xit('can re-establish object references when de-serializing from JSON', function(){
+		it('can re-establish object references when de-serializing from JSON', function(){
 			
+			var oldPermission = app.prefs.isLocalStorageAllowed();
 			
+			app.prefs.isLocalStorageAllowed(true);
+			
+			void new app.TestType();
+			
+			void new app.TestType();
+			
+			void new app.TestType();
+
+			expect(deSerializedCounter).toBe(0);
+
+			testRegistry.onDeserialized();
+
+			expect(deSerializedCounter).toBe(3);
+			
+
+			app.prefs.isLocalStorageAllowed(oldPermission);
 		});
 		
 		
