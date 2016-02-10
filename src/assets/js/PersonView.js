@@ -13,8 +13,6 @@ var app = app || {};
 * @implements IViewable
 *
 * @author Ulrik H. Gade, February 2016
-*
-* @todo 
 */
 
 app.PersonView = function(Person_person) {

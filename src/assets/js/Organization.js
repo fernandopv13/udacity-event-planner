@@ -147,7 +147,7 @@ app.Organization = function(str_name) {
 
 	/** Returns true if class implements the interface passed in (by function reference)
 	*
-	* (Method realization required by ISerializable.)
+	* (Method realization required by IInterfaceable.)
 	*
 	* @param {Function} interface The interface we wish to determine if this class implements
 	*

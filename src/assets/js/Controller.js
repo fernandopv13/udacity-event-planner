@@ -23,20 +23,6 @@ app.Controller = function() {
 	
 	var _implements = [app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
 
-	/*
-	_currentView, // viewmodel currently presented in the UI
-	
-	_accountView, // viewmodel handling the account form
-
-	_eventView, // viewmodel handling the event form
-
-	_eventListView, // viewmodel handling the event list
-
-	_guestView, // viewmodel handling the guest form
-
-	_guestListView, // viewmodel handling the guest list
-
-	*/
 	_selectedAccount = null, // the currently selected account, or null if none selected
 
 	_selectedEvent = null, // the currently selected event, or null if none selected
@@ -313,17 +299,17 @@ app.Controller = function() {
 	};
 
 	
-	/** Update in response to notifications from either UI or data model
+	/** Update in response to notifications from either UI or data model.
 	*
 	* Uses JS style 'polymorphism' to decide what to do when invoked.
 	*
-	* @param {Object} obj Reference to an IModelable or an IViewable.
+	* @param {Object} obj Reference to an IModelable or an IViewable. If an Imodelable and no id is provided, handles as a notification of a change to the data model.
 	*
 	* @param {int} id Object id (optional). If following an IViewable, handled as a click in a list of same IViewables. If following an IModelable, handled as submission of update to IModelable with same id.
 	*
 	* @return {void}
 	*
-	* @throws {IllegalMethodError} If obj is neither an IModelable nor an IViewable
+	* @throws {IllegalArgumentError} If obj is neither an IModelable nor an IViewable
 	*/
 
 	this.update = function(Object_obj, int_objId) {

@@ -66,7 +66,7 @@ IllegalArgumentError.prototype = Object.create(Error.prototype);
 IllegalArgumentError.prototype.constructor = IllegalArgumentError;
 
 
-/** Java-like error for when trying to instantiate an abstract class or interface (including interface methos signatures) */
+/** Java-like error for when trying to instantiate an abstract class or interface (including interface method signatures) */
 
 function InstantiationError(message) {
 	

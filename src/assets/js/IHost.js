@@ -36,12 +36,12 @@ app.IHost = function() {
 	* @throws {AbstractMethodError} If attempting to invoke (abstract) method signature
 	**/
 	
-	this.constructor.prototype.hostName = function () {
+	app.IHost.prototype.hostName = function () {
 		
 		throw new AbstractMethodError(app.IHost.prototype.hostName.errorMessage);
 	}
 	
-	this.constructor.prototype.hostName.errorMessage = 'Method signature "hostName()" must be implemented in derived classes';
+	app.IHost.prototype.hostName.errorMessage = 'Method signature "hostName()" must be implemented in derived classes';
 	
 
 	/** Tests whether object is an instance of a provided interface (by function reference).
@@ -57,18 +57,18 @@ app.IHost = function() {
 	* @throws {AbstractMethodError} If attempting to invoke (abstract) method signature
 	**/
 	
-	this.constructor.prototype.isInstanceOf = function () {
+	app.IHost.prototype.isInstanceOf = function () {
 		
 		throw new AbstractMethodError(app.IHost.prototype.isInstanceOf.errorMessage);
 	}
 	
-	this.constructor.prototype.isInstanceOf.errorMessage = 'Method signature "isInstanceOf()" must be implemented in derived classes';
+	app.IHost.prototype.isInstanceOf.errorMessage = 'Method signature "isInstanceOf()" must be implemented in derived classes';
 	
 	/*----------------------------------------------------------------------------------------
 	* Block instantiation
 	*---------------------------------------------------------------------------------------*/
 	
-	this.constructor.constructorErrorMessage = 'Interface IHost cannot be instantiated. Realize in derived classes.';
+	app.IHost.constructorErrorMessage = 'Interface IHost cannot be instantiated. Realize in derived classes.';
 	
-	throw new InstantiationError(this.constructor.constructorErrorMessage);
+	throw new InstantiationError(app.IHost.constructorErrorMessage);
 }

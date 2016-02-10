@@ -43,9 +43,9 @@ app.ISerializable = function() {
 	app.ISerializable.prototype.className.errorMessage = 'Method signature "className()" must be realized in derived classes';
 	
 	
-	/** Gets object's unique id
+	/** Gets object's unique id.
 	*
-	* Inherited methods do not have access to private members, so can't provide default.
+	* Inherited methods do not have access to private members, so can't provide default method.
 	*
 	* @return {int} ID Object's unique ID (by class)
 	*/
@@ -136,7 +136,7 @@ app.ISerializable.prototype.default_writeObject = function() {
 
 /** Desirializes object from JSON in local storage. Expected to be called from within constructor of class implementing ISerializable when invoked with a single, integer parameter. Does most of the work of re-instantiation, loosely in the style of the similarly named Java Serialize API method.
 *
-* Automatically parses primitive private attributes in JSON that have unified standard accessors. Re-referencing of more complex objects has to wait until this process has completed for all primary classes in the app, making the objects available in memory.
+* Automatically parses primitive private attributes in JSON that have unified standard accessors. Re-referencing of more complex objects has to wait until this process has completed for all serializable classes in the app, making the objects available in memory.
 *
 * Assumptions made: Private attribute names are prefixed with a single underscore (e.g. '_privateAttr'). Standard accessors have the same name as the attribute they set, except for removing any leading underscore (e.g. 'privateAttr()'). They can both set and get the value of the attribute (hence 'unified'), and manage basic validation and error handling.
 *

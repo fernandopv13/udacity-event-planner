@@ -6,15 +6,13 @@
 
 var app = app || {};
 
-/** @classdesc ViewObject for individual accounts. Renders account in UI, and captures UI accounts on account.
+/** @classdesc ViewObject for individual accounts. Renders account in UI, and captures UI events on account.
 *
 * @constructor
 *
 * @implements IViewable
 *
 * @author Ulrik H. Gade, February 2016
-*
-* @todo 
 */
 
 app.AccountView = function(Account_account) {
@@ -98,7 +96,7 @@ app.AccountView = function(Account_account) {
 	};
 	*/
 
-	/** (Re)renders account to form in UI
+	/** Renders account to form in UI
 	*
 	* @param {Account} The account from which to present data in the form
 	*

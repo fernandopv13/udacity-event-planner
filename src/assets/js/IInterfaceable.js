@@ -8,7 +8,7 @@ var app = app || {}; // create a simple namespace for the module
 *********************************************************************************************/
 
 /** @classdesc Base interface for our Java-like interface mechanism. Guarantees behaviours
-* that all classes using using the mechanism must support, and provides utility methods.
+* that all classes using the mechanism must support, and provides utility methods.
 *
 * @constructor
 *

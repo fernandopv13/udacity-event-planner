@@ -11,7 +11,7 @@ var app = app || {}; // create a simple namespace for the module
 *
 * Presents information from the data model in the UI. Handles all UI related work.
 *
-* Extension of IObservable and IObserver implemented as mixins in realizing classes, using interfaceHelper.js.
+* Extension of IObservable and IObserver implemented as mixins in realizing classes, using static method in IInterfaceable.
 *
 * IViewables must only notify observers as a direct result of user actions in the UI. Otherwise the MVC objects will likely enter an infinite update loop.
 *

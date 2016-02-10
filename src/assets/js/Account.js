@@ -25,7 +25,7 @@ var app = app || {};
 *
 * @return {Account} An account instance
 
-* @throws Same errors as email and password accessors if passing in invalid data.
+* @throws Same errors as accessors for attribute values passed in, if invalid.
 *
 * @author Ulrik H. Gade, January 2016
 *
@@ -548,7 +548,10 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 
-/** Provides registry and unique object ID services to this class  */
+/** Provides registry and unique object ID services to this class.
+*
+* See ObjectRegistry class for further documentation.
+*/
 
 app.Account.registry = new app.ObjectRegistry(app.Account, 'Account');
 
