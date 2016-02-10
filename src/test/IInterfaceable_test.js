@@ -23,6 +23,53 @@ describe('Interface IInterfaceable', function(){
 	});
 	
 
+	it('can mix default methods from an interface into a custom class', function() {
+
+		function TestInterface() {}
+
+		TestInterface.prototype.default_someMethod = function() {return 'default someMethod() called';};
+
+		function TestClass() {
+
+			TestClass.prototype.someInstanceMethod = function() {return 'someInstanceMethod() called';};
+		}
+
+		app.IInterfaceable.mixInto(TestInterface, TestClass);
+
+		var testObj = new TestClass();
+
+		expect(testObj.someMethod()).toBe('default someMethod() called');
+
+		expect(testObj.someInstanceMethod()).toBe('someInstanceMethod() called');
+	});
+
+
+	it('respects local overrides when mixing default methods from an interface into a custom class', function() {
+
+		function TestInterface() {}
+
+		TestInterface.prototype.default_someMethod = function() {return 'default someMethod() called';};
+
+		
+		function TestClass() {
+
+			TestClass.prototype.someInstanceMethod = function() {return 'someInstanceMethod() called';};
+
+			TestClass.prototype.someMethod = function() {return 'local someMethod() called';};
+		}
+
+		// To-do: Test for inheritence via TestClass' prototype chain. (Should work, but better to verify.)
+
+		app.IInterfaceable.mixInto(TestInterface, TestClass);
+
+		var testObj = new TestClass();
+
+		expect(testObj.someMethod()).toBe('local someMethod() called');
+
+		expect(testObj.someInstanceMethod()).toBe('someInstanceMethod() called');
+	});
+
+	
 	it('defines an isInstanceOf() method signature', function() {
 			
 		// verify that method signature exists
