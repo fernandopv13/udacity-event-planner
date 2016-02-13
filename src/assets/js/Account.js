@@ -146,15 +146,15 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	};
 
 
-	/** Gets or sets default location for the account
+	/** Gets or sets default location for the account. Location may be a string with the position's name, or a Position object
 	*
 	* @param {String} location The default location (as a string with the location's name)
 	*
-	* @param {Position} location The default location (as a GPS Position object)
+	* @param {Position} location The default location (as a geolocation API Position object)
 	*
-	* @return {Object} The default capacity
+	* @return {Object} The default location
 	*
-	* @throws {IllegalArgumentError} If attempting to set capacity that is neither a string nor an Position
+	* @throws {IllegalArgumentError} If attempting to set location that is neither a string nor an Position
 	*/
 	
 	this.defaultLocation = function (obj_location) {
@@ -485,7 +485,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 			_defaultCapacity: _defaultCapacity,
 
-			_defaultLocation: _defaultLocation ? {_className: _defaultLocation.className(), _id: _defaultLocation.id()} : undefined,
+			_defaultLocation: _defaultLocation,
 
 			_geoLocationAllowed: _geoLocationAllowed,
 
@@ -527,13 +527,13 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 			this.password(Account_account.password());
 
-			this.accountholder(Account_account.account() ? Account_account.accountholder() : null);
+			this.accountHolder(Account_account.accountHolder() ? Account_account.accountHolder() : null);
 
 			this.defaultCapacity(Account_account.defaultCapacity());
 
 			this.defaultLocation(Account_account.defaultLocation());
 
-			this.geolocationAllowed(Account_account.geolocationAllowed());
+			this.geoLocationAllowed(Account_account.geoLocationAllowed());
 
 			this.localStorageAllowed(Account_account.localStorageAllowed());
 			
@@ -553,7 +553,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 			// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
 
-			app.Event.registry.remove(Account_account);
+			app.Account.registry.remove(Account_account);
 
 			Account_account = undefined;
 

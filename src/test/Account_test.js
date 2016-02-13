@@ -494,9 +494,11 @@ describe('class Account', function(){
 
 			var id = testAccount.id();
 			
-			testAccount.email(new app.Email('aname@serv.com');
+			testAccount.email(new app.Email('aname@serv.com'));
 
-			testAccount.password(new app.Password('HDF#!3245hrtshys');
+			testAccount.password(new app.Password('HDF#!3245hrtshys'));
+
+			testAccount.defaultLocation('New York');
 
 
 			// Create temporary object to copy from
@@ -515,6 +517,8 @@ describe('class Account', function(){
 			tmpAccount.geoLocationAllowed(true);
 
 			tmpAccount.defaultCapacity(100);
+
+			tmpAccount.defaultLocation('San Francisco');
 
 			var tmpId = tmpAccount.id();
 
@@ -537,7 +541,7 @@ describe('class Account', function(){
 
 				expect(testAccount.defaultCapacity()).not.toEqual(tmpAccount.defaultCapacity());
 
-				//skipping location for now
+				expect(testAccount.defaultLocation()).not.toEqual(tmpAccount.defaultLocation());
 
 
 			// Copy data from temporary object
@@ -559,7 +563,7 @@ describe('class Account', function(){
 
 			expect(testAccount.defaultCapacity()).toEqual(tmpAccount.defaultCapacity());
 
-			//skipping location for now
+			expect(testAccount.defaultLocation()).toEqual(tmpAccount.defaultLocation());
 
 
 			// Verify that temporary object has been removed from registry

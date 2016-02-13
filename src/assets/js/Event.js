@@ -283,6 +283,36 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 
 
+	/** Gets or sets default location for the event. Location may be a string with the position's name, or a Position object
+	*
+	* @param {String} location The default location (as a string with the location's name)
+	*
+	* @param {Position} location The default location (as a geolocation API Position object)
+	*
+	* @return {Object} The location
+	*
+	* @throws {IllegalArgumentError} If attempting to set location that is neither a string nor an Position
+	*/
+	
+	this.location = function (obj_location) {
+	
+		if (arguments.length > 0) {
+
+			if (typeof obj_location === 'string' || obj_location.coords) {
+			
+				_location = obj_location;
+			}
+
+			else {
+			
+				throw new IllegalArgumentError('Location must be a string or a Position')
+			}
+		}
+		
+		return _location;
+	};
+
+
 	/** Gets or sets location
 	*
 	* @param {String} location The location of the event (optional, supply if setting)
@@ -290,6 +320,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* @return {String} The location of the event
 	*/
 	
+	/*
 	this.location = function (str_location) {
 		
 		if (arguments.length !== 0) {
@@ -299,6 +330,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		return _location;
 	};
+	*/
 	
 	
 	/** Gets or sets name
