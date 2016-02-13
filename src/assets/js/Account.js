@@ -235,8 +235,6 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 			if (Boolean_permission.constructor === Boolean) {
 			
-				console.log(Boolean_permission);
-
 				_geoLocationAllowed = Boolean_permission;
 			}
 
@@ -528,7 +526,9 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	app.Account.prototype.update = function(Account_account, int_objId) {
 
-		if (Account_account.constructor !== app.Account) { // wrong class
+		var source = Account_account;
+
+		if (source.constructor !== app.Account) { // wrong class
 
 			throw new IllegalArgumentError('Object must be instance of Account');
 		}
@@ -542,20 +542,20 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 			// Update using accessors (for validation)
 
-			this.email(Account_account.email());
+			this.email(source.email());
 
-			this.password(Account_account.password());
+			this.password(source.password());
 
-			this.accountHolder(Account_account.accountHolder() ? Account_account.accountHolder() : null);
+			this.accountHolder(source.accountHolder() ? source.accountHolder() : null);
 
-			this.defaultCapacity(Account_account.defaultCapacity());
+			this.defaultCapacity(source.defaultCapacity());
 
-			this.defaultLocation(Account_account.defaultLocation());
+			this.defaultLocation(source.defaultLocation());
 
-			this.geoLocationAllowed(Account_account.geoLocationAllowed());
+			this.geoLocationAllowed(source.geoLocationAllowed());
 
-			this.localStorageAllowed(Account_account.localStorageAllowed());
-			
+			this.localStorageAllowed(source.localStorageAllowed());
+		
 			
 			// Write new state to local storage, if available
 

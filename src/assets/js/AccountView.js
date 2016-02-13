@@ -380,6 +380,7 @@ app.AccountView = function(Account_account) {
 			
 			// Add account holder field
 
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -429,16 +430,19 @@ app.AccountView = function(Account_account) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+				*/
 
 
 			// Add hidden account holder id field
 
+				/*
 				containerDiv.appendChild(this.createElement({
 
 					element: 'input',
 
 					attributes: {id: 'account-holder-id', type: 'hidden', value: account.accountHolder() ? account.accountHolder().id(): ''}
 				}));
+				*/
 
 			
 			// Add default event capacity field
@@ -654,7 +658,14 @@ app.AccountView = function(Account_account) {
 				{	
 					element: 'input',			
 					
-					attributes: {id: 'account-localstorage', type: 'checkbox'}
+					attributes: (function(){
+
+						var attr = {id: 'account-localstorage', type: 'checkbox'};
+
+						if (account.localStorageAllowed()) {attr.checked = true;}
+
+						return attr;
+					})()
 				}));
 
 				
@@ -771,7 +782,14 @@ app.AccountView = function(Account_account) {
 				{	
 					element: 'input',			
 					
-					attributes: {id: 'account-geolocation', type: 'checkbox'}
+					attributes: (function(){
+
+						var attr = {id: 'account-geolocation', type: 'checkbox'};
+
+						if (account.geoLocationAllowed()) {attr.checked = true;}
+
+						return attr;
+					})()
 				}));
 
 				
@@ -875,7 +893,7 @@ app.AccountView = function(Account_account) {
 			
 			// Update DOM
 
-				$formDiv = $('#account-form');
+				$formDiv = $('#account-settings-form');
 
 				$formDiv.empty();
 

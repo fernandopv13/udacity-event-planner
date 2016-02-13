@@ -12,16 +12,22 @@ var app = app || {};
 *
 * @implements IViewable
 *
+* @param (String) renderContext Id of the HTML DOM element the PersonView is bound to
+*
 * @author Ulrik H. Gade, February 2016
 */
 
-app.PersonView = function(Person_person) {
+app.PersonView = function(str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IObservable, app.IObserver, app.IViewable]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IObservable, app.IObserver, app.IViewable], // list of interfaces implemented by this class (by function reference);
+
+	$_renderContext = $('#' + str_elementId),
+
+	_heading = str_heading;
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -156,7 +162,7 @@ app.PersonView = function(Person_person) {
 
 					element: 'h4',
 
-					innerHTML: 'Edit Guest'
+					innerHTML: _heading
 
 				}));
 
@@ -557,11 +563,15 @@ app.PersonView = function(Person_person) {
 			
 			// Update DOM
 
-				$formDiv = $('#guest-form');
+				//$formDiv = $('#guest-form');
 
-				$formDiv.empty();
+				//$formDiv.empty();
 
-				$formDiv.append(formElement);
+				//$formDiv.append(formElement);
+
+				$_renderContext.empty();
+
+				$_renderContext.append(formElement);
 
 
 			// (Re)assign event handlers to form elements
@@ -585,17 +595,20 @@ app.PersonView = function(Person_person) {
 
 		else { // present default message
 
-			$formDiv = $('#guest-form');
+			//$formDiv = $('#guest-form');
 
-			$formDiv.empty();
+			//$formDiv.empty();
 
-			$formDiv.append(this.createElement(
+			//$formDiv.append(this.createElement(
+			
+			$_renderContext.empty();
+
+			$_renderContext.append(
 			{
-
 				element: 'p',
 
 				innerHTML: 'No guest selected. Please select or create a guest in order to edit details.'
-			}));
+			});
 		}
 	};
 
