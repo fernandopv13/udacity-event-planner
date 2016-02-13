@@ -17,31 +17,7 @@ describe('class Email', function(){
 		});
 	
 	
-	it('implements the IInterfaceable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.InterfaceTester.isImplementationOf(app.Email, app.IInterfaceable)).toBe(true);
-	});
-
-	
-	xit('implements the IModelable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.InterfaceTester.isImplementationOf(app.Email, app.IModelable)).toBe(true);
-	});
-
-
-	it('implements the IObservable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.InterfaceTester.isImplementationOf(app.Email, app.IObservable)).toBe(true);
-	});
-
-
-	xit('implements the IObserver interface', function() { // uses InterfaceTester.js
-		
-			expect(app.InterfaceTester.isImplementationOf(app.Email, app.IObserver)).toBe(true);
-	});
-
-
-	it('implements the ISerializable interface', function() { // uses Interface.js
+	it('implements the ISerializable interface', function() { // uses IInterface.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Email, app.ISerializable)).toBe(true);
 	});
@@ -166,18 +142,6 @@ describe('class Email', function(){
 		});
 		
 		
-		// IInterfaceable testing
-
-		it('can tell if it is an implementation of a custom app interface', function() {
-
-			expect(testMail.isInstanceOf(app.IInterfaceable)).toBe(true);
-
-			expect(testMail.isInstanceOf(app.IModelable)).toBe(true);
-
-			expect(testMail.isInstanceOf(Array)).toBe(false);
-		});
-
-
 		// ISerializable testing
 
 		it('can get its class name', function() {

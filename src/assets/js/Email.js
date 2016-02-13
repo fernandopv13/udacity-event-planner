@@ -4,16 +4,12 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Email implements IInterfaceable, IModelable, ISerializable
+* public class Email implements ISerializable
 **********************************************************************************************/
 
 /** @classdesc Describes an email address.
 *
 * @constructor
-*
-* @implements IInterfaceable
-*
-* @implements IModelable
 *
 * @implements ISerializable
 **
@@ -200,10 +196,10 @@ app.Email = function(str_address) {
 	* (See IInterfaceable for further documentation.)
 	*/
 	
-	this.isInstanceOf = function (func_interface) {
+	/*this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
-	};
+	};*/
 
 
 	
@@ -305,14 +301,6 @@ app.Email.registry = new app.ObjectRegistry(app.Email, 'Email');
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
-
-void app.IInterfaceable.mixInto(app.IInterfaceable, app.Email);
-
-void app.IInterfaceable.mixInto(app.IModelable, app.Email);
-
-void app.IInterfaceable.mixInto(app.IObservable, app.Email);
-
-void app.IInterfaceable.mixInto(app.IObserver, app.Email);
 
 void app.IInterfaceable.mixInto(app.ISerializable, app.Email);
 

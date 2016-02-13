@@ -619,7 +619,15 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		if (Password_password) {this.password(Password_password);}
 
-		if (Person_accountHolder) {this.accountHolder(Person_accountHolder);}
+		if (Person_accountHolder) { // use provided person if available
+
+			this.accountHolder(Person_accountHolder);
+		}
+
+		else { // otherwise provide empty template (for account profile)
+
+			this.accountHolder(new app.Person);
+		}
 	}
 
 	

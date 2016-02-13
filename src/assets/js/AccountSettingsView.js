@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /**********************************************************************************************
-* public class AccountView Implements IViewable
+* public class AccountSettingsView Implements IViewable
 **********************************************************************************************/
 
 var app = app || {};
@@ -19,7 +19,7 @@ var app = app || {};
 * @author Ulrik H. Gade, February 2016
 */
 
-app.AccountView = function(str_elementId, str_heading) {
+app.AccountSettingsView = function(str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
@@ -63,7 +63,7 @@ app.AccountView = function(str_elementId, str_heading) {
 	* @todo Everything(!)
 	*/
 
-	app.AccountView.prototype.cancel = function() {
+	app.AccountSettingsView.prototype.cancel = function() {
 
 		// do something!
 	}
@@ -95,7 +95,7 @@ app.AccountView = function(str_elementId, str_heading) {
 	 */
 
 	/*
-	app.AccountView.prototype.notifyObservers = function(IModelable_account, int_objId) {
+	app.AccountSettingsView.prototype.notifyObservers = function(IModelable_account, int_objId) {
 
 		this.observers.forEach(function(observer) {
 
@@ -113,7 +113,7 @@ app.AccountView = function(str_elementId, str_heading) {
 	* @todo Get character counter to work on description field
 	 */
 	
-	app.AccountView.prototype.render = function(Account_account) {
+	app.AccountSettingsView.prototype.render = function(Account_account) {
 
 		var account = Account_account,
 
@@ -951,7 +951,7 @@ app.AccountView = function(str_elementId, str_heading) {
 	* @todo Fix host hack
 	*/
 
-	app.AccountView.prototype.submit = function() {
+	app.AccountSettingsView.prototype.submit = function() {
 
 		// Account handler binds to this, so reference works here
 		
@@ -990,7 +990,7 @@ app.AccountView = function(str_elementId, str_heading) {
 
 	/** Updates account presentation when notified by controller of change */
 	
-	app.AccountView.prototype.update = function(IModelable_account) {
+	app.AccountSettingsView.prototype.update = function(IModelable_account) {
 		
 		this.render(IModelable_account);
 	};
@@ -1001,7 +1001,7 @@ app.AccountView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
-	app.AccountView.prototype.validateName = function(account) {
+	app.AccountSettingsView.prototype.validateName = function(account) {
 
 		var $name = $('#account-name');
 
@@ -1050,8 +1050,8 @@ app.AccountView = function(str_elementId, str_heading) {
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.IInterfaceable.mixInto(app.IObservable, app.AccountView);
+void app.IInterfaceable.mixInto(app.IObservable, app.AccountSettingsView);
 
-void app.IInterfaceable.mixInto(app.IObserver, app.AccountView);
+void app.IInterfaceable.mixInto(app.IObserver, app.AccountSettingsView);
 
-void app.IInterfaceable.mixInto(app.IViewable, app.AccountView);
+void app.IInterfaceable.mixInto(app.IViewable, app.AccountSettingsView);

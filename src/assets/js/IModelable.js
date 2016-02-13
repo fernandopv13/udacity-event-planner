@@ -9,9 +9,11 @@ var app = app || {}; // create a simple namespace for the module
 
 /** @classdesc Main interface for the 'M' part of our MVC framework. Holds information about data in the app.
 *
-* For now, mostly placeholder enabling loosely coupled messaging among MVC collaborators.
+* Enables loosely coupled messaging among main MVC collaborators.
 *
-* Extension of parent interfaces implemented as mixins in realizing classes, using static method in IInterface.
+* Secondary helper objects in the data model (e.g. Email, Password) are exempt from implementing this interface.
+*
+* (Extension of parent interfaces implemented as mixins in realizing classes, using static method in IInterface.)
 *
 * @extends IObservable
 *

@@ -17,30 +17,6 @@ describe('class Password', function(){
 		});
 	
 	
-	it('implements the IInterfaceable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.InterfaceTester.isImplementationOf(app.Password, app.IInterfaceable)).toBe(true);
-	});
-
-	
-	xit('implements the IModelable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.InterfaceTester.isImplementationOf(app.Password, app.IModelable)).toBe(true);
-	});
-
-
-	it('implements the IObservable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.InterfaceTester.isImplementationOf(app.Password, app.IObservable)).toBe(true);
-	});
-
-
-	xit('implements the IObserver interface', function() { // uses InterfaceTester.js
-		
-			expect(app.InterfaceTester.isImplementationOf(app.Password, app.IObserver)).toBe(true);
-	});
-
-
 	it('implements the ISerializable interface', function() { // uses InterfaceTester.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Password, app.ISerializable)).toBe(true);
@@ -226,18 +202,6 @@ describe('class Password', function(){
 		});
 		
 		
-		// IInterfaceable testing
-
-		it('can tell if it is an implementation of a custom app interface', function() {
-
-			expect(testPassword.isInstanceOf(app.IInterfaceable)).toBe(true);
-
-			expect(testPassword.isInstanceOf(app.IModelable)).toBe(true);
-
-			expect(testPassword.isInstanceOf(Array)).toBe(false);
-		});
-
-
 		// ISerializable testing
 
 		it('can get its class name', function() {

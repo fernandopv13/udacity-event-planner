@@ -4,16 +4,12 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Password implements IInterfaceable, IModelable, ISerializable
+* public class Password implements ISerializable
 **********************************************************************************************/
 
 /** @classdesc Describes a password.
 *
 * @constructor
-*
-* @implements IInterfaceable
-*
-* @implements IModelable
 *
 * @implements  ISerializable
 *
@@ -175,10 +171,12 @@ app.Password = function(str_password) {
 	* (See IInterfaceable for further documentation.)
 	*/
 	
+	/*
 	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
+	*/
 	
 
 	/** Re-establishes references to complex members after they have been deserialized

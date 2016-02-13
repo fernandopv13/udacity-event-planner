@@ -118,6 +118,12 @@ describe('class Account', function(){
 	});
 
 
+	it('supplies a default account holder if none is provided in the instructor', function() {
+			
+			expect((new app.Account()).accountHolder()).toBeDefined();
+	});
+
+
 	it('has an object registry', function() {
 		
 		expect(app.Account.registry.constructor).toBe(app.ObjectRegistry);

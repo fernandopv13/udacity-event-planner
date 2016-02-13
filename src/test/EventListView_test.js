@@ -41,7 +41,7 @@ describe('class EventListView', function(){
 
 			testAccount = new app.Account(new app.Email('some@server.domain'), new app.Password('ABCD!efgh4'));
 
-			testView = new app.EventListView(testAccount);
+			testView = new app.EventListView('event-list', 'Event List View Test');
 		});
 
 		

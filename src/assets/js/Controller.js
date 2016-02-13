@@ -204,13 +204,13 @@ app.Controller = function() {
 
 			switch (observer.constructor) {
 
-				//case app.AccountListView // account list
+				case app.AccountSettingsView: // account settings form
 
-					//
+					observer.update(_selectedAccount);
 
-					//break;
+					break;
 
-				case app.AccountView: // account form
+				case app.AccountProfileView: // account profile form
 
 					observer.update(_selectedAccount);
 
@@ -254,9 +254,9 @@ app.Controller = function() {
 
 			_views =
 			{
-				accountSettingsView: new app.AccountView('account-settings-form', 'Account Settings'), // account settings form (email, password and prefs)
+				accountSettingsView: new app.AccountSettingsView('account-settings-form', 'Account Settings'), // account settings form (email, password and prefs)
 
-				//accountProfileView: new app.PersonView('account-profile-form', 'Account Profile'), // account holder profile
+				accountProfileView: new app.AccountProfileView('account-profile-form', 'Account Profile'), // account holder profile
 
 				eventListView: new app.EventListView('event-list', 'My Events'), // event list
 
@@ -275,11 +275,11 @@ app.Controller = function() {
 			}
 
 
-		// Register controller as observer of every object in the data model
+		// Register controller as observer of every IModelable in the data model
 
-			app.registry.getObjectList().forEach(function(registry){
+			[app.Account, app.Event, app.Organization, app.Person].forEach(function(klass){
 
-				var objList = registry.getObjectList();
+				var objList = klass.registry.getObjectList();
 
 				for (var prop in objList) {
 
@@ -289,7 +289,7 @@ app.Controller = function() {
 			}.bind(this)); // make sure 'this' references controller correctly within loop
 
 
-		// Set some defaults to use until account creation/selection is ready
+		// Set some defaults to use until account creation/selection is developed
 
 			this.onAccountSelected(0); //debug
 
