@@ -39,27 +39,27 @@ describe('class EventListView', function(){
 
 		beforeEach(function(){
 
-			testAccount = new app.Account('Test event');
+			testAccount = new app.Account(new app.Email('some@server.domain'), new app.Password('ABCD!efgh4'));
 
 			testView = new app.EventListView(testAccount);
 		});
 
 		
-		xit('can render itself into list item format', function() {
+		it('can render itself into the DOM', function() {
 
-			var el = testView.render();
-			
-			expect(el.constructor).toBe(HTMLLIElement);
+			var $list = $('#event-list');
 
-			expect(el.classList[0]).toBe('collection-item');
+			$list.empty();
 
-			expect(el.firstChild.constructor).toBe(HTMLDivElement);
+			expect($list.children().first().is('ul')).toBe(false);
 
-			expect(el.firstChild.lastChild.constructor).toBe(HTMLAnchorElement);
+			testView.render(testAccount);
+
+			expect($list.children().first().is('ul')).toBe(true); // a u-list was rendered to the DOM
 		});
 
 
-		xit('can update its UI presentation when receiving notification from the controller', function() {
+		xit('can update itself when receiving notification from the controller', function() {
 
 
 		});

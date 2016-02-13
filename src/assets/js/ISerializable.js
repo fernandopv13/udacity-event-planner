@@ -123,6 +123,7 @@ app.ISerializable.prototype.default_writeObject = function() {
 	try { // several things may fail here...
 		
 		localStorage.setItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id(), JSON.stringify(this));
+
 	}
 	
 	catch(e) { // ...so, for now, just bubble up the native error
@@ -241,12 +242,16 @@ app.ISerializable.prototype.default_readObject = function(arr_exclusions) {
 	
 		var exclusions = arr_exclusions || []; exclusions.push('_className');  exclusions.push('_id');
 		
+		//console.log(obj_json);
+
 		for (var prop in obj_json) {
 			
 			if (exclusions.indexOf(prop) === -1) { // skip props in exclusions list
 			
 				// call accessor (assumed have same name as property, except popping leading underscore)
 				
+				//console.log(prop);
+
 				this[prop.slice(1)](obj_json[prop]);
 			}
 			

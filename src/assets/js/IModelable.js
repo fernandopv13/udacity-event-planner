@@ -9,7 +9,7 @@ var app = app || {}; // create a simple namespace for the module
 
 /** @classdesc Main interface for the 'M' part of our MVC framework. Holds information about data in the app.
 *
-* For now, just an empty placeholder enabling loosely coupled messaging among MVC collaborators.
+* For now, mostly placeholder enabling loosely coupled messaging among MVC collaborators.
 *
 * Extension of parent interfaces implemented as mixins in realizing classes, using static method in IInterface.
 *
@@ -34,15 +34,31 @@ app.IModelable = function() {
 	* Method signatures
 	*---------------------------------------------------------------------------------------*/
 	
-	// none so far
+	/** Update data model in reponse to UI event
+	*
+	* @param {IModelable} obj Temporary object holding the updated information. Is of same class as Modelable itself.
+	*
+	* @param {int} id ID of the object to be updated
+	*
+	* @return {void}
+	*
+	* @throws {AbstractMethodError} If attempting to invoke directly on interface (abstract method signature)
+	*/
+
+	app.IModelable.prototype.update = function(IModelable) {
+		
+		throw new AbstractMethodError(app.IModelable.prototype.update.errorMessage);
+	};
+	
+	app.IModelable.prototype.update.errorMessage = 'Method signature "update()" must be realized in implementing classes';
 	
 	/*----------------------------------------------------------------------------------------
 	* Block instantiation
 	*---------------------------------------------------------------------------------------*/
 	
-	this.constructor.constructorErrorMessage = 'Interface IModelable cannot be instantiated. Realize in implementing classes.';
+	app.IModelable.constructorErrorMessage = 'Interface IModelable cannot be instantiated. Realize in implementing classes.';
 	
-	throw new InstantiationError(this.constructor.constructorErrorMessage);
+	throw new InstantiationError(app.IModelable.constructorErrorMessage);
 }
 
 /*----------------------------------------------------------------------------------------

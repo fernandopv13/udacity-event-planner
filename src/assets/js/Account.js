@@ -127,7 +127,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	* @throws {IllegalArgumentError} If attempting to set capacity that is not a positive integer
 	*/
 	
-	this.defaultEventCapacity = function (int_capacity) {
+	this.defaultCapacity = function (int_capacity) {
 	
 		if (arguments.length > 0) {
 
@@ -217,7 +217,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	* @throws {IllegalArgumentError} If attempting to set permission with other than a Boolean
 	*/
 	
-	this.geolocationAllowed = function (Boolean_permission) {
+	this.geoLocationAllowed = function (Boolean_permission) {
 	
 		if (arguments.length > 0) {
 
@@ -395,6 +395,38 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		return _implements.indexOf(func_interface) > -1;
 	};
 
+	
+	/** Re-establishes references to complex members after they have been deserialized.
+	*
+	* (Method realization required by ISerializable.)
+	*
+	* @return {Boolean} true if successful
+	*
+	* @todo Return false or throw error if not successful, or void
+	*/
+	
+	this.onDeserialized = function() { // Replace IDs with references to objects of that ID
+		
+		// Verify that properties exist and are likely to be temporary literals left by readObject() before assigning references
+		
+		if (_email && _email.constructor !== app.Email && _email._className === 'Email') {
+		
+			_email = app.Email.registry.getObjectById(_email._id);
+		}
+
+		if (_password && _password.constructor !== app.Password && _password._className === 'Password') {
+		
+			_password = app.Password.registry.getObjectById(_password._id);
+		}
+
+		if (_accountHolder && _accountHolder.constructor !== app.Person && _accountHolder._className === 'Person') {
+		
+			_accountHolder = app.Person.registry.getObjectById(_accountHolder._id);
+		}
+
+		return true;
+	}
+		
 
 	/** Removes event from account
 	*
@@ -428,52 +460,6 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		return obj_event;
 	};
 
-	
-	/** Re-establishes references to complex members after they have been deserialized.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {Boolean} true if successful
-	*
-	* @todo Return false or throw error if not successful, or void
-	*/
-	
-	this.onDeserialized = function() { // Replace IDs with references to objects of that ID
-		
-		// Verify that properties exist and are likely to be temporary literals left by readObject() before assigning references
-		
-		if (_email && _email.constructor !== app.Email && _email._className === 'Email') {
-		
-			_email = app.Email.registry.getObjectById(_email._id);
-		}
-
-		if (_password && _password.constructor !== app.Password && _password._className === 'Password') {
-		
-			_password = app.Password.registry.getObjectById(_password._id);
-		}
-
-		if (_accountHolder && _accountHolder.constructor !== app.Person && _accountHolder._className === 'Person') {
-		
-			_accountHolder = app.Person.registry.getObjectById(_accountHolder._id);
-		}
-		
-		return true;
-	}
-	
-	
-	/** Updates account when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Account} account Object holding the data to update this event with
-	*
-	* @return {Boolean} true if copy was successful, else error or false
-	*
-	* @todo Not implemented
-	*/
-
-	//app.Account.prototype.update = function(Account_account, int_objId) {}
-
 
 	/** Converts Account state to JSON object
 	*
@@ -481,6 +467,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	*
 	* @return {Object} JSON object representation of account (used to override default behaviour of JSON.stringify())
 	*/
+
 
 	this.toJSON = function() { // we need private access so no prototype inheritance here
 		
@@ -494,11 +481,90 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 			_password: _password ? {_className: _password.className(), _id: _password.id()} : undefined,
 
-			_accountHolder: _accountHolder ? {_className: _accountHolder.className(), _id: _accountHolder.id()} : undefined
+			_accountHolder: _accountHolder ? {_className: _accountHolder.className(), _id: _accountHolder.id()} : undefined,
+
+			_defaultCapacity: _defaultCapacity,
+
+			_defaultLocation: _defaultLocation ? {_className: _defaultLocation.className(), _id: _defaultLocation.id()} : undefined,
+
+			_geoLocationAllowed: _geoLocationAllowed,
+
+			_localStorageAllowed: _localStorageAllowed
 		};
 	};
 	
-	
+		
+	/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
+	*
+	* (See IObserver for further documentation.)
+	*
+	* @param {Account} account Object holding the data to update with
+	*
+	* @return {Boolean} true if copy was successful, else error or false
+	*
+	* @throws {IllegalArgumentError} If object provided is not an instance of Account
+	*
+	* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+	*/
+
+	app.Account.prototype.update = function(Account_account, int_objId) {
+
+		if (Account_account.constructor !== app.Account) { // wrong class
+
+			throw new IllegalArgumentError('Object must be instance of Account');
+		}
+
+		else if (this.id() !== int_objId) { // id mismatch
+
+			throw new IllegalArgumentError('Objects IDs don\'t match');
+		}
+
+		else {
+
+			// Update using accessors (for validation)
+
+			this.email(Account_account.email());
+
+			this.password(Account_account.password());
+
+			this.accountholder(Account_account.account() ? Account_account.accountholder() : null);
+
+			this.defaultCapacity(Account_account.defaultCapacity());
+
+			this.defaultLocation(Account_account.defaultLocation());
+
+			this.geolocationAllowed(Account_account.geolocationAllowed());
+
+			this.localStorageAllowed(Account_account.localStorageAllowed());
+			
+			
+			// Write new state to local storage, if available
+
+			if (this.localStorageAllowed() && window.localStorage) {
+
+				this.writeObject();
+			}
+
+			
+			// Notify observers (i.e. controller)
+
+			this.notifyObservers(this);
+
+			
+			// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
+
+			app.Event.registry.remove(Account_account);
+
+			Account_account = undefined;
+
+			
+			return true;
+		}
+
+		return false; // this should never happen, keeping just in case
+	}
+
+
 	
 	/*----------------------------------------------------------------------------------------
 	* Parameter parsing (constructor 'polymorphism')

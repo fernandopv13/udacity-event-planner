@@ -578,6 +578,9 @@ describe('class Event', function(){
 
 			var id = testEvent.id();
 
+			
+			// Create temporary object to copy from
+
 			var tmpEvent = new app.Event(
 
 				'Birthday party',
@@ -597,60 +600,61 @@ describe('class Event', function(){
 				5
 			);
 
-			expect(testEvent.id()).toEqual(id);
+			var tmpId = tmpEvent.id();
 
-			expect(testEvent.name()).not.toEqual(tmpEvent.name());
+			var tmpHostId = tmpEvent.host().id();
 
-			expect(testEvent.type()).not.toEqual(tmpEvent.type());
+			
+			// Verify that object contents are different
 
-			expect(testEvent.start()).not.toEqual(tmpEvent.start());
+				expect(testEvent.id()).toEqual(id);
 
-			expect(testEvent.end()).not.toEqual(tmpEvent.end());
+				expect(testEvent.name()).not.toEqual(tmpEvent.name());
 
-			expect(testEvent.location()).not.toEqual(tmpEvent.location());
+				expect(testEvent.type()).not.toEqual(tmpEvent.type());
 
-			expect(testEvent.description()).not.toEqual(tmpEvent.description());
+				expect(testEvent.start()).not.toEqual(tmpEvent.start());
 
-			expect(testEvent.capacity()).not.toEqual(tmpEvent.capacity());
+				expect(testEvent.end()).not.toEqual(tmpEvent.end());
 
-			expect(testEvent.host().id()).not.toEqual(tmpEvent.host().id());
+				expect(testEvent.location()).not.toEqual(tmpEvent.location());
+
+				expect(testEvent.description()).not.toEqual(tmpEvent.description());
+
+				expect(testEvent.capacity()).not.toEqual(tmpEvent.capacity());
+
+				expect(testEvent.host().id()).not.toEqual(tmpEvent.host().id());
 
 
-			testEvent.name(tmpEvent.name());
+			// Copy data from temporary object
 
-			testEvent.type(tmpEvent.type());
+			testEvent.update (tmpEvent, id);
 
-			testEvent.start(tmpEvent.start());
 
-			testEvent.end(tmpEvent.end());
-
-			testEvent.location(tmpEvent.location());
-
-			testEvent.description(tmpEvent.description());
-
-			testEvent.capacity(tmpEvent.capacity());
-
-			testEvent.host(tmpEvent.host());
-
+			// Verify copy
 
 			expect(testEvent.id()).toEqual(id);
 
-			expect(testEvent.name()).toEqual(tmpEvent.name());
+			expect(testEvent.name()).toEqual('Birthday party');
 
-			expect(testEvent.type()).toEqual(tmpEvent.type());
+			expect(testEvent.type()).toEqual('Celebration of life');
 
-			expect(testEvent.start()).toEqual(tmpEvent.start());
+			expect(testEvent.start().valueOf()).toEqual(new Date(2500000).valueOf());
 
-			expect(testEvent.end()).toEqual(tmpEvent.end());
+			expect(testEvent.end().valueOf()).toEqual(new Date(2500001).valueOf());
 
-			expect(testEvent.location()).toEqual(tmpEvent.location());
+			expect(testEvent.location()).toEqual('Starbucks');
 
-			expect(testEvent.description()).toEqual(tmpEvent.description());
+			expect(testEvent.description()).toEqual('Just testing');
 
-			expect(testEvent.capacity()).toEqual(tmpEvent.capacity());
+			expect(testEvent.capacity()).toEqual(5);
 
-			expect(testEvent.host().id()).toEqual(tmpEvent.host().id());
+			expect(testEvent.host().id()).toEqual(tmpHostId);
 
+
+			// Verify that temporary object has been removed from registry
+
+			expect(app.Event.registry.getObjectById(tmpId)).toBe(null);
 		});
 
 

@@ -293,7 +293,7 @@ app.Controller = function() {
 
 			this.selectedAccount().defaultLocation('Copenhagen'); // debug
 
-			this.selectedAccount().geolocationAllowed(true); //debug
+			this.selectedAccount().geoLocationAllowed(true); //debug
 
 			this.selectedAccount().localStorageAllowed(true); //debug
 	};
@@ -301,21 +301,25 @@ app.Controller = function() {
 	
 	/** Update in response to notifications from either UI or data model.
 	*
-	* Uses JS style 'polymorphism' to decide what to do when invoked.
+	* Uses JS style 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked
 	*
-	* @param {Object} obj Reference to an IModelable or an IViewable. If an Imodelable and no id is provided, handles as a notification of a change to the data model.
+	* (see comments in code for supported method signatures).
 	*
-	* @param {int} id Object id (optional). If following an IViewable, handled as a click in a list of same IViewables. If following an IModelable, handled as submission of update to IModelable with same id.
+	* @param {IModelable} model Reference to an IModelable (data model object). If not accompanied by an id, call is handled as a notification of a change to the data model requiring a view update.
+	*
+	* @param {IViewable} view Reference to an IViewable. Expected to be accompanied by an id-
+	*
+	* @param {int} id Object id. If following an IViewable, call is handled as a tap/click in a list of the type the IViewables is presenting. If following an IModelable, handled as submission of an update to the IModelable with same class and id.
 	*
 	* @return {void}
 	*
-	* @throws {IllegalArgumentError} If obj is neither an IModelable nor an IViewable
+	* @throws {IllegalArgumentError} If first parameter provided is neither an IModelable nor an IViewable
 	*/
 
 	this.update = function(Object_obj, int_objId) {
 
 		/*
-		Update implements JS version of method polymorphism, i.e. parsing function parameters.
+		Update implements JS version of method polymorphism, i.e. by parsing function parameters.
 		
 		Supported method 'signatures' are as follows:
 
@@ -328,34 +332,42 @@ app.Controller = function() {
 
 		if (arguments.length > 1 && typeof arguments[1] !== 'undefined') { // id provided
 
-			if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
+			if (int_objId === parseInt(int_objId)) { // id is an integer
 
-				var sourceObj = Object_obj.constructor.registry.getObjectById(int_objId);
+				if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
 
-				sourceObj.update(Object_obj, parseInt(int_objId));
+					var sourceObj = Object_obj.constructor.registry.getObjectById(int_objId);
+
+					sourceObj.update(Object_obj, parseInt(int_objId));
+				}
+
+				else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
+
+					switch (Object_obj.constructor)	{
+
+						case app.EventListView: // event list
+
+							this.onEventSelected(int_objId);
+
+							break;
+						
+						case app.PersonListView: // guest list
+
+							this.onGuestSelected(int_objId);
+
+							break;
+						}
+				}
+
+				else { // wrong type
+
+					throw new IllegalArgumentError('Expected IModelable or IViewable');
+				}
 			}
 
-			else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
+			else { // id not an integer
 
-				switch (Object_obj.constructor)	{
-
-					case app.EventListView: // event list
-
-						this.onEventSelected(int_objId);
-
-						break;
-					
-					case app.PersonListView: // guest list
-
-						this.onGuestSelected(int_objId);
-
-						break;
-					}
-			}
-
-			else { // wrong type
-
-				throw new IllegalArgumentError('Expected IModelable or IViewable');
+				throw new IllegalArgumentError('ID must be an integer');
 			}
 		
 		}

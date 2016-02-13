@@ -454,7 +454,7 @@ app.AccountView = function(Account_account) {
 						
 						step: 1,
 						
-						value: account.defaultEventCapacity() >= 0 ? account.defaultEventCapacity() : '',
+						value: account.defaultCapacity() >= 0 ? account.defaultCapacity() : '',
 						
 						required: true
 					},
@@ -469,7 +469,7 @@ app.AccountView = function(Account_account) {
 					
 					attributes: {for: 'account-capacity'},
 					
-					classList: account.defaultEventCapacity() >= 0 ? ['form-label', 'active'] : ['form-label'],
+					classList: account.defaultCapacity() >= 0 ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter default event capacity'},
 					

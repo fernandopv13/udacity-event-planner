@@ -92,6 +92,9 @@ describe('Storage localStorage', function(){
 	
 	it('can get a key from local storage by number', function() {
 		
+		// todo: find out why this throws an error in the native Android
+		// browser, but in none of the (other) major browsers
+
 		localStorage.clear();
 		
 		localStorage.setItem(prefix + 'storageTest1', 'storageTest1');

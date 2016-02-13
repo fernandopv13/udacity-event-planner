@@ -526,65 +526,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 
 
-	/** Updates account when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Event} event Object holding the data to update this event with
-	*
-	* @return {Boolean} true if copy was successful, else error or false
-	*/
-
-	app.Event.prototype.update = function(Event_event, int_objId) {
-
-		if (Event_event.constructor !== app.Event) { // wrong class
-
-			throw new IllegalArgumentError('Object must be instance of Event');
-		}
-
-		else if (this.id() !== int_objId) { // id mismatch
-
-			throw new IllegalArgumentError('Objects IDs don\'t match');
-		}
-
-		else {
-
-			// Update using accessors for validation
-
-			this.name(Event_event.name());
-
-			this.type(Event_event.type());
-
-			this.start(Event_event.start() ? Event_event.start() : null);
-
-			this.end(Event_event.end() ? Event_event.end() : null);
-
-			this.location(Event_event.location());
-
-			this.description(Event_event.description());
-
-			this.capacity(Event_event.capacity());
-
-			// Write new state to local storage, if available
-
-			var account = app.controller.selectedAccount();
-
-			if (account.localStorageAllowed() && window.localStorage) {
-
-				this.writeObject();
-			}
-
-			// Notify observers (i.e. controller)
-
-			this.notifyObservers(this);
-
-			return true;
-		}
-
-		return false;
-	}
-
-	
 	/** Converts event to JSON object
 	*
 	* (Method realization required by ISerializable.)
@@ -629,6 +570,81 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			})()
 		};
 	};
+
+
+	/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
+	*
+	* (See IObserver for further documentation.)
+	*
+	* @param {Event} event Object holding the data to update with
+	*
+	* @return {Boolean} true if copy was successful, else error or false
+	*
+	* @throws {IllegalArgumentError} If object provided is not an instance of Event
+	*
+	* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+	*/
+
+	app.Event.prototype.update = function(Event_event, int_objId) {
+
+		if (Event_event.constructor !== app.Event) { // wrong class
+
+			throw new IllegalArgumentError('Object must be instance of Event');
+		}
+
+		else if (this.id() !== int_objId) { // id mismatch
+
+			throw new IllegalArgumentError('Objects IDs don\'t match');
+		}
+
+		else {
+
+			// Update using accessors (for validation)
+
+			this.name(Event_event.name());
+
+			this.type(Event_event.type());
+
+			this.start(Event_event.start() ? Event_event.start() : null);
+
+			this.end(Event_event.end() ? Event_event.end() : null);
+
+			this.location(Event_event.location());
+
+			this.description(Event_event.description());
+
+			this.capacity(Event_event.capacity());
+
+			this.host(Event_event.host());
+
+			
+			// Write new state to local storage, if available
+
+			var account = app.controller.selectedAccount();
+
+			if (account.localStorageAllowed() && window.localStorage) {
+
+				this.writeObject();
+			}
+
+			
+			// Notify observers (i.e. controller)
+
+			this.notifyObservers(this);
+
+			
+			// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
+
+			app.Event.registry.remove(Event_event);
+
+			Event_event = undefined;
+
+			
+			return true;
+		}
+
+		return false; // this should never happen, keeping just in case
+	}
 	
 		
 	/*----------------------------------------------------------------------------------------

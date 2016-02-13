@@ -23,7 +23,7 @@ describe('class Password', function(){
 	});
 
 	
-	it('implements the IModelable interface', function() { // uses InterfaceTester.js
+	xit('implements the IModelable interface', function() { // uses InterfaceTester.js
 		
 			expect(app.InterfaceTester.isImplementationOf(app.Password, app.IModelable)).toBe(true);
 	});

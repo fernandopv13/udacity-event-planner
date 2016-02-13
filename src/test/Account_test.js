@@ -241,11 +241,11 @@ describe('class Account', function(){
 
 		it('can get and set its geolocation access permission preference', function() {
 
-			expect(testAccount.geolocationAllowed()).toBe(false);
+			expect(testAccount.geoLocationAllowed()).toBe(false);
 
-			expect(testAccount.geolocationAllowed(true)).toBe(true);
+			expect(testAccount.geoLocationAllowed(true)).toBe(true);
 
-			testAccount.geolocationAllowed(false);
+			testAccount.geoLocationAllowed(false);
 		});
 
 
@@ -253,7 +253,7 @@ describe('class Account', function(){
 
 			try {
 
-				testAccount.geolocationAllowed('not a Boolean');
+				testAccount.geoLocationAllowed('not a Boolean');
 			}
 
 			catch(e) {
@@ -265,11 +265,11 @@ describe('class Account', function(){
 		
 		it('can get and set its default event capacity', function() {
 
-			expect(testAccount.defaultEventCapacity()).toBeGreaterThan(-1);
+			expect(testAccount.defaultCapacity()).toBeGreaterThan(-1);
 
-			expect(testAccount.defaultEventCapacity(25)).toBe(25);
+			expect(testAccount.defaultCapacity(25)).toBe(25);
 
-			expect(testAccount.defaultEventCapacity(50)).toBe(50);
+			expect(testAccount.defaultCapacity(50)).toBe(50);
 		});
 
 
@@ -277,7 +277,7 @@ describe('class Account', function(){
 
 			try {
 
-				testAccount.defaultEventCapacity('not an integer');
+				testAccount.defaultCapacity('not an integer');
 			}
 
 			catch(e) {
@@ -287,7 +287,7 @@ describe('class Account', function(){
 
 			try {
 
-				testAccount.defaultEventCapacity(-1);
+				testAccount.defaultCapacity(-1);
 			}
 
 			catch(e) {
@@ -488,6 +488,86 @@ describe('class Account', function(){
 		});
 		
 		
+		// IObserver testing
+
+		it('can update itself when notified of change by Observable', function() {
+
+			var id = testAccount.id();
+			
+			testAccount.email(new app.Email('aname@serv.com');
+
+			testAccount.password(new app.Password('HDF#!3245hrtshys');
+
+
+			// Create temporary object to copy from
+
+			var tmpAccount = new app.Account(
+
+				new app.Email('name@server.domain'),
+				
+				new app.Password('abcd!2EFGH'),
+				
+				new app.Person('Test Person')
+			);
+
+			tmpAccount.localStorageAllowed(true);
+
+			tmpAccount.geoLocationAllowed(true);
+
+			tmpAccount.defaultCapacity(100);
+
+			var tmpId = tmpAccount.id();
+
+			var tmpAccountHolderId = tmpAccount.accountHolder().id();
+
+			
+			// Verify that object contents are different
+
+				expect(testAccount.id()).toEqual(id);
+
+				expect(testAccount.email().id()).not.toEqual(tmpAccount.email().id());
+
+				expect(testAccount.password().id()).not.toEqual(tmpAccount.password().id());
+
+				expect(testAccount.accountHolder().id()).not.toEqual(tmpAccount.accountHolder().id());
+
+				expect(testAccount.localStorageAllowed()).not.toEqual(tmpAccount.localStorageAllowed());
+
+				expect(testAccount.localStorageAllowed()).not.toEqual(tmpAccount.geoLocationAllowed());
+
+				expect(testAccount.defaultCapacity()).not.toEqual(tmpAccount.defaultCapacity());
+
+				//skipping location for now
+
+
+			// Copy data from temporary object
+
+			testAccount.update (tmpAccount, id);
+
+
+			// Verify copy
+
+			expect(testAccount.email().id()).toEqual(tmpAccount.email().id());
+
+			expect(testAccount.password().id()).toEqual(tmpAccount.password().id());
+
+			expect(testAccount.accountHolder().id()).toEqual(tmpAccount.accountHolder().id());
+
+			expect(testAccount.localStorageAllowed()).toEqual(tmpAccount.localStorageAllowed());
+
+			expect(testAccount.localStorageAllowed()).toEqual(tmpAccount.geoLocationAllowed());
+
+			expect(testAccount.defaultCapacity()).toEqual(tmpAccount.defaultCapacity());
+
+			//skipping location for now
+
+
+			// Verify that temporary object has been removed from registry
+
+			expect(app.Account.registry.getObjectById(tmpId)).toBe(null);
+		});
+
+
 		// ISerializable testing
 
 		it('can get its class name', function() {
@@ -571,7 +651,7 @@ describe('class Account', function(){
 			expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're empty
 			
 			testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
-			
+
 			expect(testAccount.className()).toBe('Account'); // test
 			
 			expect(testAccount.password()._className).toBe('Password');

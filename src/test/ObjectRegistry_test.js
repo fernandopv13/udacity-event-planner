@@ -220,7 +220,7 @@ describe('class ObjectRegistry', function(){
 			
 			expect(testRegistry.getObjectById(testObj.id())).toBe(testObj); // id found
 			
-			expect(testRegistry.getObjectById(10000)).not.toBeDefined(); // no match
+			expect(testRegistry.getObjectById(10000)).toBe(null); // no match
 		});
 		
 		
@@ -257,7 +257,7 @@ describe('class ObjectRegistry', function(){
 			
 			expect(testRegistry.remove(testObj).id()).toBe(1);
 			
-			expect(testRegistry.getObjectById(1)).not.toBeDefined();
+			expect(testRegistry.getObjectById(1)).toBe(null);
 		});
 		
 		
@@ -326,7 +326,7 @@ describe('class ObjectRegistry', function(){
 		
 		it('ignores attempts to remove an object that isn\'t in the registry', function() {
 			
-			expect(testRegistry.getObjectById(0)).not.toBeDefined();
+			expect(testRegistry.getObjectById(0)).toBe(null);
 			
 			
 			void new app.TestType();
@@ -350,7 +350,7 @@ describe('class ObjectRegistry', function(){
 		
 		it('can return a list of objects in the registry', function() {
 			
-			expect(testRegistry.getObjectById(0)).not.toBeDefined();
+			expect(testRegistry.getObjectById(0)).toBe(null);
 			
 			
 			void new app.TestType();

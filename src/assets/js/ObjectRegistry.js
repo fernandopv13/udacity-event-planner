@@ -174,12 +174,22 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 	
 	/** Gets a reference to an object in the registry by its ID
 	*
-	* @return {Object} A reference to the object with the ID, or undefined if not in registry
+	* @param {int} id The ID of the object to get.
+	*
+	* @return {Object} A reference to the object with the ID, or null if not in registry
 	*/
 	
 	this.getObjectById = function(id) {
 	
-		return _objectList[id];
+		if (_objectList[id]) {
+
+			return _objectList[id];
+		}
+
+		else {
+
+			return null;
+		}
 	}
 	
 	
@@ -218,9 +228,9 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 	}
 	
 
-	/** Removes an object from the registry
+	/** Removes an object from the registry (by id)
 	*
-	* @return {Object} An The object that was removed, or null if the object was not found in the registry
+	* @return {Object} obj The object that was removed, or null if the object was not found in the registry
 	*/
 	
 	this.remove = function(obj) {
