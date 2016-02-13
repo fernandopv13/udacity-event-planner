@@ -158,6 +158,47 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 };
 
 
+
+/** Utility for creating field descriptions when generating form elements
+*
+* @param {String} description Description of the field
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createFieldDescription = function (str_description, bool_divider) {
+
+	var innerDiv =  this.createElement( // inner div for description
+		{
+			element: 'div',			
+			
+			classList: ['col', 's12']
+		});
+
+	innerDiv.appendChild(this.createElement( // description
+	{	
+		element: 'p',
+
+		classList: ['form-label', 'input-field-description'],
+
+		innerHTML: str_description
+
+	}));
+
+	if (bool_divider) { // defaults to no divider
+
+		innerDiv.appendChild(this.createElement({ // divider
+
+			element: 'div',
+
+			classList: ['divider']
+		}));
+	}
+
+	return innerDiv;
+}
+
+
 /** Tests if object implements IViewable
 *
 * Default method for IViewables that only need to be able to report that they are indeed IViewables.
@@ -167,6 +208,8 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 * @param {Function} interface The interface we wish to determine if this object implements
 *
 * @return {Boolean} true if object implements interface, otherwise false
+*
+* @todo Refactor to method signature
 */
 
 app.IViewable.prototype.default_isInstanceOf = function (Function_interface) {

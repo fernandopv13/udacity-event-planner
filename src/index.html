@@ -43,6 +43,7 @@
 
 			.required-indicator {
 				padding-left: 0.25em;
+				color: red;
 			}
 			
 			
@@ -77,6 +78,10 @@
 
 			input[type=text]:focus.invalid + label.active::after {
 				top: 65px;
+			}
+
+			.input-field-description {
+				font-style: italic;
 			}
 
 		</style>
@@ -135,12 +140,14 @@
 			</nav>
 
 		</div>
-		
+
 		
 		<!-- Page content -->
 		
 		<div class="container"> 
 			
+			<!-- Test sandbox-->
+
 			<!-- Placeholders for dynamically generated main content views -->
 
 			<div id="signup-form" class="row"></div>

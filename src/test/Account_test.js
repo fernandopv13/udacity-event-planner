@@ -111,7 +111,7 @@ describe('class Account', function(){
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Account holder must be a Person');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 			
 			expect(this.success).not.toBeDefined();
@@ -208,7 +208,7 @@ describe('class Account', function(){
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Account holder must be a Person');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 			
 			expect(testAccount.accountHolder().name()).toBe('Test person');

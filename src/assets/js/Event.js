@@ -168,7 +168,9 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	*
 	* @param {String} end The date and time when the event ends (String representation)
 	*
-	* @return {Date} The date and time when the event ends
+	* @param {null} end In order to clear the event's end date
+	*
+	* @return {Date} The date and time when the event ends, or null
 	*
 	* @throws {IllegalArgumentError} If end is not a date, or end is before start
 	*/
@@ -177,7 +179,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		if (arguments.length !== 0) {
 			
-			if (date_end === null || date_end === '') {
+			if (date_end === null || date_end === '') { // reset event
 
 				_end = null;
 			}
@@ -331,7 +333,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		return _location;
 	};
 	*/
-	
+
 	
 	/** Gets or sets name
 	*

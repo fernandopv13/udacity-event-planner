@@ -69,6 +69,8 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	*
 	* @param {Person} accountholder The person holding the account (optional, supply if setting)
 	*
+	* @param {null} accountHolder In order to reset the account holder
+	*
 	* @return {Person} The person holding the account
 	*
 	* @throws {IllegalArgumentError} If attempting to set account holder not of class Person
@@ -78,7 +80,12 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		if (arguments.length !== 0) { // normal setter
 			
-			if (obj_person.constructor === app.Person) {
+			if (obj_person === null || obj_person ==='') { // reset account holder
+
+				_accountHolder = null;
+			}
+
+			else if (obj_person.constructor === app.Person) { // normal setter
 				
 				_accountHolder = obj_person;
 			}
@@ -90,7 +97,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 			else {
 				
-				throw new IllegalArgumentError('Account holder must be a Person')
+				throw new IllegalArgumentError('Account holder must be a Person or null')
 			}
 		}
 		
@@ -189,7 +196,12 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		if (arguments.length !== 0) { // normal setter
 			
-			if (obj_email.constructor === app.Email) {
+			if (obj_email === null || obj_email === '') { // reset email
+
+				_email = obj_email;
+			}
+
+			else if (obj_email.constructor === app.Email) { // normal setter
 				
 				_email = obj_email;
 			}
@@ -201,7 +213,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 			else {
 				
-				throw new IllegalArgumentError('Email must be an instance of the Email class')
+				throw new IllegalArgumentError('Email must be an instance of the Email class, or null')
 			}
 		}
 		
@@ -223,6 +235,8 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 			if (Boolean_permission.constructor === Boolean) {
 			
+				console.log(Boolean_permission);
+
 				_geoLocationAllowed = Boolean_permission;
 			}
 
@@ -297,11 +311,16 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		if (arguments.length !== 0) {
 			
-			if (obj_password !== null) { // Deserialization may create call with null, ignore
+			if (obj_password === null || obj_password === '') { // reset password
+
+				_password = obj_password;
+			}
+
+			else if (obj_password !== null) { // Deserialization may create call with null, ignore
 				
 				//if (!/^(.{0,7}|[^0-9]*|[^A-Z]*|[^a-z]*|[a-zA-Z0-9]*)$/.test(str_password)) {
 					
-				if (obj_password.constructor === app.Password) {
+				if (obj_password.constructor === app.Password) { // normal setter
 
 					_password = obj_password;
 				}
@@ -313,7 +332,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 				
 				else {
 					
-					throw new IllegalArgumentError('Password must be instance of class Password');
+					throw new IllegalArgumentError('Password must be instance of class Password, or null');
 				}
 			}
 

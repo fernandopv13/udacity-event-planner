@@ -109,12 +109,11 @@ app.AccountView = function(Account_account) {
 
 		var account = Account_account,
 
-		accountHolder = account.accountHolder(),
-
-		formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
+		accountHolder, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
 
 		
-		if (account !== null) {
+		
+		if (account) {
 			
 			// Setup up form and container div
 
@@ -170,12 +169,12 @@ app.AccountView = function(Account_account) {
 
 			// Add hidden account id field
 
-			containerDiv.appendChild(this.createElement({
+				containerDiv.appendChild(this.createElement({
 
-				element: 'input',
+					element: 'input',
 
-				attributes: {id: 'account-id', type: 'hidden', value: account.id()}
-			}));
+					attributes: {id: 'account-id', type: 'hidden', value: account.id()}
+				}));
 
 			
 			// Add email field
@@ -378,7 +377,7 @@ app.AccountView = function(Account_account) {
 				
 				containerDiv.appendChild(outerDiv);
 
-
+			
 			// Add account holder field
 
 				innerDiv =  this.createElement( // inner div
@@ -398,7 +397,9 @@ app.AccountView = function(Account_account) {
 						
 						id: 'account-holder',
 						
-						value: account.accountHolder() && account.accountHolder().name() ? account.accountHolder().name() : ''
+						value: account.accountHolder() && account.accountHolder().name() ? account.accountHolder().name() : '',
+
+						disabled: true
 					}
 				}));
 				
@@ -409,7 +410,7 @@ app.AccountView = function(Account_account) {
 					
 					attributes: {for: 'account-holder'},
 					
-					classList: account.accountHolder() ? ['form-label', 'active'] : ['form-label'],
+					classList: ['active'], //account.accountHolder() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter account holder'},
 					
@@ -430,6 +431,16 @@ app.AccountView = function(Account_account) {
 				containerDiv.appendChild(outerDiv);
 
 
+			// Add hidden account holder id field
+
+				containerDiv.appendChild(this.createElement({
+
+					element: 'input',
+
+					attributes: {id: 'account-holder-id', type: 'hidden', value: account.accountHolder() ? account.accountHolder().id(): ''}
+				}));
+
+			
 			// Add default event capacity field
 
 				innerDiv =  this.createElement( // inner div
@@ -439,7 +450,7 @@ app.AccountView = function(Account_account) {
 					classList: ['input-field', 'col', 's12']
 				});
 				
-				
+
 				innerDiv.appendChild(this.createElement( // input
 				{
 					element: 'input',			
@@ -496,13 +507,16 @@ app.AccountView = function(Account_account) {
 				});
 							
 				outerDiv.appendChild(innerDiv);
+
+				
+				outerDiv.appendChild(this.createFieldDescription('The default event capacity is the maximum number of participants you will usually want to set for an event. You can change this any time you want.', true));
+				
 				
 				containerDiv.appendChild(outerDiv);
 
 
 			// Add default location field
 
-				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -510,8 +524,7 @@ app.AccountView = function(Account_account) {
 					classList: ['input-field', 'col', 's12']
 				});
 				
-				
-				innerDiv.appendChild(this.createElement( // input
+				innerDiv.appendChild(this.createElement( //input
 				{
 					element: 'input',			
 					
@@ -521,10 +534,8 @@ app.AccountView = function(Account_account) {
 						
 						id: 'account-location',
 						
-						value: account.location() ? account.location : ''
-					},
-					
-					classList: ['validate']
+						value: account.defaultLocation() ? account.defaultLocation(): ''
+					}
 				}));
 				
 				
@@ -534,25 +545,27 @@ app.AccountView = function(Account_account) {
 					
 					attributes: {for: 'account-location'},
 					
-					classList: account.location() ? ['form-label', 'active'] : ['form-label'],
+					classList: ['active'], //account.defaultLocation() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter default location'},
 					
-					innerHTML: 'Default location'
+					innerHTML: 'Default Location'
 				}));
 				
-
+				
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',
 					
 					classList: ['row']
 				});
-			
+							
+				
 				outerDiv.appendChild(innerDiv);
-			
-				containerDiv.appendChild(outerDiv); // add to container
-				*/
+
+				outerDiv.appendChild(this.createFieldDescription('Entering a default location (e.g. a city and/or street name) helps the app suggest relevant venues when you plan a new event.'));
+				
+				containerDiv.appendChild(outerDiv);
 
 
 			// Add local storage permission field
@@ -666,34 +679,9 @@ app.AccountView = function(Account_account) {
 				spanElement.appendChild(labelElement);
 
 
-				innerDiv =  this.createElement( // inner div for description of switch
-				{
-					element: 'div',			
-					
-					classList: ['col', 's12']
-				});
+				outerDiv.appendChild(this.createFieldDescription('Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection'));
 
-				outerDiv.appendChild(innerDiv);
-
-
-				innerDiv.appendChild(this.createElement( // description
-				{	
-					element: 'p',
-
-					classList: ['form-label', 'input-switch-description'],
-
-					innerHTML: 'Allow local storage if you want to be able to work with your events on this device when you\'re offline.'
-
-				}));
-
-				innerDiv.appendChild(this.createElement({ // divider
-
-					element: 'div',
-
-					classList: ['divider']
-				}));
-
-
+				
 				containerDiv.appendChild(outerDiv);			
 
 			
@@ -807,35 +795,10 @@ app.AccountView = function(Account_account) {
 
 				spanElement.appendChild(labelElement);
 
+		
+				outerDiv.appendChild(this.createFieldDescription('Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device'));
+
 				
-				innerDiv =  this.createElement( // inner div for description of switch
-				{
-					element: 'div',			
-					
-					classList: ['col', 's12']
-				});
-
-				outerDiv.appendChild(innerDiv);
-
-
-				innerDiv.appendChild(this.createElement( // description
-				{	
-					element: 'p',
-
-					classList: ['form-label', 'input-switch-description'],
-
-					innerHTML: 'Allow geolocation if you want to the app to suggest event venues and other useful information based on the location of this device.'
-
-				}));
-
-				innerDiv.appendChild(this.createElement({ // divider
-
-					element: 'div',
-
-					classList: ['divider']
-				}));
-
-
 				containerDiv.appendChild(outerDiv);
 
 			
@@ -955,27 +918,31 @@ app.AccountView = function(Account_account) {
 
 		// Account handler binds to this, so reference works here
 		
-		if (this.validateName()) { // Submit results if all validations pass
+		if (true) { // Submit results if all validations pass
 
-			// Nofity observers by passing them a new Account with the data from the form
+			// Create a temporary, new account with the data from the form
 
-			this.notifyObservers(
-				
-				new app.Account(
+			var account = new app.Account()
 
-					$('#account-name').val(),
+			account.email(new app.Email($('#account-email').val()));
 
-					new app.Organization($('#account-employer').val()), //hack
+			account.password(new app.Password($('#account-password').val()));
 
-					$('#account-jobTitle').val(),
+			account.accountHolder($('#account-holder-id') !== '' && $('#account-holder-id') >= 0 ? app.Person.getObjectById(parseInt($('#account-holder-id'))) : null);
 
-					new app.Email($('#account-email').val()),
+			account.defaultCapacity(parseInt($('#account-capacity').val()));
 
-					new Date($('#account-birthday').val())
-				),
+			account.defaultLocation($('#account-location').val());
 
-				parseInt($('#account-id').val())
-			);
+			account.geoLocationAllowed($('#account-geolocation').prop('checked'));
+
+			account.localStorageAllowed($('#account-localstorage').prop('checked'));
+
+			
+			// Notify observers by passing them a reference to the temporary account,
+			// and the id of the account to be updated
+
+			this.notifyObservers(account, parseInt($('#account-id').val()));
 			
 			return true;
 		}
