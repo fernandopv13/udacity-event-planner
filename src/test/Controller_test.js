@@ -37,7 +37,7 @@ describe('class Controller', function(){
 		});
 
 		
-		it('can initialize', function() {
+		xit('can initialize', function() {
 
 			app.init();
 

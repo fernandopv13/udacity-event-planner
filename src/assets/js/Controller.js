@@ -300,6 +300,12 @@ app.Controller = function() {
 
 			this.selectedAccount().localStorageAllowed(true); // debug
 
+			this.selectedAccount().accountHolder(new app.Person('Superuser')); // debug
+
+			this.selectedAccount().accountHolder().email(new app.Email('superuser@acme.corp')); // debug
+
+			this.selectedAccount().accountHolder().jobTitle('Master Octopus'); // debug
+
 			this.onAccountSelected(0); // debug
 	};
 

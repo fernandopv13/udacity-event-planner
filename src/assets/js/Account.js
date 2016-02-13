@@ -546,7 +546,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 			this.password(source.password());
 
-			this.accountHolder(source.accountHolder() ? source.accountHolder() : null);
+			if (source.accountHolder()) {this.accountHolder(source.accountHolder());}
 
 			this.defaultCapacity(source.defaultCapacity());
 
@@ -619,15 +619,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		if (Password_password) {this.password(Password_password);}
 
-		if (Person_accountHolder) { // use provided person if available
-
-			this.accountHolder(Person_accountHolder);
-		}
-
-		else { // otherwise provide empty template (for account profile)
-
-			this.accountHolder(new app.Person());
-		}
+		if (Person_accountHolder) {this.accountHolder(Person_accountHolder);}
 	}
 
 	

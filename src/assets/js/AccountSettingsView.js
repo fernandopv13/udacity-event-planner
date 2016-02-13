@@ -117,7 +117,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 		var account = Account_account,
 
-		accountHolder, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
+		accountHolder, formElement, containerDiv, innerDiv, outerDiv, labelElement, pElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
 
 		
 		
@@ -129,7 +129,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{
 					element: 'form',			
 					
-					attributes: {novalidate: true},
+					attributes: {id: 'account-settings-form', novalidate: true},
 					
 					classList: ['col', 's12']
 				});
@@ -181,7 +181,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 					element: 'input',
 
-					attributes: {id: 'account-id', type: 'hidden', value: account.id()}
+					attributes: {id: 'account-settings-id', type: 'hidden', value: account.id()}
 				}));
 
 			
@@ -203,7 +203,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					{
 						type: 'email',
 						
-						id: 'account-email',
+						id: 'account-settings-email',
 						
 						value: account.email() && account.email().address() ? account.email().address() : '',
 
@@ -218,7 +218,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'account-email'},
+					attributes: {for: 'account-settings-email'},
 					
 					classList: account.email() && account.email().address() ? ['form-label', 'active'] : ['form-label'],
 					
@@ -254,6 +254,14 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			// Add password field
 
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
+				
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -261,6 +269,8 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					classList: ['input-field', 'col', 's12']
 				});
 				
+				outerDiv.appendChild(innerDiv);
+
 
 				innerDiv.appendChild(this.createElement( // input
 				{
@@ -270,7 +280,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					{
 						type: 'text',
 						
-						id: 'account-password',
+						id: 'account-settings-password',
 						
 						value: account.password() && account.password().password() ? account.password().password() : '',
 
@@ -285,7 +295,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'account-password'},
+					attributes: {for: 'account-settings-password'},
 					
 					classList: account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
 					
@@ -306,15 +316,132 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				innerDiv.appendChild(labelElement);
 
 				
-				outerDiv =  this.createElement( // outer div
+				innerDiv =  this.createElement( // inner div (for validation hits)
 				{
 					element: 'div',
+
+					attributes: {id: 'account-settings-password-hints'},
 					
-					classList: ['row']
+					classList: ['col', 's12', 'hide']
 				});
-							
-				
+
 				outerDiv.appendChild(innerDiv);
+
+
+				pElement = this.createElement(
+				{
+					element: 'p',
+
+					attributes: {id: 'password-validation-hint-charcount'},
+
+					classList: ['password-validation-hint'],
+
+					innerHTML: 'Must be at least 8 characters long'
+				});
+
+				pElement.appendChild(this.createElement(
+				{
+					element: 'i',
+
+					classList: ['material-icons', 'left'],
+
+					innerHTML: 'error'
+				}));
+
+				innerDiv.appendChild(pElement);
+
+				
+				pElement = this.createElement(
+				{
+					element: 'p',
+
+					attributes: {id: 'password-validation-hint-uppercase'},
+
+					classList: ['password-validation-hint'],
+
+					innerHTML: 'Must contain Upper Case characters'
+				});
+
+				pElement.appendChild(this.createElement(
+				{
+					element: 'i',
+
+					classList: ['material-icons', 'left'],
+
+					innerHTML: 'error'
+				}));
+
+				innerDiv.appendChild(pElement);
+
+
+				pElement = this.createElement(
+				{
+					element: 'p',
+
+					attributes: {id: 'password-validation-hint-lowercase'},
+
+					classList: ['password-validation-hint'],
+
+					innerHTML: 'Must contain lower case characters'
+				});
+
+				pElement.appendChild(this.createElement(
+				{
+					element: 'i',
+
+					classList: ['material-icons', 'left'],
+
+					innerHTML: 'error'
+				}));
+
+				innerDiv.appendChild(pElement);
+				
+
+				pElement = this.createElement(
+				{
+					element: 'p',
+
+					attributes: {id: 'password-validation-hint-number'},
+
+					classList: ['password-validation-hint'],
+
+					innerHTML: 'Must contain numbers'
+				});
+
+				pElement.appendChild(this.createElement(
+				{
+					element: 'i',
+
+					classList: ['material-icons', 'left'],
+
+					innerHTML: 'error'
+				}));
+
+				innerDiv.appendChild(pElement);
+
+
+				pElement = this.createElement(
+				{
+					element: 'p',
+
+					attributes: {id: 'password-validation-hint-punctuation'},
+
+					classList: ['password-validation-hint'],
+
+					innerHTML: 'Must contain one ore more of !@#$%^&'
+				});
+
+				pElement.appendChild(this.createElement(
+				{
+					element: 'i',
+
+					classList: ['material-icons', 'left'],
+
+					innerHTML: 'error'
+				}));
+
+				innerDiv.appendChild(pElement);
+				
 				
 				containerDiv.appendChild(outerDiv);
 
@@ -337,9 +464,9 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					{
 						type: 'text',
 						
-						id: 'account-password-confirmation',
+						id: 'account-settings-password-confirmation',
 						
-						value: account.password() && account.password().password() ? account.password().password() : '',
+						value: '',//account.password() && account.password().password() ? account.password().password() : '',
 
 						required: 'true'
 					},
@@ -385,74 +512,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				
 				containerDiv.appendChild(outerDiv);
 
-			
-			// Add account holder field
 
-				/*
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				innerDiv.appendChild(this.createElement( //input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'text',
-						
-						id: 'account-holder',
-						
-						value: account.accountHolder() && account.accountHolder().name() ? account.accountHolder().name() : '',
-
-						disabled: true
-					}
-				}));
-				
-				
-				innerDiv.appendChild(this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-holder'},
-					
-					classList: ['active'], //account.accountHolder() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter account holder'},
-					
-					innerHTML: 'Account Holder'
-				}));
-				
-				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
-				*/
-
-
-			// Add hidden account holder id field
-
-				/*
-				containerDiv.appendChild(this.createElement({
-
-					element: 'input',
-
-					attributes: {id: 'account-holder-id', type: 'hidden', value: account.accountHolder() ? account.accountHolder().id(): ''}
-				}));
-				*/
-
-			
 			// Add default event capacity field
 
 				innerDiv =  this.createElement( // inner div
@@ -471,7 +531,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					{
 						type: 'number',
 						
-						id: 'account-capacity',
+						id: 'account-settings-capacity',
 						
 						min: 0,
 						
@@ -490,7 +550,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'account-capacity'},
+					attributes: {for: 'account-settings-capacity'},
 					
 					classList: account.defaultCapacity() >= 0 ? ['form-label', 'active'] : ['form-label'],
 					
@@ -544,7 +604,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					{
 						type: 'text',
 						
-						id: 'account-location',
+						id: 'account-settings-location',
 						
 						value: account.defaultLocation() ? account.defaultLocation(): ''
 					}
@@ -555,7 +615,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'account-location'},
+					attributes: {for: 'account-settings-location'},
 					
 					classList: ['active'], //account.defaultLocation() ? ['form-label', 'active'] : ['form-label'],
 					
@@ -645,7 +705,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'account-localstorage'},
+					attributes: {for: 'account-settings-localstorage'},
 					
 					classList: ['form-label', 'active']
 				});
@@ -668,7 +728,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					
 					attributes: (function(){
 
-						var attr = {id: 'account-localstorage', type: 'checkbox'};
+						var attr = {id: 'account-settings-localstorage', type: 'checkbox'};
 
 						if (account.localStorageAllowed()) {attr.checked = true;}
 
@@ -769,7 +829,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'account-geolocation'},
+					attributes: {for: 'account-settings-geolocation'},
 					
 					classList: ['form-label', 'active']
 				});
@@ -792,7 +852,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					
 					attributes: (function(){
 
-						var attr = {id: 'account-geolocation', type: 'checkbox'};
+						var attr = {id: 'account-settings-geolocation', type: 'checkbox'};
 
 						if (account.geoLocationAllowed()) {attr.checked = true;}
 
@@ -864,7 +924,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					
 					element: 'a',
 					
-					attributes: {id: 'account-form-cancel'},
+					attributes: {id: 'account-settings-cancel'},
 					
 					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
 
@@ -876,7 +936,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					
 					element: 'a',
 					
-					attributes: {id: 'account-form-submit'},
+					attributes: {id: 'account-settings-submit'},
 					
 					classList: ['waves-effect', 'waves-light', 'btn'],
 
@@ -901,36 +961,36 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 			
 			// Update DOM
 
-				/*
-				$formDiv = $('#account-settings-form');
-
-				$formDiv.empty();
-
-				$formDiv.append(formElement);
-				*/
-
 				$_renderContext.empty();
 
 				$_renderContext.append(formElement);
-
 
 
 			// (Re)assign account handlers to form elements
 
 				//$('#account-location').focus(this.suggestLocations);
 				
-				$('#account-name').keyup(this.validateName);
+				$('#account-settings-name').keyup(this.validateName);
 
-				$('#account-form-submit').click(function() {this.submit();}.bind(this));
+				$('#account-settings-password').keyup(this.validatePassword);
+
+				$('#account-settings-password').focus(function() {
+
+					this.validatePassword($('#account-settings-password').val());
+
+					$('#account-settings-password-hints').removeClass('hide');
+
+				}.bind(this));
+
+				$('#account-settings-password').blur(function() {$('#account-settings-password-hints').addClass('hide');});
+
+				
+				
+
+				$('#account-settings-submit').click(function() {this.submit();}.bind(this));
 		}
 
 		else { // present default message
-
-			/*
-			$formDiv = $('#account-form');
-
-			$formDiv.empty();
-			*/
 
 			$_renderContext.empty();
 
@@ -961,25 +1021,25 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			var account = new app.Account()
 
-			account.email(new app.Email($('#account-email').val()));
+			account.email(new app.Email($('#account-settings-email').val()));
 
-			account.password(new app.Password($('#account-password').val()));
+			account.password(new app.Password($('#account-settings-password').val()));
 
-			account.accountHolder($('#account-holder-id') !== '' && $('#account-holder-id') >= 0 ? app.Person.getObjectById(parseInt($('#account-holder-id'))) : null);
+			// leaving source.accountHolder undefined causes Account update() to skip it, leaving the original intact
 
-			account.defaultCapacity(parseInt($('#account-capacity').val()));
+			account.defaultCapacity(parseInt($('#account-settings-capacity').val()));
 
-			account.defaultLocation($('#account-location').val());
+			account.defaultLocation($('#account-settings-location').val());
 
-			account.geoLocationAllowed($('#account-geolocation').prop('checked'));
+			account.geoLocationAllowed($('#account-settings-geolocation').prop('checked'));
 
-			account.localStorageAllowed($('#account-localstorage').prop('checked'));
+			account.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
 
 			
 			// Notify observers by passing them a reference to the temporary account,
 			// and the id of the account to be updated
 
-			this.notifyObservers(account, parseInt($('#account-id').val()));
+			this.notifyObservers(account, parseInt($('#account-settings-id').val()));
 			
 			return true;
 		}
@@ -1001,7 +1061,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
-	app.AccountSettingsView.prototype.validateName = function(account) {
+	app.AccountSettingsView.prototype.validateName = function() {
 
 		var $name = $('#account-name');
 
@@ -1029,6 +1089,67 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 		return true;
 	}
+
+
+	/* Event handler for interactive validation of account name field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+	
+	app.AccountSettingsView.prototype.validatePassword = function() {
+
+		var password = $('#account-settings-password').val(), ret, tmp;
+
+		var invalidIcon = 'error', validIcon = 'done'
+
+		
+		tmp = app.Password.hasValidCharacterCount(password);
+
+		ret = tmp;
+
+		if (tmp) {$('#password-validation-hint-charcount').find('i').html(validIcon);}
+
+		else {$('#password-validation-hint-charcount').find('i').html(invalidIcon);}
+
+				
+		tmp = app.Password.hasValidUpperCaseCount(password);
+
+		ret = ret && tmp;
+
+		if (tmp) {$('#password-validation-hint-uppercase').find('i').html(validIcon);}
+
+		else {$('#password-validation-hint-uppercase').find('i').html(invalidIcon);}
+
+
+		tmp = app.Password.hasValidLowerCaseCount(password);
+
+		ret = ret && tmp;
+
+		if (tmp) {$('#password-validation-hint-lowercase').find('i').html(validIcon);}
+
+		else {$('#password-validation-hint-lowercase').find('i').html(invalidIcon);}
+
+		
+		tmp = app.Password.hasValidNumberCount(password);
+
+		ret = ret && tmp;
+
+		if (tmp) {$('#password-validation-hint-number').find('i').html(validIcon);}
+
+		else {$('#password-validation-hint-number').find('i').html(invalidIcon);}
+
+
+		tmp = app.Password.hasValidPunctuationCount(password);
+
+		ret = ret && tmp;
+
+		if (tmp) {$('#password-validation-hint-punctuation').find('i').html();}
+
+		else {$('#password-validation-hint-punctuation').find('i').html(invalidIcon);}
+
+
+		return ret;
+	};
 
 
 	/*----------------------------------------------------------------------------------------
