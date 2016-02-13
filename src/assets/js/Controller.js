@@ -254,15 +254,15 @@ app.Controller = function() {
 
 			_views =
 			{
-				accountSettingsView: new app.AccountView(), // account settings form (email, password and prefs)
+				accountSettingsView: new app.AccountView('account-settings-form', 'Account Settings'), // account settings form (email, password and prefs)
 
-				accountProfileView: new app.PersonView('account-profile-form', 'Account Profile'), // account holder profile
+				//accountProfileView: new app.PersonView('account-profile-form', 'Account Profile'), // account holder profile
 
-				eventListView: new app.EventListView(), // event list
+				eventListView: new app.EventListView('event-list', 'My Events'), // event list
 
-				eventView: new app.EventView(), // event form
+				eventView: new app.EventView('event-form', 'Edit Event'), // event form
 
-				guestListView: new app.PersonListView(), // guest list
+				guestListView: new app.PersonListView('guest-list', 'Guest List'), // guest list
 
 				guestView: new app.PersonView('guest-form', 'Edit Guest') // guest form
 			}

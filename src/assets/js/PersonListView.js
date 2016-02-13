@@ -10,18 +10,26 @@ var app = app || {};
 *
 * @implements IViewable
 *
+* @param (String) elementId Id of the HTML DOM element the view is bound to
+*
+* @param (String) heading Content for the list heading
+*
 * @constructor
 *
 * @author Ulrik H. Gade, February 2016
 */
 
-app.PersonListView = function() {
+app.PersonListView = function(str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IObservable, app.IObserver, app.IViewable]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IObservable, app.IObserver, app.IViewable], // list of interfaces implemented by this class (by function reference);
+
+	$_renderContext = $('#' + str_elementId),
+
+	_heading = str_heading;
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -180,7 +188,7 @@ app.PersonListView = function() {
 
 			classList: ['collection-header'],
 
-			innerHTML: 'Guest List'
+			innerHTML: _heading
 		}));
 
 				
@@ -205,11 +213,18 @@ app.PersonListView = function() {
 		}
 
 		
-		var $list = $('#guest-list');  // update DOM
+		// Update DOM
+		/*
+		var $list = $('#guest-list');  
 
 		$list.empty();
 
 		$list.append(UlElement);
+		*/
+
+		$_renderContext.empty();
+
+		$_renderContext.append(UlElement);
 	};
 
 

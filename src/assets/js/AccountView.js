@@ -12,18 +12,26 @@ var app = app || {};
 *
 * @implements IViewable
 *
+* @param (String) elementId Id of the HTML DOM element the view is bound to
+*
+* @param (String) heading Content for the list heading
+*
 * @author Ulrik H. Gade, February 2016
 */
 
-app.AccountView = function(Account_account) {
+app.AccountView = function(str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IObservable, app.IObserver, app.IViewable]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IObservable, app.IObserver, app.IViewable], // list of interfaces implemented by this class (by function reference);
 
-	
+	$_renderContext = $('#' + str_elementId),
+
+	_heading = str_heading;
+
+
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
@@ -160,7 +168,7 @@ app.AccountView = function(Account_account) {
 
 					element: 'h4',
 
-					innerHTML: 'Account Settings'
+					innerHTML: _heading
 
 				}));
 
@@ -893,11 +901,18 @@ app.AccountView = function(Account_account) {
 			
 			// Update DOM
 
+				/*
 				$formDiv = $('#account-settings-form');
 
 				$formDiv.empty();
 
 				$formDiv.append(formElement);
+				*/
+
+				$_renderContext.empty();
+
+				$_renderContext.append(formElement);
+
 
 
 			// (Re)assign account handlers to form elements
@@ -911,16 +926,20 @@ app.AccountView = function(Account_account) {
 
 		else { // present default message
 
+			/*
 			$formDiv = $('#account-form');
 
 			$formDiv.empty();
+			*/
 
-			$formDiv.append(this.createElement(
+			$_renderContext.empty();
+
+			$_renderContext.append(
 			{
 				element: 'p',
 
 				innerHTML: 'No account selected. Please select or create a account in order to edit details.'
-			}));
+			});
 		}
 	};
 

@@ -12,6 +12,10 @@ var app = app || {};
 *
 * @implements IViewable
 *
+* @param (String) elementId Id of the HTML DOM element the view is bound to
+*
+* @param (String) heading Content for the list heading
+*
 * @author Ulrik H. Gade, February 2016
 *
 * @todo Set end date to start date when initially selecting start date, supressing end datepicker
@@ -21,13 +25,17 @@ var app = app || {};
 * @todo Verify geolocation and remove mock
 */
 
-app.EventView = function(Event_event) {
+app.EventView = function(str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IObservable, app.IObserver, app.IViewable]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IObservable, app.IObserver, app.IViewable], // list of interfaces implemented by this class (by function reference);
+
+	$_renderContext = $('#' + str_elementId),
+
+	_heading = str_heading;
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -160,7 +168,7 @@ app.EventView = function(Event_event) {
 
 					element: 'h4',
 
-					innerHTML: 'Edit Event'
+					innerHTML: _heading
 
 				}));
 
@@ -892,11 +900,17 @@ app.EventView = function(Event_event) {
 			
 			// Update DOM
 
+				/*
 				$formDiv = $('#event-form');
 
 				$formDiv.empty();
 
 				$formDiv.append(formElement);
+				*/
+
+				$_renderContext.empty();
+
+				$_renderContext.append(formElement);
 
 
 			// (Re)assign event handlers to form elements
@@ -931,17 +945,18 @@ app.EventView = function(Event_event) {
 
 		else { // present default message
 
-			$formDiv = $('#event-form');
+			//$formDiv = $('#event-form');
 
-			$formDiv.empty();
+			//$formDiv.empty();
 
-			$formDiv.append(this.createElement(
+			$_renderContext.empty();
+
+			$_renderContext.append(
 			{
-
 				element: 'p',
 
 				innerHTML: 'No event selected. Please select or create an event in order to edit details.'
-			}));
+			});
 		}
 	};
 

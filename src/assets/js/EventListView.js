@@ -10,6 +10,10 @@ var app = app || {};
 *
 * @implements IViewable
 *
+* @param (String) elementId Id of the HTML DOM element the view is bound to
+*
+* @param (String) heading Content for the list heading
+*
 * @constructor
 *
 * @author Ulrik H. Gade, February 2016
@@ -17,15 +21,17 @@ var app = app || {};
 * @todo Add unit testing (of rendering in browser)
 */
 
-app.EventListView = function(Event_event) {
+app.EventListView = function(str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	//var _event, // (Event) The event in the data model this EventView is observing
-	
-	var _implements = [app.IObservable, app.IObserver, app.IViewable]; // list of interfaces implemented by this class (by function reference);
+	var _implements = [app.IObservable, app.IObserver, app.IViewable], // list of interfaces implemented by this class (by function reference);
+
+	$_renderContext = $('#' + str_elementId),
+
+	_heading = str_heading;
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -147,7 +153,7 @@ app.EventListView = function(Event_event) {
 
 			classList: ['collection-header'],
 
-			innerHTML: 'My Events'
+			innerHTML: _heading
 		}));
 
 				
@@ -171,11 +177,20 @@ app.EventListView = function(Event_event) {
 			}));
 		}
 		
-		var $list = $('#event-list'); // update DOM
+		// Update DOM
+
+		/*
+		var $list = $('#event-list'); 
 
 		$list.empty();
 
 		$list.append(UlElement);
+		*/
+
+		$_renderContext.empty();
+
+		$_renderContext.append(UlElement);
+
 	};
 
 	

@@ -12,7 +12,9 @@ var app = app || {};
 *
 * @implements IViewable
 *
-* @param (String) renderContext Id of the HTML DOM element the PersonView is bound to
+* @param (String) elementId Id of the HTML DOM element the view is bound to
+*
+* @param (String) heading Content for the list heading
 *
 * @author Ulrik H. Gade, February 2016
 */
