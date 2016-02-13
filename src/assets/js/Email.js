@@ -54,8 +54,29 @@ app.Email = function(str_address) {
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
+	
+	/** Gets or sets email address
+	*
+	* @param {String} address The email address (optional, supply if setting)
+	*
+	* @param {null} null If resetting the email address
+	*
+	* @return {String} The email address
+	*/
+	
+	this.address = function (str_address) {
+		
+		if (arguments.length !== 0) {
+			
+			_address = str_address;
+			
+			_isValid = null; // reset validation
+		}
+		
+		return _address;
 
-	/** Gets name of object's class. Class name is read-only.
+
+	}/** Gets name of object's class. Class name is read-only.
 	*
 	* (Method realization required by ISerializable.)
 	*
@@ -93,26 +114,6 @@ app.Email = function(str_address) {
 			throw new Error('Illegal parameter: id is read-only');
 		}
 	};
-	
-	
-	/** Gets or sets email address
-	*
-	* @param {String} address The email address (optional, supply if setting)
-	*
-	* @return {String} The email address
-	*/
-	
-	this.address = function (str_address) {
-		
-		if (arguments.length !== 0) {
-			
-			_address = str_address;
-			
-			_isValid = null; //reset validation
-		}
-		
-		return _address;
-	}
 	
 	
 	/*----------------------------------------------------------------------------------------

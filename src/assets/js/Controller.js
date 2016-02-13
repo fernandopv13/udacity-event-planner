@@ -291,13 +291,16 @@ app.Controller = function() {
 
 		// Set some defaults to use until account creation/selection is developed
 
-			this.onAccountSelected(0); //debug
-
+			
+			this.selectedAccount(app.Account.registry.getObjectById(0)); //debug
+			
 			this.selectedAccount().defaultLocation('Copenhagen'); // debug
 
-			this.selectedAccount().geoLocationAllowed(true); //debug
+			this.selectedAccount().geoLocationAllowed(true); // debug
 
-			this.selectedAccount().localStorageAllowed(true); //debug
+			this.selectedAccount().localStorageAllowed(true); // debug
+
+			this.onAccountSelected(0); // debug
 	};
 
 	

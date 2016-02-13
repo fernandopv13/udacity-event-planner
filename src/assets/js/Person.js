@@ -143,9 +143,14 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	
 	this.email = function (Email_email) {
 		
-		if (arguments.length !== 0) { // normal setter
+		if (arguments.length !== 0) {
 			
-			if (Email_email.constructor === app.Email) {
+			if (Email_email === null || Email_email === '') { // reset email
+
+				_email = null;
+			}
+
+			else if (Email_email.constructor === app.Email) { // normal setter
 				
 				_email = Email_email;
 			}
@@ -176,9 +181,14 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	
 	this.employer = function (Organization_employer) {
 		
-		if (arguments.length !== 0) { // normal setter
+		if (arguments.length !== 0) {
 			
-			if (Organization_employer.constructor === app.Organization) {
+			if (Organization_employer === null || Organization_employer === '') { // reset employer
+
+				_employer = null;
+			}
+
+			else if (Organization_employer.constructor === app.Organization) { // normal setter
 				
 				_employer = Organization_employer;
 			}
@@ -365,11 +375,11 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 
 			this.name(Person_person.name());
 
-			this.employer(Person_person.employer());
+			this.employer(Person_person.employer() ? Person_person.employer() : null);
 
 			this.jobTitle(Person_person.jobTitle());
 
-			this.email().address(Person_person.email().address ? Person_person.email().address() : null);
+			this.email(Person_person.email() ? Person_person.email() : null);
 
 			this.birthday(Person_person.birthday() ? Person_person.birthday() : null);
 

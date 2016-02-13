@@ -626,7 +626,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 		else { // otherwise provide empty template (for account profile)
 
-			this.accountHolder(new app.Person);
+			this.accountHolder(new app.Person());
 		}
 	}
 

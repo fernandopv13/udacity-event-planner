@@ -139,7 +139,6 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 				formElement.appendChild(containerDiv);
 			
-
 			// Add heading
 				
 				outerDiv =  this.createElement( // outer div
@@ -172,15 +171,15 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 			// Add hidden person id field
 
-			containerDiv.appendChild(this.createElement({
+				containerDiv.appendChild(this.createElement({
 
-				element: 'input',
+					element: 'input',
 
-				attributes: {id: 'guest-id', type: 'hidden', value: person.id()}
-			}));
+					attributes: {id: 'account-holder-id', type: 'hidden', value: person.id()}
+				}));
 
 			
-			// Add guest name field
+			// Add account holder name name field
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -198,7 +197,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					{
 						type: 'text',
 						
-						id: 'guest-name',
+						id: 'account-holder-name',
 						
 						value: person.name() ? person.name() : '',
 						
@@ -213,13 +212,13 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'guest-name'},
+					attributes: {for: 'account-holder-name'},
 					
 					classList: person.name() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter guest name'},
+					dataset: {error: 'Please enter your name'},
 					
-					innerHTML: 'Guest Name'
+					innerHTML: 'Your Name'
 				});
 				
 				labelElement.appendChild(this.createElement( // required field indicator
@@ -264,11 +263,9 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					{
 						type: 'email',
 						
-						id: 'guest-email',
+						id: 'account-holder-email',
 						
-						value: person.email() && person.email().address() ? person.email().address() : '',
-
-						required: 'true'
+						value: person.email() && person.email().address() ? person.email().address() : ''
 					},
 					
 					classList: ['validate']
@@ -279,15 +276,16 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'guest-email'},
+					attributes: {for: 'account-holder-email'},
 					
 					classList: person.email() && person.email().address() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter email'},
 					
-					innerHTML: 'Email'
+					innerHTML: 'Your Email'
 				});
 				
+				/*
 				labelElement.appendChild(this.createElement( // required field indicator
 				{
 					element: 'span',
@@ -296,6 +294,8 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 					innerHTML: '*'
 				}));
+
+				*/
 
 				innerDiv.appendChild(labelElement);
 
@@ -309,9 +309,11 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 							
 				
 				outerDiv.appendChild(innerDiv);
+
+				outerDiv.appendChild(this.createFieldDescription('The app uses this email to contact you, and when presenting you to participants in your events. If left blank, the app will use the email address that you use to sign in (see "Account Settings").'));
 				
 				containerDiv.appendChild(outerDiv);
-
+			
 
 			// Add job title field
 
@@ -330,7 +332,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					{
 						type: 'text',
 						
-						id: 'guest-jobtitle',
+						id: 'account-holder-jobtitle',
 						
 						value: person.jobTitle() ? person.jobTitle() : ''
 					}
@@ -341,13 +343,13 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'guest-jobtitle'},
+					attributes: {for: 'account-holder-jobtitle'},
 					
 					classList: person.jobTitle() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter job title'},
+					dataset: {error: 'Please enter your job title'},
 					
-					innerHTML: 'Job Title'
+					innerHTML: 'Your Job Title'
 				}));
 				
 				
@@ -382,7 +384,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					{
 						type: 'text',
 						
-						id: 'guest-employer',
+						id: 'account-holder-employer',
 						
 						value: person.employer() && person.employer().name() ? person.employer().name() : '',
 						
@@ -395,13 +397,13 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'guest-employer'},
+					attributes: {for: 'account-holder-employer'},
 					
 					classList: person.employer() && person.employer().name() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter employer'},
+					dataset: {error: 'Please enter your employer'},
 					
-					innerHTML: 'Employer'
+					innerHTML: 'Your Employer'
 				}));
 				
 				
@@ -424,7 +426,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				
 				containerDiv.appendChild(outerDiv);			
 
-	
+			
 			// Add birthday field
 
 				outerDiv =  this.createElement( // outer div
@@ -451,7 +453,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					{
 						type: 'text',
 						
-						id: 'guest-birthday',
+						id: 'account-holder-birthday',
 						
 						value: person.birthday() ? person.birthday().toLocaleDateString() : '',
 						
@@ -466,13 +468,13 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'guest-birthday'},
+					attributes: {for: 'account-holder-birthday'},
 					
 					classList: person.birthday() ? ['form-label', 'active'] : ['form-label'],
 					
-					dataset: {error: 'Please enter birthday'},
+					dataset: {error: 'Please enter your birthday'},
 					
-					innerHTML: 'Birthday'
+					innerHTML: 'Your Birthday'
 				}));
 
 				
@@ -480,7 +482,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				{	
 					element: 'div',			
 					
-					attributes: {id: 'guest-birthday-error'},
+					attributes: {id: 'account-holder-birthday-error'},
 					
 					classList: ['custom-validate']
 				}));
@@ -490,7 +492,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 			
 				containerDiv.appendChild(outerDiv); // Add to container
 
-
+			
 			// Add requirement indicator (asterisk) explanation
 
 				outerDiv =  this.createElement( // outer div
@@ -527,7 +529,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					
 					element: 'a',
 					
-					attributes: {id: 'guest-form-cancel'},
+					attributes: {id: 'account-holder-form-cancel'},
 					
 					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
 
@@ -539,7 +541,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					
 					element: 'a',
 					
-					attributes: {id: 'guest-form-submit'},
+					attributes: {id: 'account-holder-form-submit'},
 					
 					classList: ['waves-effect', 'waves-light', 'btn'],
 
@@ -564,34 +566,33 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 			
 			// Update DOM
 
-				//$formDiv = $('#guest-form');
-
-				//$formDiv.empty();
-
-				//$formDiv.append(formElement);
-
 				$_renderContext.empty();
 
 				$_renderContext.append(formElement);
-
+			
 
 			// (Re)assign event handlers to form elements
 
-				$('.datepicker').pickadate({
+				$('#account-holder-birthday.datepicker').pickadate({
+					
 					//closeOnSelect: true, // bug: ineffective
+					
 					closeOnClear: true,
+					
 					onSet: function() {this.close()},
+					
 					selectMonths: true, // Creates a dropdown to control month
+					
 					selectYears: 15 // Creates a dropdown of 15 years to control year
 				});
+				
+				
+				//$('#account-holder-location').focus(this.suggestLocations);
 
 				
-				//$('#guest-location').focus(this.suggestLocations);
+				$('#account-holder-name').keyup(this.validateName);
 
-				
-				$('#guest-name').keyup(this.validateName);
-
-				$('#guest-form-submit').click(function() {this.submit();}.bind(this));
+				$('#account-holder-form-submit').click(function() {this.submit();}.bind(this));
 		}
 
 		else { // present default message
@@ -602,7 +603,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 			{
 				element: 'p',
 
-				innerHTML: 'No guest selected. Please select or create a guest in order to edit details.'
+				innerHTML: 'No profile selected. Please select or create a profile in order to edit details.'
 			});
 		}
 	};
@@ -623,23 +624,17 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 			// Nofity observers by passing them a new Person with the data from the form
 
-			this.notifyObservers(
-				
-				new app.Person(
+			var person = new app.Person($('#account-holder-name').val());
 
-					$('#guest-name').val(),
+			person.jobTitle($('#account-holder-jobtitle').val());
 
-					new app.Organization($('#guest-employer').val()), //hack
+			person.email($('#account-holder-email').val() !== '' ? new app.Email($('#account-holder-email').val()) : null);
+			
+			person.employer($('#account-holder-employer').val() !== '' ? new app.Organization($('#account-holder-employer').val()) : null), //hack
 
-					$('#guest-jobTitle').val(),
-
-					new app.Email($('#guest-email').val()),
-
-					new Date($('#guest-birthday').val())
-				),
-
-				parseInt($('#guest-id').val())
-			);
+			person.birthday($('#account-holder-birthday').val() !== '' ? new Date($('#account-holder-birthday').val()) : null);
+			
+			this.notifyObservers(person, parseInt($('#account-holder-id').val()));
 			
 			return true;
 		}
@@ -648,7 +643,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	}
 
 
-	/** Updates guest presentation when notified by controller of change */
+	/** Updates account holder presentation when notified by controller of change */
 	
 	app.AccountProfileView.prototype.update = function(IModelable_Account) {
 		
@@ -663,18 +658,18 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	
 	app.AccountProfileView.prototype.validateName = function(person) {
 
-		var $name = $('#guest-name');
+		var $name = $('#account-holder-name');
 
 		if ($name.val() === '') { // empty
 		
 			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
 
-				person.target.labels[0].dataset.error = 'Please enter guest name';
+				person.target.labels[0].dataset.error = 'Please enter your name';
 			}
 
 			else { // Other browsers (updated value may not display, falls back on value in HTML)
 
-				$name.next('label').data('error', 'Please enter guest name');
+				$name.next('label').data('error', 'Please enter your name');
 			}
 
 			$name.addClass('invalid');

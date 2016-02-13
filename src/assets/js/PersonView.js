@@ -565,12 +565,6 @@ app.PersonView = function(str_elementId, str_heading) {
 			
 			// Update DOM
 
-				//$formDiv = $('#guest-form');
-
-				//$formDiv.empty();
-
-				//$formDiv.append(formElement);
-
 				$_renderContext.empty();
 
 				$_renderContext.append(formElement);
@@ -578,11 +572,16 @@ app.PersonView = function(str_elementId, str_heading) {
 
 			// (Re)assign event handlers to form elements
 
-				$('.datepicker').pickadate({
+				$('#guest-birthday.datepicker').pickadate({
+					
 					//closeOnSelect: true, // bug: ineffective
+					
 					closeOnClear: true,
+					
 					onSet: function() {this.close()},
+					
 					selectMonths: true, // Creates a dropdown to control month
+					
 					selectYears: 15 // Creates a dropdown of 15 years to control year
 				});
 
