@@ -158,6 +158,90 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 };
 
 
+/** Utility for creating event capacity fields in forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createCapacityField = function (str_width, str_capacityId, str_label, bool_required, int_capacity) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+
+
+	var innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', str_width]
+	});
+	
+	outerDiv.appendChild(innerDiv);
+
+
+	var attributes = 
+	{
+		type: 'number',
+		
+		id: str_capacityId,
+
+		min: 0,
+
+		step: 1,
+		
+		value: int_capacity
+	}
+
+	if (bool_required) {attributes.required = true;}
+
+	innerDiv.appendChild(this.createElement( // input
+	{
+		element: 'input',			
+		
+		attributes: attributes,
+		
+		classList: ['validate']
+	}));
+	
+	
+	var labelElement = this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: str_capacityId},
+		
+		classList: int_capacity ? ['form-label', 'active'] : ['form-label'],
+		
+		dataset: {error: 'Please enter capacity'},
+		
+		innerHTML: str_label
+	});
+
+	
+	if (bool_required) {
+
+		labelElement.appendChild(this.createElement( // required field indicator
+		{
+			element: 'span',
+
+			classList: ['required-indicator'],
+
+			innerHTML: '*'
+		}));
+	}
+
+	innerDiv.appendChild(labelElement);
+
+
+	return outerDiv;
+}
+
+
+
 /** Utility for creating date picker fields in forms
 *
 * @return {HTMLDivElement} DIV element
@@ -798,39 +882,56 @@ app.IViewable.prototype.default_createTimeField = function (str_width, str_timeI
 	
 	outerDiv.appendChild(innerDiv);
 
-	
+	var attributes = 
+	{
+		type: 'text',
+		
+		id: str_timeId,
+		
+		value: Date_date ? Date_date.toLocaleTimeString() : '',
+		
+		readonly: true
+	}
+
+	if (bool_required) {attributes.required = true;}
+
 	innerDiv.appendChild(this.createElement( // input
 	{
 		element: 'input',			
 		
-		attributes:
-		{
-			type: 'text',
-			
-			id: str_timeId,
-			
-			value: Date_date ? Date_date.toLocaleTimeString() : '',
-			
-			readonly: true
-		},
+		attributes: attributes,
 		
 		classList: ['timepicker', 'picker__input']
 	}));
 	
 	
-	innerDiv.appendChild(this.createElement( // label
+	var labelElement = this.createElement( // label
 	{	
 		element: 'label',			
 		
-		attributes: {for: 'event-end-time'},
+		attributes: {for: str_timeId},
 		
 		classList: Date_date ? ['form-label', 'active'] : ['form-label'],
 		
 		dataset: {error: 'Please enter time'},
 		
 		innerHTML: str_label
-	}));
+	});
 	
+
+	if (bool_required) {
+
+		labelElement.appendChild(this.createElement( // required field indicator
+		{
+			element: 'span',
+
+			classList: ['required-indicator'],
+
+			innerHTML: '*'
+		}));
+	}
+
+	innerDiv.appendChild(labelElement);
 	
 	innerDiv.appendChild(this.createElement( // custom error div
 	{	
@@ -840,12 +941,11 @@ app.IViewable.prototype.default_createTimeField = function (str_width, str_timeI
 		
 		classList: ['custom-validate']
 	}));
-	
-	
 
 	
 	return outerDiv;
 }
+
 
 /** Tests if object implements IViewable
 *

@@ -123,6 +123,7 @@ app.EventView = function(str_elementId, str_heading) {
 		var event = Event_event, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
 		if (event !== null) {
+			
 			// Setup up form and container div
 
 				formElement =  this.createElement(
@@ -184,6 +185,7 @@ app.EventView = function(str_elementId, str_heading) {
 					attributes: {id: 'event-id', type: 'hidden', value: Event_event.id()}
 				}))
 
+			
 			// Add event name field
 
 				innerDiv =  this.createElement( // inner div
@@ -458,6 +460,21 @@ app.EventView = function(str_elementId, str_heading) {
 
 			// Add capacity field
 
+				containerDiv.appendChild(this.createCapacityField(
+
+					's12',
+
+					'event-capacity',
+
+					'Capacity',
+
+					true,
+
+					event.capacity() ? event.capacity() : 0
+				));
+
+
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -524,6 +541,8 @@ app.EventView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+
+				*/
 
 
 			// Add host field

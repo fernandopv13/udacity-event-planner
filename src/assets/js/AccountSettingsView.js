@@ -208,77 +208,20 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			// Add default event capacity field
 
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
+				containerDiv.appendChild(this.createCapacityField(
 
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'number',
-						
-						id: 'account-settings-capacity',
-						
-						min: 0,
-						
-						step: 1,
-						
-						value: account.defaultCapacity() >= 0 ? account.defaultCapacity() : '',
-						
-						required: true
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-settings-capacity'},
-					
-					classList: account.defaultCapacity() >= 0 ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter default event capacity'},
-					
-					innerHTML: 'Default event capacity'
-				});
-				
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
+					's12',
 
-					classList: ['required-indicator'],
+					'account-settings-capacity',
 
-					innerHTML: '*'
-				}));
-				
-				innerDiv.appendChild(labelElement);
+					'Default Event Capacity',
 
-				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				outerDiv.appendChild(innerDiv);
+					true,
 
-				
-				outerDiv.appendChild(this.createFieldDescription('The default event capacity is the maximum number of participants you will usually want to set for an event. You can change this any time you want.'));
-				
-				
-				containerDiv.appendChild(outerDiv);
+					account.defaultCapacity() ? account.defaultCapacity() : 0
+				));
 
+				console.log(containerDiv);
 
 			// Add default location field
 
