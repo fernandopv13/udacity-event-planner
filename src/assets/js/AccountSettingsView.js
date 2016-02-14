@@ -987,7 +987,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					$('#account-settings-password-hints').hide('slow');
 				});
 
-				$('#account-settings-password-confirmation').keyup(this.validatePasswordConfirmation);
+				$('#account-settings-password-confirmation').keyup(this.validateAccountPasswordConfirmation);
 
 
 				$('#account-settings-submit').click(function() {this.submit();}.bind(this));
@@ -1107,99 +1107,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 		return this.validatePassword(event, 'account-settings-password', 'account-settings-pw-validation-hint');
 
-		/*
-		var $password = $('#account-settings-password'),
-
-		password = $password.val(), ret, tmp;
-
-
-		// Validate password and manage display of password hints
-
-		var invalidIcon = 'error', validIcon = 'done'
-
-		tmp = app.Password.hasValidCharacterCount(password);
-
-		ret = tmp;
-
-		if (tmp) {$('#account-settings-pw-validation-hint-charcount').find('i').html(validIcon);}
-
-		else {$('#account-settings-pw-validation-hint-charcount').find('i').html(invalidIcon);}
-
-				
-		tmp = app.Password.hasValidUpperCaseCount(password);
-
-		ret = ret && tmp;
-
-		if (tmp) {$('#account-settings-pw-validation-hint-uppercase').find('i').html(validIcon);}
-
-		else {$('#account-settings-pw-validation-hint-uppercase').find('i').html(invalidIcon);}
-
-
-		tmp = app.Password.hasValidLowerCaseCount(password);
-
-		ret = ret && tmp;
-
-		if (tmp) {$('#account-settings-pw-validation-hint-lowercase').find('i').html(validIcon);}
-
-		else {$('#account-settings-pw-validation-hint-lowercase').find('i').html(invalidIcon);}
-
-		
-		tmp = app.Password.hasValidNumberCount(password);
-
-		ret = ret && tmp;
-
-		if (tmp) {$('#account-settings-pw-validation-hint-number').find('i').html(validIcon);}
-
-		else {$('#account-settings-pw-validation-hint-number').find('i').html(invalidIcon);}
-
-
-		tmp = app.Password.hasValidPunctuationCount(password);
-
-		ret = ret && tmp;
-
-		if (tmp) {$('#account-settings-pw-validation-hint-punctuation').find('i').html(validIcon);}
-
-		else {$('#account-settings-pw-validation-hint-punctuation').find('i').html(invalidIcon);}
-
-
-		// Manage display of validation message
-
-		var msg = 'Invalid password, please try again';
-
-		if (!ret) { // not valid, display validation error
-
-			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				event.target.labels[0].dataset.error = msg;
-
-			}
-
-			else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-				$password.next('label').data('error', msg);
-			}
-			
-			$password.addClass('invalid');
-		}
-
-		else { // valid
-
-			$password.removeClass('invalid');
-
-			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				event.target.labels[0].dataset.error = msg; // can't get jQuery.data() to work
-			}
-
-			else { // Other browsers (updates value but not display, falls back on value in HTML)
-
-				$password.next('label').data('error', msg);
-			}
-		}
-
-		return ret;
-
-		*/
 	}.bind(this);
 
 
@@ -1208,8 +1115,11 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
-	app.AccountSettingsView.prototype.validatePasswordConfirmation = function(event) {
+	app.AccountSettingsView.prototype.validateAccountPasswordConfirmation = function(event) {
 
+		return this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
+		
+		/*
 		var $confirmation = $('#account-settings-password-confirmation'),
 
 		confirmation = $confirmation.val(),
@@ -1255,7 +1165,8 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 		}
 
 		return false;
-	};
+		*/
+	}.bind(this);
 
 
 	/*----------------------------------------------------------------------------------------

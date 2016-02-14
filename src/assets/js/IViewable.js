@@ -317,3 +317,58 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 
 	return ret;
 };
+
+
+/* Event handler for interactive validation of password confirmation field
+*
+* @return {Boolean} true if validation is succesful, otherwise false
+*/
+
+app.IViewable.prototype.default_validatePasswordConfirmation = function(event, str_passwordId, str_confirmationId) {
+
+	var $confirmation = $('#' + str_confirmationId),
+
+	confirmation = $confirmation.val(),
+
+	password = $('#' + str_passwordId).val(),
+
+	msg = 'Must be the same as password';
+
+
+	// Manage display of validation message
+
+	if (confirmation !== password) { // not valid, display validation error
+
+		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+			event.target.labels[0].dataset.error = msg;
+
+		}
+
+		else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+			$confirmation.next('label').data('error', msg);
+		}
+		
+		$confirmation.addClass('invalid');
+	}
+
+	else { // valid
+
+		$confirmation.removeClass('invalid');
+
+		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+			event.target.labels[0].dataset.error = msg; // can't get jQuery.data() to work
+		}
+
+		else { // Other browsers (updates value but not display, falls back on value in HTML)
+
+			$confirmation.next('label').data('error', msg);
+		}
+
+		return true;
+	}
+
+	return false;
+};
