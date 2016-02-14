@@ -272,7 +272,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 
 				
-				outerDiv.appendChild(this.createFieldDescription('The default event capacity is the maximum number of participants you will usually want to set for an event. You can change this any time you want.', true));
+				outerDiv.appendChild(this.createFieldDescription('The default event capacity is the maximum number of participants you will usually want to set for an event. You can change this any time you want.'));
 				
 				
 				containerDiv.appendChild(outerDiv);
@@ -333,6 +333,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			// Add local storage permission field
 
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',
@@ -448,15 +449,31 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 				spanElement.appendChild(labelElement);
 
+				outerDiv.appendChild(this.createFieldDescription('Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.'));
 
-				outerDiv.appendChild(this.createFieldDescription('Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection'));
 
-				
-				containerDiv.appendChild(outerDiv);			
+				containerDiv.appendChild(outerDiv);
+				*/
+
+				var outerDiv = this.createSwitchField(
+
+					's7',
+
+					'account-settings-localstorage',
+
+					'Allow local storage',
+
+					false
+				);
+
+				outerDiv.appendChild(this.createFieldDescription('Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.'));
+
+				containerDiv.appendChild(outerDiv);
 
 			
 			// Add geolocation permission field
 
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',
@@ -577,6 +594,22 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 				
 				containerDiv.appendChild(outerDiv);
+				*/
+
+				var outerDiv = this.createSwitchField(
+
+					's7',
+
+					'account-settings-geolocation',
+
+					'Allow local geolocation',
+
+					false
+				);
+
+				outerDiv.appendChild(this.createFieldDescription('Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device.'));
+
+				containerDiv.appendChild(outerDiv);
 
 			
 			// Add requirement indicator (asterisk) explanation
@@ -659,8 +692,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			// (Re)assign account handlers to form elements
 
-				//$('#account-location').focus(this.suggestLocations);
-				
 				$('#account-settings-email').keyup(function(event) { // email
 
 					this.validateEmail(event, 'account-settings-email');
@@ -730,12 +761,23 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	app.AccountSettingsView.prototype.submit = function() {
 
 		// Account handler binds to this, so reference works here
+
+		var valid =
+
+			this.validateEmail(event, 'account-settings-email')
+
+			&& this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints')
+
+			&& this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation')
+
+			&& this.validateCapacity(event, 'account-settings-capacity');
 		
-		if (this.validatePassword()) { // Submit results if all validations pass
+		
+		if (valid) { // Submit results if all validations pass
 
 			// Create a temporary, new account with the data from the form
 
-			var account = new app.Account()
+			var account = new app.Account();
 
 			account.email(new app.Email($('#account-settings-email').val()));
 

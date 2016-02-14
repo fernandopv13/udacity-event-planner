@@ -486,10 +486,7 @@ app.IViewable.prototype.default_createPasswordField = function (str_width, str_p
 
 app.IViewable.prototype.default_createPasswordConfirmationField = function (str_width, str_confirmationId) {
 
-	var outerDiv, innerDiv, labelElement;
-
-	
-	outerDiv =  this.createElement( // outer div
+	var outerDiv =  this.createElement( // outer div
 	{
 		element: 'div',
 		
@@ -497,7 +494,7 @@ app.IViewable.prototype.default_createPasswordConfirmationField = function (str_
 	});
 				
 	
-	innerDiv =  this.createElement( // inner div
+	var innerDiv =  this.createElement( // inner div
 	{
 		element: 'div',			
 		
@@ -526,7 +523,7 @@ app.IViewable.prototype.default_createPasswordConfirmationField = function (str_
 	}));
 	
 	
-	labelElement = this.createElement( // label
+	var labelElement = this.createElement( // label
 	{	
 		element: 'label',			
 		
@@ -551,6 +548,133 @@ app.IViewable.prototype.default_createPasswordConfirmationField = function (str_
 	innerDiv.appendChild(labelElement);
 
 	
+	return outerDiv;
+};
+
+
+/** Utility for creating switch (checkbox) field in forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createSwitchField = function (str_width, str_switchId, str_label, bool_checked, str_on, str_off) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+
+	
+	var innerDiv =  this.createElement( // inner div for main switch label
+	{
+		element: 'div',			
+		
+		classList: ['col', str_width]
+	});
+
+	outerDiv.appendChild(innerDiv);
+
+
+	innerDiv.appendChild(this.createElement( // main switch label
+	{	
+		element: 'span',
+
+		classList: ['form-label', 'input-switch-label'],
+
+		innerHTML: str_label
+
+	}));
+
+	
+	innerDiv =  this.createElement( // inner div for switch widget
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', 's' + (12 - parseInt(str_width.slice(1)))]
+	});
+
+	outerDiv.appendChild(innerDiv);
+	
+	
+	var switchElement = this.createElement( // switch div
+	{
+		element: 'div',
+		
+		classList: ['switch']
+	});
+
+	innerDiv.appendChild(switchElement);
+	
+	
+	var spanElement = this.createElement({ // div holding switch widget itself
+
+		element: 'span',
+
+		classList: ['input-switch-widget']
+	});
+
+	switchElement.appendChild(spanElement);
+
+
+	var labelElement = this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: str_switchId},
+		
+		classList: ['form-label', 'active']
+	});
+	
+	
+	labelElement.appendChild(this.createElement( // 'not selected' minor label
+	{	
+		element: 'span',
+
+		classList: ['form-label', 'input-switch-off-label'],
+
+		innerHTML: str_off ? str_off : 'No'
+
+	}));
+
+	
+	labelElement.appendChild(this.createElement( // input
+	{	
+		element: 'input',			
+		
+		attributes: (function(){
+
+			var attr = {id: str_switchId, type: 'checkbox'};
+
+			if (bool_checked) {attr.checked = true;}
+
+			return attr;
+		})()
+	}));
+
+	
+	labelElement.appendChild(this.createElement( // span
+	{	
+		element: 'span',
+		
+		classList: ['lever']
+	}));
+
+	
+	labelElement.appendChild(this.createElement( // 'selected' minor label
+	{	
+		element: 'span',
+
+		classList: ['form-label', 'input-switch-on-label'],
+
+		innerHTML: str_on ? str_on : 'Yes'
+
+	}));
+
+	spanElement.appendChild(labelElement);
+
+
 	return outerDiv;
 };
 
