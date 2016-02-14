@@ -917,6 +917,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 				$('textarea#description').characterCounter();
 
+				
 				$('#event-start-date.datepicker, #event-end-date.datepicker').pickadate({
 					
 					//closeOnSelect: true, // bug: ineffective
@@ -930,6 +931,7 @@ app.EventView = function(str_elementId, str_heading) {
 					selectYears: 15 // Creates a dropdown of 15 years to control year
 				});
 
+				
 				$('.timepicker').pickatime({
 					//closeOnSelect: true, // bug: ineffective
 					closeOnClear: true,
@@ -943,8 +945,16 @@ app.EventView = function(str_elementId, str_heading) {
 				
 				$('#event-name').keyup(this.validateName);
 
-				$('#event-capacity').keyup(this.validateCapacity);
+				
+				//$('#event-capacity').keyup(this.validateCapacity);
 
+				$('#event-capacity').keyup(function(event) { // capacity
+
+					this.validateCapacity(event, 'event-capacity');
+		
+				}.bind(this));
+
+				
 				$('#event-form-submit').click(function() {this.submit();}.bind(this));
 		}
 
@@ -1151,6 +1161,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
+	/*
 	app.EventView.prototype.validateCapacity = function(event) {
 		
 		var $capacity = $('#event-capacity');
@@ -1211,7 +1222,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 		return true;
 	}
-
+	*/
 
 	/** Event handler for interactive validation of start and end date fields
 	*
