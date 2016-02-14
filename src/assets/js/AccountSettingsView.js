@@ -333,128 +333,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			// Add local storage permission field
 
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-
-				
-				innerDiv =  this.createElement( // inner div for main switch label
-				{
-					element: 'div',			
-					
-					classList: ['col', 's7']
-				});
-
-				outerDiv.appendChild(innerDiv);
-
-
-				innerDiv.appendChild(this.createElement( // main switch label
-				{	
-					element: 'span',
-
-					classList: ['form-label', 'input-switch-label'],
-
-					innerHTML: 'Allow local storage'
-
-				}));
-
-				
-				innerDiv =  this.createElement( // inner div for switch widget
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's5']
-				});
-
-				outerDiv.appendChild(innerDiv);
-				
-				
-				switchElement = this.createElement( // switch div
-				{
-					element: 'div',
-					
-					classList: ['switch']
-				});
-
-				innerDiv.appendChild(switchElement);
-				
-				
-				spanElement = this.createElement({ // div holding switch widget itself
-
-					element: 'span',
-
-					classList: ['input-switch-widget']
-				});
-
-				switchElement.appendChild(spanElement);
-
-
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-settings-localstorage'},
-					
-					classList: ['form-label', 'active']
-				});
-				
-				
-				labelElement.appendChild(this.createElement( // 'not selected' minor label
-				{	
-					element: 'span',
-
-					classList: ['form-label', 'input-switch-off-label'],
-
-					innerHTML: 'No'
-
-				}));
-
-				
-				labelElement.appendChild(this.createElement( // input
-				{	
-					element: 'input',			
-					
-					attributes: (function(){
-
-						var attr = {id: 'account-settings-localstorage', type: 'checkbox'};
-
-						if (account.localStorageAllowed()) {attr.checked = true;}
-
-						return attr;
-					})()
-				}));
-
-				
-				labelElement.appendChild(this.createElement( // span
-				{	
-					element: 'span',
-					
-					classList: ['lever']
-				}));
-
-				
-				labelElement.appendChild(this.createElement( // 'selected' minor label
-				{	
-					element: 'span',
-
-					classList: ['form-label', 'input-switch-on-label'],
-
-					innerHTML: 'Yes'
-
-				}));
-
-				spanElement.appendChild(labelElement);
-
-				outerDiv.appendChild(this.createFieldDescription('Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.'));
-
-
-				containerDiv.appendChild(outerDiv);
-				*/
-
 				var outerDiv = this.createSwitchField(
 
 					's7',
@@ -463,7 +341,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 					'Allow local storage',
 
-					false
+					account.localStorageAllowed()
 				);
 
 				outerDiv.appendChild(this.createFieldDescription('Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.'));
@@ -473,129 +351,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 			
 			// Add geolocation permission field
 
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-
-				
-				innerDiv =  this.createElement( // inner div for main switch label
-				{
-					element: 'div',			
-					
-					classList: ['col', 's7']
-				});
-
-				outerDiv.appendChild(innerDiv);
-
-
-				innerDiv.appendChild(this.createElement( // main switch label
-				{	
-					element: 'span',
-
-					classList: ['form-label', 'input-switch-label'],
-
-					innerHTML: 'Allow geolocation'
-
-				}));
-
-				
-				innerDiv =  this.createElement( // inner div for switch widget
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's5']
-				});
-
-				outerDiv.appendChild(innerDiv);
-				
-				
-				switchElement = this.createElement( // switch div
-				{
-					element: 'div',
-					
-					classList: ['switch']
-				});
-
-				innerDiv.appendChild(switchElement);
-				
-				
-				spanElement = this.createElement({ // div holding switch widget itself
-
-					element: 'span',
-
-					classList: ['input-switch-widget']
-				});
-
-				switchElement.appendChild(spanElement);
-
-
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-settings-geolocation'},
-					
-					classList: ['form-label', 'active']
-				});
-				
-				
-				labelElement.appendChild(this.createElement( // 'not selected' minor label
-				{	
-					element: 'span',
-
-					classList: ['form-label', 'input-switch-off-label'],
-
-					innerHTML: 'No'
-
-				}));
-
-				
-				labelElement.appendChild(this.createElement( // input
-				{	
-					element: 'input',			
-					
-					attributes: (function(){
-
-						var attr = {id: 'account-settings-geolocation', type: 'checkbox'};
-
-						if (account.geoLocationAllowed()) {attr.checked = true;}
-
-						return attr;
-					})()
-				}));
-
-				
-				labelElement.appendChild(this.createElement( // span
-				{	
-					element: 'span',
-					
-					classList: ['lever']
-				}));
-
-				
-				labelElement.appendChild(this.createElement( // 'selected' minor label
-				{	
-					element: 'span',
-
-					classList: ['form-label', 'input-switch-on-label'],
-
-					innerHTML: 'Yes'
-
-				}));
-
-				spanElement.appendChild(labelElement);
-
-		
-				outerDiv.appendChild(this.createFieldDescription('Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device'));
-
-				
-				containerDiv.appendChild(outerDiv);
-				*/
-
 				var outerDiv = this.createSwitchField(
 
 					's7',
@@ -604,7 +359,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 					'Allow local geolocation',
 
-					false
+					account.geoLocationAllowed()
 				);
 
 				outerDiv.appendChild(this.createFieldDescription('Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device.'));
