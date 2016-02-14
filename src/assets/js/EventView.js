@@ -319,164 +319,38 @@ app.EventView = function(str_elementId, str_heading) {
 					
 					classList: ['row']
 				});
+
+				containerDiv.appendChild(outerDiv); // Add to container
 				
+			
+				outerDiv.appendChild(this.createDateField( // Date
+
+					's6',
+
+					'event-start-date',
+
+					'Start Date',
+
+					true,
+
+					event.start()
+
+				).children[0]); 
+					
 				
-				// Date
+				outerDiv.appendChild(this.createTimeField( // Time
 
-					outerDiv.appendChild(this.createDateField(
+					's6',
 
-						's6',
+					'event-start-time',
 
-						'event-start-date',
+					'Start Time',
 
-						'Start Date',
+					true,
 
-						true,
+					event.start()
 
-						event.start()
-
-					).children[0]); // extract date itself from row wrapper
-
-					/*
-					innerDiv =  this.createElement( // inner div
-					{
-						element: 'div',			
-						
-						classList: ['input-field', 'col', 's6']
-					});
-					
-					
-					innerDiv.appendChild(this.createElement( // input
-					{
-						element: 'input',			
-						
-						attributes:
-						{
-							type: 'text',
-							
-							id: 'event-start-date',
-							
-							value: event.start() ? event.start().toLocaleDateString() : '',
-							
-							readonly: true,
-							
-							required: true
-						},
-						
-						classList: ['validate', 'datepicker', 'picker__input']
-					}));
-					
-					
-					labelElement = this.createElement( // label
-					{	
-						element: 'label',			
-						
-						attributes: {for: 'event-start-date'},
-						
-						classList: event.start() ? ['form-label', 'active'] : ['form-label'],
-						
-						dataset: {error: 'Please enter start date'},
-						
-						innerHTML: 'Start Date'
-					});
-
-					
-					labelElement.appendChild(this.createElement( // required field indicator
-					{
-						element: 'span',
-
-						classList: ['required-indicator'],
-
-						innerHTML: '*'
-					}));
-					
-					innerDiv.appendChild(labelElement);
-					
-					
-					innerDiv.appendChild(this.createElement( // custom error div
-					{	
-						element: 'div',			
-						
-						attributes: {id: 'event-start-date-error'},
-						
-						classList: ['custom-validate']
-					}));
-					
-					outerDiv.appendChild(innerDiv);
-
-				*/
-					
-					
-				// Time
-
-					innerDiv =  this.createElement( // inner div
-					{
-						element: 'div',			
-						
-						classList: ['input-field', 'col', 's6']
-					});
-					
-					
-					innerDiv.appendChild(this.createElement( // input
-					{
-						element: 'input',			
-						
-						attributes:
-						{
-							type: 'text',
-							
-							id: 'event-start-time',
-							
-							value: event.start() ? event.start().toLocaleTimeString() : '',
-							
-							readonly: true,
-
-							required: true
-						},
-						
-						classList: ['validate', 'timepicker', 'picker__input']
-					}));
-									
-					
-					labelElement = this.createElement( // label
-					{	
-						element: 'label',			
-						
-						attributes: {for: 'event-start-time'},
-						
-						classList: event.start() ? ['form-label', 'active'] : ['form-label'],
-						
-						dataset: {error: 'Please enter start time'},
-						
-						innerHTML: 'Start Time'
-					});
-					
-					labelElement.appendChild(this.createElement( // required field indicator
-					{
-						element: 'span',
-
-						classList: ['required-indicator'],
-
-						innerHTML: '*'
-					}));
-					
-					innerDiv.appendChild(labelElement);
-
-
-					innerDiv.appendChild(this.createElement( // custom error div
-					{	
-						element: 'div',			
-						
-						attributes: {id: 'event-start-time-error'},
-						
-						classList:['custom-validate']
-					}));
-					
-					
-					outerDiv.appendChild(innerDiv);
-					
-					
-					containerDiv.appendChild(outerDiv); // Add to container
+				).children[0]); // extract date itself from row wrapper
 
 
 			// Add end date and time field
@@ -487,135 +361,38 @@ app.EventView = function(str_elementId, str_heading) {
 					
 					classList: ['row']
 				});
-					
-				// Date
 
-					outerDiv.appendChild(this.createDateField(
+				containerDiv.appendChild(outerDiv);
+					
+				
+				outerDiv.appendChild(this.createDateField( // Date
 
-						's6',
+					's6',
 
-						'event-end-date',
+					'event-end-date',
 
-						'End Date',
+					'End Date',
 
-						true,
+					true,
 
-						event.end()
+					event.end()
 
-					).children[0]); // extract date itself from row wrapper
-					/*
-					innerDiv =  this.createElement( // inner div
-					{
-						element: 'div',			
-						
-						classList: ['input-field', 'col', 's6']
-					});
+				).children[0]); // extract date itself from row wrapper
 					
 					
-					innerDiv.appendChild(this.createElement( // input
-					{
-						element: 'input',			
-						
-						attributes:
-						{
-							type: 'text',
-							
-							id: 'event-end-date',
-							
-							value: event.end() ? event.end().toLocaleDateString() : '',
-							
-							readonly: true
-						},
-						
-						classList: ['datepicker', 'picker__input']
-					}));
-					
-					
-					innerDiv.appendChild(this.createElement( // label
-					{	
-						element: 'label',			
-						
-						attributes: {for: 'event-end-date'},
-						
-						classList: event.end() ? ['form-label', 'active'] : ['form-label'],
-						
-						dataset: {error: 'Please enter end date'},
-						
-						innerHTML: 'End Date'
-					}));
-					
-					
-					innerDiv.appendChild(this.createElement( // custom error div
-					{	
-						element: 'div',			
-						
-						attributes: {id: 'event-end-date-error'},
-						
-						classList: ['custom-validate']
-					}));
-					
-					
-					outerDiv.appendChild(innerDiv);
-					*/
+				outerDiv.appendChild(this.createTimeField( // Time
 
+					's6',
 
-				// Time
-					
-					innerDiv =  this.createElement( // inner div
-					{
-						element: 'div',			
-						
-						classList: ['input-field','col', 's6']
-					});
-					
-					
-					innerDiv.appendChild(this.createElement( // input
-					{
-						element: 'input',			
-						
-						attributes:
-						{
-							type: 'text',
-							
-							id: 'event-end-time',
-							
-							value: event.end() ? event.end().toLocaleTimeString() : '',
-							
-							readonly: true
-						},
-						
-						classList: ['timepicker', 'picker__input']
-					}));
-					
-					
-					innerDiv.appendChild(this.createElement( // label
-					{	
-						element: 'label',			
-						
-						attributes: {for: 'event-end-time'},
-						
-						classList: event.end() ? ['form-label', 'active'] : ['form-label'],
-						
-						dataset: {error: 'Please enter end time'},
-						
-						innerHTML: 'End Time'
-					}));
-					
-					
-					innerDiv.appendChild(this.createElement( // custom error div
-					{	
-						element: 'div',			
-						
-						attributes: {id: 'event-end-time-error'},
-						
-						classList: ['custom-validate']
-					}));
-					
-					
-					outerDiv.appendChild(innerDiv);
+					'event-end-time',
 
+					'End Time',
 
-					containerDiv.appendChild(outerDiv);
+					true,
+
+					event.end()
+
+				).children[0]);
 
 
 			// Add event type field

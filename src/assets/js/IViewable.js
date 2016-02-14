@@ -158,7 +158,7 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 };
 
 
-/** Utility for creating email fields in forms
+/** Utility for creating date picker fields in forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -773,6 +773,79 @@ app.IViewable.prototype.default_createSwitchField = function (str_width, str_swi
 	return outerDiv;
 };
 
+
+/** Utility for creating time picker fields in forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createTimeField = function (str_width, str_timeId, str_label, bool_required, Date_date) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+
+
+	var innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', str_width]
+	});
+	
+	outerDiv.appendChild(innerDiv);
+
+	
+	innerDiv.appendChild(this.createElement( // input
+	{
+		element: 'input',			
+		
+		attributes:
+		{
+			type: 'text',
+			
+			id: str_timeId,
+			
+			value: Date_date ? Date_date.toLocaleTimeString() : '',
+			
+			readonly: true
+		},
+		
+		classList: ['timepicker', 'picker__input']
+	}));
+	
+	
+	innerDiv.appendChild(this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: 'event-end-time'},
+		
+		classList: Date_date ? ['form-label', 'active'] : ['form-label'],
+		
+		dataset: {error: 'Please enter time'},
+		
+		innerHTML: str_label
+	}));
+	
+	
+	innerDiv.appendChild(this.createElement( // custom error div
+	{	
+		element: 'div',			
+		
+		attributes: {id: str_timeId + '-error'},
+		
+		classList: ['custom-validate']
+	}));
+	
+	
+
+	
+	return outerDiv;
+}
 
 /** Tests if object implements IViewable
 *
