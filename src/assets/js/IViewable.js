@@ -66,7 +66,7 @@ app.IViewable = function() {
 * Default methods (must be defined outside main function/class body)
 *---------------------------------------------------------------------------------------*/
 
-/** Creates HTML element based on specs provided in JSON object
+/** Utility for creating HTML element based on specs provided in JSON object
 *
 * @param {Object} JSON object literal containing specs of element to be created. Se comments in code for an example.
 *
@@ -199,6 +199,208 @@ app.IViewable.prototype.default_createFieldDescription = function (str_descripti
 }
 
 
+/** Utility for creating password entry field for forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createPasswordField = function (str_width, str_passwordId, str_hintsPrefix, Account_account) {
+
+	var account = Account_account, outerDiv, innerDiv, labelElement, pElement;
+
+	outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+				
+	
+	innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', str_width]
+	});
+	
+	outerDiv.appendChild(innerDiv);
+
+
+	innerDiv.appendChild(this.createElement( // input
+	{
+		element: 'input',			
+		
+		attributes:
+		{
+			type: 'text',
+			
+			id: str_passwordId,
+			
+			value: account && account.password() && account.password().password() ? account.password().password() : '',
+
+			required: 'true'
+		},
+		
+		classList: ['validate']
+	}));
+	
+	
+	labelElement = this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: str_passwordId},
+		
+		classList: account && account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
+		
+		dataset: {error: 'Please enter password'},
+		
+		innerHTML: 'Password'
+	});
+	
+	labelElement.appendChild(this.createElement( // required field indicator
+	{
+		element: 'span',
+
+		classList: ['required-indicator'],
+
+		innerHTML: '*'
+	}));
+
+	innerDiv.appendChild(labelElement);
+
+	
+	innerDiv =  this.createElement( // inner div (for validation hits)
+	{
+		element: 'div',
+
+		attributes: {id: str_hintsPrefix + '-hints'},
+		
+		classList: ['col', str_width]
+	});
+
+	outerDiv.appendChild(innerDiv);
+
+
+	pElement = this.createElement(
+	{
+		element: 'p',
+
+		attributes: {id: str_hintsPrefix + '-charcount'},
+
+		classList: ['password-validation-hint'],
+
+		innerHTML: 'Must be at least 8 characters long'
+	});
+
+	pElement.appendChild(this.createElement(
+	{
+		element: 'i',
+
+		classList: ['material-icons', 'left'],
+
+		innerHTML: 'error'
+	}));
+
+	innerDiv.appendChild(pElement);
+
+	
+	pElement = this.createElement(
+	{
+		element: 'p',
+
+		attributes: {id: str_hintsPrefix + '-uppercase'},
+
+		classList: ['password-validation-hint'],
+
+		innerHTML: 'Must contain Upper Case characters'
+	});
+
+	pElement.appendChild(this.createElement(
+	{
+		element: 'i',
+
+		classList: ['material-icons', 'left'],
+
+		innerHTML: 'error'
+	}));
+
+	innerDiv.appendChild(pElement);
+
+
+	pElement = this.createElement(
+	{
+		element: 'p',
+
+		attributes: {id: str_hintsPrefix + '-lowercase'},
+
+		classList: ['password-validation-hint'],
+
+		innerHTML: 'Must contain lower case characters'
+	});
+
+	pElement.appendChild(this.createElement(
+	{
+		element: 'i',
+
+		classList: ['material-icons', 'left'],
+
+		innerHTML: 'error'
+	}));
+
+	innerDiv.appendChild(pElement);
+	
+
+	pElement = this.createElement(
+	{
+		element: 'p',
+
+		attributes: {id: str_hintsPrefix + '-number'},
+
+		classList: ['password-validation-hint'],
+
+		innerHTML: 'Must contain numbers'
+	});
+
+	pElement.appendChild(this.createElement(
+	{
+		element: 'i',
+
+		classList: ['material-icons', 'left'],
+
+		innerHTML: 'error'
+	}));
+
+	innerDiv.appendChild(pElement);
+
+
+	pElement = this.createElement(
+	{
+		element: 'p',
+
+		attributes: {id: str_hintsPrefix + '-punctuation'},
+
+		classList: ['password-validation-hint'],
+
+		innerHTML: 'Must contain one or more of !@#$%^&'
+	});
+
+	pElement.appendChild(this.createElement(
+	{
+		element: 'i',
+
+		classList: ['material-icons', 'left'],
+
+		innerHTML: 'error'
+	}));
+
+	innerDiv.appendChild(pElement);
+	
+	
+	return outerDiv;
+}
+
+
 /** Tests if object implements IViewable
 *
 * Default method for IViewables that only need to be able to report that they are indeed IViewables.
@@ -282,7 +484,7 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 
 	// Manage display of validation message
 
-	var msg = 'Invalid password, please try again';
+	var msg = 'Invalid password';
 
 	if (!ret) { // not valid, display validation error
 

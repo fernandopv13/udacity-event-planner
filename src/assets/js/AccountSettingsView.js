@@ -972,7 +972,11 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				
 				$('#account-settings-name').keyup(this.validateName);
 
-				$('#account-settings-password').keyup(this.validateAccountPassword);
+				$('#account-settings-password').keyup(function() {
+
+					this.validatePassword(event, 'account-settings-password', 'account-settings-pw-validation-hint');
+
+				}.bind(this));
 
 				$('#account-settings-password').focus(function() {
 
@@ -987,7 +991,11 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					$('#account-settings-password-hints').hide('slow');
 				});
 
-				$('#account-settings-password-confirmation').keyup(this.validateAccountPasswordConfirmation);
+				$('#account-settings-password-confirmation').keyup(function(event) {
+
+					this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
+		
+				}.bind(this));
 
 
 				$('#account-settings-submit').click(function() {this.submit();}.bind(this));
@@ -1101,6 +1109,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
+	/*
 	app.AccountSettingsView.prototype.validateAccountPassword = function(event) {
 
 		// Call generic event handler inherited from IViewable
@@ -1108,6 +1117,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 		return this.validatePassword(event, 'account-settings-password', 'account-settings-pw-validation-hint');
 
 	}.bind(this);
+	*/
 
 
 	/* Event handler for interactive validation of password confirmation field
@@ -1115,59 +1125,13 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
+	/*
 	app.AccountSettingsView.prototype.validateAccountPasswordConfirmation = function(event) {
 
 		return this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
 		
-		/*
-		var $confirmation = $('#account-settings-password-confirmation'),
-
-		confirmation = $confirmation.val(),
-
-		password = $('#account-settings-password').val(),
-
-		msg = 'Must be the same as password';
-
-
-		// Manage display of validation message
-
-		if (confirmation !== password) { // not valid, display validation error
-
-			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				event.target.labels[0].dataset.error = msg;
-
-			}
-
-			else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-				$confirmation.next('label').data('error', msg);
-			}
-			
-			$confirmation.addClass('invalid');
-		}
-
-		else { // valid
-
-			$confirmation.removeClass('invalid');
-
-			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				event.target.labels[0].dataset.error = msg; // can't get jQuery.data() to work
-			}
-
-			else { // Other browsers (updates value but not display, falls back on value in HTML)
-
-				$confirmation.next('label').data('error', msg);
-			}
-
-			return true;
-		}
-
-		return false;
-		*/
 	}.bind(this);
-
+	*/
 
 	/*----------------------------------------------------------------------------------------
 	* Parameter parsing (constructor 'polymorphism')
