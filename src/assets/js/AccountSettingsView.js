@@ -85,25 +85,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	};
 	
 
-	/** Notifies observers that form has been updated (i.e. submitted).
-	*
-	* Overrides default method in IObservable.
-	*
-	* @param {Account} The Account passing data in the form onto the observers
-	*
-	* @return void
-	 */
-
-	/*
-	app.AccountSettingsView.prototype.notifyObservers = function(IModelable_account, int_objId) {
-
-		this.observers.forEach(function(observer) {
-
-			observer.update(IModelable_account, int_objId);
-		});
-	};
-	*/
-
 	/** Renders account to form in UI
 	*
 	* @param {Account} The account from which to present data in the form
@@ -186,72 +167,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			
 			// Add email field
-
-				/*
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'email',
-						
-						id: 'account-settings-email',
-						
-						value: account.email() && account.email().address() ? account.email().address() : '',
-
-						required: 'true'
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-settings-email'},
-					
-					classList: account.email() && account.email().address() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter email'},
-					
-					innerHTML: 'Email'
-				});
-				
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
-
-					classList: ['required-indicator'],
-
-					innerHTML: '*'
-				}));
-
-				innerDiv.appendChild(labelElement);
-
-				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
-				*/
 
 				containerDiv.appendChild(this.createEmailField(
 
@@ -746,15 +661,21 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 				//$('#account-location').focus(this.suggestLocations);
 				
-				$('#account-settings-name').keyup(this.validateName);
+				$('#account-settings-email').keyup(function(event) { // email
 
-				$('#account-settings-password').keyup(function() {
+					this.validateEmail(event, 'account-settings-email');
+
+				}.bind(this));
+
+				
+				$('#account-settings-password').keyup(function(event) { // password
 
 					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
 
 				}.bind(this));
 
-				$('#account-settings-password').focus(function() {
+				
+				$('#account-settings-password').focus(function(event) { // password hints
 
 					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
 
@@ -762,19 +683,27 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 				}.bind(this));
 
-				$('#account-settings-password').blur(function() {
+				$('#account-settings-password').blur(function(event) {
 
 					$('#account-settings-password-hints').hide('slow');
 				});
 
-				$('#account-settings-password-confirmation').keyup(function(event) {
+				
+				$('#account-settings-password-confirmation').keyup(function(event) { // password confirmation
 
 					this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
 		
 				}.bind(this));
 
 
-				$('#account-settings-submit').click(function() {this.submit();}.bind(this));
+				$('#account-settings-capacity').keyup(function(event) { // default capacity
+
+					this.validateCapacity(event, 'account-settings-capacity');
+		
+				}.bind(this));
+
+
+				$('#account-settings-submit').click(function(event) {this.submit(event);}.bind(this)); // submit button
 		}
 
 		else { // present default message

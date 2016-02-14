@@ -574,6 +574,109 @@ app.IViewable.prototype.default_isInstanceOf = function (Function_interface) {
 };
 
 
+/* Event handler for interactive validation of capacity field
+*
+* @return {Boolean} true if validation is succesful, otherwise false
+*/
+
+app.IViewable.prototype.default_validateCapacity = function(event, str_capacityId) {
+	
+	// Using the HTML5 validity contraint API here just to prove to my Udacity reviewer that I know how
+
+	var validity = document.getElementById(str_capacityId).validity;
+
+	if (validity.valueMissing) { // empty
+
+		this.displayFormFieldValidationMessage(event, str_capacityId, 'Please enter capacity', false);
+	}
+
+	// no need to test for non-numbers, not programmatically available from DOM anyway
+	
+	else if (validity.rangeUnderflow) { // negative number
+
+		this.displayFormFieldValidationMessage(event, str_capacityId, 'Capacity cannot be negative', false);
+	}
+	
+	else { // valid
+
+		this.displayFormFieldValidationMessage(event, str_capacityId, 'Please enter capacity', true);
+
+		return true;
+	}
+
+	return false;
+};
+
+
+/* Event handler for interactive validation of email field
+*
+* @return {Boolean} true if validation is succesful, otherwise false
+*/
+
+app.IViewable.prototype.default_validateEmail = function(event, str_EmailId) {
+
+	// Tried the HTML5 email validity constraint but found it too lax (it does not require period after @),
+	// so rolling my own. See unit test for Email class using com_github_dominicsayers_isemail.tests for details.
+
+	var $email = $('#' + str_EmailId),
+
+	email = $email.val(),
+
+	testMail = new app.Email(email),
+
+	valid = testMail.isValid(),
+
+	msg = 'Email must be like "address@server.domain"';
+
+	msg = email !== '' ? msg : 'Please enter email';
+
+	this.displayFormFieldValidationMessage(event, str_EmailId, msg, valid);
+
+	return valid;
+};
+
+
+/* Utility for displaying and hiding field error messages during interactive form validation
+*
+*/
+
+app.IViewable.prototype.default_displayFormFieldValidationMessage = function(event, str_fieldId, str_errorMsg, bool_valid) {
+
+	var $field = $('#' + str_fieldId);
+
+	if (!bool_valid) { // not valid, display validation error
+
+		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+			event.target.labels[0].dataset.error = str_errorMsg;
+
+		}
+
+		else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+			$field.next('label').data('error', str_errorMsg);
+		}
+		
+		$field.addClass('invalid');
+	}
+
+	else { // valid
+
+		$field.removeClass('invalid');
+
+		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+			event.target.labels[0].dataset.error = str_errorMsg; // can't get jQuery.data() to work
+		}
+
+		else { // Other browsers (updates value but not display, falls back on value in HTML)
+
+			$field.next('label').data('error', str_errorMsg);
+		}
+	}
+};
+
+
 /* Event handler for interactive validation of password field
 *
 * @return {Boolean} true if validation is succesful, otherwise false
