@@ -122,6 +122,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 		var event = Event_event, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
+		
 		if (event !== null) {
 			
 			// Setup up form and container div
@@ -474,77 +475,6 @@ app.EventView = function(str_elementId, str_heading) {
 				));
 
 
-				/*
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'number',
-						
-						id: 'event-capacity',
-						
-						min: 0,
-						
-						step: 1,
-						
-						value: event.capacity() ? event.capacity() : '',
-						
-						required: true
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'event-capacity'},
-					
-					classList: typeof event.capacity() === 'number' ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter capacity'},
-					
-					innerHTML: 'Capacity'
-				});
-				
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
-
-					classList: ['required-indicator'],
-
-					innerHTML: '*'
-				}));
-				
-				innerDiv.appendChild(labelElement);
-
-				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
-
-				*/
-
-
 			// Add host field
 
 				innerDiv =  this.createElement( // inner div
@@ -608,7 +538,7 @@ app.EventView = function(str_elementId, str_heading) {
 					classList: ['input-field', 'col', 's12']
 				});
 				
-				
+
 				innerDiv.appendChild(this.createElement( // input
 				{
 					element: 'textarea',			
@@ -617,14 +547,14 @@ app.EventView = function(str_elementId, str_heading) {
 					{
 						id: 'event-description',
 						
-						value: event.description() ? event.description() : '',
-						
 						length: 120,
 						
 						maxlength: 120
 					},
 					
-					classList: ['materialize-textarea']
+					classList: ['materialize-textarea'],
+
+					innerHTML: event.description()
 				}));
 				
 				
@@ -761,9 +691,13 @@ app.EventView = function(str_elementId, str_heading) {
 
 				
 				$('.timepicker').pickatime({
+					
 					//closeOnSelect: true, // bug: ineffective
+					
 					closeOnClear: true,
+					
 					format: 'H:i',
+					
 					onSet: this.validateTimeRange
 				});
 
@@ -771,11 +705,13 @@ app.EventView = function(str_elementId, str_heading) {
 				$('#event-location').focus(this.suggestLocations);
 
 				
-				$('#event-name').keyup(this.validateName);
+				$('#event-name').keyup(function(event) { // capacity
+
+					this.validateName(event, 'event-name');
+		
+				}.bind(this));
 
 				
-				//$('#event-capacity').keyup(this.validateCapacity);
-
 				$('#event-capacity').keyup(function(event) { // capacity
 
 					this.validateCapacity(event, 'event-capacity');
@@ -787,10 +723,6 @@ app.EventView = function(str_elementId, str_heading) {
 		}
 
 		else { // present default message
-
-			//$formDiv = $('#event-form');
-
-			//$formDiv.empty();
 
 			$_renderContext.empty();
 
@@ -811,17 +743,17 @@ app.EventView = function(str_elementId, str_heading) {
 	* @todo Fix host hack
 	*/
 
-	app.EventView.prototype.submit = function() {
+	app.EventView.prototype.submit = function(event) {
 
 		// Event handler binds to this, so reference works here
 		
-		if (this.validateName() && // Submit results if all validations pass
+		if (this.validateName(event, 'event-name') && // Submit results if all validations pass
 
 			this.validateDateRange() &&
 
 			this.validateTimeRange() &&
 
-			this.validateCapacity()) { 
+			this.validateCapacity(event, 'event-capacity')) { 
 
 			// Notify observers by passing them a new Event with the data from the form
 
@@ -910,7 +842,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 		// Get device's current location if available and allowed
 
-		if (account.geolocationAllowed()) { // user has granted permission to use geolocation
+		if (account.geoLocationAllowed()) { // user has granted permission to use geolocation
 
 			if(navigator.geolocation) { // device provides access to geolocation
 
@@ -1079,6 +1011,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
+	/*
 	app.EventView.prototype.validateName = function(event) {
 
 		var $name = $('#event-name');
@@ -1107,7 +1040,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 		return true;
 	}
-
+*/
 
 	/** Validates start time field
 	*

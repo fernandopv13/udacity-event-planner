@@ -220,8 +220,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 					account.defaultCapacity() ? account.defaultCapacity() : 0
 				));
-
-				console.log(containerDiv);
+				
 
 			// Add default location field
 
