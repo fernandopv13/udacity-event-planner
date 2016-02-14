@@ -274,7 +274,7 @@ app.IViewable.prototype.default_createPasswordField = function (str_width, str_p
 	{
 		element: 'div',
 
-		attributes: {id: str_hintsPrefix + '-hints'},
+		attributes: {id: str_hintsPrefix},
 		
 		classList: ['col', str_width]
 	});
@@ -398,7 +398,83 @@ app.IViewable.prototype.default_createPasswordField = function (str_width, str_p
 	
 	
 	return outerDiv;
-}
+};
+
+
+/** Utility for creating password confirmation field for forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createPasswordConfirmationField = function (str_width, str_confirmationId) {
+
+	var outerDiv, innerDiv, labelElement;
+
+	
+	outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+				
+	
+	innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', str_width]
+	});
+
+	outerDiv.appendChild(innerDiv);
+	
+
+	innerDiv.appendChild(this.createElement( // input
+	{
+		element: 'input',			
+		
+		attributes:
+		{
+			type: 'text',
+			
+			id: str_confirmationId,
+			
+			value: '',
+
+			required: 'true'
+		},
+		
+		classList: ['validate']
+	}));
+	
+	
+	labelElement = this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: str_confirmationId},
+		
+		classList: ['form-label'],
+		
+		dataset: {error: 'Please confirm password'},
+		
+		innerHTML: 'Confirm Password'
+	});
+	
+	labelElement.appendChild(this.createElement( // required field indicator
+	{
+		element: 'span',
+
+		classList: ['required-indicator'],
+
+		innerHTML: '*'
+	}));
+
+	innerDiv.appendChild(labelElement);
+
+	
+	return outerDiv;
+};
 
 
 /** Tests if object implements IViewable

@@ -630,7 +630,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 			person.email($('#account-holder-email').val() !== '' ? new app.Email($('#account-holder-email').val()) : null);
 			
-			person.employer($('#account-holder-employer').val() !== '' ? new app.Organization($('#account-holder-employer').val()) : null), //hack
+			person.employer($('#account-holder-employer').val() !== '' ? new app.Organization($('#account-holder-employer').val()) : null); //hack
 
 			person.birthday($('#account-holder-birthday').val() !== '' ? new Date($('#account-holder-birthday').val()) : null);
 			

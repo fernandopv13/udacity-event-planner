@@ -254,200 +254,21 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			// Add password field
 
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				outerDiv.appendChild(innerDiv);
+				containerDiv.appendChild(this.createPasswordField(
 
+					's12',
 
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'text',
-						
-						id: 'account-settings-password',
-						
-						value: account.password() && account.password().password() ? account.password().password() : '',
+					'account-settings-password',
 
-						required: 'true'
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-settings-password'},
-					
-					classList: account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter password'},
-					
-					innerHTML: 'Password'
-				});
-				
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
+					 'account-settings-password-hints',
 
-					classList: ['required-indicator'],
-
-					innerHTML: '*'
-				}));
-
-				innerDiv.appendChild(labelElement);
-
-				
-				innerDiv =  this.createElement( // inner div (for validation hits)
-				{
-					element: 'div',
-
-					attributes: {id: 'account-settings-password-hints'},
-					
-					classList: ['col', 's12']
-				});
-
-				outerDiv.appendChild(innerDiv);
-
-
-				pElement = this.createElement(
-				{
-					element: 'p',
-
-					attributes: {id: 'account-settings-pw-validation-hint-charcount'},
-
-					classList: ['password-validation-hint'],
-
-					innerHTML: 'Must be at least 8 characters long'
-				});
-
-				pElement.appendChild(this.createElement(
-				{
-					element: 'i',
-
-					classList: ['material-icons', 'left'],
-
-					innerHTML: 'error'
-				}));
-
-				innerDiv.appendChild(pElement);
-
-				
-				pElement = this.createElement(
-				{
-					element: 'p',
-
-					attributes: {id: 'account-settings-pw-validation-hint-uppercase'},
-
-					classList: ['password-validation-hint'],
-
-					innerHTML: 'Must contain Upper Case characters'
-				});
-
-				pElement.appendChild(this.createElement(
-				{
-					element: 'i',
-
-					classList: ['material-icons', 'left'],
-
-					innerHTML: 'error'
-				}));
-
-				innerDiv.appendChild(pElement);
-
-
-				pElement = this.createElement(
-				{
-					element: 'p',
-
-					attributes: {id: 'account-settings-pw-validation-hint-lowercase'},
-
-					classList: ['password-validation-hint'],
-
-					innerHTML: 'Must contain lower case characters'
-				});
-
-				pElement.appendChild(this.createElement(
-				{
-					element: 'i',
-
-					classList: ['material-icons', 'left'],
-
-					innerHTML: 'error'
-				}));
-
-				innerDiv.appendChild(pElement);
-				
-
-				pElement = this.createElement(
-				{
-					element: 'p',
-
-					attributes: {id: 'account-settings-pw-validation-hint-number'},
-
-					classList: ['password-validation-hint'],
-
-					innerHTML: 'Must contain numbers'
-				});
-
-				pElement.appendChild(this.createElement(
-				{
-					element: 'i',
-
-					classList: ['material-icons', 'left'],
-
-					innerHTML: 'error'
-				}));
-
-				innerDiv.appendChild(pElement);
-
-
-				pElement = this.createElement(
-				{
-					element: 'p',
-
-					attributes: {id: 'account-settings-pw-validation-hint-punctuation'},
-
-					classList: ['password-validation-hint'],
-
-					innerHTML: 'Must contain one or more of !@#$%^&'
-				});
-
-				pElement.appendChild(this.createElement(
-				{
-					element: 'i',
-
-					classList: ['material-icons', 'left'],
-
-					innerHTML: 'error'
-				}));
-
-				innerDiv.appendChild(pElement);
-				
-				
-				containerDiv.appendChild(outerDiv);
+					 Account_account
+				));
 
 
 			// Add password confirmation field
 
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -511,6 +332,15 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+				*/
+
+
+				containerDiv.appendChild(this.createPasswordConfirmationField(
+
+					's12',
+
+					'account-settings-password-confirmation'
+				));
 
 
 			// Add default event capacity field
@@ -974,13 +804,13 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 				$('#account-settings-password').keyup(function() {
 
-					this.validatePassword(event, 'account-settings-password', 'account-settings-pw-validation-hint');
+					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
 
 				}.bind(this));
 
 				$('#account-settings-password').focus(function() {
 
-					this.validatePassword(event, 'account-settings-password', 'account-settings-pw-validation-hint');
+					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
 
 					$('#account-settings-password-hints').show('slow');
 
@@ -1066,72 +896,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 		this.render(IModelable_account);
 	};
 	
-
-	/* Event handler for interactive validation of account name field
-	*
-	* @return {Boolean} true if validation is succesful, otherwise false
-	*/
-	
-	/*
-	app.AccountSettingsView.prototype.validateName = function() {
-
-		var $name = $('#account-name');
-
-		if ($name.val() === '') { // empty
-		
-			if (account && account.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				account.target.labels[0].dataset.error = 'Please enter account name';
-			}
-
-			else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-				$name.next('label').data('error', 'Please enter account name');
-			}
-
-			$name.addClass('invalid');
-
-			return false;
-		}
-
-		else {
-
-			$name.removeClass('invalid');
-		}
-
-		return true;
-	}
-	/*
-
-	
-	/* Event handler for interactive validation of password field
-	*
-	* @return {Boolean} true if validation is succesful, otherwise false
-	*/
-	
-	/*
-	app.AccountSettingsView.prototype.validateAccountPassword = function(event) {
-
-		// Call generic event handler inherited from IViewable
-
-		return this.validatePassword(event, 'account-settings-password', 'account-settings-pw-validation-hint');
-
-	}.bind(this);
-	*/
-
-
-	/* Event handler for interactive validation of password confirmation field
-	*
-	* @return {Boolean} true if validation is succesful, otherwise false
-	*/
-	
-	/*
-	app.AccountSettingsView.prototype.validateAccountPasswordConfirmation = function(event) {
-
-		return this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
-		
-	}.bind(this);
-	*/
 
 	/*----------------------------------------------------------------------------------------
 	* Parameter parsing (constructor 'polymorphism')
