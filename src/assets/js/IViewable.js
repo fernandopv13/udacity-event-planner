@@ -980,6 +980,8 @@ app.IViewable.prototype.default_createSwitchField = function (str_width, str_swi
 /** Utility for creating text input fields in forms
 *
 * @return {HTMLDivElement} DIV element
+*
+* @todo Add ability to also handle elements with datalists (e.g. event location)
 */
 
 app.IViewable.prototype.default_createTextField = function (str_width, str_fieldId, str_label, bool_required, value) {

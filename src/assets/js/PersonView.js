@@ -176,6 +176,7 @@ app.PersonView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				*/
 
+			
 			// Add hidden person id field
 
 				containerDiv.appendChild(this.createElement({
@@ -560,6 +561,8 @@ app.PersonView = function(str_elementId, str_heading) {
 			
 			// Add requirement indicator (asterisk) explanation
 
+				containerDiv.appendChild(this.createRequiredFieldExplanation());
+
 				/*
 				outerDiv =  this.createElement( // outer div
 				{
@@ -725,11 +728,11 @@ app.PersonView = function(str_elementId, str_heading) {
 
 					new app.Organization($('#guest-employer').val()), //hack
 
-					$('#guest-jobTitle').val(),
+					$('#guest-jobtitle').val(),
 
 					new app.Email($('#guest-email').val()),
 
-					new Date($('#guest-birthday').val())
+					$('#guest-birthday').val() ? new Date($('#guest-birthday').val()) : null
 				),
 
 				parseInt($('#guest-id').val())

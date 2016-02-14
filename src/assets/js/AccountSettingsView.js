@@ -405,7 +405,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 				$('#account-settings-email').keyup(function(event) { // email
 
-					this.validateEmail(event, 'account-settings-email');
+					this.validateEmail(event, 'account-settings-email', true);
 
 				}.bind(this));
 
@@ -473,7 +473,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 		// First display any and all validation errors at once
 
-		void this.validateEmail(event, 'account-settings-email');
+		void this.validateEmail(event, 'account-settings-email', true);
 
 		void this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
 
@@ -488,7 +488,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 		var valid =
 
-			this.validateEmail(event, 'account-settings-email')
+			this.validateEmail(event, 'account-settings-email', true)
 
 			&& this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints')
 
