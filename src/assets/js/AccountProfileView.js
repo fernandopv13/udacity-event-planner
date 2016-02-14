@@ -508,6 +508,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				containerDiv.appendChild(outerDiv);
 				*/
 			
+			
 			// Update DOM
 
 				$_renderContext.empty();
@@ -540,6 +541,13 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 				}.bind(this));
 
+
+				$('#account-holder-email').keyup(function(event) {
+
+					this.validateEmail(event, 'account-holder-email', false);
+
+				}.bind(this));
+
 				
 				$('#account-holder-form-submit').click(function(event) {this.submit(event);}.bind(this));
 		}
@@ -567,9 +575,19 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 	app.AccountProfileView.prototype.submit = function(event) {
 
-		// Person handler binds to this, so reference works here
+		// First display any and all validation errors at once
+
+		void this.validateName(event, 'account-holder-name', 'Please enter your name', true);
+
+		void this.validateEmail(event, 'account-holder-email', false);
+
+		// Then do it again to obtain validation status
+
+		// (Chain stops at first false, so no use for UI)
 		
-		if (this.validateName(event, 'account-holder-name', 'Please enter your name', true)) { // Submit results if all validations pass
+		if (this.validateName(event, 'account-holder-name', 'Please enter your name', true)
+
+			&& this.validateEmail(event, 'account-holder-email', false)) { // Submit results if all validations pass
 
 			// Nofity observers by passing them a new Person with the data from the form
 

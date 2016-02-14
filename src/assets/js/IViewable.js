@@ -725,6 +725,8 @@ app.IViewable.prototype.default_createPasswordConfirmationField = function (str_
 	var outerDiv =  this.createElement( // outer div
 	{
 		element: 'div',
+
+		attributes: {id: str_confirmationId + '-parent'},
 		
 		classList: ['row']
 	});
@@ -767,7 +769,7 @@ app.IViewable.prototype.default_createPasswordConfirmationField = function (str_
 		
 		classList: ['form-label'],
 		
-		dataset: {error: 'Please confirm password'},
+		dataset: {error: 'Please confirm password', succes: 'Matches password'},
 		
 		innerHTML: 'Confirm Password'
 	});
@@ -1286,15 +1288,20 @@ app.IViewable.prototype.default_validateEmail = function(event, str_emailId, boo
 
 	testMail = new app.Email(email),
 
-	valid = testMail.isValid() || !bool_required,
+	valid = testMail.isValid();
 
-	msg = 'Must be same format as "address@server.domain"';
 
-	
-	msg = email !== '' ? msg : 'Please enter email';
+	if (email !== '') { // always validate email if it exists
 
-	this.displayValidation(event, str_emailId, msg, valid);
+		this.displayValidation(event, str_emailId, 'Must be same format as "address@server.domain"', valid);
+	}
 
+	else if (bool_required) { // no entry, require if required(!)
+
+		this.displayValidation(event, str_emailId, 'Please enter email', false);
+
+		return valid || !bool_required; // empty is OK if not required
+	}
 	
 	return valid;
 };
@@ -1396,17 +1403,9 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 
 app.IViewable.prototype.default_validatePasswordConfirmation = function(event, str_passwordId, str_confirmationId) {
 
-	/*
-	var $confirmation = $('#' + str_confirmationId),
+	// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
 
-	confirmation = $confirmation.val(),
-
-	password = $('#' + str_passwordId).val(),
-
-	msg = 'Must be the same as password';
-	*/
-
-	var valid = $('#' + str_confirmationId).val() === $('#' + str_passwordId).val();
+	var valid = $('#' + str_confirmationId).val() === $('#' + str_passwordId).val() || !this.isPasswordDirty;
 
 	this.displayValidation(
 
@@ -1420,44 +1419,4 @@ app.IViewable.prototype.default_validatePasswordConfirmation = function(event, s
 	);
 
 	return valid;
-
-	// Manage display of validation message
-
-	/*
-	if (confirmation !== password) { // not valid, display validation error
-
-		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-			event.target.labels[0].dataset.error = msg;
-
-		}
-
-		else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-			$confirmation.next('label').data('error', msg);
-		}
-		
-		$confirmation.addClass('invalid');
-	}
-
-	else { // valid
-
-		$confirmation.removeClass('invalid');
-
-		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-			event.target.labels[0].dataset.error = msg; // can't get jQuery.data() to work
-		}
-
-		else { // Other browsers (updates value but not display, falls back on value in HTML)
-
-			$confirmation.next('label').data('error', msg);
-		}
-
-		return true;
-	}
-	
-	return false;
-	*/
-
 };

@@ -209,7 +209,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 					'account-settings-password-confirmation'
 				));
 
-
+				
 			// Add default event capacity field
 
 				containerDiv.appendChild(this.createCapacityField(
@@ -414,6 +414,10 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
 
+					this.isPasswordDirty = true; // password may have changed, so enable confirmation
+
+					$('#account-settings-password-confirmation-parent').show('slow');
+
 				}.bind(this));
 
 				
@@ -425,6 +429,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 				}.bind(this));
 
+				
 				$('#account-settings-password').blur(function(event) {
 
 					$('#account-settings-password-hints').hide('slow');
