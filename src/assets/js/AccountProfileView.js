@@ -247,6 +247,28 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 			
 			// Add email field
 
+				outerDiv =  this.createEmailField(
+
+					's12',
+
+					'account-holder-email',
+
+					false,
+
+					person.email()
+				);
+
+
+				outerDiv.appendChild(this.createFieldDescription(
+
+					'The app uses this email to contact you, and when presenting you to participants in your events. If left blank, the app will use the email address that you use to sign in (see "Account Settings").'
+				));
+
+				containerDiv.appendChild(outerDiv);
+
+
+
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -284,6 +306,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					
 					innerHTML: 'Your Email'
 				});
+				*/
 				
 				/*
 				labelElement.appendChild(this.createElement( // required field indicator
@@ -297,6 +320,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 				*/
 
+				/*
 				innerDiv.appendChild(labelElement);
 
 				
@@ -313,6 +337,8 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(this.createFieldDescription('The app uses this email to contact you, and when presenting you to participants in your events. If left blank, the app will use the email address that you use to sign in (see "Account Settings").'));
 				
 				containerDiv.appendChild(outerDiv);
+
+				*/
 			
 
 			// Add job title field
@@ -429,6 +455,21 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 			
 			// Add birthday field
 
+				containerDiv.appendChild(this.createDateField(
+
+					's12',
+
+					'account-holder-birthday',
+
+					'Your Birthday',
+
+					false,
+
+					person.birthday()
+				));
+
+
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',
@@ -491,6 +532,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 			
 				containerDiv.appendChild(outerDiv); // Add to container
+				*/
 
 			
 			// Add requirement indicator (asterisk) explanation

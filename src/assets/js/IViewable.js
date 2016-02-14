@@ -158,7 +158,83 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 };
 
 
-/** Utility for creating email field in forms
+/** Utility for creating email fields in forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+
+
+	var innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', str_width]
+	});
+	
+	outerDiv.appendChild(innerDiv);
+
+
+	var attributes = 
+	{
+		type: 'text',
+		
+		id: str_dateId,
+		
+		value: Date_date ? Date_date.toLocaleDateString() : '',
+		
+		readonly: true
+	}
+
+	if (bool_required) {attributes.required = true;}
+
+	innerDiv.appendChild(this.createElement( // input
+	{
+		element: 'input',			
+		
+		attributes: attributes,
+		
+		classList: ['validate', 'datepicker', 'picker__input']
+	}));
+	
+	
+	innerDiv.appendChild(this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: str_dateId},
+		
+		classList: Date_date ? ['form-label', 'active'] : ['form-label'],
+		
+		dataset: {error: 'Please enter date'},
+		
+		innerHTML: str_label
+	}));
+
+	
+	innerDiv.appendChild(this.createElement( // custom error div
+	{	
+		element: 'div',			
+		
+		attributes: {id: str_dateId + '-error'},
+		
+		classList: ['custom-validate']
+	}));
+	
+	
+	return outerDiv;
+}
+
+
+/** Utility for creating email fields in forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -237,7 +313,7 @@ app.IViewable.prototype.default_createEmailField = function (str_width, str_Emai
 }
 
 
-/** Utility for creating field descriptions when generating form elements
+/** Utility for creating field descriptions in forms
 *
 * @param {String} description Description of the field
 *
@@ -277,7 +353,7 @@ app.IViewable.prototype.default_createFieldDescription = function (str_descripti
 }
 
 
-/** Utility for creating password entry field in forms
+/** Utility for creating password entry fields in forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -479,7 +555,7 @@ app.IViewable.prototype.default_createPasswordField = function (str_width, str_p
 };
 
 
-/** Utility for creating password confirmation field in forms
+/** Utility for creating password confirmation fields in forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -552,7 +628,7 @@ app.IViewable.prototype.default_createPasswordConfirmationField = function (str_
 };
 
 
-/** Utility for creating switch (checkbox) field in forms
+/** Utility for creating switch (checkbox) fields in forms
 *
 * @return {HTMLDivElement} DIV element
 */
