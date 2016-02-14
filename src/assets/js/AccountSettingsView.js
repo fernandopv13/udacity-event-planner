@@ -174,6 +174,8 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 					'account-settings-email',
 
+					'Email',
+
 					true,
 
 					account.email()

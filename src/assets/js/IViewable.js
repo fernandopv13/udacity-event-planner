@@ -206,7 +206,7 @@ app.IViewable.prototype.default_createDateField = function (str_width, str_dateI
 	}));
 	
 	
-	innerDiv.appendChild(this.createElement( // label
+	var labelElement = this.createElement( // label
 	{	
 		element: 'label',			
 		
@@ -217,7 +217,22 @@ app.IViewable.prototype.default_createDateField = function (str_width, str_dateI
 		dataset: {error: 'Please enter date'},
 		
 		innerHTML: str_label
-	}));
+	});
+
+	
+	if (bool_required) {
+
+		labelElement.appendChild(this.createElement( // required field indicator
+		{
+			element: 'span',
+
+			classList: ['required-indicator'],
+
+			innerHTML: '*'
+		}));
+	}
+
+	innerDiv.appendChild(labelElement);
 
 	
 	innerDiv.appendChild(this.createElement( // custom error div
@@ -239,7 +254,7 @@ app.IViewable.prototype.default_createDateField = function (str_width, str_dateI
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createEmailField = function (str_width, str_EmailId, bool_required, Email_email) {
+app.IViewable.prototype.default_createEmailField = function (str_width, str_EmailId, str_label, bool_required, Email_email) {
 
 	var email = Email_email;
 
@@ -294,17 +309,21 @@ app.IViewable.prototype.default_createEmailField = function (str_width, str_Emai
 		
 		dataset: {error: 'Please enter email'},
 		
-		innerHTML: 'Email'
+		innerHTML: str_label
 	});
+
 	
-	labelElement.appendChild(this.createElement( // required field indicator
-	{
-		element: 'span',
+	if (bool_required) {
 
-		classList: ['required-indicator'],
+		labelElement.appendChild(this.createElement( // required field indicator
+		{
+			element: 'span',
 
-		innerHTML: '*'
-	}));
+			classList: ['required-indicator'],
+
+			innerHTML: '*'
+		}));
+	}
 
 	innerDiv.appendChild(labelElement);
 
@@ -876,6 +895,22 @@ app.IViewable.prototype.default_displayFormFieldValidationMessage = function(eve
 	}
 };
 
+
+/* Event handler for interactive validation of person name field
+*
+* @return {Boolean} true if validation is succesful, otherwise false
+*/
+
+app.IViewable.prototype.default_validateName = function(event, str_nameId, str_errorMsg, bool_required) {
+
+	var $name = $('#' + str_nameId),
+
+	valid = $name.val() !== '' || !bool_required;
+
+	this.displayFormFieldValidationMessage(event, str_nameId, str_errorMsg, valid);
+
+	return valid;
+}
 
 /* Event handler for interactive validation of password field
 *

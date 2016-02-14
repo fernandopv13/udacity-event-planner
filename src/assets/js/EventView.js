@@ -323,6 +323,21 @@ app.EventView = function(str_elementId, str_heading) {
 				
 				// Date
 
+					outerDiv.appendChild(this.createDateField(
+
+						's6',
+
+						'event-start-date',
+
+						'Start Date',
+
+						true,
+
+						event.start()
+
+					).children[0]); // extract date itself from row wrapper
+
+					/*
 					innerDiv =  this.createElement( // inner div
 					{
 						element: 'div',			
@@ -388,6 +403,8 @@ app.EventView = function(str_elementId, str_heading) {
 					}));
 					
 					outerDiv.appendChild(innerDiv);
+
+				*/
 					
 					
 				// Time
@@ -473,6 +490,20 @@ app.EventView = function(str_elementId, str_heading) {
 					
 				// Date
 
+					outerDiv.appendChild(this.createDateField(
+
+						's6',
+
+						'event-end-date',
+
+						'End Date',
+
+						true,
+
+						event.end()
+
+					).children[0]); // extract date itself from row wrapper
+					/*
 					innerDiv =  this.createElement( // inner div
 					{
 						element: 'div',			
@@ -525,6 +556,7 @@ app.EventView = function(str_elementId, str_heading) {
 					
 					
 					outerDiv.appendChild(innerDiv);
+					*/
 
 
 				// Time

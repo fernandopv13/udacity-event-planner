@@ -253,6 +253,8 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 					'account-holder-email',
 
+					'Email',
+
 					false,
 
 					person.email()
@@ -266,80 +268,6 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 				containerDiv.appendChild(outerDiv);
 
-
-
-				/*
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'email',
-						
-						id: 'account-holder-email',
-						
-						value: person.email() && person.email().address() ? person.email().address() : ''
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-holder-email'},
-					
-					classList: person.email() && person.email().address() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter email'},
-					
-					innerHTML: 'Your Email'
-				});
-				*/
-				
-				/*
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
-
-					classList: ['required-indicator'],
-
-					innerHTML: '*'
-				}));
-
-				*/
-
-				/*
-				innerDiv.appendChild(labelElement);
-
-				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				
-				outerDiv.appendChild(innerDiv);
-
-				outerDiv.appendChild(this.createFieldDescription('The app uses this email to contact you, and when presenting you to participants in your events. If left blank, the app will use the email address that you use to sign in (see "Account Settings").'));
-				
-				containerDiv.appendChild(outerDiv);
-
-				*/
-			
 
 			// Add job title field
 
@@ -468,72 +396,6 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					person.birthday()
 				));
 
-
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-			
-			
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'text',
-						
-						id: 'account-holder-birthday',
-						
-						value: person.birthday() ? person.birthday().toLocaleDateString() : '',
-						
-						readonly: true
-					},
-					
-					classList: ['validate', 'datepicker', 'picker__input']
-				}));
-				
-				
-				innerDiv.appendChild(this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-holder-birthday'},
-					
-					classList: person.birthday() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter your birthday'},
-					
-					innerHTML: 'Your Birthday'
-				}));
-
-				
-				innerDiv.appendChild(this.createElement( // custom error div
-				{	
-					element: 'div',			
-					
-					attributes: {id: 'account-holder-birthday-error'},
-					
-					classList: ['custom-validate']
-				}));
-				
-				
-				outerDiv.appendChild(innerDiv);
-			
-				containerDiv.appendChild(outerDiv); // Add to container
-				*/
-
 			
 			// Add requirement indicator (asterisk) explanation
 
@@ -632,8 +494,13 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				//$('#account-holder-location').focus(this.suggestLocations);
 
 				
-				$('#account-holder-name').keyup(this.validateName);
+				$('#account-holder-name').keyup(function(event) {
 
+					this.validateName(event, 'account-holder-name', 'Please enter your name', true);
+
+				}.bind(this));
+
+				
 				$('#account-holder-form-submit').click(function() {this.submit();}.bind(this));
 		}
 
@@ -692,41 +559,6 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 		this.render(IModelable_Account);
 	};
 	
-
-	/* Event handler for interactive validation of person name field
-	*
-	* @return {Boolean} true if validation is succesful, otherwise false
-	*/
-	
-	app.AccountProfileView.prototype.validateName = function(person) {
-
-		var $name = $('#account-holder-name');
-
-		if ($name.val() === '') { // empty
-		
-			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				person.target.labels[0].dataset.error = 'Please enter your name';
-			}
-
-			else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-				$name.next('label').data('error', 'Please enter your name');
-			}
-
-			$name.addClass('invalid');
-
-			return false;
-		}
-
-		else {
-
-			$name.removeClass('invalid');
-		}
-
-		return true;
-	}
-
 
 	/*----------------------------------------------------------------------------------------
 	* Parameter parsing (constructor 'polymorphism')
