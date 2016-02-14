@@ -677,7 +677,7 @@ app.PersonView = function(str_elementId, str_heading) {
 				}.bind(this));
 
 
-				$('#guest-form-submit').click(function() {this.submit();}.bind(this));
+				$('#guest-form-submit').click(function(event) {this.submit(event);}.bind(this));
 		}
 
 		else { // present default message
@@ -701,13 +701,13 @@ app.PersonView = function(str_elementId, str_heading) {
 	* @todo Fix host hack
 	*/
 
-	app.PersonView.prototype.submit = function() {
+	app.PersonView.prototype.submit = function(event) {
 
 		// First display any and all validation errors in the UI
 
 		this.validateName(event, 'guest-name', 'Please enter name', true);
 
-		this.validateEmail(event, 'guest-email', 'Please enter email', true);
+		void this.validateEmail(event, 'guest-email', 'Please enter email', true);
 
 
 		// Then do it again to obtain validation status

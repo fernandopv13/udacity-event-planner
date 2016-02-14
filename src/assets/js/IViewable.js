@@ -216,7 +216,7 @@ app.IViewable.prototype.default_createCapacityField = function (str_width, str_c
 		
 		classList: int_capacity ? ['form-label', 'active'] : ['form-label'],
 		
-		dataset: {error: 'Please enter capacity'},
+		dataset: {error: 'Please enter capacity (0 or greater)'},
 		
 		innerHTML: str_label
 	});
@@ -239,7 +239,6 @@ app.IViewable.prototype.default_createCapacityField = function (str_width, str_c
 
 	return outerDiv;
 }
-
 
 
 /** Utility for creating date picker fields in forms
@@ -391,7 +390,7 @@ app.IViewable.prototype.default_createEmailField = function (str_width, str_Emai
 		
 		classList: email && email.address() ? ['form-label', 'active'] : ['form-label'],
 		
-		dataset: {error: 'Please enter email'},
+		dataset: {error: 'Please enter email in "address@server.domain" format'},
 		
 		innerHTML: str_label
 	});
@@ -545,7 +544,7 @@ app.IViewable.prototype.default_createPasswordField = function (str_width, str_p
 		
 		classList: account && account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
 		
-		dataset: {error: 'Please enter password'},
+		dataset: {error: 'Please enter a valid password', success: 'Password is valid'},
 		
 		innerHTML: 'Password'
 	});
@@ -1034,7 +1033,7 @@ app.IViewable.prototype.default_createTextField = function (str_width, str_field
 		
 		classList: value ? ['form-label', 'active'] : ['form-label'],
 		
-		dataset: {error: 'Please enter this information'},
+		dataset: {error: 'Please enter ' + str_label.toLowerCase()},
 		
 		innerHTML: str_label
 	});
@@ -1148,92 +1147,11 @@ app.IViewable.prototype.default_createTimeField = function (str_width, str_timeI
 }
 
 
-/** Tests if object implements IViewable
-*
-* Default method for IViewables that only need to be able to report that they are indeed IViewables.
-*
-* Override in realizing classes if more advanced behaviour is required.
-*
-* @param {Function} interface The interface we wish to determine if this object implements
-*
-* @return {Boolean} true if object implements interface, otherwise false
-*
-* @todo Refactor to method signature
-*/
-
-app.IViewable.prototype.default_isInstanceOf = function (Function_interface) {
-	
-	return Function_interface === app.IViewable;
-};
-
-
-/* Event handler for interactive validation of capacity field
-*
-* @return {Boolean} true if validation is succesful, otherwise false
-*/
-
-app.IViewable.prototype.default_validateCapacity = function(event, str_capacityId) {
-	
-	// Using the HTML5 validity contraint API here just to prove to my Udacity reviewer that I know how
-
-	var validity = document.getElementById(str_capacityId).validity;
-
-	if (validity.valueMissing) { // empty
-
-		this.displayFormFieldValidationMessage(event, str_capacityId, 'Please enter capacity', false);
-	}
-
-	// no need to test for non-numbers, not programmatically available from DOM anyway
-	
-	else if (validity.rangeUnderflow) { // negative number
-
-		this.displayFormFieldValidationMessage(event, str_capacityId, 'Capacity cannot be negative', false);
-	}
-	
-	else { // valid
-
-		this.displayFormFieldValidationMessage(event, str_capacityId, 'Please enter capacity', true);
-
-		return true;
-	}
-
-	return false;
-};
-
-
-/* Event handler for interactive validation of email field
-*
-* @return {Boolean} true if validation is succesful, otherwise false
-*/
-
-app.IViewable.prototype.default_validateEmail = function(event, str_EmailId, bool_required) {
-
-	// Tried the HTML5 email validity constraint but found it too lax (it does not require period after @),
-	// so rolling my own. See unit test for Email class using com_github_dominicsayers_isemail.tests for details.
-
-	var $email = $('#' + str_EmailId),
-
-	email = $email.val(),
-
-	testMail = new app.Email(email),
-
-	valid = testMail.isValid() || !bool_required,
-
-	msg = 'Must be same format as "address@server.domain"';
-
-	msg = email !== '' ? msg : 'Please enter email';
-
-	this.displayFormFieldValidationMessage(event, str_EmailId, msg, valid);
-
-	return valid;
-};
-
-
 /* Utility for displaying and hiding field error messages during interactive form validation
 *
 */
 
-app.IViewable.prototype.default_displayFormFieldValidationMessage = function(event, str_fieldId, str_errorMsg, bool_valid) {
+app.IViewable.prototype.default_displayValidation = function(event, str_fieldId, str_errorMsg, bool_valid) {
 
 	var $field = $('#' + str_fieldId);
 
@@ -1270,6 +1188,88 @@ app.IViewable.prototype.default_displayFormFieldValidationMessage = function(eve
 };
 
 
+/** Tests if object implements IViewable
+*
+* Default method for IViewables that only need to be able to report that they are indeed IViewables.
+*
+* Override in realizing classes if more advanced behaviour is required.
+*
+* @param {Function} interface The interface we wish to determine if this object implements
+*
+* @return {Boolean} true if object implements interface, otherwise false
+*
+* @todo Refactor to method signature
+*/
+
+app.IViewable.prototype.default_isInstanceOf = function (Function_interface) {
+	
+	return Function_interface === app.IViewable;
+};
+
+
+/* Event handler for interactive validation of capacity field
+*
+* @return {Boolean} true if validation is succesful, otherwise false
+*/
+
+app.IViewable.prototype.default_validateCapacity = function(event, str_capacityId) {
+	
+	var validity = $('#' + str_capacityId)[0].validity;
+
+	
+	if (validity.valueMissing) { // empty
+
+		this.displayValidation(event, str_capacityId, 'Please enter capacity', false);
+	}
+
+	// no need to test for non-numbers, not programmatically available from DOM anyway
+	
+	else if (validity.rangeUnderflow) { // negative number
+
+		this.displayValidation(event, str_capacityId, 'Capacity cannot be negative', false);
+	}
+	
+	else { // valid
+
+		this.displayValidation(event, str_capacityId, 'Please enter capacity', true);
+
+		return true;
+	}
+
+	return false;
+};
+
+
+/* Event handler for interactive validation of email field
+*
+* @return {Boolean} true if validation is succesful, otherwise false
+*/
+
+app.IViewable.prototype.default_validateEmail = function(event, str_emailId, bool_required) {
+
+	// Tried the HTML5 email validity constraint but found it too lax (it does not require period after @),
+	// so rolling my own. See unit test for Email class using com_github_dominicsayers_isemail.tests for details.
+
+	var $email = $('#' + str_emailId),
+
+	email = $email.val(),
+
+	testMail = new app.Email(email),
+
+	valid = testMail.isValid() || !bool_required,
+
+	msg = 'Must be same format as "address@server.domain"';
+
+	
+	msg = email !== '' ? msg : 'Please enter email';
+
+	this.displayValidation(event, str_emailId, msg, valid);
+
+	
+	return valid;
+};
+
+
 /* Event handler for interactive validation of person name field
 *
 * @return {Boolean} true if validation is succesful, otherwise false
@@ -1281,10 +1281,11 @@ app.IViewable.prototype.default_validateName = function(event, str_nameId, str_e
 
 	valid = $name.val() !== '' || !bool_required;
 
-	this.displayFormFieldValidationMessage(event, str_nameId, str_errorMsg, valid);
+	this.displayValidation(event, str_nameId, str_errorMsg, valid);
 
 	return valid;
 }
+
 
 /* Event handler for interactive validation of password field
 *
@@ -1293,17 +1294,45 @@ app.IViewable.prototype.default_validateName = function(event, str_nameId, str_e
 
 app.IViewable.prototype.default_validatePassword = function(event, str_passwordId, str_hintsPrefix) {
 
-	//if (arguments.length < 3) {return false}; // initial focus fires invalid call, ignore
-	
+	/* Relying solely on HTML5 constraint validation here would require me to write a compound regex
+	*
+	* meeting all the requirements of the individial static validation functions in the Password class.
+	*
+	* This is too much of a headache, both to create and maintain. So relying directly on Password instead.
+	*/
 
 	var $password = $('#' + str_passwordId), password = $password.val(), ret, tmp;
 
 
 	// Validate password and manage display of password hints
 
-	var invalidIcon = 'error', validIcon = 'done'
+	var invalidIcon = 'error', validIcon = 'done';
 
-	tmp = app.Password.hasValidCharacterCount(password);
+	var tests = 
+	{
+		charcount: app.Password.hasValidCharacterCount,
+
+		uppercase: app.Password.hasValidUpperCaseCount,
+
+		lowercase: app.Password.hasValidLowerCaseCount,
+
+		number: app.Password.hasValidNumberCount,
+
+		punctuation: app.Password.hasValidPunctuationCount
+	}
+
+
+	for (var prop in tests) {
+
+		tmp = tests[prop](password); // run test
+
+		ret = ret && tmp; // add up results
+
+		$('#' + str_hintsPrefix + '-' + prop).find('i').html(tmp ? 'done' : 'error'); // display icon
+	}
+
+	/*
+	tmp = app.Password.hasValidCharacterCount(password); // check for character count
 
 	ret = tmp;
 
@@ -1312,7 +1341,7 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 	else {$('#' + str_hintsPrefix + '-charcount').find('i').html(invalidIcon);}
 
 			
-	tmp = app.Password.hasValidUpperCaseCount(password);
+	tmp = app.Password.hasValidUpperCaseCount(password); // check for uppercase
 
 	ret = ret && tmp;
 
@@ -1321,7 +1350,7 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 	else {$('#' + str_hintsPrefix + '-uppercase').find('i').html(invalidIcon);}
 
 
-	tmp = app.Password.hasValidLowerCaseCount(password);
+	tmp = app.Password.hasValidLowerCaseCount(password); // check for lower case
 
 	ret = ret && tmp;
 
@@ -1330,7 +1359,7 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 	else {$('#' + str_hintsPrefix + '-lowercase').find('i').html(invalidIcon);}
 
 	
-	tmp = app.Password.hasValidNumberCount(password);
+	tmp = app.Password.hasValidNumberCount(password); // check for numericals
 
 	ret = ret && tmp;
 
@@ -1339,23 +1368,34 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 	else {$('#' + str_hintsPrefix + '-number').find('i').html(invalidIcon);}
 
 
-	tmp = app.Password.hasValidPunctuationCount(password);
+	tmp = app.Password.hasValidPunctuationCount(password); // check for 'punctuation'
 
 	ret = ret && tmp;
 
 	if (tmp) {$('#' + str_hintsPrefix + '-punctuation').find('i').html(validIcon);}
 
 	else {$('#' + str_hintsPrefix + '-punctuation').find('i').html(invalidIcon);}
+	*/
 
-
-	tmp = app.Password.hasIllegalCharacters(password);
+	tmp = app.Password.hasIllegalCharacters(password); // check for illegal characters
 
 	ret = ret && tmp === null;
 
+	
 	// Manage display of validation message
 
-	var msg = tmp ? 'This character is not allowed: ' + tmp[0] : (password !== '' ? 'Invalid password' : 'Please enter password');
+	this.displayValidation(
 
+		event,
+
+		str_passwordId,
+
+		tmp ? 'This character is not allowed: ' + tmp[0] : (password !== '' ? 'Invalid password' : 'Please enter password'),
+
+		ret
+	);
+
+	/*
 	if (!ret) { // not valid, display validation error
 
 		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
@@ -1386,6 +1426,7 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 			$password.next('label').data('error', msg);
 		}
 	}
+	*/
 
 	return ret;
 };

@@ -751,7 +751,7 @@ app.EventView = function(str_elementId, str_heading) {
 				}.bind(this));
 
 				
-				$('#event-form-submit').click(function() {this.submit();}.bind(this));
+				$('#event-form-submit').click(function(event) {this.submit(event);}.bind(this));
 		}
 
 		else { // present default message

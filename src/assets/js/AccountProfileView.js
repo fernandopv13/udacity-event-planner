@@ -541,7 +541,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				}.bind(this));
 
 				
-				$('#account-holder-form-submit').click(function() {this.submit();}.bind(this));
+				$('#account-holder-form-submit').click(function(event) {this.submit(event);}.bind(this));
 		}
 
 		else { // present default message

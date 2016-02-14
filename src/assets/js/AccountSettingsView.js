@@ -110,7 +110,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{
 					element: 'form',			
 					
-					attributes: {id: 'account-settings-form', novalidate: true},
+					attributes: {id: 'account-settings-form', novalidate: false},
 					
 					classList: ['col', 's12']
 				});
@@ -281,7 +281,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			// Add local storage permission field
 
-				var outerDiv = this.createSwitchField(
+				outerDiv = this.createSwitchField(
 
 					's7',
 
@@ -299,7 +299,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 			
 			// Add geolocation permission field
 
-				var outerDiv = this.createSwitchField(
+				outerDiv = this.createSwitchField(
 
 					's7',
 
@@ -469,7 +469,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* @todo Fix host hack
 	*/
 
-	app.AccountSettingsView.prototype.submit = function() {
+	app.AccountSettingsView.prototype.submit = function(event) {
 
 		// First display any and all validation errors at once
 
@@ -481,7 +481,9 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 		void this.validateCapacity(event, 'account-settings-capacity');
 
+		//console.log(document.getElementById('account-settings-form').checkValidity());
 
+				
 		// Then do it again to obtain validation status
 
 		// (Chain stops at first false, so no use for UI)
