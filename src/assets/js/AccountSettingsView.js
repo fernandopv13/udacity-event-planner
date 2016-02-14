@@ -187,6 +187,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 			
 			// Add email field
 
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -250,6 +251,18 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+				*/
+
+				containerDiv.appendChild(this.createEmailField(
+
+					's12',
+
+					'account-settings-email',
+
+					true,
+
+					account.email()
+				));
 
 
 			// Add password field
@@ -267,73 +280,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 
 			// Add password confirmation field
-
-				/*
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'text',
-						
-						id: 'account-settings-password-confirmation',
-						
-						value: '',//account.password() && account.password().password() ? account.password().password() : '',
-
-						required: 'true'
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-settings-password-confirmation'},
-					
-					classList: ['form-label'], //account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please confirm password'},
-					
-					innerHTML: 'Confirm Password'
-				});
-				
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
-
-					classList: ['required-indicator'],
-
-					innerHTML: '*'
-				}));
-
-				innerDiv.appendChild(labelElement);
-
-				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
-				*/
-
 
 				containerDiv.appendChild(this.createPasswordConfirmationField(
 

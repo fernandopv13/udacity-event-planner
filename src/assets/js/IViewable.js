@@ -158,6 +158,84 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 };
 
 
+/** Utility for creating email field in forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createEmailField = function (str_width, str_EmailId, bool_required, Email_email) {
+
+	var email = Email_email;
+
+	
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+
+	
+
+	var innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', str_width]
+	});
+
+	outerDiv.appendChild(innerDiv);
+	
+
+	var attributes = 
+	{
+		type: 'email',
+		
+		id: str_EmailId,
+		
+		value: email && email.address() ? email.address() : ''
+	}
+
+	if (bool_required) {attributes.required = true;}
+
+	innerDiv.appendChild(this.createElement( // input
+	{
+		element: 'input',			
+		
+		attributes: attributes,
+		
+		classList: ['validate']
+	}));
+	
+	
+	var labelElement = this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: str_EmailId},
+		
+		classList: email && email.address() ? ['form-label', 'active'] : ['form-label'],
+		
+		dataset: {error: 'Please enter email'},
+		
+		innerHTML: 'Email'
+	});
+	
+	labelElement.appendChild(this.createElement( // required field indicator
+	{
+		element: 'span',
+
+		classList: ['required-indicator'],
+
+		innerHTML: '*'
+	}));
+
+	innerDiv.appendChild(labelElement);
+
+	
+	return outerDiv;
+}
+
 
 /** Utility for creating field descriptions when generating form elements
 *
@@ -199,7 +277,7 @@ app.IViewable.prototype.default_createFieldDescription = function (str_descripti
 }
 
 
-/** Utility for creating password entry field for forms
+/** Utility for creating password entry field in forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -401,7 +479,7 @@ app.IViewable.prototype.default_createPasswordField = function (str_width, str_p
 };
 
 
-/** Utility for creating password confirmation field for forms
+/** Utility for creating password confirmation field in forms
 *
 * @return {HTMLDivElement} DIV element
 */
