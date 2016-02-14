@@ -129,6 +129,9 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			// Add heading
 				
+				containerDiv.appendChild(this.createHeading('s12', _heading));
+
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -154,6 +157,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				}));
 
 				outerDiv.appendChild(innerDiv);
+				*/
 
 
 			// Add hidden account id field
@@ -313,6 +317,8 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 			
 			// Add requirement indicator (asterisk) explanation
 
+				containerDiv.appendChild(this.createRequiredFieldExplanation());
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -332,9 +338,13 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				
 				containerDiv.appendChild(outerDiv);
 
+				*/
+
 			
 			// Add submit and cancel buttons
 
+				containerDiv.appendChild(this.createSubmitCancelButtons('account-settings'))
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -380,6 +390,8 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(buttonElement);
 
 				containerDiv.appendChild(outerDiv);
+
+				*/
 
 			
 			// Update DOM
@@ -459,7 +471,20 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 	app.AccountSettingsView.prototype.submit = function() {
 
-		// Account handler binds to this, so reference works here
+		// First display any and all validation errors at once
+
+		void this.validateEmail(event, 'account-settings-email');
+
+		void this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
+
+		void this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
+
+		void this.validateCapacity(event, 'account-settings-capacity');
+
+
+		// Then do it again to obtain validation status
+
+		// (Chain stops at first false, so no use for UI)
 
 		var valid =
 

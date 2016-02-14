@@ -456,6 +456,41 @@ app.IViewable.prototype.default_createFieldDescription = function (str_descripti
 }
 
 
+/** Utility for creating headings in forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createHeading = function (str_width, str_heading) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',			
+		
+		classList: ['row']
+	});
+
+	var innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['col', str_width]
+	});
+
+	innerDiv.appendChild(this.createElement({
+
+		element: 'h4',
+
+		innerHTML: str_heading
+
+	}));
+
+	outerDiv.appendChild(innerDiv);
+	
+	return outerDiv;
+}
+
+
 /** Utility for creating password entry fields in forms
 *
 * @return {HTMLDivElement} DIV element
@@ -731,6 +766,90 @@ app.IViewable.prototype.default_createPasswordConfirmationField = function (str_
 };
 
 
+/** Utility for creating required field explanations in forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createRequiredFieldExplanation = function () {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',			
+		
+		classList: ['row']
+	});
+	
+	outerDiv.appendChild(this.createElement({
+	
+		element: 'p',
+		
+		classList: ['required-indicator'],
+			
+		innerHTML: '* indicates a required field'
+	}));
+				
+	
+	return outerDiv;
+}
+
+
+/** Utility for creating submit buttons in forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createSubmitCancelButtons = function(str_buttonIdPrefix) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',			
+		
+		classList: ['row', 'form-submit']
+	});
+	
+	
+	outerDiv.appendChild(this.createElement({ // cancel button
+		
+		element: 'a',
+		
+		attributes: {id: str_buttonIdPrefix + '-cancel'},
+		
+		classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+
+		innerHTML: 'Cancel'
+	}));
+	
+	
+	var buttonElement =  this.createElement({ // submit button
+		
+		element: 'a',
+		
+		attributes: {id: str_buttonIdPrefix + '-submit'},
+		
+		classList: ['waves-effect', 'waves-light', 'btn'],
+
+		innerHTML: 'Done'
+	});
+	
+	
+	buttonElement.appendChild(this.createElement({ // 'send' icon
+		
+		element: 'i',
+		
+		classList: ['material-icons', 'right'],
+		
+		innerHTML: 'send'
+	}));
+	
+	
+	outerDiv.appendChild(buttonElement);
+
+
+	return outerDiv
+}
+
+
 /** Utility for creating switch (checkbox) fields in forms
 *
 * @return {HTMLDivElement} DIV element
@@ -856,6 +975,86 @@ app.IViewable.prototype.default_createSwitchField = function (str_width, str_swi
 
 	return outerDiv;
 };
+
+
+/** Utility for creating text input fields in forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createTextField = function (str_width, str_fieldId, str_label, bool_required, value) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+
+	
+
+	var innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', str_width]
+	});
+
+	outerDiv.appendChild(innerDiv);
+	
+
+	var attributes = 
+	{
+		type: 'text',
+		
+		id: str_fieldId,
+		
+		value: value ? value : ''
+	}
+
+	if (bool_required) {attributes.required = true;}
+
+	innerDiv.appendChild(this.createElement( // input
+	{
+		element: 'input',			
+		
+		attributes: attributes,
+		
+		classList: ['validate']
+	}));
+	
+	
+	var labelElement = this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: str_fieldId},
+		
+		classList: value ? ['form-label', 'active'] : ['form-label'],
+		
+		dataset: {error: 'Please enter this information'},
+		
+		innerHTML: str_label
+	});
+
+	
+	if (bool_required) {
+
+		labelElement.appendChild(this.createElement( // required field indicator
+		{
+			element: 'span',
+
+			classList: ['required-indicator'],
+
+			innerHTML: '*'
+		}));
+	}
+
+	innerDiv.appendChild(labelElement);
+
+	
+	return outerDiv;
+}
 
 
 /** Utility for creating time picker fields in forms
@@ -1005,7 +1204,7 @@ app.IViewable.prototype.default_validateCapacity = function(event, str_capacityI
 * @return {Boolean} true if validation is succesful, otherwise false
 */
 
-app.IViewable.prototype.default_validateEmail = function(event, str_EmailId) {
+app.IViewable.prototype.default_validateEmail = function(event, str_EmailId, bool_required) {
 
 	// Tried the HTML5 email validity constraint but found it too lax (it does not require period after @),
 	// so rolling my own. See unit test for Email class using com_github_dominicsayers_isemail.tests for details.
@@ -1016,9 +1215,9 @@ app.IViewable.prototype.default_validateEmail = function(event, str_EmailId) {
 
 	testMail = new app.Email(email),
 
-	valid = testMail.isValid(),
+	valid = testMail.isValid() || !bool_required,
 
-	msg = 'Email must be like "address@server.domain"';
+	msg = 'Must be same format as "address@server.domain"';
 
 	msg = email !== '' ? msg : 'Please enter email';
 
@@ -1147,9 +1346,13 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 	else {$('#' + str_hintsPrefix + '-punctuation').find('i').html(invalidIcon);}
 
 
+	tmp = app.Password.hasIllegalCharacters(password);
+
+	ret = ret && tmp === null;
+
 	// Manage display of validation message
 
-	var msg = 'Invalid password';
+	var msg = tmp ? 'This character is not allowed: ' + tmp[0] : (password !== '' ? 'Invalid password' : 'Please enter password');
 
 	if (!ret) { // not valid, display validation error
 

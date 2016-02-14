@@ -150,6 +150,9 @@ app.EventView = function(str_elementId, str_heading) {
 			
 			// Add heading
 				
+				containerDiv.appendChild(this.createHeading('s12', _heading));
+
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -175,7 +178,7 @@ app.EventView = function(str_elementId, str_heading) {
 				}));
 
 				outerDiv.appendChild(innerDiv);
-
+				*/
 
 			// Add hidden event id field
 
@@ -189,6 +192,19 @@ app.EventView = function(str_elementId, str_heading) {
 			
 			// Add event name field
 
+				containerDiv.appendChild(this.createTextField(
+
+					's12',
+
+					'event-name',
+
+					'Event Name',
+
+					true,
+
+					event.name() ? event.name() : ''
+				));
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -251,7 +267,8 @@ app.EventView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
-				
+				*/
+			
 			
 			// Add location field
 
@@ -477,6 +494,19 @@ app.EventView = function(str_elementId, str_heading) {
 
 			// Add host field
 
+				containerDiv.appendChild(this.createTextField(
+
+					's12',
+
+					'event-host',
+
+					'Host',
+
+					false,
+
+					event.host() && event.host().hostName() ? event.host().hostName() : ''
+				));
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -527,6 +557,8 @@ app.EventView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+
+				*/
 
 			
 			// Add description field
@@ -587,6 +619,9 @@ app.EventView = function(str_elementId, str_heading) {
 
 			// Add requirement indicator (asterisk) explanation
 
+				containerDiv.appendChild(this.createRequiredFieldExplanation());
+
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -605,10 +640,13 @@ app.EventView = function(str_elementId, str_heading) {
 				
 				
 				containerDiv.appendChild(outerDiv);
+				*/
 
 			
 			// Add submit and cancel buttons
 
+				containerDiv.appendChild(this.createSubmitCancelButtons('event-form'))
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -655,16 +693,10 @@ app.EventView = function(str_elementId, str_heading) {
 
 				containerDiv.appendChild(outerDiv);
 
+				*/
+
 			
 			// Update DOM
-
-				/*
-				$formDiv = $('#event-form');
-
-				$formDiv.empty();
-
-				$formDiv.append(formElement);
-				*/
 
 				$_renderContext.empty();
 
@@ -707,7 +739,7 @@ app.EventView = function(str_elementId, str_heading) {
 				
 				$('#event-name').keyup(function(event) { // capacity
 
-					this.validateName(event, 'event-name');
+					this.validateName(event, 'event-name', 'Please enter name', true);
 		
 				}.bind(this));
 
@@ -745,15 +777,27 @@ app.EventView = function(str_elementId, str_heading) {
 
 	app.EventView.prototype.submit = function(event) {
 
-		// Event handler binds to this, so reference works here
+		// First display any and all validation errors at once
+
+		void this.validateName(event, 'event-name', 'Please enter name', true);
+
+		void this.validateDateRange()
+
+		void this.validateTimeRange()
+
+		void this.validateCapacity(event, 'event-capacity')
+
+		// Then do it again to obtain validation status
+
+		// (Chain stops at first false, so no use for UI)
 		
-		if (this.validateName(event, 'event-name') && // Submit results if all validations pass
+		if (this.validateName(event, 'event-name', 'Please enter name', true) // Submit results if all validations pass
 
-			this.validateDateRange() &&
+			&& this.validateDateRange()
 
-			this.validateTimeRange() &&
+			&& this.validateTimeRange()
 
-			this.validateCapacity(event, 'event-capacity')) { 
+			&& this.validateCapacity(event, 'event-capacity')) { 
 
 			// Notify observers by passing them a new Event with the data from the form
 
@@ -886,6 +930,8 @@ app.EventView = function(str_elementId, str_heading) {
 
 				if (venues !== null) { // search succeeded
 
+					console.log(venues);
+
 					var $listElmnt = $('#suggested-locations'), optionElmnt;
 
 					$listElmnt.empty();
@@ -894,10 +940,9 @@ app.EventView = function(str_elementId, str_heading) {
 
 						optionElmnt = document.createElement('option');
 
-						optionElmnt.value = venue.name;
+						optionElmnt.value = venue.name + ' (' + venue.location.address + ')';
 
 						$listElmnt.append(optionElmnt);
-
 					});
 				}
 
@@ -1006,43 +1051,7 @@ app.EventView = function(str_elementId, str_heading) {
 	}
 
 
-	/* Event handler for interactive validation of event name field
-	*
-	* @return {Boolean} true if validation is succesful, otherwise false
-	*/
-	
-	/*
-	app.EventView.prototype.validateName = function(event) {
-
-		var $name = $('#event-name');
-
-		if ($name.val() === '') { // empty
-		
-			if (event && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-				event.target.labels[0].dataset.error = 'Please enter event name';
-			}
-
-			else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-				$name.next('label').data('error', 'Please enter event name');
-			}
-
-			$name.addClass('invalid');
-
-			return false;
-		}
-
-		else {
-
-			$name.removeClass('invalid');
-		}
-
-		return true;
-	}
-*/
-
-	/** Validates start time field
+	/** Validates end time field
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/

@@ -118,6 +118,7 @@ app.PersonView = function(str_elementId, str_heading) {
 		var person = Person_person, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
 		if (person !== null) {
+			
 			// Setup up form and container div
 
 				formElement =  this.createElement(
@@ -143,6 +144,10 @@ app.PersonView = function(str_elementId, str_heading) {
 
 			// Add heading
 				
+				containerDiv.appendChild(this.createHeading('s12', _heading));
+
+				/*
+
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -169,20 +174,34 @@ app.PersonView = function(str_elementId, str_heading) {
 				}));
 
 				outerDiv.appendChild(innerDiv);
-
+				*/
 
 			// Add hidden person id field
 
-			containerDiv.appendChild(this.createElement({
+				containerDiv.appendChild(this.createElement({
 
-				element: 'input',
+					element: 'input',
 
-				attributes: {id: 'guest-id', type: 'hidden', value: Person_person.id()}
-			}));
+					attributes: {id: 'guest-id', type: 'hidden', value: Person_person.id()}
+				}));
 
 			
 			// Add guest name field
 
+				containerDiv.appendChild(this.createTextField(
+
+					's12',
+
+					'guest-name',
+
+					'Guest Name',
+
+					true,
+
+					person.name()
+				));
+
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -245,9 +264,26 @@ app.PersonView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
-				
+
+				*/
+			
 			
 			// Add email field
+
+				containerDiv.appendChild(this.createEmailField(
+
+					's12',
+
+					'guest-email',
+
+					'Email',
+
+					true,
+
+					person.email()
+				));
+
+				/*
 
 				innerDiv =  this.createElement( // inner div
 				{
@@ -312,10 +348,24 @@ app.PersonView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+				*/
 
-
+			
 			// Add job title field
 
+				containerDiv.appendChild(this.createTextField(
+
+					's12',
+
+					'guest-jobtitle',
+
+					'Job Title',
+
+					false,
+
+					person.jobTitle()
+				));
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -363,6 +413,8 @@ app.PersonView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+
+				*/
 
 
 			// Add employer field
@@ -428,6 +480,19 @@ app.PersonView = function(str_elementId, str_heading) {
 	
 			// Add birthday field
 
+				containerDiv.appendChild(this.createDateField(
+
+					's12',
+
+					'guest-birthday',
+
+					'Birthday',
+
+					false,
+
+					person.birthday()
+				));
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',
@@ -490,10 +555,12 @@ app.PersonView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 			
 				containerDiv.appendChild(outerDiv); // Add to container
+				*/
 
-
+			
 			// Add requirement indicator (asterisk) explanation
 
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -513,9 +580,13 @@ app.PersonView = function(str_elementId, str_heading) {
 				
 				containerDiv.appendChild(outerDiv);
 
+				*/
+
 			
 			// Add submit and cancel buttons
 
+				containerDiv.appendChild(this.createSubmitCancelButtons('guest-form'))
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -561,7 +632,7 @@ app.PersonView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(buttonElement);
 
 				containerDiv.appendChild(outerDiv);
-
+				*/
 			
 			// Update DOM
 
@@ -589,19 +660,25 @@ app.PersonView = function(str_elementId, str_heading) {
 				//$('#guest-location').focus(this.suggestLocations);
 
 				
-				$('#guest-name').keyup(this.validateName);
+				$('#guest-name').keyup(function(event) {
+
+					this.validateName(event, 'guest-name', 'Please enter name', true);
+
+				}.bind(this));
+				
+
+				$('#guest-email').keyup(function(event) {
+
+					this.validateEmail(event, 'guest-email', 'Please enter email', true);
+
+				}.bind(this));
+
 
 				$('#guest-form-submit').click(function() {this.submit();}.bind(this));
 		}
 
 		else { // present default message
 
-			//$formDiv = $('#guest-form');
-
-			//$formDiv.empty();
-
-			//$formDiv.append(this.createElement(
-			
 			$_renderContext.empty();
 
 			$_renderContext.append(
@@ -623,9 +700,20 @@ app.PersonView = function(str_elementId, str_heading) {
 
 	app.PersonView.prototype.submit = function() {
 
-		// Person handler binds to this, so reference works here
+		// First display any and all validation errors in the UI
+
+		this.validateName(event, 'guest-name', 'Please enter name', true);
+
+		this.validateEmail(event, 'guest-email', 'Please enter email', true);
+
+
+		// Then do it again to obtain validation status
+
+		// (Chain stops at first false, so no use for UI)
 		
-		if (this.validateName()) { // Submit results if all validations pass
+		if (this.validateName(event, 'guest-name', 'Please enter name', true)
+
+		&& this.validateEmail(event, 'guest-email', 'Please enter email', true)){ // Submit results if all validations pass
 
 			// Nofity observers by passing them a new Person with the data from the form
 

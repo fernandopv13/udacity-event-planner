@@ -141,6 +141,9 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 			
 			// Add heading
 				
+				containerDiv.appendChild(this.createHeading('s12', _heading));
+
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -167,6 +170,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				}));
 
 				outerDiv.appendChild(innerDiv);
+				*/
 
 
 			// Add hidden person id field
@@ -179,8 +183,21 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				}));
 
 			
-			// Add account holder name name field
+			// Add account holder name field
 
+				containerDiv.appendChild(this.createTextField(
+
+					's12',
+
+					'account-holder-name',
+
+					'Your Name',
+
+					true,
+
+					person.name() ? person.name() : ''
+				));
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -243,6 +260,8 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+
+				*/
 				
 			
 			// Add email field
@@ -271,6 +290,20 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 			// Add job title field
 
+				containerDiv.appendChild(this.createTextField(
+
+					's12',
+
+					'account-holder-jobtitle',
+
+					'Job Title',
+
+					false,
+
+					person.jobTitle()
+				));
+
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -318,8 +351,9 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+				*/
 
-
+			
 			// Add employer field
 
 				innerDiv =  this.createElement( // inner div
@@ -399,6 +433,9 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 			
 			// Add requirement indicator (asterisk) explanation
 
+				containerDiv.appendChild(this.createRequiredFieldExplanation());
+
+				/*
 				outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
@@ -417,11 +454,14 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				
 				
 				containerDiv.appendChild(outerDiv);
+				*/
 
 			
 			// Add submit and cancel buttons
 
-				outerDiv =  this.createElement( // outer div
+				containerDiv.appendChild(this.createSubmitCancelButtons('account-holder-form'));
+
+				/*outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',			
 					
@@ -466,7 +506,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				outerDiv.appendChild(buttonElement);
 
 				containerDiv.appendChild(outerDiv);
-
+				*/
 			
 			// Update DOM
 
@@ -525,11 +565,11 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* @todo Fix host hack
 	*/
 
-	app.AccountProfileView.prototype.submit = function() {
+	app.AccountProfileView.prototype.submit = function(event) {
 
 		// Person handler binds to this, so reference works here
 		
-		if (this.validateName()) { // Submit results if all validations pass
+		if (this.validateName(event, 'account-holder-name', 'Please enter your name', true)) { // Submit results if all validations pass
 
 			// Nofity observers by passing them a new Person with the data from the form
 
