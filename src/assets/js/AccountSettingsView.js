@@ -322,7 +322,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 					attributes: {id: 'account-settings-password-hints'},
 					
-					classList: ['col', 's12', 'hide']
+					classList: ['col', 's12']
 				});
 
 				outerDiv.appendChild(innerDiv);
@@ -332,7 +332,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{
 					element: 'p',
 
-					attributes: {id: 'password-validation-hint-charcount'},
+					attributes: {id: 'account-settings-pw-validation-hint-charcount'},
 
 					classList: ['password-validation-hint'],
 
@@ -355,7 +355,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{
 					element: 'p',
 
-					attributes: {id: 'password-validation-hint-uppercase'},
+					attributes: {id: 'account-settings-pw-validation-hint-uppercase'},
 
 					classList: ['password-validation-hint'],
 
@@ -378,7 +378,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{
 					element: 'p',
 
-					attributes: {id: 'password-validation-hint-lowercase'},
+					attributes: {id: 'account-settings-pw-validation-hint-lowercase'},
 
 					classList: ['password-validation-hint'],
 
@@ -401,7 +401,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{
 					element: 'p',
 
-					attributes: {id: 'password-validation-hint-number'},
+					attributes: {id: 'account-settings-pw-validation-hint-number'},
 
 					classList: ['password-validation-hint'],
 
@@ -424,11 +424,11 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{
 					element: 'p',
 
-					attributes: {id: 'password-validation-hint-punctuation'},
+					attributes: {id: 'account-settings-pw-validation-hint-punctuation'},
 
 					classList: ['password-validation-hint'],
 
-					innerHTML: 'Must contain one ore more of !@#$%^&'
+					innerHTML: 'Must contain one or more of !@#$%^&'
 				});
 
 				pElement.appendChild(this.createElement(
@@ -479,9 +479,9 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				{	
 					element: 'label',			
 					
-					attributes: {for: 'account-password-confirmation'},
+					attributes: {for: 'account-settings-password-confirmation'},
 					
-					classList: account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
+					classList: ['form-label'], //account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please confirm password'},
 					
@@ -972,20 +972,23 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				
 				$('#account-settings-name').keyup(this.validateName);
 
-				$('#account-settings-password').keyup(this.validatePassword);
+				$('#account-settings-password').keyup(this.validateAccountPassword);
 
 				$('#account-settings-password').focus(function() {
 
-					this.validatePassword($('#account-settings-password').val());
+					this.validatePassword(event, 'account-settings-password', 'account-settings-pw-validation-hint');
 
-					$('#account-settings-password-hints').removeClass('hide');
+					$('#account-settings-password-hints').show('slow');
 
 				}.bind(this));
 
-				$('#account-settings-password').blur(function() {$('#account-settings-password-hints').addClass('hide');});
+				$('#account-settings-password').blur(function() {
 
-				
-				
+					$('#account-settings-password-hints').hide('slow');
+				});
+
+				$('#account-settings-password-confirmation').keyup(this.validatePasswordConfirmation);
+
 
 				$('#account-settings-submit').click(function() {this.submit();}.bind(this));
 		}
@@ -1015,7 +1018,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 		// Account handler binds to this, so reference works here
 		
-		if (true) { // Submit results if all validations pass
+		if (this.validatePassword()) { // Submit results if all validations pass
 
 			// Create a temporary, new account with the data from the form
 
@@ -1061,6 +1064,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
+	/*
 	app.AccountSettingsView.prototype.validateName = function() {
 
 		var $name = $('#account-name');
@@ -1089,66 +1093,168 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 		return true;
 	}
+	/*
 
-
-	/* Event handler for interactive validation of account name field
+	
+	/* Event handler for interactive validation of password field
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
-	app.AccountSettingsView.prototype.validatePassword = function() {
+	app.AccountSettingsView.prototype.validateAccountPassword = function(event) {
 
-		var password = $('#account-settings-password').val(), ret, tmp;
+		// Call generic event handler inherited from IViewable
+
+		return this.validatePassword(event, 'account-settings-password', 'account-settings-pw-validation-hint');
+
+		/*
+		var $password = $('#account-settings-password'),
+
+		password = $password.val(), ret, tmp;
+
+
+		// Validate password and manage display of password hints
 
 		var invalidIcon = 'error', validIcon = 'done'
 
-		
 		tmp = app.Password.hasValidCharacterCount(password);
 
 		ret = tmp;
 
-		if (tmp) {$('#password-validation-hint-charcount').find('i').html(validIcon);}
+		if (tmp) {$('#account-settings-pw-validation-hint-charcount').find('i').html(validIcon);}
 
-		else {$('#password-validation-hint-charcount').find('i').html(invalidIcon);}
+		else {$('#account-settings-pw-validation-hint-charcount').find('i').html(invalidIcon);}
 
 				
 		tmp = app.Password.hasValidUpperCaseCount(password);
 
 		ret = ret && tmp;
 
-		if (tmp) {$('#password-validation-hint-uppercase').find('i').html(validIcon);}
+		if (tmp) {$('#account-settings-pw-validation-hint-uppercase').find('i').html(validIcon);}
 
-		else {$('#password-validation-hint-uppercase').find('i').html(invalidIcon);}
+		else {$('#account-settings-pw-validation-hint-uppercase').find('i').html(invalidIcon);}
 
 
 		tmp = app.Password.hasValidLowerCaseCount(password);
 
 		ret = ret && tmp;
 
-		if (tmp) {$('#password-validation-hint-lowercase').find('i').html(validIcon);}
+		if (tmp) {$('#account-settings-pw-validation-hint-lowercase').find('i').html(validIcon);}
 
-		else {$('#password-validation-hint-lowercase').find('i').html(invalidIcon);}
+		else {$('#account-settings-pw-validation-hint-lowercase').find('i').html(invalidIcon);}
 
 		
 		tmp = app.Password.hasValidNumberCount(password);
 
 		ret = ret && tmp;
 
-		if (tmp) {$('#password-validation-hint-number').find('i').html(validIcon);}
+		if (tmp) {$('#account-settings-pw-validation-hint-number').find('i').html(validIcon);}
 
-		else {$('#password-validation-hint-number').find('i').html(invalidIcon);}
+		else {$('#account-settings-pw-validation-hint-number').find('i').html(invalidIcon);}
 
 
 		tmp = app.Password.hasValidPunctuationCount(password);
 
 		ret = ret && tmp;
 
-		if (tmp) {$('#password-validation-hint-punctuation').find('i').html();}
+		if (tmp) {$('#account-settings-pw-validation-hint-punctuation').find('i').html(validIcon);}
 
-		else {$('#password-validation-hint-punctuation').find('i').html(invalidIcon);}
+		else {$('#account-settings-pw-validation-hint-punctuation').find('i').html(invalidIcon);}
 
+
+		// Manage display of validation message
+
+		var msg = 'Invalid password, please try again';
+
+		if (!ret) { // not valid, display validation error
+
+			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+				event.target.labels[0].dataset.error = msg;
+
+			}
+
+			else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+				$password.next('label').data('error', msg);
+			}
+			
+			$password.addClass('invalid');
+		}
+
+		else { // valid
+
+			$password.removeClass('invalid');
+
+			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+				event.target.labels[0].dataset.error = msg; // can't get jQuery.data() to work
+			}
+
+			else { // Other browsers (updates value but not display, falls back on value in HTML)
+
+				$password.next('label').data('error', msg);
+			}
+		}
 
 		return ret;
+
+		*/
+	}.bind(this);
+
+
+	/* Event handler for interactive validation of password confirmation field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+	
+	app.AccountSettingsView.prototype.validatePasswordConfirmation = function(event) {
+
+		var $confirmation = $('#account-settings-password-confirmation'),
+
+		confirmation = $confirmation.val(),
+
+		password = $('#account-settings-password').val(),
+
+		msg = 'Must be the same as password';
+
+
+		// Manage display of validation message
+
+		if (confirmation !== password) { // not valid, display validation error
+
+			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+				event.target.labels[0].dataset.error = msg;
+
+			}
+
+			else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+				$confirmation.next('label').data('error', msg);
+			}
+			
+			$confirmation.addClass('invalid');
+		}
+
+		else { // valid
+
+			$confirmation.removeClass('invalid');
+
+			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+				event.target.labels[0].dataset.error = msg; // can't get jQuery.data() to work
+			}
+
+			else { // Other browsers (updates value but not display, falls back on value in HTML)
+
+				$confirmation.next('label').data('error', msg);
+			}
+
+			return true;
+		}
+
+		return false;
 	};
 
 

@@ -216,3 +216,104 @@ app.IViewable.prototype.default_isInstanceOf = function (Function_interface) {
 	
 	return Function_interface === app.IViewable;
 };
+
+
+/* Event handler for interactive validation of password field
+*
+* @return {Boolean} true if validation is succesful, otherwise false
+*/
+
+app.IViewable.prototype.default_validatePassword = function(event, str_passwordId, str_hintsPrefix) {
+
+	//if (arguments.length < 3) {return false}; // initial focus fires invalid call, ignore
+	
+
+	var $password = $('#' + str_passwordId), password = $password.val(), ret, tmp;
+
+
+	// Validate password and manage display of password hints
+
+	var invalidIcon = 'error', validIcon = 'done'
+
+	tmp = app.Password.hasValidCharacterCount(password);
+
+	ret = tmp;
+
+	if (tmp) {$('#' + str_hintsPrefix + '-charcount').find('i').html(validIcon);}
+
+	else {$('#' + str_hintsPrefix + '-charcount').find('i').html(invalidIcon);}
+
+			
+	tmp = app.Password.hasValidUpperCaseCount(password);
+
+	ret = ret && tmp;
+
+	if (tmp) {$('#' + str_hintsPrefix + '-uppercase').find('i').html(validIcon);}
+
+	else {$('#' + str_hintsPrefix + '-uppercase').find('i').html(invalidIcon);}
+
+
+	tmp = app.Password.hasValidLowerCaseCount(password);
+
+	ret = ret && tmp;
+
+	if (tmp) {$('#' + str_hintsPrefix + '-lowercase').find('i').html(validIcon);}
+
+	else {$('#' + str_hintsPrefix + '-lowercase').find('i').html(invalidIcon);}
+
+	
+	tmp = app.Password.hasValidNumberCount(password);
+
+	ret = ret && tmp;
+
+	if (tmp) {$('#' + str_hintsPrefix + '-number').find('i').html(validIcon);}
+
+	else {$('#' + str_hintsPrefix + '-number').find('i').html(invalidIcon);}
+
+
+	tmp = app.Password.hasValidPunctuationCount(password);
+
+	ret = ret && tmp;
+
+	if (tmp) {$('#' + str_hintsPrefix + '-punctuation').find('i').html(validIcon);}
+
+	else {$('#' + str_hintsPrefix + '-punctuation').find('i').html(invalidIcon);}
+
+
+	// Manage display of validation message
+
+	var msg = 'Invalid password, please try again';
+
+	if (!ret) { // not valid, display validation error
+
+		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+			event.target.labels[0].dataset.error = msg;
+
+		}
+
+		else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+			$password.next('label').data('error', msg);
+		}
+		
+		$password.addClass('invalid');
+	}
+
+	else { // valid
+
+		$password.removeClass('invalid');
+
+		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+			event.target.labels[0].dataset.error = msg; // can't get jQuery.data() to work
+		}
+
+		else { // Other browsers (updates value but not display, falls back on value in HTML)
+
+			$password.next('label').data('error', msg);
+		}
+	}
+
+	return ret;
+};

@@ -643,7 +643,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 
 			this.end(Event_event.end() ? Event_event.end() : null);
 
-			this.location(Event_event.location());
+			if (Event_event.location()) {this.location(Event_event.location());}
 
 			this.description(Event_event.description());
 
