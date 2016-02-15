@@ -11,6 +11,8 @@ var app = app || {}; // create a simple namespace for the module
 *
 * Presents information from the data model in the UI. Handles all UI related work.
 *
+* Provides a number of default HTML (form) element factory, and form validation, methods.
+*
 * Extension of IObservable and IObserver implemented as mixins in realizing classes, using static method in IInterfaceable.
 *
 * IViewables must only notify observers as a direct result of user actions in the UI. Otherwise the MVC objects will likely enter an infinite update loop.
@@ -21,13 +23,11 @@ var app = app || {}; // create a simple namespace for the module
 *
 * @constructor
 *
-* @return Nothing. An interface cannot be instantiated
+* @return Nothing. An interface cannot be instantiated.
 *
 * @throws {InstantiationError} If attempting to instantiate interface
 *
 * @author Ulrik H. Gade, February 2016
-*
-* @todo: Figure out how to get jsDoc to show (all) the method signature(s)
 */
 
 app.IViewable = function() {
@@ -38,11 +38,13 @@ app.IViewable = function() {
 	
 	/** Update (i.e. render) UI on demand.
 	*
+	* Overrides IObserver method to limit acceptable parameter type to IModelable.
+	*
 	* @param {IModelable} obj Reference to the data model object to be rendered in the UI.
 	*
 	* @return {void}
 	*
-	* @throws {AbstractMethodError} If attempting to invoke (abstract method signature)
+	* @throws {AbstractMethodError} If attempting to invoke
 	*/
 
 	app.IViewable.prototype.update = function(IModelable) {
@@ -66,7 +68,102 @@ app.IViewable = function() {
 * Default methods (must be defined outside main function/class body)
 *---------------------------------------------------------------------------------------*/
 
-/** Utility for creating HTML element based on specs provided in JSON object
+/** Factory method for creating date picker fields for forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+
+
+	var innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', str_width]
+	});
+	
+	outerDiv.appendChild(innerDiv);
+
+
+	var attributes = 
+	{
+		type: 'text',
+		
+		id: str_dateId,
+		
+		value: Date_date ? Date_date.toLocaleDateString() : '',
+		
+		readonly: true
+	}
+
+	if (bool_required) {attributes.required = true;}
+
+	innerDiv.appendChild(this.createElement( // input
+	{
+		element: 'input',			
+		
+		attributes: attributes,
+		
+		classList: ['validate', 'datepicker', 'picker__input']
+	}));
+	
+	
+	var labelElement = this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: str_dateId},
+		
+		classList: Date_date ? ['form-label', 'active'] : ['form-label'],
+		
+		dataset: {error: 'Please enter date'},
+		
+		innerHTML: str_label
+	});
+
+	
+	if (bool_required) {
+
+		labelElement.appendChild(this.createElement( // required field indicator
+		{
+			element: 'span',
+
+			classList: ['required-indicator'],
+
+			innerHTML: '*'
+		}));
+	}
+
+	innerDiv.appendChild(labelElement);
+
+	
+	innerDiv.appendChild(this.createElement( // custom error div
+	{	
+		element: 'div',			
+		
+		attributes: {id: str_dateId + '-error'},
+		
+		classList: ['custom-validate']
+	}));
+	
+	
+	return outerDiv;
+}
+
+
+/** Factory method for creating HTML element based on specs provided in JSON object.
+*
+* Relied on by other factory methods for consistent, basic element creation.
+*
+* (So, if some aspect of element creation fails, only this method will need to change.)
 *
 * @param {Object} JSON object literal containing specs of element to be created. Se comments in code for an example.
 *
@@ -158,181 +255,7 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 };
 
 
-/** Utility for creating event capacity fields in forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.IViewable.prototype.default_createCapacityField = function (str_width, str_capacityId, str_label, bool_required, int_capacity) {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
-		
-		classList: ['row']
-	});
-
-
-	var innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
-		
-		classList: ['input-field', 'col', str_width]
-	});
-	
-	outerDiv.appendChild(innerDiv);
-
-
-	var attributes = 
-	{
-		type: 'number',
-		
-		id: str_capacityId,
-
-		min: 0,
-
-		step: 1,
-		
-		value: int_capacity
-	}
-
-	if (bool_required) {attributes.required = true;}
-
-	innerDiv.appendChild(this.createElement( // input
-	{
-		element: 'input',			
-		
-		attributes: attributes,
-		
-		classList: ['validate']
-	}));
-	
-	
-	var labelElement = this.createElement( // label
-	{	
-		element: 'label',			
-		
-		attributes: {for: str_capacityId},
-		
-		classList: int_capacity ? ['form-label', 'active'] : ['form-label'],
-		
-		dataset: {error: 'Please enter capacity (0 or greater)'},
-		
-		innerHTML: str_label
-	});
-
-	
-	if (bool_required) {
-
-		labelElement.appendChild(this.createElement( // required field indicator
-		{
-			element: 'span',
-
-			classList: ['required-indicator'],
-
-			innerHTML: '*'
-		}));
-	}
-
-	innerDiv.appendChild(labelElement);
-
-
-	return outerDiv;
-}
-
-
-/** Utility for creating date picker fields in forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.IViewable.prototype.default_createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
-		
-		classList: ['row']
-	});
-
-
-	var innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
-		
-		classList: ['input-field', 'col', str_width]
-	});
-	
-	outerDiv.appendChild(innerDiv);
-
-
-	var attributes = 
-	{
-		type: 'text',
-		
-		id: str_dateId,
-		
-		value: Date_date ? Date_date.toLocaleDateString() : '',
-		
-		readonly: true
-	}
-
-	if (bool_required) {attributes.required = true;}
-
-	innerDiv.appendChild(this.createElement( // input
-	{
-		element: 'input',			
-		
-		attributes: attributes,
-		
-		classList: ['validate', 'datepicker', 'picker__input']
-	}));
-	
-	
-	var labelElement = this.createElement( // label
-	{	
-		element: 'label',			
-		
-		attributes: {for: str_dateId},
-		
-		classList: Date_date ? ['form-label', 'active'] : ['form-label'],
-		
-		dataset: {error: 'Please enter date'},
-		
-		innerHTML: str_label
-	});
-
-	
-	if (bool_required) {
-
-		labelElement.appendChild(this.createElement( // required field indicator
-		{
-			element: 'span',
-
-			classList: ['required-indicator'],
-
-			innerHTML: '*'
-		}));
-	}
-
-	innerDiv.appendChild(labelElement);
-
-	
-	innerDiv.appendChild(this.createElement( // custom error div
-	{	
-		element: 'div',			
-		
-		attributes: {id: str_dateId + '-error'},
-		
-		classList: ['custom-validate']
-	}));
-	
-	
-	return outerDiv;
-}
-
-
-/** Utility for creating email fields in forms
+/** Factory method for creating email fields for forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -415,7 +338,7 @@ app.IViewable.prototype.default_createEmailField = function (str_width, str_Emai
 }
 
 
-/** Utility for creating field descriptions in forms
+/** Factory method for creating field descriptions for forms
 *
 * @param {String} description Description of the field
 *
@@ -455,7 +378,7 @@ app.IViewable.prototype.default_createFieldDescription = function (str_descripti
 }
 
 
-/** Utility for creating headings in forms
+/** Factory method for creating the main heading in forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -490,7 +413,87 @@ app.IViewable.prototype.default_createHeading = function (str_width, str_heading
 }
 
 
-/** Utility for creating password entry fields in forms
+/** Factory method for creating number fields for forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createNumberField = function (str_width, str_fieldId, str_label, bool_required, int_value, int_min, int_max, int_step, str_errorMsg) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+		
+		classList: ['row']
+	});
+
+
+	var innerDiv =  this.createElement( // inner div
+	{
+		element: 'div',			
+		
+		classList: ['input-field', 'col', str_width]
+	});
+	
+	outerDiv.appendChild(innerDiv);
+
+
+	var attributes = {type: 'number', id: str_fieldId, value: int_value}
+
+	if (!isNaN(parseInt(int_min))) {attributes.min = int_min;}
+
+	if (!isNaN(parseInt(int_max))) {attributes.max = int_max;}
+
+	if (!isNaN(parseInt(int_step))) {attributes.step = int_step;}
+
+	if (bool_required) {attributes.required = true;}
+
+	innerDiv.appendChild(this.createElement( // input
+	{
+		element: 'input',			
+		
+		attributes: attributes,
+		
+		classList: ['validate']
+	}));
+	
+	
+	var labelElement = this.createElement( // label
+	{	
+		element: 'label',			
+		
+		attributes: {for: str_fieldId},
+		
+		classList: int_value ? ['form-label', 'active'] : ['form-label'],
+		
+		dataset: {error: str_errorMsg},
+		
+		innerHTML: str_label
+	});
+
+	
+	if (bool_required) {
+
+		labelElement.appendChild(this.createElement( // required field indicator
+		{
+			element: 'span',
+
+			classList: ['required-indicator'],
+
+			innerHTML: '*'
+		}));
+	}
+
+	innerDiv.appendChild(labelElement);
+
+
+	return outerDiv;
+}
+
+
+/** Factory method for creating password entry fields for forms.
+*
+* Includes markup for interactively updated password hints.
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -715,10 +718,11 @@ app.IViewable.prototype.default_createPasswordField = function (str_width, str_p
 };
 
 
-/** Utility for creating password confirmation fields in forms
+/** Factory method for creating password confirmation fields for forms
 *
 * @return {HTMLDivElement} DIV element
 */
+
 
 app.IViewable.prototype.default_createPasswordConfirmationField = function (str_width, str_confirmationId) {
 
@@ -790,7 +794,7 @@ app.IViewable.prototype.default_createPasswordConfirmationField = function (str_
 };
 
 
-/** Utility for creating required field explanations in forms
+/** Factory method for creating required field explanations for forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -818,7 +822,7 @@ app.IViewable.prototype.default_createRequiredFieldExplanation = function () {
 }
 
 
-/** Utility for creating submit buttons in forms
+/** Factory method for creating submit and cancel buttons for forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -874,7 +878,7 @@ app.IViewable.prototype.default_createSubmitCancelButtons = function(str_buttonI
 }
 
 
-/** Utility for creating switch (checkbox) fields in forms
+/** Factory method for creating switch (checkbox) fields for forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -1001,7 +1005,7 @@ app.IViewable.prototype.default_createSwitchField = function (str_width, str_swi
 };
 
 
-/** Utility for creating text input fields in forms
+/** Factory method for creating text input fields for forms
 *
 * @return {HTMLDivElement} DIV element
 *
@@ -1083,7 +1087,7 @@ app.IViewable.prototype.default_createTextField = function (str_width, str_field
 }
 
 
-/** Utility for creating time picker fields in forms
+/** Factory method for creating time picker fields for forms
 *
 * @return {HTMLDivElement} DIV element
 */
@@ -1213,27 +1217,7 @@ app.IViewable.prototype.default_displayValidation = function(event, str_fieldId,
 };
 
 
-/** Tests if object implements IViewable
-*
-* Default method for IViewables that only need to be able to report that they are indeed IViewables.
-*
-* Override in realizing classes if more advanced behaviour is required.
-*
-* @param {Function} interface The interface we wish to determine if this object implements
-*
-* @return {Boolean} true if object implements interface, otherwise false
-*
-* @todo Refactor to method signature
-*/
-
-/*
-app.IViewable.prototype.default_isInstanceOf = function (Function_interface) {
-	
-	return Function_interface === app.IViewable;
-};
-*/
-
-/* Event handler for interactive validation of capacity field
+/* Event handler for interactive validation of event capacity field
 *
 * @return {Boolean} true if validation is succesful, otherwise false
 */
@@ -1324,7 +1308,9 @@ app.IViewable.prototype.default_validateName = function(event, str_nameId, str_e
 }
 
 
-/* Event handler for interactive validation of password field
+/* Event handler for interactive validation of password field.
+*
+* Includes support for dynamically updated password hints
 *
 * @return {Boolean} true if validation is succesful, otherwise false
 */

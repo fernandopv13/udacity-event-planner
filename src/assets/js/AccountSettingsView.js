@@ -131,34 +131,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				
 				containerDiv.appendChild(this.createHeading('s12', _heading));
 
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				});
-
-				containerDiv.appendChild(outerDiv);
-
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['col', 's12']
-				});
-
-				innerDiv.appendChild(this.createElement({
-
-					element: 'h4',
-
-					innerHTML: _heading
-
-				}));
-
-				outerDiv.appendChild(innerDiv);
-				*/
-
 
 			// Add hidden account id field
 
@@ -212,7 +184,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				
 			// Add default event capacity field
 
-				containerDiv.appendChild(this.createCapacityField(
+				containerDiv.appendChild(this.createNumberField(
 
 					's12',
 
@@ -222,7 +194,15 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 					true,
 
-					account.defaultCapacity() ? account.defaultCapacity() : 0
+					account.defaultCapacity() ? account.defaultCapacity() : 0,
+
+					0,
+
+					null,
+
+					1,
+
+					'Please enter capacity (0 or greater)'
 				));
 				
 
@@ -318,80 +298,11 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 			// Add requirement indicator (asterisk) explanation
 
 				containerDiv.appendChild(this.createRequiredFieldExplanation());
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				});
-				
-				outerDiv.appendChild(this.createElement({
-				
-					element: 'p',
-					
-					classList: ['required-indicator'],
-						
-					innerHTML: '* indicates a required field'
-				}));
-				
-				
-				containerDiv.appendChild(outerDiv);
-
-				*/
 
 			
 			// Add submit and cancel buttons
 
-				containerDiv.appendChild(this.createSubmitCancelButtons('account-settings'))
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row', 'form-submit']
-				});
-				
-				
-				outerDiv.appendChild(this.createElement({ // cancel button
-					
-					element: 'a',
-					
-					attributes: {id: 'account-settings-cancel'},
-					
-					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
-
-					innerHTML: 'Cancel'
-				}));
-				
-				
-				buttonElement =  this.createElement({ // submit button
-					
-					element: 'a',
-					
-					attributes: {id: 'account-settings-submit'},
-					
-					classList: ['waves-effect', 'waves-light', 'btn'],
-
-					innerHTML: 'Done'
-				});
-				
-				
-				buttonElement.appendChild(this.createElement({ // 'send' icon
-					
-					element: 'i',
-					
-					classList: ['material-icons', 'right'],
-					
-					innerHTML: 'send'
-				}));
-				
-				
-				outerDiv.appendChild(buttonElement);
-
-				containerDiv.appendChild(outerDiv);
-
-				*/
+				containerDiv.appendChild(this.createSubmitCancelButtons('account-settings'));
 
 			
 			// Update DOM
@@ -403,25 +314,14 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			// (Re)assign account handlers to form elements
 
-				$('#account-settings-email').keyup(function(event) { // email
+				$('#account-settings-email').keyup(function(event) { // validate email
 
 					this.validateEmail(event, 'account-settings-email', true);
 
 				}.bind(this));
-
 				
-				$('#account-settings-password').keyup(function(event) { // password
-
-					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
-
-					this.isPasswordDirty = true; // password may have changed, so enable confirmation
-
-					$('#account-settings-password-confirmation-parent').show('slow');
-
-				}.bind(this));
-
 				
-				$('#account-settings-password').focus(function(event) { // password hints
+				$('#account-settings-password').focus(function(event) { // update and show password hints
 
 					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
 
@@ -429,21 +329,37 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 				}.bind(this));
 
+
+				$('#account-settings-password').keyup(function(event) { // validate password
+
+					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
+
+				}.bind(this));
+
 				
-				$('#account-settings-password').blur(function(event) {
+				$('#account-settings-password').blur(function(event) { // hide password hints
 
 					$('#account-settings-password-hints').hide('slow');
 				});
-
 				
-				$('#account-settings-password-confirmation').keyup(function(event) { // password confirmation
+
+				$('#account-settings-password').change(function(event) { // show password confirmation, if password changed
+
+					this.isPasswordDirty = true; // enable confirmation
+
+					$('#account-settings-password-confirmation-parent').show('slow');
+
+				}.bind(this));
+
+
+				$('#account-settings-password-confirmation').keyup(function(event) { // validate password confirmation
 
 					this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
 		
 				}.bind(this));
 
 
-				$('#account-settings-capacity').keyup(function(event) { // default capacity
+				$('#account-settings-capacity').keyup(function(event) { // validate default capacity
 
 					this.validateCapacity(event, 'account-settings-capacity');
 		
@@ -451,6 +367,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 
 				$('#account-settings-submit').click(function(event) {this.submit(event);}.bind(this)); // submit button
+
 		}
 
 		else { // present default message
@@ -486,9 +403,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 		void this.validateCapacity(event, 'account-settings-capacity');
 
-		//console.log(document.getElementById('account-settings-form').checkValidity());
-
-				
 		// Then do it again to obtain validation status
 
 		// (Chain stops at first false, so no use for UI)

@@ -272,7 +272,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 					'account-holder-email',
 
-					'Email',
+					'Your Email',
 
 					false,
 
@@ -296,7 +296,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 					'account-holder-jobtitle',
 
-					'Job Title',
+					'Your Job Title',
 
 					false,
 

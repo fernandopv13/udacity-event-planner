@@ -292,7 +292,7 @@ app.Controller = function() {
 		// Set some defaults to use until account creation/selection is developed
 
 			
-			this.selectedAccount(app.Account.registry.getObjectById(0)); //debug
+			this.selectedAccount(new app.Account());//(app.Account.registry.getObjectById(0)); //debug
 			
 			this.selectedAccount().defaultLocation('Copenhagen'); // debug
 

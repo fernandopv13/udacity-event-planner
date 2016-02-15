@@ -32,7 +32,7 @@ app.data = {
 		
 		new app.Event('Stag night for Andrea'),
 		
-		new app.Event('Sunday lunch at mom\'s')
+		new app.Event('Sunday lunch at moms')
 	],
 	
 	emails:
@@ -53,7 +53,6 @@ app.data = {
 		new app.Account(new app.Email('john@server.domain'), new app.Password('abCd1234!'))
 	]
 };
-
 app.data.people[2].imgUrl('assets/img/test-avatar.jpg');
 
 app.data.people[0].employer(app.data.organizations[0]);

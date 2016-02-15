@@ -151,34 +151,7 @@ app.EventView = function(str_elementId, str_heading) {
 			// Add heading
 				
 				containerDiv.appendChild(this.createHeading('s12', _heading));
-
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				});
-
-				containerDiv.appendChild(outerDiv);
-
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['col', 's12']
-				});
-
-				innerDiv.appendChild(this.createElement({
-
-					element: 'h4',
-
-					innerHTML: _heading
-
-				}));
-
-				outerDiv.appendChild(innerDiv);
-				*/
+				
 
 			// Add hidden event id field
 
@@ -204,70 +177,6 @@ app.EventView = function(str_elementId, str_heading) {
 
 					event.name() ? event.name() : ''
 				));
-				/*
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes: 
-					{
-						type: 'text',
-						
-						id: 'event-name',
-						
-						value: event.name() ? event.name() : '',
-						
-						required: true
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'event-name'},
-					
-					classList: event.name() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter event name'},
-					
-					innerHTML: 'Event Name'
-				});
-				
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
-
-					classList: ['required-indicator'],
-
-					innerHTML: '*'
-				}));
-				
-				innerDiv.appendChild(labelElement);
-
-
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-				
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
-				*/
 			
 			
 			// Add location field
@@ -478,7 +387,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 			// Add capacity field
 
-				containerDiv.appendChild(this.createCapacityField(
+				containerDiv.appendChild(this.createNumberField(
 
 					's12',
 
@@ -488,7 +397,15 @@ app.EventView = function(str_elementId, str_heading) {
 
 					true,
 
-					event.capacity() ? event.capacity() : 0
+					event.capacity() ? event.capacity() : 0,
+
+					0,
+
+					null,
+
+					1,
+
+					'Please enter capacity (0 or greater)'
 				));
 
 
@@ -930,8 +847,6 @@ app.EventView = function(str_elementId, str_heading) {
 
 				if (venues !== null) { // search succeeded
 
-					console.log(venues);
-
 					var $listElmnt = $('#suggested-locations'), optionElmnt;
 
 					$listElmnt.empty();
@@ -940,7 +855,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 						optionElmnt = document.createElement('option');
 
-						optionElmnt.value = venue.name + ' (' + venue.location.address + ')';
+						optionElmnt.value = venue.name + (venue.location.address ? ' (' + venue.location.address + ')' : '');
 
 						$listElmnt.append(optionElmnt);
 					});
