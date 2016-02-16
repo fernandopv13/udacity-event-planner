@@ -551,4 +551,305 @@ describe('Interface IViewable', function(){
 
 		expect(el.innerHTML).toBe('send');
 	});
+
+	
+	it('defines a default createSwitchField() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_createSwitchField).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_createSwitchField).toBe('function');
+	});
+	
+
+	it('can create a new switch field', function(){
+
+		var el = app.IViewable.prototype.default_createSwitchField.call(
+		
+			testView,'s7',
+
+			'switch-test',
+
+			'Switch Test Label',
+
+			true,
+
+			'Yes',
+
+			'No'
+		);
+
+		expect(el.constructor).toBe(HTMLDivElement); // outer div
+
+		expect(el.classList[0]).toBe('row');
+
+		el = el.firstChild;
+
+		expect(el.constructor).toBe(HTMLDivElement); // main label div
+
+		expect(el.classList[1]).toBe('s7');
+
+		el = el.firstChild;
+
+		expect(el.constructor).toBe(HTMLSpanElement); // main label span
+
+		expect(el.classList[1]).toBe('input-switch-label');
+
+		expect(el.innerHTML).toBe('Switch Test Label');
+
+		el = el.parentNode.nextSibling;
+
+		expect(el.classList[2]).toBe('s5'); // outer switch div
+
+		el = el.firstChild;
+
+		expect(el.constructor).toBe(HTMLDivElement); // inner switch div
+
+		expect(el.classList[0]).toBe('switch');
+
+		el = el.firstChild;
+
+		expect(el.constructor).toBe(HTMLSpanElement); // switch span
+
+		el = el.firstChild;
+
+		expect(el.htmlFor).toBe('switch-test'); // minor label
+
+		el = el.firstChild;
+
+		expect(el.constructor).toBe(HTMLSpanElement); // 'off' label
+
+		expect(el.innerHTML).toBe('No');
+
+		el = el.nextSibling;
+
+		expect(el.constructor).toBe(HTMLInputElement); // checkbox
+
+		expect(el.type).toBe('checkbox');
+
+		expect(el.checked).toBe(true);
+
+		el = el.nextSibling;
+
+		expect(el.constructor).toBe(HTMLSpanElement); // visual presentation of switch ('lever')
+
+		expect(el.classList[0]).toBe('lever');
+
+		el = el.nextSibling;
+
+		expect(el.constructor).toBe(HTMLSpanElement); // 'on' label
+
+		expect(el.innerHTML).toBe('Yes');
+	});
+
+
+	it('defines a default createTextField() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_createTextField).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_createTextField).toBe('function');
+	});
+	
+
+	it('can create a new text field', function(){
+
+		var el = app.IViewable.prototype.default_createTextField.call(
+		
+			testView,'s12',
+
+			'text-test',
+
+			'Text Test',
+
+			true,
+
+			'Some text'
+		);
+
+		expect(el.constructor).toBe(HTMLDivElement); // outer div
+
+		expect(el.classList[0]).toBe('row');
+
+		el = el.firstChild;
+
+		expect(el.constructor).toBe(HTMLDivElement); // inner div
+
+		expect(el.classList[2]).toBe('s12');
+
+		el = el.firstChild;
+
+		expect(el.constructor).toBe(HTMLInputElement); // input
+
+		expect(el.id).toBe('text-test');
+
+		expect(el.value).toBe('Some text');
+
+		expect(el.required).toBe(true);
+
+		el = el.nextSibling;
+
+		expect(el.htmlFor).toBe('text-test'); // label
+
+		expect(el.dataset.error).toBe('Please enter text test');
+
+		el = el.firstChild;
+
+		expect(el.nodeValue).toBe('Text Test');
+
+		el = el.nextSibling;
+
+		expect(el.classList[0]).toBe('required-indicator');
+	});
+
+
+	it('defines a default createTimeField() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_createTimeField).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_createTimeField).toBe('function');
+	});
+	
+
+	it('can create a new time field', function(){
+
+		var el = app.IViewable.prototype.default_createTimeField.call(
+		
+			testView,'s12',
+
+			'time-test',
+
+			'Time Test',
+
+			true,
+
+			new Date(1000000)
+		);
+
+		expect(el.constructor).toBe(HTMLDivElement); // outer div
+
+		expect(el.classList[0]).toBe('row');
+
+		el = el.firstChild;
+
+		expect(el.constructor).toBe(HTMLDivElement); // inner div
+
+		expect(el.classList[2]).toBe('s12');
+
+		el = el.firstChild;
+
+		expect(el.constructor).toBe(HTMLInputElement); // input
+
+		expect(el.id).toBe('time-test');
+
+		expect(el.value).toBe((new Date(1000000).toLocaleTimeString()));
+
+		expect(el.required).toBe(true);
+
+		expect(el.classList[0]).toBe('timepicker');
+
+		el = el.nextSibling;
+
+		expect(el.htmlFor).toBe('time-test'); // label
+
+		expect(el.dataset.error).toBe('Please enter time');
+
+		el = el.firstChild;
+
+		expect(el.nodeValue).toBe('Time Test');
+
+		el = el.nextSibling;
+
+		expect(el.classList[0]).toBe('required-indicator');
+
+		el = el.parentNode.nextSibling;
+
+		expect(el.id).toBe('time-test-error');
+
+		expect(el.classList[0]).toBe('custom-validate');
+	});
+
+
+	it('defines a default displayValidation() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_displayValidation).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_displayValidation).toBe('function');
+	});
+	
+
+	xit('can display validation messages for a form field', function(){
+
+		
+	});
+
+
+	it('defines a default validateCapacity() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_validateCapacity).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_validateCapacity).toBe('function');
+	});
+	
+
+	xit('can validate an event capacity form field', function(){
+
+		
+	});
+
+
+	it('defines a default validateName() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_validateName).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_validateName).toBe('function');
+	});
+	
+
+	xit('can validate a person name form field', function(){
+
+		
+	});
+
+
+	it('defines a default validatePassword() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_validatePassword).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_validatePassword).toBe('function');
+	});
+	
+
+	xit('can validate a password form field', function(){
+
+		
+	});
+
+
+	it('defines a default validatePasswordConfirmation() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_validatePasswordConfirmation).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_validatePasswordConfirmation).toBe('function');
+	});
+	
+
+	xit('can validate a password confirmation field', function(){
+
+		
+	});
 });
