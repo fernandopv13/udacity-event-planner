@@ -1000,6 +1000,7 @@ app.IViewable.prototype.default_createSwitchField = function (str_width, str_swi
 
 	spanElement.appendChild(labelElement);
 
+	console.log(outerDiv);
 
 	return outerDiv;
 };

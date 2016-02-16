@@ -21,6 +21,8 @@
 		
 		<style>
 
+			/* {border: 1px solid blue;}*/
+
 			.custom-validate {
 				color: #F44336;
 				opacity: 1;
@@ -56,36 +58,77 @@
 				text-align: right;
 				padding-right: 15px;
 			}
+			
+			
+			/* Fix some Materialize CSS bugs that may cause error messages to overlap active labels on fields below*/
 
-			input:not([type]) + label:after,
-			input[type=text] + label:after,
-			input[type=password] + label:after,
-			input[type=email] + label:after,
-			input[type=url] + label:after,
-			input[type=time] + label:after,
-			input[type=date] + label:after,
-			input[type=datetime-local] + label:after,
-			input[type=tel] + label:after,
-			input[type=number] + label:after,
-			input[type=search] + label:after,
-			textarea.materialize-textarea + label:after {
+			input:not([type]) + label::after,
+			input[type=text] + label::after,
+			input[type=password] + label::after,
+			input[type=email] + label::after,
+			input[type=url] + label::after,
+			input[type=time] + label::after,
+			input[type=date] + label::after,
+			input[type=datetime-local] + label::after,
+			input[type=tel] + label::after,
+			input[type=number] + label::after,
+			input[type=search] + label::after,
+			textarea.materialize-textarea + label::after {
 				font-size: 0.8rem;
 			}
 
-			input[type=text].invalid + label::after {
+			
+			input:not([type]).invalid + label::after,
+			input[type=text].invalid + label::after,
+			input[type=password].invalid + label::after,
+			input[type=email].invalid + label::after,
+			input[type=url].invalid+ label::after,
+			input[type=time].invalid + label::after,
+			input[type=date].invalid + label::after,
+			input[type=datetime-local].invalid + label::after,
+			input[type=tel].invalid + label::after,
+			input[type=number].invalid + label::after,
+			input[type=search].invalid + label::after,
+			textarea.materialize-textarea.invalid + label::after {
 				top: 45px;
 			}
+			
 
-			input[type=text]:focus.invalid + label.active::after {
-				top: 65px;
+			input:not([type]):focus.invalid + label::after,
+			input[type=text]:focus.invalid + label::after,
+			input[type=password]:focus.invalid + label::after,
+			input[type=email]:focus.invalid + label::after,
+			input[type=url]:focus.invalid+ label::after,
+			input[type=time]:focus.invalid + label::after,
+			input[type=date]:focus.invalid + label::after,
+			input[type=datetime-local].invalid + label::after,
+			input[type=tel]:focus.invalid + label::after,
+			input[type=number]:focus.invalid + label::after,
+			input[type=search]:focus.invalid + label::after,
+			textarea.materialize-textarea:focus.invalid + label::after {
+				top: 67px;
 			}
 
+			
 			.input-field-description {
 				font-style: italic;
 			}
+			
+			
+			/* Materialize-style divider after field description */
+			
+			.input-field-description::after {
+				content:' ';
+				display: block;
+				width: 100%;
+				height: 1px;
+				margin-top: 10px;
+				/*overflow: hidden;*/
+				background-color: #e0e0e0; /*#9e9e9e;*/
+			}
+
 
 			#account-settings-password-hints, #account-settings-password-confirmation-parent {
-
 				display: none;
 			}
 
