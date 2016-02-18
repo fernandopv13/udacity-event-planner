@@ -43,7 +43,17 @@ app.PersonView = function(str_elementId, str_heading) {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
-	// none so far
+	/** Gets HTML element this view will render to */
+
+	app.PersonView.prototype.renderContext = function() {
+
+		if (arguments.length > 0) {
+
+			throw new IllegalArgumentError('Render context is readonly');
+		}
+
+		return $_renderContext;
+	}
 
 
 	/*----------------------------------------------------------------------------------------
@@ -79,7 +89,7 @@ app.PersonView = function(str_elementId, str_heading) {
 	*	
 	*/
 	
-	this.isInstanceOf = function (func_interface) {
+	app.PersonView.prototype.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
@@ -794,11 +804,10 @@ app.PersonView = function(str_elementId, str_heading) {
 
 
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	// none so far
-	
+	$_renderContext.addClass('iviewable'); // set shared view class on main HTML element
 };
 
 

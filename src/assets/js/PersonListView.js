@@ -33,10 +33,28 @@ app.PersonListView = function(str_elementId, str_heading) {
 
 	
 	/*----------------------------------------------------------------------------------------
+	* Public instance fields (non-encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+	
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
+							//any way in order to expose collection to default IObservable methods
+	
+		
+	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
-	// none so far
+	/** Gets HTML element this view will render to */
+
+	app.PersonListView.prototype.renderContext = function() {
+
+		if (arguments.length > 0) {
+
+			throw new IllegalArgumentError('Render context is readonly');
+		}
+
+		return $_renderContext;
+	}
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -46,14 +64,6 @@ app.PersonListView = function(str_elementId, str_heading) {
 	// none so far
 
 	
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
-							//any way in order to expose collection to default IObservable methods
-	
-		
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
@@ -68,7 +78,7 @@ app.PersonListView = function(str_elementId, str_heading) {
 	*	
 	*/
 	
-	this.isInstanceOf = function (func_interface) {
+	app.PersonListView.prototype.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
@@ -210,14 +220,7 @@ app.PersonListView = function(str_elementId, str_heading) {
 
 		
 		// Update DOM
-		/*
-		var $list = $('#guest-list');  
-
-		$list.empty();
-
-		$list.append(UlElement);
-		*/
-
+		
 		$_renderContext.empty();
 
 		$_renderContext.append(UlElement);
@@ -237,15 +240,10 @@ app.PersonListView = function(str_elementId, str_heading) {
 	};
 	
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	// If neeeded, we can simulate polymorphism here by testing named parameters in the
-	// constructor's signature and/or by analysing the 'arguments' array-like collection of
-	// parameters, and branching all or parts of the constructor logic accordingly.
-	//
-	//Probably most useful if kept relatively simple. Else maybe better to create new class.
-	
+	$_renderContext.addClass('iviewable'); // set shared view class on main HTML element
 };
 
 

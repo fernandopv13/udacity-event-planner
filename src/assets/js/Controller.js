@@ -13,6 +13,8 @@ var app = app || {};
 * @constructor
 *
 * @author Ulrik H. Gade, February 2016
+*
+* @todo Refactor as many accessors and event handlers as possible from public to private members
 */
 
 app.Controller = function() {
@@ -22,6 +24,8 @@ app.Controller = function() {
 	*---------------------------------------------------------------------------------------*/
 	
 	var _implements = [app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
+
+	_currentView, // the view currently being displayed in the UI
 
 	_selectedAccount = null, // the currently selected account, or null if none selected
 
@@ -44,6 +48,40 @@ app.Controller = function() {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
+	/** Gets or sets the view currently being displayed in the UI.
+	*
+	* When setting, hides the existing view and shows the new one.
+	*
+	* @param {IViewable} currentView The current view, or null
+	*
+	* @return {IViewable} The current view, or null
+	*
+	* @throws {IllegalArgumentError} If attempting to set a view that is not an IViewable, or null
+	*/
+	
+	app.Controller.prototype.currentView = function (IViewable_view) {
+	
+		if (arguments.length > 0) {
+
+			if (IViewable_view === null || IViewable_view.isInstanceOf(app.IViewable)) {
+			
+				if (_currentView) {_currentView.hide()}
+
+				_currentView = IViewable_view;
+
+				_currentView.show();
+			}
+
+			else {
+			
+				throw new IllegalArgumentError('View must be instance of IViewable')
+			}
+		}
+		
+		return _currentView;
+	};
+
+
 	/** Gets or sets the currently selected (active) account
 	*
 	* @param {Account} selectedAccount The selected account, or null
@@ -53,7 +91,7 @@ app.Controller = function() {
 	* @throws {IllegalArgumentError} If attempting to set account that is not an Account, or null
 	*/
 	
-	this.selectedAccount = function (Account_account) {
+	app.Controller.prototype.selectedAccount = function (Account_account) {
 	
 		if (arguments.length > 0) {
 
@@ -81,7 +119,7 @@ app.Controller = function() {
 	* @throws {IllegalArgumentError} If attempting to set event that is not an Event, or null
 	*/
 	
-	this.selectedEvent = function (Event_event) {
+	app.Controller.prototype.selectedEvent = function (Event_event) {
 	
 		if (arguments.length > 0) {
 
@@ -109,7 +147,7 @@ app.Controller = function() {
 	* @throws {IllegalArgumentError} If attempting to set guest that is not a Person, or null
 	*/
 	
-	this.selectedGuest = function (Person_guest) {
+	app.Controller.prototype.selectedGuest = function (Person_guest) {
 	
 		if (arguments.length > 0) {
 
@@ -132,7 +170,46 @@ app.Controller = function() {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
-	// none so far
+	app.Controller.prototype.onAccountSelected = function(int_accountId) {
+
+		this.selectedAccount(app.Account.registry.getObjectById(int_accountId));
+
+		this.selectedEvent(null);
+
+		this.selectedGuest(null);
+
+		this.notifyObservers(_selectedAccount);
+
+		this.currentView(_views.eventListView);
+	};
+
+
+	app.Controller.prototype.onEventSelected = function(int_eventId) {
+
+		this.selectedEvent(app.Event.registry.getObjectById(int_eventId));
+
+		this.selectedGuest(null);
+
+		this.notifyObservers(_selectedEvent);
+
+		this.currentView(_views.eventView);
+	};
+
+
+	app.Controller.prototype.onGuestListSelected = function() {
+
+		this.currentView(_views.guestListView);
+	};
+
+
+	app.Controller.prototype.onGuestSelected = function(int_guestId) {
+
+		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
+
+		this.notifyObservers(_selectedGuest);
+
+		this.currentView(_views.guestView);
+	};
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -149,47 +226,9 @@ app.Controller = function() {
 	*	
 	*/
 	
-	this.isInstanceOf = function (func_interface) {
+	app.Controller.prototype.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
-	};
-
-
-	this.onAccountSelected = function(int_accountId) {
-
-		this.selectedAccount(app.Account.registry.getObjectById(int_accountId));
-
-		this.selectedEvent(null);
-
-		this.selectedGuest(null);
-
-		this.notifyObservers(_selectedAccount);
-	};
-
-
-	this.onEventSelected = function(int_eventId) {
-
-		this.selectedEvent(app.Event.registry.getObjectById(int_eventId));
-
-		this.selectedGuest(null);
-
-		this.notifyObservers(_selectedEvent);
-	};
-
-
-	this.onGuestListSelected = function() {
-
-		//app.personView.render(_selectedEvent.guests());
-
-		// bind guest form to event, display form
-	};
-
-
-	this.onGuestSelected = function(int_guestId) {
-
-		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
-
-		this.notifyObservers(_selectedGuest);
 	};
 
 
@@ -198,7 +237,7 @@ app.Controller = function() {
 	* @param {IModelable} Reference to the data model object that caused the update
 	*/
 
-	this.notifyObservers = function(IModelable) {
+	app.Controller.prototype.notifyObservers = function(IModelable) {
 
 		this.observers.forEach(function(observer) {
 
@@ -320,73 +359,103 @@ app.Controller = function() {
 	*
 	* @param {IModelable} model Reference to an IModelable (data model object). If not accompanied by an id, call is handled as a notification of a change to the data model requiring a view update.
 	*
-	* @param {IViewable} view Reference to an IViewable. Expected to be accompanied by an id-
+	* @param {IViewable} view Reference to an IViewable. Expected to be accompanied by an id or a native Event.
 	*
 	* @param {int} id Object id. If following an IViewable, call is handled as a tap/click in a list of the type the IViewables is presenting. If following an IModelable, handled as submission of an update to the IModelable with same class and id.
+	*
+	* @param {Event} event Native browser event. Expected to follow IViewable. If present, handled as user interaction that cannot be handled by the originating IViewable itself (e.g. a change to a different view)
 	*
 	* @return {void}
 	*
 	* @throws {IllegalArgumentError} If first parameter provided is neither an IModelable nor an IViewable
 	*/
 
-	this.update = function(Object_obj, int_objId) {
+	app.Controller.prototype.update = function(Object_obj, intOrEvent) {
 
 		/*
 		Update implements JS version of method polymorphism, i.e. by parsing function parameters.
 		
 		Supported method 'signatures' are as follows:
 
-		- update(IViewable, int): Click received in list of objects of same class as IViewable
+		- update(IViewable, int): Click received in list of objects of IModelable class matching IViewable
+
+		- update(IViewable, Event): Native UI event in IViewable requires Controller supervision
 
 		- update(IModelable, int): Submission received from form representing IModelable of same class and id
 
 		- update(IModelable): Update received from data model. Object represents itself.
 		*/
 
-		if (arguments.length > 1 && typeof arguments[1] !== 'undefined') { // id provided
+		if (arguments.length > 1 && typeof arguments[1] !== 'undefined') { // second param provided
 
-			if (int_objId === parseInt(int_objId)) { // id exists and is an integer
+			if (intOrEvent === parseInt(intOrEvent)) { // id exists and is an integer
+
+				var int_id = parseInt(intOrEvent);
 
 				if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
 
-					var sourceObj = Object_obj.constructor.registry.getObjectById(int_objId);
+					var sourceObj = Object_obj.constructor.registry.getObjectById(int_id);
 
-					sourceObj.update(Object_obj, parseInt(int_objId));
+					sourceObj.update(Object_obj, int_id);
 				}
 
 				else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
 
+					/* Using the more generic update(IVewable, Event) form might void the need for this.
+					* But that would make retrieving the id of the clicked object more tightly coupled
+					* to the implementation of the view. So keeping this for now.
+					*/
+
 					switch (Object_obj.constructor)	{
 
-						case app.EventListView: // event list
+						case app.EventListView: // Event list
 
-							this.onEventSelected(int_objId);
+							this.onEventSelected(int_id);
 
 							break;
 						
-						case app.PersonListView: // guest list
+						case app.PersonListView: // Guest list
 
-							this.onGuestSelected(int_objId);
+							this.onGuestSelected(int_id);
 
 							break;
 						}
 				}
 
-				else { // wrong type
+				else { // Wrong type
 
 					throw new IllegalArgumentError('Expected IModelable or IViewable');
 				}
 			}
 
-			else { // id not an integer
+			else if (intOrEvent.originalEvent && Object_obj.isInstanceOf(app.IViewable)) { // Native event from IViewable
 
-				throw new IllegalArgumentError('ID must be an integer');
+				var event = intOrEvent, id;
+
+				switch (Object_obj.constructor)	{ // Branch on IViewable implementer type
+
+					case app.EventView: // Event form
+
+						// Not crazy about the controller knowing the id of the div, but will do for now
+
+						if (event.target.id === 'event-edit-guests-button') { // click on 'edit guests' button
+
+							this.onGuestListSelected(); // show guest list
+						}
+
+						break;
+				}
+			}
+
+			else { // id neither an integer nor a native browser Event
+
+				throw new IllegalArgumentError('Param must be an integer or a native browser Event');
 			}
 		}
 
 		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
 
-			this.notifyObservers();
+			this.notifyObservers(app.IModelable);
 		}
 
 		else { // wrong type

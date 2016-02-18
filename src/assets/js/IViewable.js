@@ -1216,6 +1216,32 @@ app.IViewable.prototype.default_displayValidation = function(event, str_fieldId,
 };
 
 
+/* Utility for hiding view in the UI on demand.
+*
+* Uses jQuery.show().
+*
+* @param Same as jQuery.hide()
+*/
+
+app.IViewable.prototype.default_hide = function(obj_options) {
+
+	this.renderContext().hide(obj_options ? obj_options : 'fast');
+}
+
+
+/* Utility for showing view in the UI on demand.
+*
+* Uses jQuery.show().
+*
+* @param Same as jQuery.show()
+*/
+
+app.IViewable.prototype.default_show = function(obj_options) {
+
+	this.renderContext().show(obj_options ? obj_options : 'slow');
+}
+
+
 /* Event handler for interactive validation of event capacity field
 *
 * @return {Boolean} true if validation is succesful, otherwise false

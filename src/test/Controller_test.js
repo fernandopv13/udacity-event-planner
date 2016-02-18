@@ -49,6 +49,34 @@ describe('class Controller', function(){
 		});
 
 
+		xit('can get and set the current (visible) view', function() {
+
+			var testEvent = new app.Event();
+
+			expect(testController.selectedEvent(testEvent)).toBe(testEvent);
+		});
+
+
+		xit('rejects attempt to set view that is not an IViewable', function() {
+
+			try {
+
+				testController.selectedEvent('not an Event');
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+		});
+
+		xit('displays the current view being set and hides all others', function() {
+
+			
+		})
+
+
+
 		it('can get and set the selected (active) account', function() {
 
 			var testAccount = new app.Account();

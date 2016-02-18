@@ -32,11 +32,31 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	_heading = str_heading;
 
 
+	
+	/*----------------------------------------------------------------------------------------
+	* Public instance fields (non-encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+	
+	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
+							//any way in order to expose collection to default IObservable methods
+	
+	
+
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
-	// none so far
+	/** Gets HTML element this view will render to */
+
+	app.AccountSettingsView.prototype.renderContext = function() {
+
+		if (arguments.length > 0) {
+
+			throw new IllegalArgumentError('Render context is readonly');
+		}
+
+		return $_renderContext;
+	}
 	
 
 	/*----------------------------------------------------------------------------------------
@@ -45,14 +65,6 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	
 	// none so far
 
-
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
-							//any way in order to expose collection to default IObservable methods
-	
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
@@ -79,7 +91,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	*	
 	*/
 	
-	this.isInstanceOf = function (func_interface) {
+	app.AccountSettingsView.prototype.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
@@ -465,11 +477,10 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	
 
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	// none so far
-	
+	$_renderContext.addClass('iviewable'); // set shared view class on main HTML element
 };
 
 

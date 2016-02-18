@@ -38,19 +38,6 @@ app.EventView = function(str_elementId, str_heading) {
 	_heading = str_heading; // content of the view heading
 
 	
-	/*----------------------------------------------------------------------------------------
-	* Accessors for private instance fields
-	*---------------------------------------------------------------------------------------*/
-
-	// none so far
-	
-
-	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
-	*---------------------------------------------------------------------------------------*/
-	
-	// none so far
-
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
@@ -59,6 +46,31 @@ app.EventView = function(str_elementId, str_heading) {
 	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
 							//any way in order to expose collection to default IObservable methods
 	
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Accessors for private instance fields
+	*---------------------------------------------------------------------------------------*/
+
+	/** Gets HTML element this view will render to */
+
+	app.EventView.prototype.renderContext = function() {
+
+		if (arguments.length > 0) {
+
+			throw new IllegalArgumentError('Render context is readonly');
+		}
+
+		return $_renderContext;
+	}
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Private instance methods (may depend on accessors, so declare after them)
+	*---------------------------------------------------------------------------------------*/
+	
+	// none so far
+
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
@@ -85,7 +97,7 @@ app.EventView = function(str_elementId, str_heading) {
 	*	
 	*/
 	
-	this.isInstanceOf = function (func_interface) {
+	app.EventView.prototype.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
@@ -409,6 +421,34 @@ app.EventView = function(str_elementId, str_heading) {
 				));
 
 
+			// Add guest list button
+
+				containerDiv.appendChild(function() {
+
+					var outerDiv =  this.createElement( // outer div
+					{
+						element: 'div',
+						
+						classList: ['row']
+					});
+
+
+					outerDiv.appendChild(this.createElement( // button
+					{
+						element: 'a',
+
+						attributes: {id: 'event-edit-guests-button'},
+						
+						classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+
+						innerHTML: 'Edit guests'
+					}));
+
+					return outerDiv;
+
+				}.bind(this)());
+
+
 			// Add host field
 
 				containerDiv.appendChild(this.createTextField(
@@ -423,60 +463,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 					event.host() && event.host().hostName() ? event.host().hostName() : ''
 				));
-				/*
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
 				
-				
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'text',
-						
-						id: 'event-host',
-						
-						value: event.host() && event.host().name()? event.host().name() : '',
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				innerDiv.appendChild(this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'event-host'},
-					
-					classList: event.host() && event.host().name() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter host'},
-					
-					innerHTML: 'Host'
-				}));
-				
-				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
-
-				*/
-
 			
 			// Add description field
 
@@ -538,80 +525,11 @@ app.EventView = function(str_elementId, str_heading) {
 
 				containerDiv.appendChild(this.createRequiredFieldExplanation());
 
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				});
-				
-				outerDiv.appendChild(this.createElement({
-				
-					element: 'p',
-					
-					classList: ['required-indicator'],
-						
-					innerHTML: '* indicates a required field'
-				}));
-				
-				
-				containerDiv.appendChild(outerDiv);
-				*/
-
 			
 			// Add submit and cancel buttons
 
 				containerDiv.appendChild(this.createSubmitCancelButtons('event-form'))
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row', 'form-submit']
-				});
 				
-				
-				outerDiv.appendChild(this.createElement({ // cancel button
-					
-					element: 'a',
-					
-					attributes: {id: 'event-form-cancel'},
-					
-					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
-
-					innerHTML: 'Cancel'
-				}));
-				
-				
-				buttonElement =  this.createElement({ // submit button
-					
-					element: 'a',
-					
-					attributes: {id: 'event-form-submit'},
-					
-					classList: ['waves-effect', 'waves-light', 'btn'],
-
-					innerHTML: 'Done'
-				});
-				
-				
-				buttonElement.appendChild(this.createElement({ // 'send' icon
-					
-					element: 'i',
-					
-					classList: ['material-icons', 'right'],
-					
-					innerHTML: 'send'
-				}));
-				
-				
-				outerDiv.appendChild(buttonElement);
-
-				containerDiv.appendChild(outerDiv);
-
-				*/
-
 			
 			// Update DOM
 
@@ -664,6 +582,13 @@ app.EventView = function(str_elementId, str_heading) {
 				$('#event-capacity').keyup(function(event) { // capacity
 
 					this.validateCapacity(event, 'event-capacity');
+		
+				}.bind(this));
+
+				
+				$('#event-edit-guests-button').click(function(event) { // edit guest list button
+
+					this.notifyObservers(this, event); // dispatch event handling to controller
 		
 				}.bind(this));
 
@@ -1131,11 +1056,10 @@ app.EventView = function(str_elementId, str_heading) {
 
 
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	// none so far
-	
+	$_renderContext.addClass('iviewable'); // set shared view class on main HTML element
 };
 
 

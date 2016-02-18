@@ -852,4 +852,36 @@ describe('Interface IViewable', function(){
 
 		
 	});
+
+
+	it('defines a default hide() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_hide).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_hide).toBe('function');
+	});
+	
+
+	xit('can hide itself in the UI', function(){
+
+		
+	});
+
+
+	it('defines a default show() method', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.default_show).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.default_show).toBe('function');
+	});
+	
+
+	xit('can show (i.e. unhide) itself in the UI', function(){
+
+		
+	});
 });
