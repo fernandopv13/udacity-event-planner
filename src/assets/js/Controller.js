@@ -202,7 +202,9 @@ app.Controller = function() {
 
 		this.observers.forEach(function(observer) {
 
-			switch (observer.constructor) {
+			observer.update(IModelable);
+
+			/*switch (observer.constructor) {
 
 				case app.AccountSettingsView: // account settings form
 
@@ -239,7 +241,7 @@ app.Controller = function() {
 					observer.update(_selectedGuest);
 
 					break;
-			}
+			}*/
 		});
 	}
 
@@ -292,7 +294,7 @@ app.Controller = function() {
 		// Set some defaults to use until account creation/selection is developed
 
 			
-			this.selectedAccount(new app.Account());//(app.Account.registry.getObjectById(0)); //debug
+			this.selectedAccount(app.Account.registry.getObjectById(0)); //debug
 			
 			this.selectedAccount().defaultLocation('Copenhagen'); // debug
 
@@ -343,7 +345,7 @@ app.Controller = function() {
 
 		if (arguments.length > 1 && typeof arguments[1] !== 'undefined') { // id provided
 
-			if (int_objId === parseInt(int_objId)) { // id is an integer
+			if (int_objId === parseInt(int_objId)) { // id exists and is an integer
 
 				if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
 
@@ -380,7 +382,6 @@ app.Controller = function() {
 
 				throw new IllegalArgumentError('ID must be an integer');
 			}
-		
 		}
 
 		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated

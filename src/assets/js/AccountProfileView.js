@@ -85,25 +85,6 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	};
 	
 
-	/** Notifies observers that form has been updated (i.e. submitted).
-	*
-	* Overrides default method in IObservable.
-	*
-	* @param {Person} The Person passing data in the form onto the observers
-	*
-	* @return void
-	 */
-
-	/*
-	app.AccountProfileView.prototype.notifyObservers = function(IModelable_person, int_objId) {
-
-		this.observers.forEach(function(observer) {
-
-			observer.update(IModelable_person, int_objId);
-		});
-	};
-	*/
-
 	/** (Re)renders person to form in UI
 	*
 	* @param {Account} The account from whose profile to present data in the form
@@ -111,11 +92,11 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* @return void
 	 */
 	
-	app.AccountProfileView.prototype.render = function(IModelable_Account) {
+	app.AccountProfileView.prototype.render = function(IModelable_account) {
 
-		var person = IModelable_Account.accountHolder(), formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
+		var person = IModelable_account.accountHolder(), formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
-		if (person && person !== null) { // account holder exists
+		if (person !== null && person) { // account holder exists
 			
 			// Setup up form and container div
 
@@ -143,36 +124,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				
 				containerDiv.appendChild(this.createHeading('s12', _heading));
 
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				});
-
-				containerDiv.appendChild(outerDiv);
-
 				
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['col', 's12']
-				});
-
-				innerDiv.appendChild(this.createElement({
-
-					element: 'h4',
-
-					innerHTML: _heading
-
-				}));
-
-				outerDiv.appendChild(innerDiv);
-				*/
-
-
 			// Add hidden person id field
 
 				containerDiv.appendChild(this.createElement({
@@ -197,71 +149,6 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 					person.name() ? person.name() : ''
 				));
-				/*
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				
-				innerDiv.appendChild(this.createElement( // input
-				{
-					element: 'input',			
-					
-					attributes: 
-					{
-						type: 'text',
-						
-						id: 'account-holder-name',
-						
-						value: person.name() ? person.name() : '',
-						
-						required: true
-					},
-					
-					classList: ['validate']
-				}));
-				
-				
-				labelElement = this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-holder-name'},
-					
-					classList: person.name() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter your name'},
-					
-					innerHTML: 'Your Name'
-				});
-				
-				labelElement.appendChild(this.createElement( // required field indicator
-				{
-					element: 'span',
-
-					classList: ['required-indicator'],
-
-					innerHTML: '*'
-				}));
-				
-				innerDiv.appendChild(labelElement);
-
-
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-				
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
-
-				*/
 				
 			
 			// Add email field
@@ -303,57 +190,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 					person.jobTitle()
 				));
 
-				/*
-				innerDiv =  this.createElement( // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				innerDiv.appendChild(this.createElement( //input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'text',
-						
-						id: 'account-holder-jobtitle',
-						
-						value: person.jobTitle() ? person.jobTitle() : ''
-					}
-				}));
-				
-				
-				innerDiv.appendChild(this.createElement( // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-holder-jobtitle'},
-					
-					classList: person.jobTitle() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter your job title'},
-					
-					innerHTML: 'Your Job Title'
-				}));
-				
-				
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
 							
-				
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);
-				*/
-
-			
 			// Add employer field
 
 				innerDiv =  this.createElement( // inner div
@@ -435,80 +272,12 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 				containerDiv.appendChild(this.createRequiredFieldExplanation());
 
-				/*
-				outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				});
-				
-				outerDiv.appendChild(this.createElement({
-				
-					element: 'p',
-					
-					classList: ['required-indicator'],
-						
-					innerHTML: '* indicates a required field'
-				}));
-				
-				
-				containerDiv.appendChild(outerDiv);
-				*/
-
-			
+							
 			// Add submit and cancel buttons
 
 				containerDiv.appendChild(this.createSubmitCancelButtons('account-holder-form'));
 
-				/*outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row', 'form-submit']
-				});
-				
-				
-				outerDiv.appendChild(this.createElement({ // cancel button
-					
-					element: 'a',
-					
-					attributes: {id: 'account-holder-form-cancel'},
-					
-					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
-
-					innerHTML: 'Cancel'
-				}));
-				
-				
-				buttonElement =  this.createElement({ // submit button
-					
-					element: 'a',
-					
-					attributes: {id: 'account-holder-form-submit'},
-					
-					classList: ['waves-effect', 'waves-light', 'btn'],
-
-					innerHTML: 'Done'
-				});
-				
-				
-				buttonElement.appendChild(this.createElement({ // 'send' icon
-					
-					element: 'i',
-					
-					classList: ['material-icons', 'right'],
-					
-					innerHTML: 'send'
-				}));
-				
-				
-				outerDiv.appendChild(buttonElement);
-
-				containerDiv.appendChild(outerDiv);
-				*/
-			
-			
+							
 			// Update DOM
 
 				$_renderContext.empty();
@@ -556,12 +325,12 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 			$_renderContext.empty();
 
-			$_renderContext.append(
+			$_renderContext.append(this.createElement(
 			{
 				element: 'p',
 
 				innerHTML: 'No profile selected. Please select or create a profile in order to edit details.'
-			});
+			}));
 		}
 	};
 
@@ -610,11 +379,19 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	}
 
 
-	/** Updates account holder presentation when notified by controller of change */
+	/** Updates account holder presentation when notified by controller of change
+	* 
+	* See IViewable for further details.
+	 */
 	
-	app.AccountProfileView.prototype.update = function(IModelable_Account) {
+	app.AccountProfileView.prototype.update = function(IModelable_account) {
 		
-		this.render(IModelable_Account);
+		if (IModelable_account === null || IModelable_account.constructor === app.Account) {
+
+			this.render(IModelable_account);
+		}
+
+		// else do nothing
 	};
 	
 

@@ -179,14 +179,6 @@ app.EventListView = function(str_elementId, str_heading) {
 		
 		// Update DOM
 
-		/*
-		var $list = $('#event-list'); 
-
-		$list.empty();
-
-		$list.append(UlElement);
-		*/
-
 		$_renderContext.empty();
 
 		$_renderContext.append(UlElement);
@@ -196,9 +188,14 @@ app.EventListView = function(str_elementId, str_heading) {
 	
 	/** Updates event list presentation when notified by controller of change */
 	
-	app.EventListView.prototype.update = function(IModelable_Account) {
+	app.EventListView.prototype.update = function(IModelable_account) {
 		
-		this.render(IModelable_Account);
+		if (IModelable_account === null || IModelable_account.constructor === app.Account) {
+
+			this.render(IModelable_account);
+		}
+
+		// else do nothing
 	};
 
 

@@ -36,15 +36,15 @@ app.IViewable = function() {
 	* Method signatures
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Update (i.e. render) UI on demand.
+	/** Update (i.e. render) UI on demand if passed an IModelable of the type this view observes. Otherwise ignores call.
 	*
-	* Overrides IObserver method to limit acceptable parameter type to IModelable.
+	* Overrides inherited IObserver method to limit acceptable parameter type to IModelable.
 	*
-	* @param {IModelable} obj Reference to the data model object to be rendered in the UI.
+	* @param {IModelable} obj Reference to the data model object to be rendered in the UI, or null (to reset the view).
 	*
 	* @return {void}
 	*
-	* @throws {AbstractMethodError} If attempting to invoke
+	* @throws {AbstractMethodError} If attempting to invoke directly on interface
 	*/
 
 	app.IViewable.prototype.update = function(IModelable) {
@@ -999,8 +999,6 @@ app.IViewable.prototype.default_createSwitchField = function (str_width, str_swi
 	}));
 
 	spanElement.appendChild(labelElement);
-
-	console.log(outerDiv);
 
 	return outerDiv;
 };

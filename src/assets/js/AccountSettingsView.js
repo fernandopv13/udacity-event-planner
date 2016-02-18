@@ -374,12 +374,12 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 			$_renderContext.empty();
 
-			$_renderContext.append(
+			$_renderContext.append(this.createElement(
 			{
 				element: 'p',
 
 				innerHTML: 'No account selected. Please select or create a account in order to edit details.'
-			});
+			}));
 		}
 	};
 
@@ -455,7 +455,12 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	
 	app.AccountSettingsView.prototype.update = function(IModelable_account) {
 		
-		this.render(IModelable_account);
+		if (IModelable_account.constructor === app.Account) {
+
+			this.render(IModelable_account);
+		}
+
+		// else do nothing
 	};
 	
 

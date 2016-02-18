@@ -33,9 +33,9 @@ app.EventView = function(str_elementId, str_heading) {
 	
 	var _implements = [app.IObservable, app.IObserver, app.IViewable], // list of interfaces implemented by this class (by function reference);
 
-	$_renderContext = $('#' + str_elementId),
+	$_renderContext = $('#' + str_elementId), //  the HTML element the view will render itself into when updated
 
-	_heading = str_heading;
+	_heading = str_heading; // content of the view heading
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -675,12 +675,12 @@ app.EventView = function(str_elementId, str_heading) {
 
 			$_renderContext.empty();
 
-			$_renderContext.append(
+			$_renderContext.append(this.createElement(
 			{
 				element: 'p',
 
 				innerHTML: 'No event selected. Please select or create an event in order to edit details.'
-			});
+			}));
 		}
 	};
 
@@ -872,7 +872,12 @@ app.EventView = function(str_elementId, str_heading) {
 	
 	app.EventView.prototype.update = function(IModelable_event) {
 		
-		this.render(IModelable_event);
+		if (IModelable_event === null || IModelable_event.constructor === app.Event) {
+
+			this.render(IModelable_event);
+		}
+
+		// else do nothing
 	};
 	
 

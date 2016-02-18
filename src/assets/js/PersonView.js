@@ -684,12 +684,12 @@ app.PersonView = function(str_elementId, str_heading) {
 
 			$_renderContext.empty();
 
-			$_renderContext.append(
+			$_renderContext.append(this.createElement(
 			{
 				element: 'p',
 
 				innerHTML: 'No guest selected. Please select or create a guest in order to edit details.'
-			});
+			}));
 		}
 	};
 
@@ -749,7 +749,12 @@ app.PersonView = function(str_elementId, str_heading) {
 	
 	app.PersonView.prototype.update = function(IModelable_person) {
 		
-		this.render(IModelable_person);
+		if (IModelable_person === null || IModelable_person.constructor === app.Person) {
+
+			this.render(IModelable_person);
+		}
+
+		// else do nothing
 	};
 	
 

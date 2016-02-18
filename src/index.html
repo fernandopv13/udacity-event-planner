@@ -60,7 +60,10 @@
 			}
 			
 			
-			/* Fix some Materialize CSS bugs that may cause error messages to overlap active labels on fields below*/
+			/* Fix some Materialize CSS bugs that may cause error messages to overlap active labels on fields below.
+			*
+			* Known remaining bug: Problem persists when capacity field goes negative. This is rare enough to ignore for now;
+			*/
 
 			input:not([type]) + label::after,
 			input[type=text] + label::after,
@@ -139,6 +142,8 @@
 
 	<body>
 
+		
+
 		<!-- Navbar -->
 		
 		<div class="navbar-fixed">
@@ -197,6 +202,20 @@
 		<div class="container"> 
 			
 			<!-- Test sandbox-->
+			
+			<!-- Preload spinner -->
+
+			<div id="preloader" class="valign-wrapper" style="height:160px;">
+				
+				<div class="valign" style="width:90%;text-align:center;">
+
+					<div>Loading the app...</div>
+
+					<div class="progress"><div class="indeterminate"></div></div>
+
+				</div>
+
+			</div>
 
 			<!-- Placeholders for dynamically generated main content views -->
 
@@ -257,10 +276,33 @@
 			
 			$(document).ready(function() {
 
-				$(".button-collapse").sideNav();
+				$('#preloader').hide('fast');
+
+				$('.button-collapse').sideNav();
+
+				
+				// Parse URL hashbangs for which view and object to display
+
+				var hash = document.location.hash;
+
+				if (hash !== '') {
+
+					hash = hash.slice(2); // pop 'hashbang'
+
+					var view = hash.split('?')[0]; id = hash.split('?')[1].split('=')[1];
+
+					//controller.router.route(view, id); // sub-view
+				}
+
+				else { // main view
+
+					//controller.router.route(...);
+				}
+
+
 			});
 
-			window.onload = function() {
+			window.onload = function() { // $(document).ready()) may fire too early, som going old school
 				
 				app.init();	
 			};
@@ -270,3 +312,4 @@
 	</body>
 
 </html>
+;

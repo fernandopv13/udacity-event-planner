@@ -94,10 +94,6 @@ app.PersonListView = function(str_elementId, str_heading) {
 				listeners:
 				{
 					click: function(e) {self.notifyObservers(self, Person_guest.id());}
-
-					//click: function(e) {self.notifyObservers(Person_guest.id());}
-
-					//click: function(e) {app.controller.onGuestSelected(Person_guest.id());}
 				}
 			});
 
@@ -232,7 +228,12 @@ app.PersonListView = function(str_elementId, str_heading) {
 	
 	app.PersonListView.prototype.update = function(Imodelable_Event) {
 		
-		this.render(Imodelable_Event);
+		if (Imodelable_Event === null || Imodelable_Event.constructor === app.Event) {
+
+			this.render(Imodelable_Event);
+		}
+
+		// else do nothing
 	};
 	
 	/*----------------------------------------------------------------------------------------
