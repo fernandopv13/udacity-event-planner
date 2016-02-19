@@ -619,7 +619,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
 	*/
 
-	app.Event.prototype.update = function(Event_event, int_objId) {
+	this.update = function(Event_event, int_objId) {
 
 		if (Event_event.constructor !== app.Event) { // wrong class
 
@@ -652,6 +652,11 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			this.host(Event_event.host());
 
 			
+			// Do some housekeeping (calls IModelable default)
+
+			this.onUpdate(Event_event);
+
+			/*
 			// Write new state to local storage, if available
 
 			var account = app.controller.selectedAccount();
@@ -659,6 +664,8 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			if (account.localStorageAllowed() && window.localStorage) {
 
 				this.writeObject();
+
+				console.log(localStorage.getItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id()));
 			}
 
 			
@@ -672,7 +679,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			app.Event.registry.remove(Event_event);
 
 			Event_event = undefined;
-
+			*/
 			
 			return true;
 		}

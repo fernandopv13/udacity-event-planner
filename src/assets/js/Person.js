@@ -357,7 +357,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	* @todo Not implemented
 	*/
 
-	app.Person.prototype.update = function(Person_person, int_objId) {
+	this.update = function(Person_person, int_objId) {
 
 		if (Person_person.constructor !== app.Person) { // wrong class
 
@@ -384,6 +384,12 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 			this.birthday(Person_person.birthday() ? Person_person.birthday() : null);
 
 			
+			// Do some housekeeping (calls IModelable default)
+
+			this.onUpdate(Person_person);
+
+			/*
+
 			// Write new state to local storage, if available
 
 			var account = app.controller.selectedAccount();
@@ -396,6 +402,8 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 			// Notify observers (i.e. controller)
 
 			this.notifyObservers();
+
+			*/
 
 			return true;
 		}

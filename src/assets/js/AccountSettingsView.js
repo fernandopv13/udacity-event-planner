@@ -29,7 +29,9 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 	$_renderContext = $('#' + str_elementId),
 
-	_heading = str_heading;
+	_heading = str_heading, // content of the view heading
+
+	_modelId; // id of the model object currently presented in the view
 
 
 	
@@ -46,9 +48,20 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
+	/** Get ID of model object currently being presented by the view
+	*
+	* @return {int}
+	*/
+
+	this.modelId = function() {
+
+		return _modelId;
+	}
+
+
 	/** Gets HTML element this view will render to */
 
-	app.AccountSettingsView.prototype.renderContext = function() {
+	this.renderContext = function() {
 
 		if (arguments.length > 0) {
 
@@ -75,7 +88,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* @todo Everything(!)
 	*/
 
-	app.AccountSettingsView.prototype.cancel = function() {
+	this.cancel = function() {
 
 		// do something!
 	}
@@ -91,7 +104,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	*	
 	*/
 	
-	app.AccountSettingsView.prototype.isInstanceOf = function (func_interface) {
+	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
@@ -106,7 +119,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* @todo Get character counter to work on description field
 	 */
 	
-	app.AccountSettingsView.prototype.render = function(Account_account) {
+	this.render = function(Account_account) {
 
 		var account = Account_account,
 
@@ -403,7 +416,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* @todo Fix host hack
 	*/
 
-	app.AccountSettingsView.prototype.submit = function(event) {
+	this.submit = function(event) {
 
 		// First display any and all validation errors at once
 
@@ -465,11 +478,13 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 	/** Updates account presentation when notified by controller of change */
 	
-	app.AccountSettingsView.prototype.update = function(IModelable_account) {
+	this.update = function(IModelable_account) {
 		
 		if (IModelable_account.constructor === app.Account) {
 
 			this.render(IModelable_account);
+
+			_modelId = IModelable_account.id();
 		}
 
 		// else do nothing

@@ -36,6 +36,22 @@ app.IViewable = function() {
 	* Method signatures
 	*---------------------------------------------------------------------------------------*/
 	
+	/** Get ID of model object currently being presented by the view
+	*
+	* @return {int}
+	*
+	* @throws {AbstractMethodError} If attempting to invoke directly on interface
+	*/
+
+	app.IViewable.prototype.modelId = function() {
+		
+		throw new AbstractMethodError(app.IViewable.prototype.modelId.errorMessage);
+	};
+	
+	this.constructor.prototype.modelId.errorMessage = 'Method signature "modelId()" must be realized in implementing classes';
+	
+
+
 	/** Update (i.e. render) UI on demand if passed an IModelable of the type this view observes. Otherwise ignores call.
 	*
 	* Overrides inherited IObserver method to limit acceptable parameter type to IModelable.
@@ -67,6 +83,66 @@ app.IViewable = function() {
 /*----------------------------------------------------------------------------------------
 * Default methods (must be defined outside main function/class body)
 *---------------------------------------------------------------------------------------*/
+
+/** Gets name of object's class. Class name is read-only.
+*
+* Save some bolierplate in realizaing classes by doing it here. OVerhead should be acceptable
+*
+* @return {String} name The name of the object's class
+*	
+* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
+*/
+
+app.IViewable.prototype.default_className = function () {
+	
+	if (arguments.length === 0) {
+
+		switch (this.constructor) {
+
+			case app.AccountProfileView:
+
+				return 'AccountProfileView';
+
+				break;
+
+			case app.AccountSettingsView:
+
+				return 'AccountSettingsView';
+
+				break;
+
+			case app.EventView:
+
+				return 'EventView';
+
+				break;
+
+			case app.EventListView:
+
+				return 'EventListView';
+
+				break;
+
+			case app.PersonView:
+
+				return 'PersonView';
+
+				break;
+
+			case app.PersonListView:
+
+				return 'PersonListView';
+
+				break;
+		}
+	}
+	
+	else {
+		
+		throw new IllegalArgumentError('className is read-only');
+	}
+};
+
 
 /** Factory method for creating date picker fields for forms
 *
@@ -1216,9 +1292,9 @@ app.IViewable.prototype.default_displayValidation = function(event, str_fieldId,
 };
 
 
-/* Utility for hiding view in the UI on demand.
+/** Utility for hiding view in the UI on demand.
 *
-* Uses jQuery.show().
+* Uses jQuery.hide().
 *
 * @param Same as jQuery.hide()
 */
@@ -1229,7 +1305,7 @@ app.IViewable.prototype.default_hide = function(obj_options) {
 }
 
 
-/* Utility for showing view in the UI on demand.
+/** Utility for showing view in the UI on demand.
 *
 * Uses jQuery.show().
 *
@@ -1242,7 +1318,7 @@ app.IViewable.prototype.default_show = function(obj_options) {
 }
 
 
-/* Event handler for interactive validation of event capacity field
+/** Event handler for interactive validation of event capacity field
 *
 * @return {Boolean} true if validation is succesful, otherwise false
 */
@@ -1277,7 +1353,7 @@ app.IViewable.prototype.default_validateCapacity = function(event, str_capacityI
 };
 
 
-/* Event handler for interactive validation of email field
+/** Event handler for interactive validation of email field
 *
 * @return {Boolean} true if validation is succesful, otherwise false
 */
@@ -1316,7 +1392,7 @@ app.IViewable.prototype.default_validateEmail = function(event, str_emailId, boo
 };
 
 
-/* Event handler for interactive validation of person name field
+/** Event handler for interactive validation of person name field
 *
 * @return {Boolean} true if validation is succesful, otherwise false
 */
@@ -1333,7 +1409,7 @@ app.IViewable.prototype.default_validateName = function(event, str_nameId, str_e
 }
 
 
-/* Event handler for interactive validation of password field.
+/** Event handler for interactive validation of password field.
 *
 * Includes support for dynamically updated password hints
 *
@@ -1407,7 +1483,7 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 };
 
 
-/* Event handler for interactive validation of password confirmation field
+/** Event handler for interactive validation of password confirmation field
 *
 * @return {Boolean} true if validation is succesful, otherwise false
 */

@@ -29,7 +29,9 @@ app.PersonListView = function(str_elementId, str_heading) {
 
 	$_renderContext = $('#' + str_elementId),
 
-	_heading = str_heading;
+	_heading = str_heading, // content of the view heading
+
+	_modelId; // id of the model object currently presented in the view
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -44,9 +46,20 @@ app.PersonListView = function(str_elementId, str_heading) {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
+	/** Get ID of model object currently being presented by the view
+	*
+	* @return {int}
+	*/
+
+	this.modelId = function() {
+
+		return _modelId;
+	}
+
+
 	/** Gets HTML element this view will render to */
 
-	app.PersonListView.prototype.renderContext = function() {
+	this.renderContext = function() {
 
 		if (arguments.length > 0) {
 
@@ -78,7 +91,7 @@ app.PersonListView = function(str_elementId, str_heading) {
 	*	
 	*/
 	
-	app.PersonListView.prototype.isInstanceOf = function (func_interface) {
+	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
@@ -89,7 +102,7 @@ app.PersonListView = function(str_elementId, str_heading) {
 	* @param {Event} The event whose guest list we want to render
 	 */
 
-	app.PersonListView.prototype.render = function(Event_event) {
+	this.render = function(Event_event) {
 		
 		function renderListItem(Person_guest, self) {
 			
@@ -229,11 +242,13 @@ app.PersonListView = function(str_elementId, str_heading) {
 
 	/** Update event presentation when model has changed */
 	
-	app.PersonListView.prototype.update = function(Imodelable_Event) {
+	this.update = function(Imodelable_Event) {
 		
 		if (Imodelable_Event === null || Imodelable_Event.constructor === app.Event) {
 
 			this.render(Imodelable_Event);
+
+			_modelId = Imodelable_Event.id();
 		}
 
 		// else do nothing

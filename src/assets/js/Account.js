@@ -511,80 +511,6 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	};
 	
 		
-	/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Account} account Object holding the data to update with
-	*
-	* @return {Boolean} true if copy was successful, else error or false
-	*
-	* @throws {IllegalArgumentError} If object provided is not an instance of Account
-	*
-	* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
-	*/
-
-	app.Account.prototype.update = function(Account_account, int_objId) {
-
-		var source = Account_account;
-
-		if (source.constructor !== app.Account) { // wrong class
-
-			throw new IllegalArgumentError('Object must be instance of Account');
-		}
-
-		else if (this.id() !== int_objId) { // id mismatch
-
-			throw new IllegalArgumentError('Objects IDs don\'t match');
-		}
-
-		else {
-
-			// Update using accessors (for validation)
-
-			this.email(source.email());
-
-			this.password(source.password());
-
-			if (source.accountHolder()) {this.accountHolder(source.accountHolder());}
-
-			this.defaultCapacity(source.defaultCapacity());
-
-			this.defaultLocation(source.defaultLocation());
-
-			this.geoLocationAllowed(source.geoLocationAllowed());
-
-			this.localStorageAllowed(source.localStorageAllowed());
-		
-			
-			// Write new state to local storage, if available
-
-			if (this.localStorageAllowed() && window.localStorage) {
-
-				this.writeObject();
-			}
-
-			
-			// Notify observers (i.e. controller)
-
-			this.notifyObservers(this);
-
-			
-			// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
-
-			app.Account.registry.remove(Account_account);
-
-			Account_account = undefined;
-
-			
-			return true;
-		}
-
-		return false; // this should never happen, keeping just in case
-	}
-
-
-	
 	/*----------------------------------------------------------------------------------------
 	* Parameter parsing (constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
@@ -627,6 +553,89 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	
 	this.constructor.registry.add(this); // Will only happend if initialization passes w/o error
 };
+
+
+/*----------------------------------------------------------------------------------------
+* Public instance members (on prototype)
+*---------------------------------------------------------------------------------------*/
+
+/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
+*
+* (See IObserver for further documentation.)
+*
+* @param {Account} account Object holding the data to update with
+*
+* @return {Boolean} true if copy was successful, else error or false
+*
+* @throws {IllegalArgumentError} If object provided is not an instance of Account
+*
+* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+*/
+
+app.Account.prototype.update = function(Account_account, int_objId) {
+
+	var source = Account_account;
+
+	if (source.constructor !== app.Account) { // wrong class
+
+		throw new IllegalArgumentError('Object must be instance of Account');
+	}
+
+	else if (this.id() !== int_objId) { // id mismatch
+
+		throw new IllegalArgumentError('Objects IDs don\'t match');
+	}
+
+	else {
+
+		// Update using accessors (for validation)
+
+		this.email(source.email());
+
+		this.password(source.password());
+
+		if (source.accountHolder()) {this.accountHolder(source.accountHolder());}
+
+		this.defaultCapacity(source.defaultCapacity());
+
+		this.defaultLocation(source.defaultLocation());
+
+		this.geoLocationAllowed(source.geoLocationAllowed());
+
+		this.localStorageAllowed(source.localStorageAllowed());
+	
+		
+		// Do some housekeeping (calls IModelable default)
+
+		this.onUpdate(Account_account);
+
+
+		/*
+		// Write new state to local storage, if available
+
+		if (this.localStorageAllowed() && window.localStorage) {
+
+			this.writeObject();
+		}
+
+		
+		// Notify observers (i.e. controller)
+
+		this.notifyObservers(this);
+
+		
+		// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
+
+		app.Account.registry.remove(Account_account);
+
+		Account_account = undefined;
+
+		*/
+		return true;
+	}
+
+	return false; // this should never happen, keeping just in case
+}
 
 
 /*----------------------------------------------------------------------------------------

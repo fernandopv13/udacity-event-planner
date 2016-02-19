@@ -9,15 +9,15 @@
 
 describe('class Controller', function(){
 	
-	it('implements the IObservable interface', function() { // uses Interface.js
+	it('implements the IObservable interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Controller, app.IObservable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Controller, app.IObservable)).toBe(true);
 	});
 
 
-	it('implements the IObserver interface', function() { // uses Interface.js
+	it('implements the IObserver interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Controller, app.IObserver)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Controller, app.IObserver)).toBe(true);
 	});
 
 

@@ -77,21 +77,21 @@ describe('class Event', function(){
 	}
 
 
-	it('implements the IObservable interface', function() { // uses Interface.js
+	it('implements the IObservable interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Event, app.IObservable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Event, app.IObservable)).toBe(true);
 	});
 
 
-	it('implements the IObserver interface', function() { // uses Interface.js
+	it('implements the IObserver interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Event, app.IObserver)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Event, app.IObserver)).toBe(true);
 	});
 
 
-	it('implements the ISerializable interface', function() { // uses Interface.js
+	it('implements the ISerializable interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Event, app.ISerializable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Event, app.ISerializable)).toBe(true);
 	});
 		
 	

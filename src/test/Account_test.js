@@ -28,33 +28,33 @@ describe('class Account', function(){
 	app.Email = app.Email || function() {};
 			
 	
-	it('implements the IInterfaceable interface', function() { // uses InterfaceTester.js
+	it('implements the IInterfaceable interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Account, app.IInterfaceable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Account, app.IInterfaceable)).toBe(true);
 	});
 
 	
-	it('implements the IModelable interface', function() { // uses InterfaceTester.js
+	it('implements the IModelable interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Account, app.IModelable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Account, app.IModelable)).toBe(true);
 	});
 
 
-	it('implements the IObservable interface', function() { // uses InterfaceTester.js
+	it('implements the IObservable interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Account, app.IObservable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Account, app.IObservable)).toBe(true);
 	});
 
 
-	xit('implements the IObserver interface', function() { // uses InterfaceTester.js
+	xit('implements the IObserver interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Account, app.IObserver)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Account, app.IObserver)).toBe(true);
 	});
 
 
-	it('implements the ISerializable interface', function() { // uses InterfaceTester.js
+	it('implements the ISerializable interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Account, app.ISerializable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Account, app.ISerializable)).toBe(true);
 	});
 	
 	

@@ -35,7 +35,9 @@ app.EventView = function(str_elementId, str_heading) {
 
 	$_renderContext = $('#' + str_elementId), //  the HTML element the view will render itself into when updated
 
-	_heading = str_heading; // content of the view heading
+	_heading = str_heading, // content of the view heading
+
+	_modelId; // id of the model object currently presented in the view
 
 	
 
@@ -52,9 +54,20 @@ app.EventView = function(str_elementId, str_heading) {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
+	/** Get ID of model object currently being presented by the view
+	*
+	* @return {int}
+	*/
+
+	this.modelId = function() {
+
+		return _modelId;
+	}
+
+
 	/** Gets HTML element this view will render to */
 
-	app.EventView.prototype.renderContext = function() {
+	this.renderContext = function() {
 
 		if (arguments.length > 0) {
 
@@ -81,7 +94,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* @todo Everything(!)
 	*/
 
-	app.EventView.prototype.cancel = function() {
+	this.cancel = function() {
 
 		// do something!
 	}
@@ -97,30 +110,12 @@ app.EventView = function(str_elementId, str_heading) {
 	*	
 	*/
 	
-	app.EventView.prototype.isInstanceOf = function (func_interface) {
+	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
 	
-
-	/** Notifies observers that form has been updated (i.e. submitted).
-	*
-	* Overrides default method in IObservable.
-	*
-	* @param {Event} The Event passing data in the form onto the observers
-	*
-	* @return void
-	 */
-	/*
-	app.EventView.prototype.notifyObservers = function(IModelable_event, int_objId) {
-
-		this.observers.forEach(function(observer) {
-
-			observer.update(IModelable_event, int_objId);
-		});
-	};
-	*/
-
+	
 	/** (Re)renders event to form in UI
 	*
 	* @param {Event} The event from which to present data in the form
@@ -130,7 +125,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* @todo Get character counter to work on description field
 	 */
 	
-	app.EventView.prototype.render = function(Event_event) {
+	this.render = function(Event_event) {
 
 		var event = Event_event, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
@@ -617,7 +612,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* @todo Fix host hack
 	*/
 
-	app.EventView.prototype.submit = function(event) {
+	this.submit = function(event) {
 
 		// First display any and all validation errors at once
 
@@ -719,7 +714,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* @todo Add address info to venue display
 	*/
 
-	app.EventView.prototype.suggestLocations = function() {
+	this.suggestLocations = function() {
 
 		var account = app.controller.selectedAccount(),
 
@@ -795,11 +790,13 @@ app.EventView = function(str_elementId, str_heading) {
 
 	/** Updates event presentation when notified by controller of change */
 	
-	app.EventView.prototype.update = function(IModelable_event) {
+	this.update = function(IModelable_event) {
 		
 		if (IModelable_event === null || IModelable_event.constructor === app.Event) {
 
 			this.render(IModelable_event);
+
+			_modelId = IModelable_event.id();
 		}
 
 		// else do nothing
@@ -811,7 +808,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 	
-	app.EventView.prototype.validateDateRange = function() {
+	this.validateDateRange = function() {
 
 		if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
 
@@ -884,13 +881,13 @@ app.EventView = function(str_elementId, str_heading) {
 
 		// Cascade validation to start/end times
 
-			 // 'this' refers to date picker here, not eventview, so invoke method using full path
-			
-			app.EventView.prototype.validateStartTime();
+			// 'this' refers to date picker here, not eventview, so invoke method using full path
 
-			app.EventView.prototype.validateEndTime();
+			app.controller.currentView().validateStartTime();
 
-			//app.EventView.prototype.validateTimeRange();
+			app.controller.currentView().validateEndTime();
+
+			//this.validateTimeRange();
 
 		return ret;
 	}
@@ -901,7 +898,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.EventView.prototype.validateEndTime = function() {
+	this.validateEndTime = function() {
 
 		var $end_time = $('#event-end-time'),
 
@@ -935,7 +932,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	 */
 
-	app.EventView.prototype.validateStartTime = function() {
+	this.validateStartTime = function() {
 
 		// Set up references to DOM
 
@@ -970,10 +967,12 @@ app.EventView = function(str_elementId, str_heading) {
 	* @return {Boolean} true if validation is succesful, otherwise false
 	 */
 
-	app.EventView.prototype.validateTimeRange = function() {
+	this.validateTimeRange = function() {
 
 		if (this.close) {this.close()} // close picker (if called from dialog); setting closeOnClear true does not work (bug)
 		
+		var self = app.controller.currentView(); // reset this reference from picker to view
+
 
 		var start_date = new Date($('#event-start-date').val()),
 
@@ -993,9 +992,9 @@ app.EventView = function(str_elementId, str_heading) {
 
 		
 
-		if (app.EventView.prototype.validateStartTime()) { // start time entered
+		if (self.validateStartTime()) { // start time entered
 
-			if (app.EventView.prototype.validateEndTime()) { // end date and time entered
+			if (self.validateEndTime()) { // end date and time entered
 
 				if (end_date.valueOf() === start_date.valueOf()) { // start and end dates match
 					
@@ -1038,7 +1037,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 			$start_time.addClass('invalid');
 
-			void app.EventView.prototype.validateEndTime();
+			void self.validateEndTime();
 
 			return false;
 		}

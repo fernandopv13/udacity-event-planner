@@ -67,4 +67,31 @@ app.IModelable = function() {
 * Default methods (must be defined outside main function/class body)
 *---------------------------------------------------------------------------------------*/
 
-// none so far
+/** Does housekeep common to all IModelables after updating themselves*/
+
+app.IModelable.prototype.default_onUpdate = function(IModelable_obj) {
+
+	// Write new state to local storage, if available
+
+	var account = app.controller.selectedAccount();
+
+	if (account.localStorageAllowed() && window.localStorage) {
+
+		this.writeObject();
+
+		console.log(JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id())));
+	}
+
+	
+	// Notify observers (i.e. controller)
+
+	this.notifyObservers(this);
+
+	
+	// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
+
+	this.constructor.registry.remove(IModelable_obj);
+
+	IModelable_obj = undefined;
+
+}

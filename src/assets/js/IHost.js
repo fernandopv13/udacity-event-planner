@@ -38,10 +38,10 @@ app.IHost = function() {
 	
 	app.IHost.prototype.hostName = function () {
 		
-		throw new AbstractMethodError(app.IHost.prototype.hostName.errorMessage);
+		throw new AbstractMethodError(this.hostName.errorMessage);
 	}
 	
-	app.IHost.prototype.hostName.errorMessage = 'Method signature "hostName()" must be implemented in derived classes';
+	this.hostName.errorMessage = 'Method signature "hostName()" must be implemented in derived classes';
 	
 
 	/** Tests whether object is an instance of a provided interface (by function reference).
@@ -59,10 +59,10 @@ app.IHost = function() {
 	
 	app.IHost.prototype.isInstanceOf = function () {
 		
-		throw new AbstractMethodError(app.IHost.prototype.isInstanceOf.errorMessage);
+		throw new AbstractMethodError(this.isInstanceOf.errorMessage);
 	}
 	
-	app.IHost.prototype.isInstanceOf.errorMessage = 'Method signature "isInstanceOf()" must be implemented in derived classes';
+	this.isInstanceOf.errorMessage = 'Method signature "isInstanceOf()" must be implemented in derived classes';
 	
 	/*----------------------------------------------------------------------------------------
 	* Block instantiation

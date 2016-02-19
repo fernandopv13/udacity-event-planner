@@ -19,7 +19,7 @@ describe('class Email', function(){
 	
 	it('implements the ISerializable interface', function() { // uses IInterface.js
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Email, app.ISerializable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Email, app.ISerializable)).toBe(true);
 	});
 	
 	

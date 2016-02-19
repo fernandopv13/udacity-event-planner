@@ -19,7 +19,7 @@ describe('class Password', function(){
 	
 	it('implements the ISerializable interface', function() { // uses InterfaceTester.js
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Password, app.ISerializable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Password, app.ISerializable)).toBe(true);
 	});
 	
 	

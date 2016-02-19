@@ -11,9 +11,9 @@ var app = app || {};
 
 describe('class ObjectRegistry', function(){
 	
-	it('implements the ISerializable interface', function() { // uses Interface.js
+	it('implements the ISerializable interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.ObjectRegistry, app.ISerializable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.ObjectRegistry, app.ISerializable)).toBe(true);
 	});
 	
 

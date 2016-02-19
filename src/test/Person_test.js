@@ -42,39 +42,39 @@ describe('class Person', function(){
 	
 	// Start testing
 	
-	it('implements the IHost interface', function() { // uses Interface.js
+	it('implements the IHost interface', function() {
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Person, app.IHost)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IHost)).toBe(true);
 	});
 		
 	
 	it('implements the IInterfaceable interface', function() { // uses InterfaceTester.js
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Person, app.IInterfaceable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IInterfaceable)).toBe(true);
 	});
 
 	
 	it('implements the IModelable interface', function() { // uses InterfaceTester.js
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Person, app.IModelable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IModelable)).toBe(true);
 	});
 
 
 	it('implements the IObservable interface', function() { // uses InterfaceTester.js
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Person, app.IObservable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IObservable)).toBe(true);
 	});
 
 
 	it('implements the IObserver interface', function() { // uses InterfaceTester.js
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Person, app.IObserver)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IObserver)).toBe(true);
 	});
 
 
 	it('implements the ISerializable interface', function() { // uses InterfaceTester.js
 		
-			expect(app.InterfaceTester.isImplementationOf(app.Person, app.ISerializable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.Person, app.ISerializable)).toBe(true);
 	});
 
 		

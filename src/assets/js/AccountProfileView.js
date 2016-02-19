@@ -29,7 +29,9 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 	$_renderContext = $('#' + str_elementId),
 
-	_heading = str_heading;
+	_heading = str_heading,
+
+	_modelId; // id of the model object currently presented in the view
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -44,9 +46,20 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
+	/** Get ID of model object currently being presented by the view
+	*
+	* @return {int}
+	*/
+
+	this.modelId = function() {
+
+		return _modelId;
+	}
+
+
 	/** Gets HTML element this view will render to */
 
-	app.AccountProfileView.prototype.renderContext = function() {
+	this.renderContext = function() {
 
 		if (arguments.length > 0) {
 
@@ -73,7 +86,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* @todo Everything(!)
 	*/
 
-	app.AccountProfileView.prototype.cancel = function() {
+	this.cancel = function() {
 
 		// do something!
 	}
@@ -89,7 +102,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	*	
 	*/
 	
-	app.AccountProfileView.prototype.isInstanceOf = function (func_interface) {
+	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
@@ -102,7 +115,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* @return void
 	 */
 	
-	app.AccountProfileView.prototype.render = function(IModelable_account) {
+	this.render = function(IModelable_account) {
 
 		var person = IModelable_account.accountHolder(), formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
@@ -352,7 +365,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* @todo Fix host hack
 	*/
 
-	app.AccountProfileView.prototype.submit = function(event) {
+	this.submit = function(event) {
 
 		// First display any and all validation errors at once
 
@@ -394,11 +407,13 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* See IViewable for further details.
 	 */
 	
-	app.AccountProfileView.prototype.update = function(IModelable_account) {
+	this.update = function(IModelable_account) {
 		
 		if (IModelable_account === null || IModelable_account.constructor === app.Account) {
 
 			this.render(IModelable_account);
+
+			_modelId = IModelable_account.id();
 		}
 
 		// else do nothing
