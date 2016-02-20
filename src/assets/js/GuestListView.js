@@ -272,7 +272,7 @@ app.GuestListView = function(str_elementId, str_heading) {
 
 			this.render(app.controller.selectedEvent());
 
-			_modelId = app.controller.selectedEvent().id();
+			_modelId = app.controller.selectedEvent() ? app.controller.selectedEvent().id() : null;
 		}
 
 		// else do nothing

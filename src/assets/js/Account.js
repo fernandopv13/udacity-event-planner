@@ -417,8 +417,6 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 			for (var prop in _events) {
 				
-				console.log(prop);
-
 				if (prop === event.id()) {
 
 					return true;
@@ -642,28 +640,7 @@ app.Account.prototype.update = function(Account_account, int_objId) {
 
 		this.onUpdate(Account_account);
 
-
-		/*
-		// Write new state to local storage, if available
-
-		if (this.localStorageAllowed() && window.localStorage) {
-
-			this.writeObject();
-		}
-
 		
-		// Notify observers (i.e. controller)
-
-		this.notifyObservers(this);
-
-		
-		// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
-
-		app.Account.registry.remove(Account_account);
-
-		Account_account = undefined;
-
-		*/
 		return true;
 	}
 

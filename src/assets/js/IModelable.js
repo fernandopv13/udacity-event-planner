@@ -89,7 +89,7 @@ app.IModelable.prototype.default_onUpdate = function(IModelable_obj) {
 
 		this.writeObject();
 
-		console.log(JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id())));
+		//console.log(JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id())));
 	}
 
 

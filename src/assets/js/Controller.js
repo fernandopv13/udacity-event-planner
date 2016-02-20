@@ -503,12 +503,17 @@ app.Controller = function() {
 				
 				case app.Person: // guest
 
-					// This relies on only the guest list adding people at run time;
-					// should be sufficient for now
+					//Bit of a hack to exclude account holder from guest list, but acceptable for now
 
-					if (!self.selectedEvent().isGuest(Object_obj)) { // event does not know person
+					if (Object_obj.id() !== self.selectedAccount().accountHolder().id()) { // account holder cannot be guest
 
-						self.selectedEvent().addGuest(Object_obj); // so add her/him
+						if (self.selectedEvent()) { // an event has been selected
+
+							if (!self.selectedEvent().isGuest(Object_obj)) { // event doesn't know person
+
+								self.selectedEvent().addGuest(Object_obj); // so add as guest
+							}
+						}
 					}
 
 					break;
@@ -532,36 +537,11 @@ app.Controller = function() {
 				if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
 
 					onFormSubmitted(this, Object_obj, int_id);
-
-					//var sourceObj = Object_obj.constructor.registry.getObjectById(int_id); // update data model
-
-					//sourceObj.update(Object_obj, int_id);
 				}
 
 				else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
 
 					onListItemClicked(this, Object_obj, int_id);
-
-					/* Using the more generic update(IViewable, Event) form might void the need for this.
-					* But that would make retrieving the id of the clicked object more tightly coupled
-					* to the implementation of the view. So keeping this for now.
-					*/
-
-					/*switch (Object_obj.constructor)	{
-
-						case app.EventListView: // Event list
-
-							this.onEventSelected(int_id);
-
-							break;
-						
-						case app.GuestListView: // Guest list
-
-							this.onGuestSelected(int_id);
-
-							break;
-					}
-					*/
 				}
 
 				else { // Wrong type
@@ -573,24 +553,6 @@ app.Controller = function() {
 			else if (intOrEvent.originalEvent && Object_obj.isInstanceOf(app.IViewable)) { // Native event from IViewable
 
 				onNativeEventReceived(this, Object_obj, intOrEvent);
-
-				/*
-				var event = intOrEvent, id;
-
-				switch (Object_obj.constructor)	{ // Branch on IViewable implementer type
-
-					case app.EventView: // Event form
-
-						// Not crazy about the controller knowing the id of the div, but will do for now
-
-						if (event.target.id === 'event-edit-guests-button') { // click on 'edit guests' button
-
-							this.onGuestListSelected(); // show guest list
-						}
-
-						break;
-				}
-				*/
 			}
 
 			else { // id neither an integer nor a native browser Event
@@ -602,38 +564,6 @@ app.Controller = function() {
 		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
 
 			onDataModelUpdated(this, Object_obj);
-			/*
-			// If a new event or guest was added, first register it with its account or event
-
-			switch (Object_obj.constructor) {
-
-				case app.Event: // event
-
-					if (!this.selectedAccount().isInAccount(Object_obj)) { // account does not know event
-
-						this.selectedAccount().addEvent(Object_obj); // so add it
-					}
-
-					break;
-				
-				case app.Person: // guest
-
-					// This relies on only the guest list adding people at run time;
-					// should be sufficient for now
-
-					if (!this.selectedEvent().isGuest(Object_obj)) { // event does not know person
-
-						this.selectedEvent().addGuest(Object_obj); // so add her/him
-					}
-
-					break;
-			}
-			*/
-
-
-			// then notify observers (i.e. views)
-
-			this.notifyObservers(Object_obj);
 		}
 
 		else { // wrong type

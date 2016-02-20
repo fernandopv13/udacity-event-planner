@@ -417,23 +417,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 			// Do some housekeeping (calls IModelable default)
 
 			this.onUpdate(Person_person);
-
-			/*
-
-			// Write new state to local storage, if available
-
-			var account = app.controller.selectedAccount();
-
-			if (account.localStorageAllowed() && window.localStorage) {
-
-				this.writeObject();
-			}
-
-			// Notify observers (i.e. controller)
-
-			this.notifyObservers();
-
-			*/
+			
 
 			return true;
 		}
