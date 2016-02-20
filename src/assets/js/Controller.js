@@ -400,11 +400,11 @@ app.Controller = function() {
 	};
 	
 	
-	/** Update in response to notifications from either UI or data model.
+	/** Update app in response to notifications from either view (UI) or data model.
 	*
 	* Uses JS style 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked
 	*
-	* (see comments in code for supported method signatures).
+	* (see inner functions in code for supported method signatures).
 	*
 	* @param {IModelable} model Reference to an IModelable (data model object). If not accompanied by an id, call is handled as a notification of a change to the data model requiring a view update.
 	*
@@ -421,37 +421,20 @@ app.Controller = function() {
 
 	this.update = function(Object_obj, intOrEvent) {
 
-		/*
-		Update implements JS version of method polymorphism, i.e. by parsing function parameters.
+		var self = this; // set up reference to controller 'this' for use in innner functions
+
 		
-		Supported method 'signatures' are as follows:
+		// Inner utility functions implementing the polymorphic behaviours.
+		// Supported method 'signatures' are as follows:
 
-		- update(IViewable, int): Click received in list of objects of IModelable class matching IViewable
-
-		- update(IViewable, Event): Native UI event in IViewable requires Controller supervision
-
-		- update(IModelable, int): Submission received from form representing IModelable of same class and id
-
-		- update(IModelable): Update received from data model. Object represents itself.
-		*/
-
-		// Some inner utility functions to help keep the main algorithm clean
-
-		function onFormSubmitted(self, Object_obj, int_id) {
-
-			var sourceObj = Object_obj.constructor.registry.getObjectById(int_id); // update data model
-
-			sourceObj.update(Object_obj, int_id);
-		}
-
-		function onListItemClicked(self, Object_obj, int_id) {
+		function update(IViewable, int_id) { // Click received in list of IModelable s displayed by IViewable
 
 			/* Using the more generic update(IViewable, Event) form might void the need for this.
 			* But that would make retrieving the id of the clicked object more tightly coupled
 			* to the implementation of the view. So keeping this for now.
 			*/
 
-			switch (Object_obj.constructor)	{
+			switch (IViewable.constructor)	{
 
 				case app.EventListView: // Event list
 
@@ -467,17 +450,16 @@ app.Controller = function() {
 			}
 		}
 
-		function onNativeEventReceived(self, Object_obj, event) {
 
-			var id;
+		function update_(IViewable, nEvent) { // Native UI event in IViewable requires Controller supervision
 
-			switch (Object_obj.constructor)	{ // Branch on IViewable implementer type
+			switch (IViewable.constructor)	{ // Branch on IViewable implementer type
 
 				case app.EventView: // Event form
 
 					// Not crazy about the controller knowing the id of the div, but will do for now
 
-					if (event.target.id === 'event-edit-guests-button') { // click on 'edit guests' button
+					if (nEvent.target.id === 'event-edit-guests-button') { // click on 'edit guests' button
 
 						self.onGuestListSelected(); // show guest list
 					}
@@ -486,17 +468,26 @@ app.Controller = function() {
 			}
 		}
 
-		function onDataModelUpdated(self, Object_obj) {
+
+		function update__(IModelable, int_id) { // Submission received from form representing IModelable of same class and id as parameters
+
+			var sourceObj = IModelable.constructor.registry.getObjectById(int_id); // update data model
+
+			sourceObj.update(IModelable, int_id);
+		}
+
+
+		function update___(IModelable) { // Update received from data model. Object represents itself.
 
 			// If a new event or guest was added, first register it with its account or event
 
-			switch (Object_obj.constructor) {
+			switch (IModelable.constructor) {
 
 				case app.Event: // event
 
-					if (!self.selectedAccount().isInAccount(Object_obj)) { // account does not know event
+					if (!self.selectedAccount().isInAccount(IModelable)) { // account does not know event
 
-						self.selectedAccount().addEvent(Object_obj); // so add it
+						self.selectedAccount().addEvent(IModelable); // so add it
 					}
 
 					break;
@@ -505,13 +496,13 @@ app.Controller = function() {
 
 					//Bit of a hack to exclude account holder from guest list, but acceptable for now
 
-					if (Object_obj.id() !== self.selectedAccount().accountHolder().id()) { // account holder cannot be guest
+					if (IModelable.id() !== self.selectedAccount().accountHolder().id()) { // account holder cannot be guest
 
 						if (self.selectedEvent()) { // an event has been selected
 
-							if (!self.selectedEvent().isGuest(Object_obj)) { // event doesn't know person
+							if (!self.selectedEvent().isGuest(IModelable)) { // event doesn't know person
 
-								self.selectedEvent().addGuest(Object_obj); // so add as guest
+								self.selectedEvent().addGuest(IModelable); // so add as guest
 							}
 						}
 					}
@@ -522,11 +513,11 @@ app.Controller = function() {
 
 			// then notify observers (i.e. views)
 
-			self.notifyObservers(Object_obj);
+			self.notifyObservers(IModelable);
 		}
 
 
-		// Main algorithm
+		// Parse parameters to invoke appropriate polymorphic response
 
 		if (arguments.length > 1 && typeof arguments[1] !== 'undefined') { // second param provided
 
@@ -536,12 +527,12 @@ app.Controller = function() {
 
 				if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
 
-					onFormSubmitted(this, Object_obj, int_id);
+					update__(Object_obj, int_id);
 				}
 
 				else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
 
-					onListItemClicked(this, Object_obj, int_id);
+					update(Object_obj, int_id);
 				}
 
 				else { // Wrong type
@@ -552,7 +543,7 @@ app.Controller = function() {
 
 			else if (intOrEvent.originalEvent && Object_obj.isInstanceOf(app.IViewable)) { // Native event from IViewable
 
-				onNativeEventReceived(this, Object_obj, intOrEvent);
+				update_(Object_obj, intOrEvent);
 			}
 
 			else { // id neither an integer nor a native browser Event
@@ -563,7 +554,7 @@ app.Controller = function() {
 
 		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
 
-			onDataModelUpdated(this, Object_obj);
+			update___(Object_obj); // IModelable
 		}
 
 		else { // wrong type
@@ -573,7 +564,7 @@ app.Controller = function() {
 	}
 	
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 		
 	// none so far
