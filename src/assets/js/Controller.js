@@ -174,6 +174,94 @@ app.Controller = function() {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
+	function _update(IViewable, int_id) { // Click received in list of IModelable s displayed by IViewable
+
+			/* Using the more generic update(IViewable, Event) form might void the need for this.
+			* But that would make retrieving the id of the clicked object more tightly coupled
+			* to the implementation of the view. So keeping this for now.
+			*/
+
+			switch (IViewable.constructor)	{
+
+				case app.EventListView: // Event list
+
+					this.onEventSelected(int_id);
+
+					break;
+				
+				case app.GuestListView: // Guest list
+
+					this.onGuestSelected(int_id);
+
+					break;
+			}
+	};
+
+
+	function __update(IViewable, nEvent) { // Native UI event in IViewable requires Controller supervision
+
+		switch (IViewable.constructor)	{ // Branch on IViewable implementer type
+
+			case app.EventView: // Event form
+
+				// Not crazy about the controller knowing the id of the div, but will do for now
+
+				if (nEvent.target.id === 'event-edit-guests-button') { // click on 'edit guests' button
+
+					this.onGuestListSelected(); // show guest list
+				}
+
+				break;
+		}
+	}
+
+
+	function ___update(IModelable, int_id) { // Submission received from form representing IModelable of same class and id as parameters
+
+		var sourceObj = IModelable.constructor.registry.getObjectById(int_id); // update data model
+
+		sourceObj.update(IModelable, int_id);
+	}
+
+
+	function ____update(IModelable) { // Update received from data model. Object represents itself.
+
+		// If a new event or guest was added, first register it with its account or event
+
+		switch (IModelable.constructor) {
+
+			case app.Event: // event
+
+				if (!this.selectedAccount().isInAccount(IModelable)) { // account does not know event
+
+					this.selectedAccount().addEvent(IModelable); // so add it
+				}
+
+				break;
+			
+			case app.Person: // guest
+
+				//Bit of a hack to exclude account holder from guest list, but acceptable for now
+
+				if (IModelable.id() !== this.selectedAccount().accountHolder().id()) { // account holder cannot be guest
+
+					if (this.selectedEvent()) { // an event has been selected
+
+						if (!this.selectedEvent().isGuest(IModelable)) { // event doesn't know person
+
+							this.selectedEvent().addGuest(IModelable); // so add as guest
+						}
+					}
+				}
+
+				break;
+		}
+
+
+		// then notify observers (i.e. views)
+
+		this.notifyObservers(IModelable);
+	}
 
 
 	/*----------------------------------------------------------------------------------------
@@ -406,17 +494,19 @@ app.Controller = function() {
 	*
 	* (see inner functions in code for supported method signatures).
 	*
-	* @param {IModelable} model Reference to an IModelable (data model object). If not accompanied by an id, call is handled as a notification of a change to the data model requiring a view update.
+	* @param {IModelable} model Reference to an IModelable (data model object). If not accompanied by an id, call is handled as a notification of a change to the data model.
 	*
-	* @param {IViewable} view Reference to an IViewable. Expected to be accompanied by an id or a native Event.
+	* @param {IViewable} view Reference to an IViewable. Expected to be accompanied by an integer id or a native Event.
 	*
 	* @param {int} id Object id. If following an IViewable, call is handled as a tap/click in a list of the type the IViewables is presenting. If following an IModelable, handled as submission of an update to the IModelable with same class and id.
 	*
-	* @param {nEvent} event Native browser event. Expected to follow IViewable. If present, handled as user interaction that requires Controller involvement, and is not just a main click in a list
+	* @param {nEvent} event Native browser event. Expected to follow IViewable. If present, handled as user interaction that requires more elaborate Controller involvement than a simple click in a list.
 	*
 	* @return {void}
 	*
-	* @throws {IllegalArgumentError} If first parameter provided is neither an IModelable nor an IViewable
+	* @throws {IllegalArgumentError} If first parameter provided is neither an IModelable nor an IViewable.
+	*
+	* @throws {IllegalArgumentError} If second parameter provided (when present) is neither an integer nor a native browser event.
 	*/
 
 	this.update = function(Object_obj, intOrEvent) {
@@ -427,7 +517,7 @@ app.Controller = function() {
 		// Inner utility functions implementing the polymorphic behaviours.
 		// Supported method 'signatures' are as follows:
 
-		function update(IViewable, int_id) { // Click received in list of IModelable s displayed by IViewable
+		function update_(IViewable, int_id) { // Click received in list of IModelable s displayed by IViewable
 
 			/* Using the more generic update(IViewable, Event) form might void the need for this.
 			* But that would make retrieving the id of the clicked object more tightly coupled
@@ -451,7 +541,7 @@ app.Controller = function() {
 		}
 
 
-		function update_(IViewable, nEvent) { // Native UI event in IViewable requires Controller supervision
+		function update__(IViewable, nEvent) { // Native UI event in IViewable requires Controller supervision
 
 			switch (IViewable.constructor)	{ // Branch on IViewable implementer type
 
@@ -469,7 +559,7 @@ app.Controller = function() {
 		}
 
 
-		function update__(IModelable, int_id) { // Submission received from form representing IModelable of same class and id as parameters
+		function update___(IModelable, int_id) { // Submission received from form representing IModelable of same class and id as parameters
 
 			var sourceObj = IModelable.constructor.registry.getObjectById(int_id); // update data model
 
@@ -477,7 +567,7 @@ app.Controller = function() {
 		}
 
 
-		function update___(IModelable) { // Update received from data model. Object represents itself.
+		function update____(IModelable) { // Update received from data model. Object represents itself.
 
 			// If a new event or guest was added, first register it with its account or event
 
@@ -521,18 +611,18 @@ app.Controller = function() {
 
 		if (arguments.length > 1 && typeof arguments[1] !== 'undefined') { // second param provided
 
-			if (intOrEvent === parseInt(intOrEvent)) { // id exists and is an integer
+			if (intOrEvent === parseInt(intOrEvent)) { // second param is an integer
 
 				var int_id = parseInt(intOrEvent);
 
 				if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
 
-					update__(Object_obj, int_id);
+					___update.call(this, Object_obj, int_id);
 				}
 
 				else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
 
-					update(Object_obj, int_id);
+					_update.call(this, Object_obj, int_id);
 				}
 
 				else { // Wrong type
@@ -541,9 +631,9 @@ app.Controller = function() {
 				}
 			}
 
-			else if (intOrEvent.originalEvent && Object_obj.isInstanceOf(app.IViewable)) { // Native event from IViewable
+			else if (intOrEvent.originalEvent && Object_obj.isInstanceOf(app.IViewable)) { // second param is a native event from an IViewable
 
-				update_(Object_obj, intOrEvent);
+				__update.call(this, Object_obj, intOrEvent);
 			}
 
 			else { // id neither an integer nor a native browser Event
@@ -552,9 +642,9 @@ app.Controller = function() {
 			}
 		}
 
-		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
+		else if (Object_obj.isInstanceOf(app.IModelable)) { // IModelable and no second param => data model updated
 
-			update___(Object_obj); // IModelable
+			____update.call(this, Object_obj); // IModelable
 		}
 
 		else { // wrong type
