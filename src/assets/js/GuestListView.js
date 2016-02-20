@@ -1,12 +1,12 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class PersonListView Implements IViewable
+* public class GuestListView Implements IViewable
 ******************************************************************************/
 
 var app = app || {};
 
-/** @classdesc ViewObject for person list(s). Renders list in UI, and captures UI events in list.
+/** @classdesc ViewObject for event guest list. Renders list in UI, and captures UI events in list.
 *
 * @implements IViewable
 *
@@ -19,7 +19,7 @@ var app = app || {};
 * @author Ulrik H. Gade, February 2016
 */
 
-app.PersonListView = function(str_elementId, str_heading) {
+app.GuestListView = function(str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
@@ -237,6 +237,16 @@ app.PersonListView = function(str_elementId, str_heading) {
 		$_renderContext.empty();
 
 		$_renderContext.append(UlElement);
+
+		$_renderContext.append(this.createFloatingActionButton('guest-list-add', 'add', 'red', 'Add guest'));
+
+
+		// Attach event handlers (other than for list item click)
+
+		$('#guest-list-add').click(function(event) {
+
+			app.controller.onAddGuest(event);
+		});
 	};
 
 
@@ -286,8 +296,8 @@ app.PersonListView = function(str_elementId, str_heading) {
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.IInterfaceable.mixInto(app.IObservable, app.PersonListView);
+void app.IInterfaceable.mixInto(app.IObservable, app.GuestListView);
 
-void app.IInterfaceable.mixInto(app.IObserver, app.PersonListView);
+void app.IInterfaceable.mixInto(app.IObserver, app.GuestListView);
 
-void app.IInterfaceable.mixInto(app.IViewable, app.PersonListView);
+void app.IInterfaceable.mixInto(app.IViewable, app.GuestListView);

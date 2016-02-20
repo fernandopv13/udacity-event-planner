@@ -96,7 +96,22 @@ app.EventView = function(str_elementId, str_heading) {
 
 	this.cancel = function() {
 
-		// do something!
+		// Discard temporary object if we were about to add a new event
+
+		var event = app.Event.registry.getObjectById(this.modelId());
+
+		if (!app.controller.selectedAccount().isInAccount(event)) {
+
+			app.Event.registry.removeObject(event); // remove from Event registry
+
+			event = undefined; // dereference object to expose it to garbage collection
+		}
+
+		// Return to previous view
+
+		window.history.back();
+
+		// for now, simply discard any entries made by user to an existing guest
 	}
 
 

@@ -7,13 +7,15 @@
 var app = app || {};
 
 
-/** @classdesc Manages the browser history so that deep linking and back/forward navigation
+/** @classdesc Manages the browser history so that back/forward navigation
 *
 * works meaningfully despite this being a single-page application.
 *
 * Minimalist implementation to get demo of app up and running. Requires HTML5 capable browser.
 
 * More comprehensive solution awaits port of the app to Angular.js or similar framework.
+*
+* For now, does not support deep linking.
 *
 * @constructor
 *
@@ -96,7 +98,7 @@ app.Router = function() {
 
 					break;
 
-				case 'PersonListView':
+				case 'GuestListView':
 
 					app.controller.onGuestListSelected(id);
 
@@ -124,7 +126,7 @@ app.Router = function() {
 
 		if (history.pushState) {
 
-			var className = IViewable_view.className();
+			var className = IViewable_view.className(), id = IViewable_view.modelId();
 
 			try {// needs to be run off a server to work
 
@@ -134,12 +136,16 @@ app.Router = function() {
 					{
 						className: className,
 
-						id: IViewable_view.modelId()
+						id: id
 					},
 
 						'',
 
-						className.slice(0, className.length - 4) // pop 'View' from class name
+						'#!'
+
+						+ className.toLowerCase().slice(0, className.length - 4) // pop 'View' from class name
+
+						+ '?id=' + id // add model object id
 					);
 				}
 			}

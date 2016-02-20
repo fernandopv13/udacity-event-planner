@@ -368,11 +368,13 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	* @throws {IllegalArgumentError} If attempting to set event not of class Event
 	*/
 	
-	this.addEvent = function (obj_event) {
+	this.addEvent = function (Event_event) {
 	
-		if (obj_event.constructor === app.Event) {
+		var event = Event_event;
+
+		if (event.constructor === app.Event) {
 			
-			_events[obj_event.id()] = obj_event;
+			_events[event.id()] = event;
 		}
 					
 		else {
@@ -380,7 +382,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			throw new IllegalArgumentError('Event must be an Event')
 		}
 	
-		return obj_event;
+		return event;
 	};
 
 
@@ -399,6 +401,37 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		}
 
 		return _events;
+	};
+
+
+	/** Checks if an even belongs to the account
+	*
+	* @return {Boolean} True if the event is belongs to the account, otherwise false
+	*/
+
+	this.isInAccount = function (Event_event) {
+		
+		var event = Event_event;
+		
+		if (event.constructor === app.Event) {
+			
+			for (var prop in _events) {
+				
+				console.log(prop);
+
+				if (prop === event.id()) {
+
+					return true;
+				}
+			}
+		}
+		
+		else {
+			
+			throw new TypeError('Event must be instance of Event');
+		}
+		
+		return false;
 	};
 
 

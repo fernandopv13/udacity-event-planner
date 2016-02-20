@@ -346,6 +346,36 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	}
 	
 	
+	/** Converts person to JSON object
+	*
+	* (Method realization required by ISerializable.)
+	*
+	* @return {Object} JSON object representation of person (used to override default behaviour of JSON.stringify())
+	*/
+	
+	this.toJSON = function () { // we need private access so no prototype inheritance here
+		
+		return {
+			
+			_className: _className,
+			
+			_id: _id,
+			
+			_name: _name,
+
+			_imgUrl: _imgUrl,
+			
+			_employer: _employer ? {_className: _employer.className(), _id: _employer.id()} : undefined,
+			
+			_jobTitle: _jobTitle,
+
+			_email: _email ? {_className: _email.className(), _id: _email.id()} : undefined,
+			
+			_birthday: _birthday
+		};
+	};
+	
+	
 	/** Updates person when notified of change by observable (controller). Autosaves to local storage if available.
 	*
 	* (See IObserver for further documentation.)
@@ -412,37 +442,6 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	}
 
 
-	/** Converts person to JSON object
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {Object} JSON object representation of person (used to override default behaviour of JSON.stringify())
-	*/
-	
-	this.toJSON = function () { // we need private access so no prototype inheritance here
-		
-		return {
-			
-			_className: _className,
-			
-			_id: _id,
-			
-			_name: _name,
-
-			_imgUrl: _imgUrl,
-			
-			_employer: _employer ? {_className: _employer.className(), _id: _employer.id()} : undefined,
-			
-			_jobTitle: _jobTitle,
-
-			_email: _email ? {_className: _email.className(), _id: _email.id()} : undefined,
-			
-			_birthday: _birthday
-		};
-	};
-	
-	
-	
 	/*----------------------------------------------------------------------------------------
 	* Parameter parsing (constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/

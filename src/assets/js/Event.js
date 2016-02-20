@@ -428,7 +428,10 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Adds a person to the event's guest list */
+	/** Adds a person to the event's guest list
+	*
+	* @return {Person} The person just added. Otherwise throws error.
+	 */
 
 	this.addGuest = function (obj_guest) {
 		
@@ -656,30 +659,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 
 			this.onUpdate(Event_event);
 
-			/*
-			// Write new state to local storage, if available
-
-			var account = app.controller.selectedAccount();
-
-			if (account.localStorageAllowed() && window.localStorage) {
-
-				this.writeObject();
-
-				console.log(localStorage.getItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id()));
-			}
-
-			
-			// Notify observers (i.e. controller)
-
-			this.notifyObservers(this);
-
-			
-			// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
-
-			app.Event.registry.remove(Event_event);
-
-			Event_event = undefined;
-			*/
 			
 			return true;
 		}

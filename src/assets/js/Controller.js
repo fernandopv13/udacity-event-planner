@@ -180,6 +180,82 @@ app.Controller = function() {
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
+	/** Sets up the MVC collaborators to observe/be observed by each other as required.
+	*
+	*/
+
+	this.init = function() {
+
+		// Create views
+
+			_views =
+			{
+				accountSettingsView: new app.AccountSettingsView('account-settings-view', 'Account Settings'), // account settings form (email, password and prefs)
+
+				accountProfileView: new app.AccountProfileView('account-profile-view', 'Account Profile'), // account holder profile
+
+				eventListView: new app.EventListView('event-list-view', 'My Events'), // event list
+
+				eventView: new app.EventView('event-view', 'Edit Event'), // event form
+
+				guestListView: new app.GuestListView('guest-list-view', 'Guest List'), // guest list
+
+				guestView: new app.PersonView('guest-view', 'Edit Guest') // guest form
+			}
+
+			
+			// Register views and controller as mutual observers
+
+			for (var prop in _views) {
+
+				this.registerObserver(_views[prop]);
+
+				_views[prop].registerObserver(app.controller);
+			}
+
+
+		// Register controller as observer of every IModelable in the data model
+
+			[app.Account, app.Event, app.Organization, app.Person].forEach(function(klass){
+
+				var objList = klass.registry.getObjectList();
+
+				for (var prop in objList) {
+
+					objList[prop].registerObserver(this);
+				}
+
+			}.bind(this)); // make sure 'this' references controller correctly within loop
+
+
+		// Set up a router to manage the browser's history
+
+		_router = new app.Router();
+
+		window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
+
+		
+		// Set some defaults to use until account creation/selection is developed
+
+			
+			this.selectedAccount(app.Account.registry.getObjectById(0)); //debug
+			
+			this.selectedAccount().defaultLocation('Copenhagen'); // debug
+
+			this.selectedAccount().geoLocationAllowed(true); // debug
+
+			this.selectedAccount().localStorageAllowed(true); // debug
+
+			this.selectedAccount().accountHolder(new app.Person('Superuser')); // debug
+
+			this.selectedAccount().accountHolder().email(new app.Email('superuser@acme.corp')); // debug
+
+			this.selectedAccount().accountHolder().jobTitle('Master Octopus'); // debug
+
+			this.onAccountSelected(0); // debug
+	};
+
+	
 	/** Returns true if class implements the interface passed in (by function reference)
 	*
 	* (Method realization required by ISerializable.)
@@ -206,7 +282,6 @@ app.Controller = function() {
 		this.observers.forEach(function(observer) {
 
 			observer.update(IModelable);
-
 		});
 	}
 
@@ -215,12 +290,32 @@ app.Controller = function() {
 
 	this.onAddEvent = function(event) {
 
-		var evt = this.selectedAccount().addEvent(new app.Event());
-
-		this.onEventSelected(evt.id());
+		this.onEventSelected(new app.Event().id());
 	};
 
 	
+	/** Handles click on "Add" button in guest list */
+
+	this.onAddGuest = function(event) {
+
+		// Check if there is capacity before trying to add a new guest
+
+		var evt = this.selectedEvent();
+
+		if (evt.guests().length < evt.capacity()) {
+
+			// add guest immediately; remember to back out if users cancels creation
+
+			this.onGuestSelected(new app.Person().id());
+		}
+		
+		else {
+
+			 Materialize.toast('The event is full to capacity. Increase capacity or remove guests to make room.', 4000)
+		}
+	};
+
+
 	this.onAccountSelected = function(int_accountId) {
 
 		this.selectedAccount(app.Account.registry.getObjectById(int_accountId));
@@ -305,78 +400,6 @@ app.Controller = function() {
 		_router.onPopState(event);
 	};
 	
-	/** Sets up the MVC collaborators to observe/be observed by each other as required.
-	*
-	*/
-
-	this.init = function() {
-
-		// Create views and apply bindings
-
-			_views =
-			{
-				accountSettingsView: new app.AccountSettingsView('account-settings-view', 'Account Settings'), // account settings form (email, password and prefs)
-
-				accountProfileView: new app.AccountProfileView('account-profile-view', 'Account Profile'), // account holder profile
-
-				eventListView: new app.EventListView('event-list-view', 'My Events'), // event list
-
-				eventView: new app.EventView('event-view', 'Edit Event'), // event form
-
-				guestListView: new app.PersonListView('guest-list-view', 'Guest List'), // guest list
-
-				guestView: new app.PersonView('guest-view', 'Edit Guest') // guest form
-			}
-
-			for (var prop in _views) {
-
-				this.registerObserver(_views[prop]);
-
-				_views[prop].registerObserver(app.controller);
-			}
-
-
-		// Register controller as observer of every IModelable in the data model
-
-			[app.Account, app.Event, app.Organization, app.Person].forEach(function(klass){
-
-				var objList = klass.registry.getObjectList();
-
-				for (var prop in objList) {
-
-					objList[prop].registerObserver(this);
-				}
-
-			}.bind(this)); // make sure 'this' references controller correctly within loop
-
-
-		// Set up a router to manage the browser's history
-
-		_router = new app.Router();
-
-		window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
-
-		
-		// Set some defaults to use until account creation/selection is developed
-
-			
-			this.selectedAccount(app.Account.registry.getObjectById(0)); //debug
-			
-			this.selectedAccount().defaultLocation('Copenhagen'); // debug
-
-			this.selectedAccount().geoLocationAllowed(true); // debug
-
-			this.selectedAccount().localStorageAllowed(true); // debug
-
-			this.selectedAccount().accountHolder(new app.Person('Superuser')); // debug
-
-			this.selectedAccount().accountHolder().email(new app.Email('superuser@acme.corp')); // debug
-
-			this.selectedAccount().accountHolder().jobTitle('Master Octopus'); // debug
-
-			this.onAccountSelected(0); // debug
-	};
-
 	
 	/** Update in response to notifications from either UI or data model.
 	*
@@ -441,7 +464,7 @@ app.Controller = function() {
 
 							break;
 						
-						case app.PersonListView: // Guest list
+						case app.GuestListView: // Guest list
 
 							this.onGuestSelected(int_id);
 
@@ -481,6 +504,32 @@ app.Controller = function() {
 		}
 
 		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
+
+			// If a new event or guest was added, first register it with its account or event
+
+			switch (Object_obj.constructor) {
+
+				case app.Event:
+
+					if (!this.selectedAccount().isInAccount(Object_obj)) {
+
+						this.selectedAccount().addEvent(Object_obj);
+					}
+
+					break;
+				
+				case app.Person:
+
+					if (!this.selectedEvent().isGuest(Object_obj)) {
+
+						this.selectedEvent().addGuest(Object_obj);
+					}
+
+					break;
+			}
+
+
+			// then notify observers (i.e. views)
 
 			this.notifyObservers(Object_obj);
 		}

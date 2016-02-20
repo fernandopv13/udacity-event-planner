@@ -88,7 +88,22 @@ app.PersonView = function(str_elementId, str_heading) {
 
 	this.cancel = function() {
 
-		// do something!
+		// Discard temporary object if we were about to add a new event
+
+		var person = app.Person.registry.getObjectById(this.modelId());
+
+		if (!app.controller.selectedEvent().isGuest(person)) {
+
+			app.Person.registry.removeObject(person); // remove from Person registry
+
+			person = undefined; // dereference object to expose it to garbage collection
+		}
+
+		// Return to previous view
+
+		window.history.back();
+
+		// for now, simply discard any entries made by user to an existing guest
 	}
 
 
@@ -229,7 +244,7 @@ app.PersonView = function(str_elementId, str_heading) {
 						
 						id: 'guest-employer',
 						
-						value: person.employer() ? person.employer().name() : '',
+						value: person.employer() && person.employer().name() ? person.employer().name() : '',
 						
 						list: 'suggested-employers'
 					}
@@ -242,7 +257,7 @@ app.PersonView = function(str_elementId, str_heading) {
 					
 					attributes: {for: 'guest-employer'},
 					
-					classList: person.employer().name() ? ['form-label', 'active'] : ['form-label'],
+					classList: person.employer() && person.employer().name() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter employer'},
 					
@@ -338,9 +353,7 @@ app.PersonView = function(str_elementId, str_heading) {
 
 				$('#guest-form-cancel').click(function(event) {
 
-					window.history.back(); // return to previous view
-
-					// for now, simply discard any entries made by user
+					this.cancel();
 
 				}.bind(this));
 

@@ -131,9 +131,9 @@ app.IViewable.prototype.default_className = function () {
 
 				break;
 
-			case app.PersonListView:
+			case app.GuestListView:
 
-				ret = 'PersonListView';
+				ret = 'GuestListView';
 
 				break;
 		}
@@ -148,18 +148,20 @@ app.IViewable.prototype.default_className = function () {
 };
 
 
-/** Factory method for creating email fields for forms
+/** Factory method for creating floating main action button for views.
+*
+* Currently supports only buttons with a single action (Matrialize allows several actions per button).
 *
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createAddButton = function (str_buttonId) {
+app.IViewable.prototype.default_createFloatingActionButton = function (str_buttonId, str_icon, str_color, str_label) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
 		element: 'div',
 
-		attributes: {style: 'bottom: 45px; right: 24px;'},
+		//attributes: {style: 'bottom: 45px; right: 24px;'},
 		
 		classList: ['fixed-action-btn']
 	});
@@ -169,9 +171,9 @@ app.IViewable.prototype.default_createAddButton = function (str_buttonId) {
 	{
 		element: 'a',
 
-		attributes: {id: str_buttonId},
+		attributes: {id: str_buttonId, title: str_label},
 		
-		classList: ['btn-floating', 'btn-large', 'red']
+		classList: ['btn-floating', 'btn-large', str_color]
 	});
 
 	outerDiv.appendChild(anchorElement);
@@ -183,7 +185,7 @@ app.IViewable.prototype.default_createAddButton = function (str_buttonId) {
 
 		classList: ['large', 'material-icons'],
 
-		innerHTML: 'add'
+		innerHTML: str_icon
 	}));
 
 	return outerDiv;

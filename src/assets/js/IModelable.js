@@ -74,6 +74,13 @@ app.IModelable = function() {
 
 app.IModelable.prototype.default_onUpdate = function(IModelable_obj) {
 
+	// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
+
+	this.constructor.registry.remove(IModelable_obj);
+
+	IModelable_obj = undefined;
+	
+
 	// Write new state to local storage, if available
 
 	var account = app.controller.selectedAccount();
@@ -85,16 +92,13 @@ app.IModelable.prototype.default_onUpdate = function(IModelable_obj) {
 		console.log(JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id())));
 	}
 
-	
+
+	// Register controller as observer of object (auto-skips if already registered)
+
+	this.registerObserver(app.controller);
+
+
 	// Notify observers (i.e. controller)
 
 	this.notifyObservers(this);
-
-	
-	// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
-
-	this.constructor.registry.remove(IModelable_obj);
-
-	IModelable_obj = undefined;
-
 }

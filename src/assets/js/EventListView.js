@@ -206,11 +206,10 @@ app.EventListView = function(str_elementId, str_heading) {
 
 		$_renderContext.append(UlElement);
 		
-		$_renderContext.append(this.createAddButton('event-list-add'));
+		$_renderContext.append(this.createFloatingActionButton('event-list-add', 'add', 'red', 'Add event'));
 
 
 		// Attach event handlers (other than for list item click)
-
 
 		$('#event-list-add').click(function(event) {
 
