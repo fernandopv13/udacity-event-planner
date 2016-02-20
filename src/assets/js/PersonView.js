@@ -336,7 +336,28 @@ app.PersonView = function(str_elementId, str_heading) {
 				}.bind(this));
 
 
-				$('#guest-form-submit').click(function(event) {this.submit(event);}.bind(this));
+				$('#guest-form-cancel').click(function(event) {
+
+					window.history.back(); // return to previous view
+
+					// for now, simply discard any entries made by user
+
+				}.bind(this));
+
+
+				$('#guest-form-submit').click(function(event) {
+
+					if (this.submit(event)) { // submit succesfull
+
+						window.history.back(); // return to previous view
+					}
+
+					else {
+
+						console.log('guest form submission failed')
+					}
+
+				}.bind(this));
 		}
 
 		else { // present default message

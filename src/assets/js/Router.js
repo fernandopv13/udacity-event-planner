@@ -11,11 +11,9 @@ var app = app || {};
 *
 * works meaningfully despite this being a single-page application.
 *
-* Minimalist implementation to get demo of app up and running. Requires HTML5 capaable browser.
+* Minimalist implementation to get demo of app up and running. Requires HTML5 capable browser.
 
-* More comprehensive solution awaits port of the app to Angular.js or similar framework
-*
-* that comes with more comprehensive support for this functionality.
+* More comprehensive solution awaits port of the app to Angular.js or similar framework.
 *
 * @constructor
 *
@@ -60,44 +58,59 @@ app.Router = function() {
 	/** Handles browser history's HTML5 onpopstate event
 	*
 	* Parses event object and loads app view matching the user's navigation
+	*
+	* @param {PopStateEvent} event Native browser PopStateEvent
 	 */
 
-	this.onPopState = function(event) {
+	this.onPopState = function(PopStateEvent_event) {
 
-		console.log(event);
+		if (PopStateEvent_event.state && PopStateEvent_event.state.className) { // we're still in the app
 
-		var className = event.state.className,
+			var className = PopStateEvent_event.state.className,
 
-		id = event.state.id;
+			id = PopStateEvent_event.state.id;
 
-		switch (className) {
+			switch (className) {
 
-			case 'EventListView':
+				case 'AccountProfileView':
 
-				app.controller.onAccountSelected(id);
+					window.history.back();
 
-				break;
+					break;
 
-			case 'EventView':
+				case 'AccountSettingsView':
 
-				app.controller.onEventSelected(id);
+					window.history.back();
 
-				break;
+					break;
 
-			case 'PersonListView':
+				case 'EventListView':
 
-				app.controller.onGuestListSelected(id);
+					app.controller.onAccountSelected(id);
 
-				break;
+					break;
 
-			case 'PersonView':
+				case 'EventView':
 
-				app.controller.onGuestSelected(id);
+					app.controller.onEventSelected(id);
 
-				break;
+					break;
+
+				case 'PersonListView':
+
+					app.controller.onGuestListSelected(id);
+
+					break;
+
+				case 'PersonView':
+
+					app.controller.onGuestSelected(id);
+
+					break;
+			}
 		}
 
-
+		// else: users is about to back out of the app
 	}
 
 
@@ -115,19 +128,20 @@ app.Router = function() {
 
 			try {// needs to be run off a server to work
 
-				history.pushState(
-				{
-					className: className,
+				if (!history.state || history.state.className !== className) { // don't set state if navigating back
 
-					id: IViewable_view.modelId()
-				},
+					history.pushState(
+					{
+						className: className,
 
-					'',
+						id: IViewable_view.modelId()
+					},
 
-					className.slice(0, className.length - 4) // pop 'View' from class name
-				);
+						'',
 
-				console.log(history.state);
+						className.slice(0, className.length - 4) // pop 'View' from class name
+					);
+				}
 			}
 
 			catch(e) {
@@ -135,7 +149,6 @@ app.Router = function() {
 				console.log(e);
 			}
 		}
-
 	}
 
 

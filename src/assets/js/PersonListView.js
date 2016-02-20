@@ -242,13 +242,27 @@ app.PersonListView = function(str_elementId, str_heading) {
 
 	/** Update event presentation when model has changed */
 	
-	this.update = function(Imodelable_Event) {
+	this.update = function(Imodelable_obj) {
 		
-		if (Imodelable_Event === null || Imodelable_Event.constructor === app.Event) {
+		if (Imodelable_obj === null) { // reset to view to default presentation
 
-			this.render(Imodelable_Event);
+			this.render(null);
 
-			_modelId = Imodelable_Event.id();
+			_modelId = undefined;
+		}
+
+		else if (Imodelable_obj.constructor === app.Event) { // present guest list for event
+
+			this.render(Imodelable_obj);
+
+			_modelId = Imodelable_obj.id();
+		}
+
+		else if (Imodelable_obj.constructor === app.Person) { // possible change to guest, so update list
+
+			this.render(app.controller.selectedEvent());
+
+			_modelId = app.controller.selectedEvent().id();
 		}
 
 		// else do nothing

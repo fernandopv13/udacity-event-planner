@@ -205,7 +205,17 @@ app.EventListView = function(str_elementId, str_heading) {
 		$_renderContext.empty();
 
 		$_renderContext.append(UlElement);
+		
+		$_renderContext.append(this.createAddButton('event-list-add'));
 
+
+		// Attach event handlers (other than for list item click)
+
+
+		$('#event-list-add').click(function(event) {
+
+			app.controller.onAddEvent(event);
+		});
 	};
 
 	

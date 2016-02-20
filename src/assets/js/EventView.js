@@ -588,7 +588,28 @@ app.EventView = function(str_elementId, str_heading) {
 				}.bind(this));
 
 				
-				$('#event-form-submit').click(function(event) {this.submit(event);}.bind(this));
+				$('#event-form-cancel').click(function(event) {
+
+					window.history.back(); // return to previous view
+
+					// for now, simply discard any entries made by user
+
+				}.bind(this));
+
+
+				$('#event-form-submit').click(function(event) {
+
+					if (this.submit(event)) { // submit succesfull
+
+						window.history.back(); // return to previous view
+					}
+
+					else {
+
+						console.log('event form submission failed')
+					}
+
+				}.bind(this));
 		}
 
 		else { // present default message

@@ -341,7 +341,28 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				}.bind(this));
 
 				
-				$('#account-holder-form-submit').click(function(event) {this.submit(event);}.bind(this));
+				$('#account-holder-form-cancel').click(function(event) {
+
+					window.history.back(); // return to previous view
+
+					// for now, simply discard any entries made by user
+
+				}.bind(this));
+
+
+				$('#account-holder-form-submit').click(function(event) {
+
+					if (this.submit(event)) { // submit succesfull
+
+						window.history.back(); // return to previous view
+					}
+
+					else {
+
+						console.log('account settings form submission failed')
+					}
+
+				}.bind(this));
 		}
 
 		else { // present default message

@@ -95,46 +95,50 @@ app.IViewable = function() {
 
 app.IViewable.prototype.default_className = function () {
 	
+	var ret;
+
 	if (arguments.length === 0) {
 
 		switch (this.constructor) {
 
 			case app.AccountProfileView:
 
-				return 'AccountProfileView';
+				ret = 'AccountProfileView';
 
 				break;
 
 			case app.AccountSettingsView:
 
-				return 'AccountSettingsView';
+				ret = 'AccountSettingsView';
 
 				break;
 
 			case app.EventView:
 
-				return 'EventView';
+				ret = 'EventView';
 
 				break;
 
 			case app.EventListView:
 
-				return 'EventListView';
+				ret = 'EventListView';
 
 				break;
 
 			case app.PersonView:
 
-				return 'PersonView';
+				ret = 'PersonView';
 
 				break;
 
 			case app.PersonListView:
 
-				return 'PersonListView';
+				ret = 'PersonListView';
 
 				break;
 		}
+
+		return ret;
 	}
 	
 	else {
@@ -142,6 +146,49 @@ app.IViewable.prototype.default_className = function () {
 		throw new IllegalArgumentError('className is read-only');
 	}
 };
+
+
+/** Factory method for creating email fields for forms
+*
+* @return {HTMLDivElement} DIV element
+*/
+
+app.IViewable.prototype.default_createAddButton = function (str_buttonId) {
+
+	var outerDiv =  this.createElement( // outer div
+	{
+		element: 'div',
+
+		attributes: {style: 'bottom: 45px; right: 24px;'},
+		
+		classList: ['fixed-action-btn']
+	});
+	
+
+	var anchorElement =  this.createElement( // inner div
+	{
+		element: 'a',
+
+		attributes: {id: str_buttonId},
+		
+		classList: ['btn-floating', 'btn-large', 'red']
+	});
+
+	outerDiv.appendChild(anchorElement);
+
+
+	anchorElement.appendChild(this.createElement(
+	{
+		element: 'i',
+
+		classList: ['large', 'material-icons'],
+
+		innerHTML: 'add'
+	}));
+
+	return outerDiv;
+}
+
 
 
 /** Factory method for creating date picker fields for forms

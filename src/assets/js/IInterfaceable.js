@@ -79,9 +79,9 @@ app.IInterfaceable.isImplementationOf = function (func_implementer, func_interfa
 	
 	// Inner function to reuse the control loop
 	
-	function _doCheck(target, source) {
+	function _doCheck(Target, source) { // Uppercase first letter to pleae jshint when calling Target as constructor
 
-		var testObj = typeof source === 'function' ? target : new target(); // verify statics against class, others against instance
+		var testObj = typeof source === 'function' ? Target : new Target(); // verify statics against class, others against instance
 	
 		for (var prop in source) { // Run through the methods defined by the interface
 		

@@ -67,7 +67,10 @@ app.IModelable = function() {
 * Default methods (must be defined outside main function/class body)
 *---------------------------------------------------------------------------------------*/
 
-/** Does housekeep common to all IModelables after updating themselves*/
+/** Does housekeeping common to all IModelables after updating themselves, 
+*
+* i.e. autosaves (if enabled), notifies observers, and destroys temporary data object.
+*/
 
 app.IModelable.prototype.default_onUpdate = function(IModelable_obj) {
 

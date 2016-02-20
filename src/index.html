@@ -151,15 +151,15 @@
 		<div class="navbar-fixed">
 			
 			<!-- 'More' dropdown -->
-			<ul id="nav-account-dropdown" class="dropdown-content">
+			<ul id="nav-dropdown" class="dropdown-content">
 
-				<li><a href="#!">Settings</a></li>
+				<li><a href="#!Settings">Settings</a></li>
 
-				<li><a href="#!">Profile</a></li>
+				<li><a href="#!Profile">Profile</a></li>
 
-				<li><a href="#!">Sign out</a></li>
+				<li><a href="#!Sign Out">Sign Out</a></li>
 
-				<li><a href="#!">About</a></li>
+				<li><a href="#!About">About</a></li>
 
 			</ul>
 
@@ -169,27 +169,27 @@
 
 					<a href="#!" class="brand-logo">Meetup Planner</a>
 
-					<a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+					<a href="#" data-activates="nav-side" class="button-collapse"><i class="material-icons">menu</i></a>
 
 					<ul class="right hide-on-med-and-down">
 
 						<li><a href="!#"><i class="material-icons left">search</i>Search</a></li>
 
-						<li><a class="dropdown-button" href="#!" data-activates="nav-account-dropdown"><i class="material-icons left">account_circle</i>Account</a></li>
+						<li><a class="dropdown-button" href="#!" data-activates="nav-dropdown"><i class="material-icons left">account_circle</i>Account</a></li>
 
 					</ul>
 
-					<ul class="side-nav" id="mobile-demo">
+					<ul id="nav-side" class="side-nav">
 
-						<li><a href="#!"><i class="material-icons left">search</i>Search</a></li>
+						<li><a href="#!Search"><i class="material-icons left">search</i>Search</a></li>
 
-						<li><a href="#!"><i class="material-icons left">settings</i>Account Settings</a></li>
+						<li><a href="#!Settings"><i class="material-icons left">settings</i>Account Settings</a></li>
 
-						<li><a href="#!"><i class="material-icons left">account_circle</i>Account Profile</a></li>
+						<li><a href="#!Profile"><i class="material-icons left">account_circle</i>Account Profile</a></li>
 
-						<li><a href="#!"><i class="material-icons left">info</i>About this app</a></li>
+						<li><a href="#!About"><i class="material-icons left">info</i>About this app</a></li>
 
-						<li><a href="#!"><i class="material-icons left"><i class="material-icons">power_settings_new</i></i>Sign Out</a></li>
+						<li><a href="#!Sign Out"><i class="material-icons left"><i class="material-icons">power_settings_new</i></i>Sign Out</a></li>
 
 					</ul>
 
@@ -284,9 +284,25 @@
 				$('.button-collapse').sideNav();
 
 				
+				$('#nav-dropdown, #nav-side').click(function(event) {
+
+					$('.button-collapse').sideNav('hide');
+
+					app.controller.onNavSelection(event);					
+				});
+
+				
+				/*
+				$('#nav-side').click(function(event) {
+
+					console.log(event.target.href.split('!')[1]);//.childNodes[1].nodeValue);
+				});
+				*/
+
+				
 				// Parse URL hashbangs for which view and object to display
 
-				var hash = document.location.hash;
+				/*var hash = document.location.hash;
 
 				if (hash !== '') {
 
@@ -301,13 +317,13 @@
 
 					//controller.router.route(...);
 				}
-
+				*/
 
 			});
 
 			window.onload = function() { // $(document).ready()) may fire too early, som going old school
 				
-				app.init();	
+				app.init();
 			};
 
 		</script>

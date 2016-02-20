@@ -207,46 +207,18 @@ app.Controller = function() {
 
 			observer.update(IModelable);
 
-			/*switch (observer.constructor) {
-
-				case app.AccountSettingsView: // account settings form
-
-					observer.update(_selectedAccount);
-
-					break;
-
-				case app.AccountProfileView: // account profile form
-
-					observer.update(_selectedAccount);
-
-					break;
-
-				case app.EventListView: // event list
-
-					observer.update(_selectedAccount);
-
-					break;
-
-				case app.EventView: // event form
-
-					observer.update(_selectedEvent);
-
-					break;
-
-				case app.PersonListView: // guest list
-
-					observer.update(_selectedEvent);
-
-					break;
-
-				case app.PersonView: // guest form
-
-					observer.update(_selectedGuest);
-
-					break;
-			}*/
 		});
 	}
+
+
+	/** Handles click on "Add" button in event list */
+
+	this.onAddEvent = function(event) {
+
+		var evt = this.selectedAccount().addEvent(new app.Event());
+
+		this.onEventSelected(evt.id());
+	};
 
 	
 	this.onAccountSelected = function(int_accountId) {
@@ -277,7 +249,7 @@ app.Controller = function() {
 
 	this.onGuestListSelected = function(int_eventId) {
 
-		this.selectedEvent(app.Event.registry.getObjectById(int_eventId));
+		//this.selectedEvent(app.Event.registry.getObjectById(int_eventId));
 
 		this.selectedGuest(null);
 		
@@ -295,14 +267,45 @@ app.Controller = function() {
 	};
 
 
-	this.onPopState = function(event) {
+	/** Handles click events in navbar/dropdown */
 
-		console.log(event);
+	this.onNavSelection = function(event) {
+
+		switch (event.target.href.split('!')[1]) { // parse the URL partial after #!
+
+			case 'Search':
+
+				break;
+
+			case 'Settings':
+
+				this.currentView(_views.accountSettingsView);
+
+				break;
+
+			case 'Profile':
+
+				this.currentView(_views.accountProfileView);
+				
+				break;
+
+			case 'About':
+
+				break;
+
+			case 'Sign Out':
+
+				break;
+		}
+	}
+
+
+	this.onPopState = function(event) {
 
 		_router.onPopState(event);
 	};
 	
-/** Sets up the MVC collaborators to observe/be observed by each other as required.
+	/** Sets up the MVC collaborators to observe/be observed by each other as required.
 	*
 	*/
 
@@ -351,7 +354,7 @@ app.Controller = function() {
 
 		_router = new app.Router();
 
-		window.onpopstate = function(event) {this.onPopState(event);}
+		window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
 
 		
 		// Set some defaults to use until account creation/selection is developed
@@ -479,7 +482,7 @@ app.Controller = function() {
 
 		else if (Object_obj.isInstanceOf(app.IModelable)) { // data model updated
 
-			this.notifyObservers(app.IModelable);
+			this.notifyObservers(Object_obj);
 		}
 
 		else { // wrong type

@@ -391,8 +391,30 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 				}.bind(this));
 
 
-				$('#account-settings-submit').click(function(event) {this.submit(event);}.bind(this)); // submit button
+				$('#account-settings-cancel').click(function(event) {
 
+					window.history.back(); // return to previous view
+
+					// for now, simply discard any entries made by user
+
+				}.bind(this));
+
+
+				$('#account-settings-submit').click(function(event) {
+
+					console.log('submit');
+
+					if (this.submit(event)) { // submit succesfull
+
+						window.history.back(); // return to previous view
+					}
+
+					else {
+
+						console.log('account settings form submission failed')
+					}
+
+				}.bind(this));
 		}
 
 		else { // present default message
