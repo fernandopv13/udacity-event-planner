@@ -581,9 +581,9 @@ app.EventView.prototype.render = function(Event_event) {
 
 	else { // present default message
 
-		this.$_renderContext.empty();
+		this.this.$renderContext.empty();
 
-		this.$_renderContext.append(this.createElement(
+		this.this.$renderContext.append(this.createElement(
 		{
 			element: 'p',
 
