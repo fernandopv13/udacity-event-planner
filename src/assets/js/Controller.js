@@ -54,31 +54,31 @@ app.Controller = function() {
 	*
 	* When setting, hides the existing view and shows the new one.
 	*
-	* @param {IViewable} currentView The current view, or null
+	* @param {View} currentView The current view, or null
 	*
-	* @return {IViewable} The current view, or null
+	* @return {View} The current view, or null
 	*
-	* @throws {IllegalArgumentError} If attempting to set a view that is not an IViewable, or null
+	* @throws {IllegalArgumentError} If attempting to set a view that is not a View, or null
 	*/
 	
-	this.currentView = function (IViewable_view) {
+	this.currentView = function (View_view) {
 	
 		if (arguments.length > 0) {
 
-			if (IViewable_view === null || IViewable_view.isInstanceOf(app.IViewable) || IViewable_view.isInstanceOf(app.View)) {
+			if (View_view === null || View_view.isInstanceOf(app.View)) {
 			
 				if (_currentView) {_currentView.hide()}
 
-				_currentView = IViewable_view;
+				_currentView = View_view;
 
 				_currentView.show();
 
-				_router.onViewChange(IViewable_view);
+				_router.onViewChange(View_view);
 			}
 
 			else {
 			
-				throw new IllegalArgumentError('View must be instance of IViewable')
+				throw new IllegalArgumentError('View must be instance of View')
 			}
 		}
 		
@@ -178,21 +178,21 @@ app.Controller = function() {
 	*
 	* Called by public update() method, which also does error handling.
 	*
-	* @param {IViewable} view Reference to an IViewable (assumed to be a list view).
+	* @param {View} view Reference to a View (assumed to be a list view).
 	*
-	* @param {int} id Id of IModelable tapped/clicked on. IModelable type is inferred from type of IViewable.
+	* @param {int} id Id of IModelable tapped/clicked on. IModelable type is inferred from type of View.
 	*
 	* @return {void}
 	*/
 
-	function _update(IViewable, int_id) { // Click received in list of IModelable s displayed by IViewable
+	function _update(View, int_id) { // Click received in list of IModelable s displayed by View
 
-			/* Using the more generic update(IViewable, Event) form might void the need for this.
+			/* Using the more generic update(View, Event) form might void the need for this.
 			* But that would make retrieving the id of the clicked object more tightly coupled
 			* to the implementation of the view. So keeping this for now.
 			*/
 
-			switch (IViewable.constructor)	{
+			switch (View.constructor)	{
 
 				case app.EventListView: // Event list
 
@@ -213,16 +213,16 @@ app.Controller = function() {
 	*
 	* Called by public update() method, which also does error handling.
 	*
-	* @param {IViewable} view Reference to the IViewable generating the event.
+	* @param {View} view Reference to the View generating the event.
 	*
 	* @param {nEvent} event Native browser event.
 	*
 	* @return {void}
 	*/
 
-	function __update(IViewable, nEvent) { // Native UI event in IViewable requires Controller supervision
+	function __update(View, nEvent) { // Native UI event in View requires Controller supervision
 
-		switch (IViewable.constructor)	{ // Branch on IViewable implementer type
+		switch (View.constructor)	{ // Branch on View implementer type
 
 			case app.EventView: // Event form
 
@@ -539,7 +539,7 @@ app.Controller = function() {
 	*
 	* @return {void}
 	*
-	* @throws {IllegalArgumentError} If first parameter provided is neither an IModelable nor an IViewable.
+	* @throws {IllegalArgumentError} If first parameter provided is neither an IModelable nor a View.
 	*
 	* @throws {IllegalArgumentError} If second parameter provided (when present) is neither an integer nor a native browser event.
 	*
@@ -561,18 +561,18 @@ app.Controller = function() {
 					___update.call(this, Object_obj, int_id);
 				}
 
-				else if (Object_obj.isInstanceOf(app.IViewable) || Object_obj.isInstanceOf(app.View)) { // list item clicked
+				else if (Object_obj.isInstanceOf(app.View)) { // list item clicked
 
 					_update.call(this, Object_obj, int_id);
 				}
 
 				else { // Wrong type
 
-					throw new IllegalArgumentError('Expected IModelable or IViewable');
+					throw new IllegalArgumentError('Expected IModelable or View');
 				}
 			}
 
-			else if (intOrEvent.originalEvent && (Object_obj.isInstanceOf(app.IViewable) || Object_obj.isInstanceOf(app.View))) { // second param is a native event from an IViewable
+			else if (intOrEvent.originalEvent && Object_obj.isInstanceOf(app.View)) { // second param is a native event from a View
 
 				__update.call(this, Object_obj, intOrEvent);
 			}
