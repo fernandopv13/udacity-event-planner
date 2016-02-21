@@ -29,7 +29,7 @@ app.ListView = function(Function_modelClass, str_elementId, str_heading) {
 	
 	/** Initializes instance members inherited from parent class*/
 	
-	app.View.call(this, arguments);
+	app.View.call(this, Function_modelClass, str_elementId, str_heading);
 	
 	
 	

@@ -561,7 +561,7 @@ app.Controller = function() {
 					___update.call(this, Object_obj, int_id);
 				}
 
-				else if (Object_obj.isInstanceOf(app.IViewable)) { // list item clicked
+				else if (Object_obj.isInstanceOf(app.IViewable) || Object_obj.isInstanceOf(app.View)) { // list item clicked
 
 					_update.call(this, Object_obj, int_id);
 				}
