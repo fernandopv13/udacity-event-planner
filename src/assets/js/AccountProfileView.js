@@ -31,7 +31,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 
 	_heading = str_heading,
 
-	_modelId; // id of the model object currently presented in the view
+	_modelId = null; // id of the model object currently presented in the view
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -83,12 +83,13 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	
 	/** Cancels entries in, and navigation to, person form
 	*
-	* @todo Everything(!)
 	*/
 
 	this.cancel = function() {
 
-		// do something!
+		window.history.back(); // return to previous view
+
+		// for now, simply discard any entries made by user
 	}
 
 
@@ -343,9 +344,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 				
 				$('#account-holder-form-cancel').click(function(event) {
 
-					window.history.back(); // return to previous view
-
-					// for now, simply discard any entries made by user
+					this.cancel();
 
 				}.bind(this));
 
@@ -428,13 +427,13 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* See IViewable for further details.
 	 */
 	
-	this.update = function(IModelable_account) {
+	this.update = function(IModelable) {
 		
-		if (IModelable_account === null || IModelable_account.constructor === app.Account) {
+		if (IModelable === null || IModelable.constructor === app.Account) {
 
-			this.render(IModelable_account);
+			this.render(IModelable);
 
-			_modelId = IModelable_account.id();
+			_modelId = IModelable.id();
 		}
 
 		// else do nothing

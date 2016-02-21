@@ -69,7 +69,7 @@ app.IModelable = function() {
 
 /** Does housekeeping common to all IModelables after updating themselves, 
 *
-* i.e. autosaves (if enabled), notifies observers, and destroys temporary data object.
+* i.e. autosaves (if enabled), notifies observers, registers with controller, and destroys temporary data object.
 */
 
 app.IModelable.prototype.default_onUpdate = function(IModelable_obj) {

@@ -31,7 +31,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 	_heading = str_heading, // content of the view heading
 
-	_modelId; // id of the model object currently presented in the view
+	_modelId = null; // id of the model object currently presented in the view
 
 
 	
@@ -84,13 +84,14 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	*---------------------------------------------------------------------------------------*/
 	
 	/** Cancels entries in, and navigation to, account form
-	*
-	* @todo Everything(!)
 	*/
 
 	this.cancel = function() {
 
-		// do something!
+		window.history.back(); // return to previous view
+
+		// for now, simply discard any entries made by user
+
 	}
 
 
@@ -393,16 +394,12 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 				$('#account-settings-cancel').click(function(event) {
 
-					window.history.back(); // return to previous view
-
-					// for now, simply discard any entries made by user
-
+					this.cancel();
+					
 				}.bind(this));
 
 
 				$('#account-settings-submit').click(function(event) {
-
-					console.log('submit');
 
 					if (this.submit(event)) { // submit succesfull
 
@@ -500,13 +497,13 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 
 	/** Updates account presentation when notified by controller of change */
 	
-	this.update = function(IModelable_account) {
+	this.update = function(IModelable) {
 		
-		if (IModelable_account.constructor === app.Account) {
+		if (IModelable.constructor === app.Account) {
 
-			this.render(IModelable_account);
+			this.render(IModelable);
 
-			_modelId = IModelable_account.id();
+			_modelId = IModelable.id();
 		}
 
 		// else do nothing

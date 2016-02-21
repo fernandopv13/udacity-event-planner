@@ -31,7 +31,7 @@ app.GuestListView = function(str_elementId, str_heading) {
 
 	_heading = str_heading, // content of the view heading
 
-	_modelId; // id of the model object currently presented in the view
+	_modelId = null; // id of the model object currently presented in the view
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -252,23 +252,23 @@ app.GuestListView = function(str_elementId, str_heading) {
 
 	/** Update event presentation when model has changed */
 	
-	this.update = function(Imodelable_obj) {
+	this.update = function(IModelable) {
 		
-		if (Imodelable_obj === null) { // reset to view to default presentation
+		if (IModelable === null) { // reset to view to default presentation
 
 			this.render(null);
 
 			_modelId = undefined;
 		}
 
-		else if (Imodelable_obj.constructor === app.Event) { // present guest list for event
+		else if (IModelable.constructor === app.Event) { // present guest list for event
 
-			this.render(Imodelable_obj);
+			this.render(IModelable);
 
-			_modelId = Imodelable_obj.id();
+			_modelId = IModelable.id();
 		}
 
-		else if (Imodelable_obj.constructor === app.Person) { // possible change to guest, so update list
+		else if (IModelable.constructor === app.Person) { // possible change to guest, so update list
 
 			this.render(app.controller.selectedEvent());
 

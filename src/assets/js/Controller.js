@@ -174,6 +174,17 @@ app.Controller = function() {
 	* Private instance methods (may depend on accessors, so declare after them)
 	*---------------------------------------------------------------------------------------*/
 	
+	/** Handles click events in list views.
+	*
+	* Called by public update() method, which also does error handling.
+	*
+	* @param {IViewable} view Reference to an IViewable (assumed to be a list view).
+	*
+	* @param {int} id Id of IModelable tapped/clicked on. IModelable type is inferred from type of IViewable.
+	*
+	* @return {void}
+	*/
+
 	function _update(IViewable, int_id) { // Click received in list of IModelable s displayed by IViewable
 
 			/* Using the more generic update(IViewable, Event) form might void the need for this.
@@ -195,8 +206,19 @@ app.Controller = function() {
 
 					break;
 			}
-	};
+	}
 
+
+	/** Handles native browser events in UI that require more elaborate Controller involvement than simple clicks, submits or cancels.
+	*
+	* Called by public update() method, which also does error handling.
+	*
+	* @param {IViewable} view Reference to the IViewable generating the event.
+	*
+	* @param {nEvent} event Native browser event.
+	*
+	* @return {void}
+	*/
 
 	function __update(IViewable, nEvent) { // Native UI event in IViewable requires Controller supervision
 
@@ -216,6 +238,17 @@ app.Controller = function() {
 	}
 
 
+	/** Handles form submit events.
+	*
+	* Called by public update() method, which also does error handling.
+	*
+	* @param {IModelable} model Reference to a temporary IModelable holding the data to be used for the update. Is of the same class as the IModelable to be updated.
+	*
+	* @param {int} id Id of the IModelable to be updated. Disregarded when creating a new object.
+	*
+	* @return {void}
+	*/
+	
 	function ___update(IModelable, int_id) { // Submission received from form representing IModelable of same class and id as parameters
 
 		var sourceObj = IModelable.constructor.registry.getObjectById(int_id); // update data model
@@ -223,6 +256,15 @@ app.Controller = function() {
 		sourceObj.update(IModelable, int_id);
 	}
 
+
+	/** Handles update notifications from the data model.
+	*
+	* Called by public update() method, which also does error handling.
+	*
+	* @param {IModelable} model The IModelable that has changed state and therefore invoked the update.
+	*
+	* @return {void}
+	*/
 
 	function ____update(IModelable) { // Update received from data model. Object represents itself.
 
@@ -429,6 +471,7 @@ app.Controller = function() {
 		this.currentView(_views.eventView);
 	};
 
+
 	this.onGuestListSelected = function(int_eventId) {
 
 		//this.selectedEvent(app.Event.registry.getObjectById(int_eventId));
@@ -488,124 +531,22 @@ app.Controller = function() {
 	};
 	
 	
-	/** Update app in response to notifications from either view (UI) or data model.
+	/** Receives and processes update notifications from either view (UI) or data model.
 	*
-	* Uses JS style 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked
+	* Uses JS style 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked.
 	*
-	* (see inner functions in code for supported method signatures).
-	*
-	* @param {IModelable} model Reference to an IModelable (data model object). If not accompanied by an id, call is handled as a notification of a change to the data model.
-	*
-	* @param {IViewable} view Reference to an IViewable. Expected to be accompanied by an integer id or a native Event.
-	*
-	* @param {int} id Object id. If following an IViewable, call is handled as a tap/click in a list of the type the IViewables is presenting. If following an IModelable, handled as submission of an update to the IModelable with same class and id.
-	*
-	* @param {nEvent} event Native browser event. Expected to follow IViewable. If present, handled as user interaction that requires more elaborate Controller involvement than a simple click in a list.
+	* Delegates response to private '_update(...)' functions. See these for supported method signatures.
 	*
 	* @return {void}
 	*
 	* @throws {IllegalArgumentError} If first parameter provided is neither an IModelable nor an IViewable.
 	*
 	* @throws {IllegalArgumentError} If second parameter provided (when present) is neither an integer nor a native browser event.
+	*
+	* @todo Maybe delegate error handling to individual private functions
 	*/
 
 	this.update = function(Object_obj, intOrEvent) {
-
-		var self = this; // set up reference to controller 'this' for use in innner functions
-
-		
-		// Inner utility functions implementing the polymorphic behaviours.
-		// Supported method 'signatures' are as follows:
-
-		function update_(IViewable, int_id) { // Click received in list of IModelable s displayed by IViewable
-
-			/* Using the more generic update(IViewable, Event) form might void the need for this.
-			* But that would make retrieving the id of the clicked object more tightly coupled
-			* to the implementation of the view. So keeping this for now.
-			*/
-
-			switch (IViewable.constructor)	{
-
-				case app.EventListView: // Event list
-
-					self.onEventSelected(int_id);
-
-					break;
-				
-				case app.GuestListView: // Guest list
-
-					self.onGuestSelected(int_id);
-
-					break;
-			}
-		}
-
-
-		function update__(IViewable, nEvent) { // Native UI event in IViewable requires Controller supervision
-
-			switch (IViewable.constructor)	{ // Branch on IViewable implementer type
-
-				case app.EventView: // Event form
-
-					// Not crazy about the controller knowing the id of the div, but will do for now
-
-					if (nEvent.target.id === 'event-edit-guests-button') { // click on 'edit guests' button
-
-						self.onGuestListSelected(); // show guest list
-					}
-
-					break;
-			}
-		}
-
-
-		function update___(IModelable, int_id) { // Submission received from form representing IModelable of same class and id as parameters
-
-			var sourceObj = IModelable.constructor.registry.getObjectById(int_id); // update data model
-
-			sourceObj.update(IModelable, int_id);
-		}
-
-
-		function update____(IModelable) { // Update received from data model. Object represents itself.
-
-			// If a new event or guest was added, first register it with its account or event
-
-			switch (IModelable.constructor) {
-
-				case app.Event: // event
-
-					if (!self.selectedAccount().isInAccount(IModelable)) { // account does not know event
-
-						self.selectedAccount().addEvent(IModelable); // so add it
-					}
-
-					break;
-				
-				case app.Person: // guest
-
-					//Bit of a hack to exclude account holder from guest list, but acceptable for now
-
-					if (IModelable.id() !== self.selectedAccount().accountHolder().id()) { // account holder cannot be guest
-
-						if (self.selectedEvent()) { // an event has been selected
-
-							if (!self.selectedEvent().isGuest(IModelable)) { // event doesn't know person
-
-								self.selectedEvent().addGuest(IModelable); // so add as guest
-							}
-						}
-					}
-
-					break;
-			}
-
-
-			// then notify observers (i.e. views)
-
-			self.notifyObservers(IModelable);
-		}
-
 
 		// Parse parameters to invoke appropriate polymorphic response
 

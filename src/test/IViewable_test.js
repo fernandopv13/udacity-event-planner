@@ -30,7 +30,59 @@ describe('Interface IViewable', function(){
 			expect(e.message).toEqual(app.IViewable.constructorErrorMessage);
 		}
 	});
+
+
+	xit('defines a clear() method signature', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.clear).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.clear).toBe('function');
+	});
+		
 	
+	xit('throws an error if clear() is invoked', function() {
+			
+		// verify that method invokation throws error
+		
+		try {
+		
+			app.IViewable.prototype.clear();
+		}
+		
+		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
+		
+			expect(e.name).toBe('AbstractMethodError');
+		}
+	});
+	
+
+	it('defines a modelId() method signature', function() {
+			
+		// verify that method signature exists
+		
+		expect(app.IViewable.prototype.modelId).toBeDefined();
+		
+		expect(typeof app.IViewable.prototype.modelId).toBe('function');
+	});
+		
+	
+	it('throws an error if modelId() is invoked', function() {
+			
+		// verify that method invokation throws error
+		
+		try {
+		
+			app.IViewable.prototype.modelId();
+		}
+		
+		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
+		
+			expect(e.name).toBe('AbstractMethodError');
+		}
+	});
+
 
 	it('defines an update() method signature', function() {
 			
@@ -53,7 +105,7 @@ describe('Interface IViewable', function(){
 		
 		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
 		
-			expect(e.message).toEqual(app.IViewable.prototype.update.errorMessage);
+			expect(e.name).toBe('AbstractMethodError');
 		}
 	});
 

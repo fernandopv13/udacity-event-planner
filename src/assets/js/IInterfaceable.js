@@ -7,8 +7,8 @@ var app = app || {}; // create a simple namespace for the app
 * public Interface IInterfaceable
 *********************************************************************************************/
 
-/** @classdesc Base interface for our Java-like interface mechanism. Guarantees behaviours
-* that all classes using the mechanism must support, and provides utility methods.
+/** @classdesc Base interface for a Java-like interface mechanism in JavaScript. Guarantees
+* behaviours that all classes using the mechanism must support, and provides utility methods.
 *
 * @constructor
 *
@@ -58,13 +58,19 @@ app.IInterfaceable = function() {
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 
-/** Checks if one class (function) complies with the interface defined by
+/** Checks if one class (function) complies with the interface defined by the non-inherited
 *
-* the non-inherited methods of another class (function),
+* methods of another class (function), in both cases using pseudo-classical class notation.
 *
-* in both cases using pseudo-classical class notation.
+* I.e. does a 'compiler-like' check if a realizing class complies with an interface it declares support for.
 *
 * For now, supports instance methods, but not static interface methods.
+*
+* Intended for use during unit testing, and so could be removed from production.
+*
+* The overhead is, however, minimal. So the convenience of collecting the functionality
+*
+* that supports interface-like behavior in a single location wins out.
 *
 * @param {Function} implementer The function that 'claims' to implement the interface
 *
@@ -72,7 +78,7 @@ app.IInterfaceable = function() {
 *
 * @return {Boolean} true if the implementer implements all the own methods of the interface
 *
-* @todo: Revisit options for Java-like support for static interface methods
+* @todo: Add support for static interface methods
 */
 
 app.IInterfaceable.isImplementationOf = function (func_implementer, func_interface) {

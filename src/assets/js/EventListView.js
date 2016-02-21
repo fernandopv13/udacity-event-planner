@@ -33,7 +33,7 @@ app.EventListView = function(str_elementId, str_heading) {
 
 	_heading = str_heading, // content of the view heading
 
-	_modelId; // id of the model object currently presented in the view
+	_modelId = null; // id of the model object currently presented in the view
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -220,13 +220,13 @@ app.EventListView = function(str_elementId, str_heading) {
 	
 	/** Updates event list presentation when notified by controller of change */
 	
-	this.update = function(IModelable_account) {
+	this.update = function(IModelable) {
 		
-		if (IModelable_account === null || IModelable_account.constructor === app.Account) {
+		if (IModelable === null || IModelable.constructor === app.Account) {
 
-			this.render(IModelable_account);
+			this.render(IModelable);
 
-			_modelId = IModelable_account.id();
+			_modelId = IModelable.id();
 		}
 
 		// else do nothing

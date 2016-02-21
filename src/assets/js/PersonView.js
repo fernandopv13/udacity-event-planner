@@ -31,7 +31,7 @@ app.PersonView = function(str_elementId, str_heading) {
 
 	_heading = str_heading, // content of the view heading
 
-	_modelId; // id of the model object currently presented in the view
+	_modelId = null; // id of the model object currently presented in the view
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -440,13 +440,13 @@ app.PersonView = function(str_elementId, str_heading) {
 
 	/** Updates guest presentation when notified by controller of change */
 	
-	this.update = function(IModelable_person) {
+	this.update = function(IModelable) {
 		
-		if (IModelable_person === null || IModelable_person.constructor === app.Person) {
+		if (IModelable === null || IModelable.constructor === app.Person) {
 
-			this.render(IModelable_person);
+			this.render(IModelable);
 
-			_modelId = IModelable_person.id();
+			_modelId = IModelable.id();
 		}
 
 		// else do nothing

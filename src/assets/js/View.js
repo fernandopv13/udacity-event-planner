@@ -4,63 +4,61 @@ var app = app || {}; // create a simple namespace for the module
 
 
 /*********************************************************************************************
-* public Interface IViewable extends IObserable, IObserver
+* public abstract class View implements IInterfaceable IObservable IObserver
 *********************************************************************************************/
 
-/** @classdesc Main interface for the 'V' part of our MVC framework.
+/** @classdesc Root class for the 'V' part of our MVC framework.
 *
 * Presents information from the data model in the UI. Handles all UI related work.
 *
 * Provides a number of default HTML (form) element factory, and form validation, methods.
 *
-* Extension of IObservable and IObserver implemented as mixins in realizing classes, using static method in IInterfaceable.
+* NOTE: Views must only notify observers as a direct result of user actions in the UI. Otherwise the MVC objects will likely enter an infinite update loop.
 *
-* IViewables must only notify observers as a direct result of user actions in the UI. Otherwise the MVC objects will likely enter an infinite update loop.
+* @implements IInterface
 *
-* @extends IObservable
+* @implements IObservable
 *
-* @extends IObserver
+* @implements IObserver
 *
 * @constructor
 *
-* @return Nothing. An interface cannot be instantiated.
-*
-* @throws {InstantiationError} If attempting to instantiate interface
+* @return {View} Not supposed to be instantiated, except when extended by subclasses.
 *
 * @author Ulrik H. Gade, February 2016
 */
 
-app.IViewable = function() {
+app.View = function(Function_modelClass) {
 	
 	/*----------------------------------------------------------------------------------------
-	* Method signatures
+	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Get ID of model object currently being presented by the view
-	*
-	* @return {int}
-	*
-	* @throws {AbstractMethodError} If attempting to invoke directly on interface
-	*/
+	var _modelClass = Function_modelClass, // the class of data model supported by this view (by function reference)
 
-	app.IViewable.prototype.modelId = function() {
-		
-		throw new AbstractMethodError('Method signature "modelId()" must be realized in implementing classes');
-	};
+	 _implements = [app.IInterfaceable, app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
+
+	 _modelId = null; // id of the model object currently presented in the view, or null if none
 	
-
-	/** Update (i.e. render) UI on demand if passed an IModelable of the type this view observes. Otherwise ignores call.
+	
+	/*----------------------------------------------------------------------------------------
+	* Abstract public instance methods
+	*---------------------------------------------------------------------------------------*/
+	
+	/** Determine whether update notification broadcast by IObservable applies to this view.
 	*
-	* Overrides inherited IObserver method to limit acceptable parameter type to IModelable.
+	* If the view is active, the type and id of the broadcast data model should match that currently being presented.
+	*
+	* If the view is inactive, only the type of the model needs to match.
 	*
 	* @param {IModelable} obj Reference to the data model object to be rendered in the UI, or null (to reset the view).
 	*
-	* @return {void}
+	* @return {Boolean} True if this view should respond to the notification, otherwise false-
 	*
-	* @throws {AbstractMethodError} If attempting to invoke directly on interface
+	* @throws {AbstractMethodError} If attempting to invoke directly on abstract class
 	*/
 
-	app.IViewable.prototype.update = function(IModelable) {
+	app.View.prototype.doUpdate = function(IModelable) {
 		
 		throw new AbstractMethodError('Method signature "update()" must be realized in implementing classes');
 	};
@@ -70,78 +68,26 @@ app.IViewable = function() {
 	* Block instantiation
 	*---------------------------------------------------------------------------------------*/
 	
-	this.constructor.constructorErrorMessage = 'Interface IViewable cannot be instantiated. Realize in implementing classes.';
+	//this.constructor.constructorErrorMessage = 'Interface View cannot be instantiated. Realize in implementing classes.';
 	
-	throw new InstantiationError(this.constructor.constructorErrorMessage);
+	//throw new InstantiationError(this.constructor.constructorErrorMessage);
 }
 
 /*----------------------------------------------------------------------------------------
-* Default methods (must be defined outside main function/class body)
+Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-/** Gets name of object's class. Class name is read-only.
-*
-* Save some bolierplate in realizing classes by doing it here. Branching overhead should be acceptable.
-*
-* @return {String} name The name of the object's class
-*	
-* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
-*/
+void app.IInterfaceable.mixInto(app.IInterfaceable, app.View);
 
-app.IViewable.prototype.default_className = function () {
-	
-	var ret;
+void app.IInterfaceable.mixInto(app.IObservable, app.View);
 
-	if (arguments.length === 0) {
+void app.IInterfaceable.mixInto(app.IObserver, app.View);
 
-		switch (this.constructor) {
 
-			case app.AccountProfileView:
 
-				ret = 'AccountProfileView';
-
-				break;
-
-			case app.AccountSettingsView:
-
-				ret = 'AccountSettingsView';
-
-				break;
-
-			case app.EventView:
-
-				ret = 'EventView';
-
-				break;
-
-			case app.EventListView:
-
-				ret = 'EventListView';
-
-				break;
-
-			case app.PersonView:
-
-				ret = 'PersonView';
-
-				break;
-
-			case app.GuestListView:
-
-				ret = 'GuestListView';
-
-				break;
-		}
-
-		return ret;
-	}
-	
-	else {
-		
-		throw new IllegalArgumentError('className is read-only');
-	}
-};
-
+/*----------------------------------------------------------------------------------------
+* Public instance methods (must be defined outside main function/class body)
+*---------------------------------------------------------------------------------------*/
 
 /** Factory method for creating floating main action button for views.
 *
@@ -150,7 +96,7 @@ app.IViewable.prototype.default_className = function () {
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createFloatingActionButton = function (str_buttonId, str_icon, str_color, str_label) {
+app.View.prototype.createFloatingActionButton = function (str_buttonId, str_icon, str_color, str_label) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -192,7 +138,7 @@ app.IViewable.prototype.default_createFloatingActionButton = function (str_butto
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
+app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -289,7 +235,7 @@ app.IViewable.prototype.default_createDateField = function (str_width, str_dateI
 * @return {HTMLElement} HTML element
 */
 
-app.IViewable.prototype.default_createElement = function(obj_specs) {
+app.View.prototype.createElement = function(obj_specs) {
 
 	/* Sample JSON specification object using all currently supported features:
 
@@ -379,7 +325,7 @@ app.IViewable.prototype.default_createElement = function(obj_specs) {
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createEmailField = function (str_width, str_EmailId, str_label, bool_required, Email_email) {
+app.View.prototype.createEmailField = function (str_width, str_EmailId, str_label, bool_required, Email_email) {
 
 	var email = Email_email;
 
@@ -464,7 +410,7 @@ app.IViewable.prototype.default_createEmailField = function (str_width, str_Emai
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createFieldDescription = function (str_description, bool_divider) {
+app.View.prototype.createFieldDescription = function (str_description, bool_divider) {
 
 	var innerDiv =  this.createElement( // inner div for description
 		{
@@ -502,7 +448,7 @@ app.IViewable.prototype.default_createFieldDescription = function (str_descripti
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createHeading = function (str_width, str_heading) {
+app.View.prototype.createHeading = function (str_width, str_heading) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -537,7 +483,7 @@ app.IViewable.prototype.default_createHeading = function (str_width, str_heading
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createNumberField = function (str_width, str_fieldId, str_label, bool_required, int_value, int_min, int_max, int_step, str_errorMsg) {
+app.View.prototype.createNumberField = function (str_width, str_fieldId, str_label, bool_required, int_value, int_min, int_max, int_step, str_errorMsg) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -617,7 +563,7 @@ app.IViewable.prototype.default_createNumberField = function (str_width, str_fie
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createPasswordField = function (str_width, str_passwordId, str_hintsPrefix, Account_account) {
+app.View.prototype.createPasswordField = function (str_width, str_passwordId, str_hintsPrefix, Account_account) {
 
 	var account = Account_account, outerDiv, innerDiv, labelElement, pElement;
 
@@ -843,7 +789,7 @@ app.IViewable.prototype.default_createPasswordField = function (str_width, str_p
 */
 
 
-app.IViewable.prototype.default_createPasswordConfirmationField = function (str_width, str_confirmationId) {
+app.View.prototype.createPasswordConfirmationField = function (str_width, str_confirmationId) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -918,7 +864,7 @@ app.IViewable.prototype.default_createPasswordConfirmationField = function (str_
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createRequiredFieldExplanation = function () {
+app.View.prototype.createRequiredFieldExplanation = function () {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -946,7 +892,7 @@ app.IViewable.prototype.default_createRequiredFieldExplanation = function () {
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createSubmitCancelButtons = function(str_buttonIdPrefix) {
+app.View.prototype.createSubmitCancelButtons = function(str_buttonIdPrefix) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -1002,7 +948,7 @@ app.IViewable.prototype.default_createSubmitCancelButtons = function(str_buttonI
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createSwitchField = function (str_width, str_switchId, str_label, bool_checked, str_on, str_off) {
+app.View.prototype.createSwitchField = function (str_width, str_switchId, str_label, bool_checked, str_on, str_off) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -1130,7 +1076,7 @@ app.IViewable.prototype.default_createSwitchField = function (str_width, str_swi
 * @todo Add ability to also handle elements with datalists (e.g. event location)
 */
 
-app.IViewable.prototype.default_createTextField = function (str_width, str_fieldId, str_label, bool_required, value) {
+app.View.prototype.createTextField = function (str_width, str_fieldId, str_label, bool_required, value) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -1210,7 +1156,7 @@ app.IViewable.prototype.default_createTextField = function (str_width, str_field
 * @return {HTMLDivElement} DIV element
 */
 
-app.IViewable.prototype.default_createTimeField = function (str_width, str_timeId, str_label, bool_required, Date_date) {
+app.View.prototype.createTimeField = function (str_width, str_timeId, str_label, bool_required, Date_date) {
 
 	var outerDiv =  this.createElement( // outer div
 	{
@@ -1298,7 +1244,7 @@ app.IViewable.prototype.default_createTimeField = function (str_width, str_timeI
 *
 */
 
-app.IViewable.prototype.default_displayValidation = function(event, str_fieldId, str_errorMsg, bool_valid) {
+app.View.prototype.displayValidation = function(event, str_fieldId, str_errorMsg, bool_valid) {
 
 	var $field = $('#' + str_fieldId);
 
@@ -1342,11 +1288,40 @@ app.IViewable.prototype.default_displayValidation = function(event, str_fieldId,
 * @param Same as jQuery.hide()
 */
 
-app.IViewable.prototype.default_hide = function(obj_options) {
+app.View.prototype.hide = function(obj_options) {
 
 	this.renderContext().hide(obj_options ? obj_options : 'fast');
 }
 
+
+/** Returns true if class implements the interface passed in (by function reference)
+*
+* (See IInterfaceable for further documentation.)
+*/
+
+this.isInstanceOf = function (func_interface) {
+	
+	return _implements.indexOf(func_interface) > -1;
+};
+
+
+/** Get ID of model object currently being presented by the view
+*
+* @return {int} Object id, or null if none (i.e. view is not active)
+*
+* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
+*/
+
+app.View.prototype.modelId = function() {
+
+	if (arguments.length > 0) {
+
+		throw new IllegalArgumentError('modelId is read-only');
+	}
+	
+	return _modelId;
+};
+	
 
 /** Utility for showing view in the UI on demand.
 *
@@ -1355,7 +1330,7 @@ app.IViewable.prototype.default_hide = function(obj_options) {
 * @param Same as jQuery.show()
 */
 
-app.IViewable.prototype.default_show = function(obj_options) {
+app.View.prototype.show = function(obj_options) {
 
 	this.renderContext().show(obj_options ? obj_options : 'slow');
 }
@@ -1366,7 +1341,7 @@ app.IViewable.prototype.default_show = function(obj_options) {
 * @return {Boolean} true if validation is succesful, otherwise false
 */
 
-app.IViewable.prototype.default_validateCapacity = function(event, str_capacityId) {
+app.View.prototype.validateCapacity = function(event, str_capacityId) {
 	
 	// Using HTML5 constraint validation to please my Udacity reviewers
 
@@ -1401,7 +1376,7 @@ app.IViewable.prototype.default_validateCapacity = function(event, str_capacityI
 * @return {Boolean} true if validation is succesful, otherwise false
 */
 
-app.IViewable.prototype.default_validateEmail = function(event, str_emailId, bool_required) {
+app.View.prototype.validateEmail = function(event, str_emailId, bool_required) {
 
 	/* Tried the HTML5 email validity constraint but found it too lax
 	*
@@ -1440,7 +1415,7 @@ app.IViewable.prototype.default_validateEmail = function(event, str_emailId, boo
 * @return {Boolean} true if validation is succesful, otherwise false
 */
 
-app.IViewable.prototype.default_validateName = function(event, str_nameId, str_errorMsg, bool_required) {
+app.View.prototype.validateName = function(event, str_nameId, str_errorMsg, bool_required) {
 
 	// Using HTML5 constraint validation to please my Udacity reviewers
 
@@ -1459,7 +1434,7 @@ app.IViewable.prototype.default_validateName = function(event, str_nameId, str_e
 * @return {Boolean} true if validation is succesful, otherwise false
 */
 
-app.IViewable.prototype.default_validatePassword = function(event, str_passwordId, str_hintsPrefix) {
+app.View.prototype.validatePassword = function(event, str_passwordId, str_hintsPrefix) {
 
 	/* Relying solely on HTML5 constraint validation here would require me to write a compound regex
 	*
@@ -1531,7 +1506,7 @@ app.IViewable.prototype.default_validatePassword = function(event, str_passwordI
 * @return {Boolean} true if validation is succesful, otherwise false
 */
 
-app.IViewable.prototype.default_validatePasswordConfirmation = function(event, str_passwordId, str_confirmationId) {
+app.View.prototype.validatePasswordConfirmation = function(event, str_passwordId, str_confirmationId) {
 
 	// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
 

@@ -37,7 +37,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 	_heading = str_heading, // content of the view heading
 
-	_modelId; // id of the model object currently presented in the view
+	_modelId = null; // id of the model object currently presented in the view, null if view is inactive
 
 	
 
@@ -54,9 +54,11 @@ app.EventView = function(str_elementId, str_heading) {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
-	/** Get ID of model object currently being presented by the view
+	/** Get ID of model object currently being presented by the view.
 	*
-	* @return {int}
+	* @param None. Id is read-only.
+	*
+	* @return {int} Model id, or null if view is inactive
 	*/
 
 	this.modelId = function() {
@@ -826,13 +828,13 @@ app.EventView = function(str_elementId, str_heading) {
 
 	/** Updates event presentation when notified by controller of change */
 	
-	this.update = function(IModelable_event) {
+	this.update = function(IModelable) {
 		
-		if (IModelable_event === null || IModelable_event.constructor === app.Event) {
+		if (IModelable === null || IModelable.constructor === app.Event) {
 
-			this.render(IModelable_event);
+			this.render(IModelable);
 
-			_modelId = IModelable_event.id();
+			_modelId = IModelable.id();
 		}
 
 		// else do nothing
