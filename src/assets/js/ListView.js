@@ -7,7 +7,7 @@
 var app = app || {};
 
 
-/** @classdesc Root class for list views. Provides default method implementations specific
+/** @classdesc Base class for list views. Provides default method implementations specific
 *
 * to list views, as well as an easy way to identify list views as such at runtime.
 *
@@ -15,11 +15,13 @@ var app = app || {};
 *
 * @constructor
 *
+* @return {ListView} Not supposed to be instantiated, except when extended by subclasses.
+*
 * @author Ulrik H. Gade, February 2016
 *
 */
 
-app.ListView = function() {
+app.ListView = function(Function_modelClass, str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
 	* Call (chain) parent class constructor
@@ -64,7 +66,10 @@ app.ListView = function() {
 	/*----------------------------------------------------------------------------------------
 	* Other object initialization (using parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
-		
+	
+	this.className = 'ListView';
+
+	this.parentList.push(app.ListView);
 		
 };
 
@@ -91,9 +96,9 @@ app.ListView.prototype.constructor = app.ListView; //Reset constructor property
 
 app.ListView.prototype.doUpdate = function(IModelable) {
 
-	if (IModelable.constructor === _modelClass) { // classes match
+	if (IModelable.constructor === this.modelClass) { // classes match
 
-		if (IModelable.id() === this.ModelId()) { // ids match
+		if (IModelable.id() === this.ModelId) { // ids match
 
 			return true;
 		}

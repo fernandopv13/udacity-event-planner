@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class EventView Implements IViewable
+* public class EventView extends FormView
 ******************************************************************************/
 
 var app = app || {};
@@ -10,7 +10,7 @@ var app = app || {};
 *
 * @constructor
 *
-* @implements IViewable
+* @extends FormView
 *
 * @param (String) elementId Id of the HTML DOM element the view is bound to
 *
@@ -28,79 +28,26 @@ var app = app || {};
 app.EventView = function(str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
-	* Private instance fields (encapsulated data members)
+	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IObservable, app.IObserver, app.IViewable], // list of interfaces implemented by this class (by function reference);
-
-	$_renderContext = $('#' + str_elementId), //  the HTML element the view will render itself into when updated
-
-	_heading = str_heading, // content of the view heading
-
-	_modelId = null; // id of the model object currently presented in the view, null if view is inactive
-
+	/** Initializes instance members inherited from parent class*/
 	
-
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
+	app.FormView.call(this, app.Event, str_elementId, str_heading);
 	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
-							//any way in order to expose collection to default IObservable methods
-	
-	
-
-	/*----------------------------------------------------------------------------------------
-	* Accessors for private instance fields
-	*---------------------------------------------------------------------------------------*/
-
-	/** Get ID of model object currently being presented by the view.
-	*
-	* @param None. Id is read-only.
-	*
-	* @return {int} Model id, or null if view is inactive
-	*/
-
-	this.modelId = function() {
-
-		return _modelId;
-	}
-
-
-	/** Gets HTML element this view will render to */
-
-	this.renderContext = function() {
-
-		if (arguments.length > 0) {
-
-			throw new IllegalArgumentError('Render context is readonly');
-		}
-
-		return $_renderContext;
-	}
-	
-
-	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
-	*---------------------------------------------------------------------------------------*/
-	
-	// none so far
-
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
 	/** Cancels entries in, and navigation to, event form
-	*
-	* @todo Everything(!)
 	*/
 
 	this.cancel = function() {
 
 		// Discard temporary object if we were about to add a new event
 
-		var event = app.Event.registry.getObjectById(this.modelId());
+		var event = app.Event.registry.getObjectById(this.modelId);
 
 		if (!app.controller.selectedAccount().isInAccount(event)) {
 
@@ -117,22 +64,6 @@ app.EventView = function(str_elementId, str_heading) {
 	}
 
 
-	/** Returns true if class implements the interface passed in (by function reference)
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @param {Function} interface The interface we wish to determine if this class implements
-	*
-	* @return {Boolean} instanceof True if class implements interface, otherwise false
-	*	
-	*/
-	
-	this.isInstanceOf = function (func_interface) {
-		
-		return _implements.indexOf(func_interface) > -1;
-	};
-	
-	
 	/** (Re)renders event to form in UI
 	*
 	* @param {Event} The event from which to present data in the form
@@ -174,7 +105,7 @@ app.EventView = function(str_elementId, str_heading) {
 			
 			// Add heading
 				
-				containerDiv.appendChild(this.createHeading('s12', _heading));
+				containerDiv.appendChild(this.createHeading('s12', this.heading));
 				
 
 			// Add hidden event id field
@@ -545,9 +476,9 @@ app.EventView = function(str_elementId, str_heading) {
 			
 			// Update DOM
 
-				$_renderContext.empty();
+				this.$renderContext.empty();
 
-				$_renderContext.append(formElement);
+				this.$renderContext.append(formElement);
 
 
 			// (Re)assign event handlers to form elements
@@ -631,9 +562,9 @@ app.EventView = function(str_elementId, str_heading) {
 
 		else { // present default message
 
-			$_renderContext.empty();
+			this.$_renderContext.empty();
 
-			$_renderContext.append(this.createElement(
+			this.$_renderContext.append(this.createElement(
 			{
 				element: 'p',
 
@@ -738,6 +669,8 @@ app.EventView = function(str_elementId, str_heading) {
 				parseInt($('#event-id').val())
 			);
 
+			this.clear(); // set form ready to receive updates again
+
 			return true;
 		}
 
@@ -832,9 +765,11 @@ app.EventView = function(str_elementId, str_heading) {
 		
 		if (IModelable === null || IModelable.constructor === app.Event) {
 
+			this.modelId = IModelable.id(); // lock form for updates from model
+
 			this.render(IModelable);
 
-			_modelId = IModelable.id();
+			
 		}
 
 		// else do nothing
@@ -1095,23 +1030,21 @@ app.EventView = function(str_elementId, str_heading) {
 	/*----------------------------------------------------------------------------------------
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
-		
-	$_renderContext.addClass('iviewable'); // set shared view class on main HTML element
+
+	this.className = 'EventView';
 };
 
+
+/*----------------------------------------------------------------------------------------
+* Inherit from FormView
+*---------------------------------------------------------------------------------------*/	
+
+app.EventView.prototype = Object.create(app.FormView.prototype); // Set up inheritance
+
+app.EventView.prototype.constructor = app.EventView; //Reset constructor property
 
 /*----------------------------------------------------------------------------------------
 * Public static methods
 *---------------------------------------------------------------------------------------*/
 
 // none so far
-
-/*----------------------------------------------------------------------------------------
-Mix in default methods from implemented interfaces, unless overridden by class or ancestor
-*---------------------------------------------------------------------------------------*/
-
-void app.IInterfaceable.mixInto(app.IObservable, app.EventView);
-
-void app.IInterfaceable.mixInto(app.IObserver, app.EventView);
-
-void app.IInterfaceable.mixInto(app.IViewable, app.EventView);

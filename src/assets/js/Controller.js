@@ -65,7 +65,7 @@ app.Controller = function() {
 	
 		if (arguments.length > 0) {
 
-			if (IViewable_view === null || IViewable_view.isInstanceOf(app.IViewable)) {
+			if (IViewable_view === null || IViewable_view.isInstanceOf(app.IViewable) || IViewable_view.isInstanceOf(app.View)) {
 			
 				if (_currentView) {_currentView.hide()}
 

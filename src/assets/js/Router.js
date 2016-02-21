@@ -126,7 +126,9 @@ app.Router = function() {
 
 		if (history.pushState) {
 
-			var className = IViewable_view.className(), id = IViewable_view.modelId();
+			var className = typeof IViewable_view.className === 'function' ? IViewable_view.className() : IViewable_view.className,
+
+			id = typeof IViewable_view.modelId === 'function' ? IViewable_view.modelId() : IViewable_view.modelId;
 
 			try {// needs to be run off a server to work
 

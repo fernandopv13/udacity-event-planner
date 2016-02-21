@@ -7,7 +7,7 @@ var app = app || {}; // create a simple namespace for the module
 * public abstract class View implements IInterfaceable IObservable IObserver
 *********************************************************************************************/
 
-/** @classdesc Root class for the 'V' part of our MVC framework.
+/** @classdesc Base class for the 'V' part of our MVC framework.
 *
 * Presents information from the data model in the UI. Handles all UI related work.
 *
@@ -28,21 +28,45 @@ var app = app || {}; // create a simple namespace for the module
 * @author Ulrik H. Gade, February 2016
 */
 
-app.View = function(Function_modelClass) {
+app.View = function(Function_modelClass, str_elementId, str_heading) {
 	
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _modelClass = Function_modelClass, // the class of data model supported by this view (by function reference)
+	// none so far
 
-	 _implements = [app.IInterfaceable, app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
 
-	 _modelId = null; // id of the model object currently presented in the view, or null if none
+	/*----------------------------------------------------------------------------------------
+	* Public instance fields (non-encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+	
+	// No way of keeping these private if we want to access them in subclasses, so breaking encapsulation
+
+	this.className = 'View'; // name of this view class
+
+	this.heading = str_heading; // content of the view's main heading
+
+	this.modelClass = Function_modelClass; // the class of data model supported by this view (by function reference)
+	
+	this.modelId = null; // id of the model object currently presented in the view, or null if none
+	
+	this.observers = []; // Array of IObservers receiving updates from this view
+
+	this.parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.View]; // list of interfaces implemented by this class (by function reference)
+
+	this.$renderContext = $('#' + str_elementId); // the HTML element the view will render itself into when updated (set in realizing classes)
 	
 	
 	/*----------------------------------------------------------------------------------------
-	* Abstract public instance methods
+	* Accessors for private instance fields
+	*---------------------------------------------------------------------------------------*/
+
+	// none so far
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Public instance methods (abstract)
 	*---------------------------------------------------------------------------------------*/
 	
 	/** Determine whether update notification broadcast by IObservable applies to this view.
@@ -58,19 +82,33 @@ app.View = function(Function_modelClass) {
 	* @throws {AbstractMethodError} If attempting to invoke directly on abstract class
 	*/
 
-	app.View.prototype.doUpdate = function(IModelable) {
+	this.doUpdate = function(IModelable) {
 		
 		throw new AbstractMethodError('Method signature "update()" must be realized in implementing classes');
 	};
 	
-	
+
+
 	/*----------------------------------------------------------------------------------------
-	* Block instantiation
+	* Public instance methods (implemented)
 	*---------------------------------------------------------------------------------------*/
 	
-	//this.constructor.constructorErrorMessage = 'Interface View cannot be instantiated. Realize in implementing classes.';
+	/** Returns true if class implements the interface passed in (by function reference)
+	*
+	* (See IInterfaceable for further documentation.)
+	*/
+
+	this.isInstanceOf = function (func_interface) {
+		
+		return this.parentList.indexOf(func_interface) > -1;
+	};
+
+
+	/*----------------------------------------------------------------------------------------
+	* Other initialization
+	*---------------------------------------------------------------------------------------*/
 	
-	//throw new InstantiationError(this.constructor.constructorErrorMessage);
+	this.$renderContext.addClass('iviewable'); // set shared view class on main HTML element
 }
 
 /*----------------------------------------------------------------------------------------
@@ -1290,38 +1328,9 @@ app.View.prototype.displayValidation = function(event, str_fieldId, str_errorMsg
 
 app.View.prototype.hide = function(obj_options) {
 
-	this.renderContext().hide(obj_options ? obj_options : 'fast');
+	this.$renderContext.hide(obj_options ? obj_options : 'fast');
 }
 
-
-/** Returns true if class implements the interface passed in (by function reference)
-*
-* (See IInterfaceable for further documentation.)
-*/
-
-this.isInstanceOf = function (func_interface) {
-	
-	return _implements.indexOf(func_interface) > -1;
-};
-
-
-/** Get ID of model object currently being presented by the view
-*
-* @return {int} Object id, or null if none (i.e. view is not active)
-*
-* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
-*/
-
-app.View.prototype.modelId = function() {
-
-	if (arguments.length > 0) {
-
-		throw new IllegalArgumentError('modelId is read-only');
-	}
-	
-	return _modelId;
-};
-	
 
 /** Utility for showing view in the UI on demand.
 *
@@ -1332,7 +1341,7 @@ app.View.prototype.modelId = function() {
 
 app.View.prototype.show = function(obj_options) {
 
-	this.renderContext().show(obj_options ? obj_options : 'slow');
+	this.$renderContext.show(obj_options ? obj_options : 'slow');
 }
 
 

@@ -7,7 +7,7 @@
 var app = app || {};
 
 
-/** @classdesc Root class for form views. Provides default method implementations specific
+/** @classdesc Base class for form views. Provides default method implementations specific
 *
 * to form views, as well as an easy way to identify form views as such at runtime.
 *
@@ -15,10 +15,12 @@ var app = app || {};
 *
 * @constructor
 *
+* @return {FormView} Not supposed to be instantiated, except when extended by subclasses.
+*
 * @author Ulrik H. Gade, February 2016
 */
 
-app.FormView = function() {
+app.FormView = function(Function_modelClass, str_elementId, str_heading) {
 
 	/*----------------------------------------------------------------------------------------
 	* Call (chain) parent class constructor
@@ -26,45 +28,16 @@ app.FormView = function() {
 	
 	/** Initializes instance members inherited from parent class*/
 	
-	app.View.call(this, arguments);
-	
-	
-	
-	/*----------------------------------------------------------------------------------------
-	* Private instance fields (encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
+	app.View.call(this, Function_modelClass, str_elementId, str_heading);
 	
 		
-	
 	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
+	* Other object initialization
 	*---------------------------------------------------------------------------------------*/
-	
-	
-	
-	/*----------------------------------------------------------------------------------------
-	* Accessors for private instance fields
-	*---------------------------------------------------------------------------------------*/
-	
+		
+	this.className = 'FormView';
 
-	
-	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
-	*---------------------------------------------------------------------------------------*/
-	
-		
-
-	/*----------------------------------------------------------------------------------------
-	* Public instance methods (beyond accessors)
-	*---------------------------------------------------------------------------------------*/
-	
-	
-	
-	/*----------------------------------------------------------------------------------------
-	* Other object initialization (using parameter parsing/constructor 'polymorphism')
-	*---------------------------------------------------------------------------------------*/
-		
-		
+	this.parentList.push(app.FormView);
 };
 
 	
@@ -90,9 +63,9 @@ app.FormView.prototype.constructor = app.FormView; //Reset constructor property
 
 app.FormView.prototype.clear = function() {
 
-	var ret = _modelId;
+	var ret = this.modelId;
 
-	_modelId = null;
+	this.modelId = null;
 
 	return ret;
 }
@@ -107,11 +80,11 @@ app.FormView.prototype.clear = function() {
 
 app.FormView.prototype.doUpdate = function(IModelable) {
 
-	if (this.ModelId() === null) { // view is inactive
+	if (this.modelId === null) { // view is inactive
 
-		if (IModelable.constructor === _modelClass) { // classes match
+		if (IModelable.constructor === this.modelClass) { // classes match
 
-			if (IModelable.id() === this.ModelId()) { // ids match
+			if (IModelable.id() === this.modelId) { // ids match
 
 				return true;
 			}
