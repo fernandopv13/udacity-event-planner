@@ -556,7 +556,7 @@ app.EventView.prototype.render = function(Event_event) {
 			
 			$('#event-edit-guests-button').click(function(event) { // edit guest list button
 
-				this.notifyObservers(this, event); // dispatch event handling to controller
+				this.notifyObservers(this, event); // delegate event handling to controller
 	
 			}.bind(this));
 

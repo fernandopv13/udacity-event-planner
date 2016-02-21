@@ -572,7 +572,7 @@ app.Controller = function() {
 				}
 			}
 
-			else if (intOrEvent.originalEvent && Object_obj.isInstanceOf(app.IViewable)) { // second param is a native event from an IViewable
+			else if (intOrEvent.originalEvent && (Object_obj.isInstanceOf(app.IViewable) || Object_obj.isInstanceOf(app.View))) { // second param is a native event from an IViewable
 
 				__update.call(this, Object_obj, intOrEvent);
 			}
