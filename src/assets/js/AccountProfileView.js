@@ -390,8 +390,6 @@ app.AccountProfileView.prototype.update = function(IModelable) {
 
 		this.model = IModelable;
 
-		//this.modelId = IModelable ? IModelable.id() : null;
-		
 		this.render(IModelable);
 	}
 

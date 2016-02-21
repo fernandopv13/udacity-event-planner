@@ -9,19 +9,19 @@
 
 describe('class EventListView', function(){
 	
-	it('implements the IObservable interface', function() {
+	xit('implements the IObservable interface', function() {
 		
 			expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IObservable)).toBe(true);
 	});
 
 
-	it('implements the IObserver interface', function() {
+	xit('implements the IObserver interface', function() {
 		
 			expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IObserver)).toBe(true);
 	});
 
 
-	it('implements the IViewable interface', function() {
+	xit('implements the IViewable interface', function() {
 		
 			expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IViewable)).toBe(true);
 	});

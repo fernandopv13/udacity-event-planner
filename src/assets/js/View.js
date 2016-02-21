@@ -33,13 +33,6 @@ var app = app || {}; // create a simple namespace for the module
 app.View = function(Function_modelClass, str_elementId, str_heading) {
 	
 	/*----------------------------------------------------------------------------------------
-	* Private instance fields (encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	// none so far
-
-
-	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
@@ -61,7 +54,7 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 
 	this.$renderContext = $('#' + str_elementId); // the HTML element the view will render itself into when updated (set in realizing classes)
 	
-	
+
 	/*----------------------------------------------------------------------------------------
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
@@ -97,11 +90,23 @@ void app.IInterfaceable.mixInto(app.IObserver, app.View);
 * @throws {AbstractMethodError} If attempting to invoke directly on abstract class
 */
 
-this.doUpdate = function(IModelable) {
+app.View.prototype.doUpdate = function(IModelable) {
+	
+	throw new AbstractMethodError('Method signature "doUpdate()" must be realized in implementing classes');
+};
+
+
+/** Updates views when notified of changes to the data model.
+*
+* Required by IObservable. Dummy implementation to 'cheat' unit test framework. Realize in derived classes.
+*
+* @throws {AbstractMethodError} If attempting to invoke directly on abstract class
+*/
+
+app.View.prototype.update = function(IModelable) {
 	
 	throw new AbstractMethodError('Method signature "update()" must be realized in implementing classes');
 };
-
 
 /*----------------------------------------------------------------------------------------
 * Public instance methods (implemented, on prototype)

@@ -75,23 +75,6 @@ app.FormView.prototype.cancel = function(bool_deleteModel) {
 }
 
 
-/** Resets the modelId of the view to null, thus marking the view as inactive and ready to
-*
-* receive update notifications. Call before exiting cancel/submit functions to relase the view
-*
-* return {int} The id being removed.
-*/
-
-app.FormView.prototype.clear = function() {
-
-	var ret = this.modelId;
-
-	//this.modelId = null;
-
-	return ret;
-}
-
-
 /** Determines whether view should respond to update notification.
 *
 * FormViews ignore and override changes to their underlying model while they are in focus.

@@ -46,8 +46,6 @@ app.Router.prototype.onPopState = function(PopStateEvent_event) {
 
 		id = PopStateEvent_event.state.id;
 
-		console.log('popped: ' + className + ', ' + id);
-
 		switch (className) {
 
 			case 'AccountProfileView':
