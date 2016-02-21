@@ -27,7 +27,7 @@ app.GuestListView = function(str_elementId, str_heading) {
 	
 	/** Initializes instance members inherited from parent class*/
 	
-	app.ListView.call(this, app.Account, str_elementId, str_heading);
+	app.ListView.call(this, app.Event, str_elementId, str_heading);
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -209,18 +209,12 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 app.GuestListView.prototype.update = function(IModelable) {
 	
-	if (IModelable === null) { // reset to view to default presentation
+	if (this.doUpdate(IModelable)) {
 
-		this.render(null);
-
-		this.modelId = null;
-	}
-
-	else if (IModelable.constructor === app.Event) { // present guest list for event
+		this.model = IModelable
 
 		this.render(IModelable);
 
-		this.modelId = IModelable.id();
 	}
 
 	else if (IModelable.constructor === app.Person) { // possible change to guest, so update list

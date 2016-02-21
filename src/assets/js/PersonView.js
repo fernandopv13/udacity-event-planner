@@ -59,7 +59,7 @@ app.PersonView.prototype.cancel = function() {
 
 	// Discard temporary object if we were about to add a new event
 
-	var person = app.Person.registry.getObjectById(this.modelId());
+	var person = app.Person.registry.getObjectById(this.model.id());
 
 	if (!app.controller.selectedEvent().isGuest(person)) {
 
@@ -397,9 +397,11 @@ app.PersonView.prototype.update = function(IModelable) {
 	
 	if (IModelable === null || IModelable.constructor === app.Person) {
 
-		this.render(IModelable);
+		this.model = IModelable;
 
-		this.modelId = IModelable.id();
+		//this.modelId = IModelable ? IModelable.id(): null;
+
+		this.render(IModelable);
 	}
 
 	// else do nothing

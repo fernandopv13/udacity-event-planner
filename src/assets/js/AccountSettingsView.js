@@ -75,12 +75,9 @@ app.AccountSettingsView.prototype.cancel = function() {
 
 app.AccountSettingsView.prototype.render = function(Account_account) {
 
-	var account = Account_account,
+	var account = Account_account, accountHolder, formElement, containerDiv, innerDiv, outerDiv, labelElement, pElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
 
-	accountHolder, formElement, containerDiv, innerDiv, outerDiv, labelElement, pElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
-
-	
-	
+		
 	if (account) {
 		
 		// Setup up form and container div
@@ -452,11 +449,13 @@ app.AccountSettingsView.prototype.submit = function(event) {
 
 app.AccountSettingsView.prototype.update = function(IModelable) {
 	
-	if (IModelable.constructor === app.Account) {
+	if (this.doUpdate(IModelable)) {
+
+		this.model = IModelable;
+
+		//this.modelId = IModelable ? IModelable.id() : null;
 
 		this.render(IModelable);
-
-		this.modelId = IModelable.id();
 	}
 
 	// else do nothing

@@ -177,11 +177,11 @@ app.EventListView.prototype.render = function(Account_account) {
 
 app.EventListView.prototype.update = function(IModelable) {
 	
-	if (IModelable === null || IModelable.constructor === app.Account) {
+	if (this.doUpdate(IModelable)) {
+
+		this.model = IModelable;
 
 		this.render(IModelable);
-
-		this.modelId = IModelable.id();
 	}
 
 	// else do nothing

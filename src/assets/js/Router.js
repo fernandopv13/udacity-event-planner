@@ -46,6 +46,8 @@ app.Router.prototype.onPopState = function(PopStateEvent_event) {
 
 		id = PopStateEvent_event.state.id;
 
+		console.log('popped: ' + className + ', ' + id);
+
 		switch (className) {
 
 			case 'AccountProfileView':
@@ -100,9 +102,7 @@ app.Router.prototype.onViewChange = function(View_view) {
 
 	if (history.pushState) {
 
-		var className = View_view.className,
-
-		id = View_view.modelId;
+		var className = View_view.className, id = View_view.model.id();
 
 		try {// needs to be run off a server to work
 

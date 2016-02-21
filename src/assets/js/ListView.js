@@ -80,7 +80,7 @@ app.ListView = function(Function_modelClass, str_elementId, str_heading) {
 
 app.ListView.prototype = Object.create(app.View.prototype); // Set up inheritance
 
-app.ListView.prototype.constructor = app.ListView; //Reset constructor property
+app.ListView.prototype.constructor = app.ListView; // Reset constructor property
 
 
 /*----------------------------------------------------------------------------------------
@@ -96,12 +96,14 @@ app.ListView.prototype.constructor = app.ListView; //Reset constructor property
 
 app.ListView.prototype.doUpdate = function(IModelable) {
 
-	if (IModelable.constructor === this.modelClass) { // classes match
-
-		if (IModelable.id() === this.ModelId) { // ids match
+	if (IModelable === null) { // i.e. reset
 
 			return true;
 		}
+
+	else if (IModelable.constructor === this.modelClass) { // classes match
+
+		return true;
 	}
 
 	return false;

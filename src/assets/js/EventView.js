@@ -51,7 +51,8 @@ app.EventView = function(str_elementId, str_heading) {
 
 app.EventView.prototype = Object.create(app.FormView.prototype); // Set up inheritance
 
-app.EventView.prototype.constructor = app.EventView; //Reset constructor property
+app.EventView.prototype.constructor = app.EventView; // Reset constructor property
+
 
 
 /*----------------------------------------------------------------------------------------
@@ -64,22 +65,15 @@ app.EventView.prototype.constructor = app.EventView; //Reset constructor propert
 
 app.EventView.prototype.cancel = function() {
 
-	// Discard temporary object if we were about to add a new event
+	app.FormView.prototype.cancel.call( // true if model is one that we just created anew, and now want to discard
 
-	var event = app.Event.registry.getObjectById(this.modelId);
+		this, // make sure 'this' points in the right direction
 
-	if (!app.controller.selectedAccount().isInAccount(event)) {
+		model // model is defined
 
-		app.Event.registry.removeObject(event); // remove from Event registry
+		&& !app.controller.selectedAccount().isInAccount(model)  // model is not know by account
 
-		event = undefined; // dereference object to expose it to garbage collection
-	}
-
-	// Return to previous view
-
-	window.history.back();
-
-	// for now, simply discard any entries made by user to an existing guest
+	);
 }
 
 
@@ -95,7 +89,6 @@ app.EventView.prototype.cancel = function() {
 app.EventView.prototype.render = function(Event_event) {
 
 	var event = Event_event, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
-
 	
 	if (event !== null) {
 		
@@ -581,9 +574,9 @@ app.EventView.prototype.render = function(Event_event) {
 
 	else { // present default message
 
-		this.this.$renderContext.empty();
+		this.$renderContext.empty();
 
-		this.this.$renderContext.append(this.createElement(
+		this.$renderContext.append(this.createElement(
 		{
 			element: 'p',
 
@@ -688,7 +681,7 @@ app.EventView.prototype.submit = function(event) {
 			parseInt($('#event-id').val())
 		);
 
-		this.clear(); // set form ready to receive updates again
+		//this.clear(); // set form ready to receive updates again
 
 		return true;
 	}
@@ -782,13 +775,11 @@ app.EventView.prototype.suggestLocations = function() {
 
 app.EventView.prototype.update = function(IModelable) {
 	
-	if (IModelable === null || IModelable.constructor === app.Event) {
+	if (this.doUpdate(IModelable)) {
 
-		this.modelId = IModelable.id(); // lock form for updates from model
+		this.model = IModelable;
 
 		this.render(IModelable);
-
-		
 	}
 
 	// else do nothing
@@ -1044,10 +1035,3 @@ app.EventView.prototype.validateTimeRange = function() {
 
 	return true;
 }
-
-
-/*----------------------------------------------------------------------------------------
-* Public static methods
-*---------------------------------------------------------------------------------------*/
-
-// none so far

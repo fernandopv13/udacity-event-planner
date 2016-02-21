@@ -27,7 +27,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	
 	/** Initializes instance members inherited from parent class*/
 	
-	app.FormView.call(this, app.Person, str_elementId, str_heading);
+	app.FormView.call(this, app.Account, str_elementId, str_heading);
 	
 
 	/*----------------------------------------------------------------------------------------
@@ -73,10 +73,12 @@ app.AccountProfileView.prototype.cancel = function() {
 
 app.AccountProfileView.prototype.render = function(IModelable_account) {
 
-	var person = IModelable_account.accountHolder(), formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
+	var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
-	if (person !== null && person) { // account holder exists
+	if (IModelable_account !== null && IModelable_account.accountHolder()) { // account holder exists
 		
+		var person = IModelable_account.accountHolder();
+
 		// Setup up form and container div
 
 			formElement =  this.createElement(
@@ -384,11 +386,13 @@ app.AccountProfileView.prototype.submit = function(event) {
 
 app.AccountProfileView.prototype.update = function(IModelable) {
 	
-	if (IModelable === null || IModelable.constructor === app.Account) {
+	if (this.doUpdate(IModelable)) {
 
+		this.model = IModelable;
+
+		//this.modelId = IModelable ? IModelable.id() : null;
+		
 		this.render(IModelable);
-
-		this.modelId = IModelable.id();
 	}
 
 	// else do nothing

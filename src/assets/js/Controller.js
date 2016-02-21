@@ -67,13 +67,11 @@ app.Controller = function() {
 
 			if (View_view === null || View_view.isInstanceOf(app.View)) {
 			
-				if (_currentView) {_currentView.hide()}
+				for (var view in _views) {_views[view].hide('fast');} // hide all views
 
-				_currentView = View_view;
+				_currentView = View_view; // set current view
 
-				_currentView.show();
-
-				_router.onViewChange(View_view);
+				_currentView.show('slow'); // show current view
 			}
 
 			else {
@@ -360,9 +358,9 @@ app.Controller = function() {
 
 		// Set up a router to manage the browser's history
 
-		_router = new app.Router();
+			_router = new app.Router();
 
-		window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
+			window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
 
 		
 		// Set some defaults to use until account creation/selection is developed
@@ -454,9 +452,11 @@ app.Controller = function() {
 
 		this.selectedGuest(null);
 
-		this.notifyObservers(_selectedAccount);
+		this.currentView(_views.eventListView); // set view so observers can know which is current
 
-		this.currentView(_views.eventListView);
+		this.notifyObservers(this.selectedAccount()); // notify observers
+
+		_router.onViewChange(_views.eventListView); // update browser history
 	};
 
 
@@ -466,19 +466,23 @@ app.Controller = function() {
 
 		this.selectedGuest(null);
 
-		this.notifyObservers(_selectedEvent);
+		this.notifyObservers(this.selectedEvent()); // notify observers
 
-		this.currentView(_views.eventView);
+		this.currentView(_views.eventView); // set view so observers can know which is current
+
+		_router.onViewChange(_views.eventView); // update browser history
 	};
 
 
 	this.onGuestListSelected = function(int_eventId) {
 
-		//this.selectedEvent(app.Event.registry.getObjectById(int_eventId));
-
 		this.selectedGuest(null);
 		
-		this.currentView(_views.guestListView);
+		this.notifyObservers(this.selectedEvent()); // notify observers
+
+		this.currentView(_views.guestListView); // set view so observers can know which is current
+
+		_router.onViewChange(_views.guestListView); // update browser history
 	};
 
 
@@ -486,9 +490,11 @@ app.Controller = function() {
 
 		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
 
-		this.notifyObservers(_selectedGuest);
+		this.notifyObservers(this.selectedGuest()); // notify observers
 
-		this.currentView(_views.guestView);
+		this.currentView(_views.guestView); // set view so observers can know which is current
+
+		_router.onViewChange(_views.guestView); // update browser history
 	};
 
 

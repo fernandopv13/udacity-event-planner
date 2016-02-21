@@ -26,6 +26,8 @@ var app = app || {}; // create a simple namespace for the module
 * @return {View} Not supposed to be instantiated, except when extended by subclasses.
 *
 * @author Ulrik H. Gade, February 2016
+*
+* @todo refactor out separate reference modelId; redundant when we have direct reference to model
 */
 
 app.View = function(Function_modelClass, str_elementId, str_heading) {
@@ -47,6 +49,8 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 
 	this.heading = str_heading; // content of the view's main heading
 
+	this.model = null; // the model currently displayed by the view, or null
+
 	this.modelClass = Function_modelClass; // the class of data model supported by this view (by function reference)
 	
 	this.modelId = null; // id of the model object currently presented in the view, or null if none
@@ -59,56 +63,10 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	
 	
 	/*----------------------------------------------------------------------------------------
-	* Accessors for private instance fields
-	*---------------------------------------------------------------------------------------*/
-
-	// none so far
-	
-
-	/*----------------------------------------------------------------------------------------
-	* Public instance methods (abstract)
-	*---------------------------------------------------------------------------------------*/
-	
-	/** Determine whether update notification broadcast by IObservable applies to this view.
-	*
-	* If the view is active, the type and id of the broadcast data model should match that currently being presented.
-	*
-	* If the view is inactive, only the type of the model needs to match.
-	*
-	* @param {IModelable} obj Reference to the data model object to be rendered in the UI, or null (to reset the view).
-	*
-	* @return {Boolean} True if this view should respond to the notification, otherwise false-
-	*
-	* @throws {AbstractMethodError} If attempting to invoke directly on abstract class
-	*/
-
-	this.doUpdate = function(IModelable) {
-		
-		throw new AbstractMethodError('Method signature "update()" must be realized in implementing classes');
-	};
-	
-
-
-	/*----------------------------------------------------------------------------------------
-	* Public instance methods (implemented)
-	*---------------------------------------------------------------------------------------*/
-	
-	/** Returns true if class implements the interface passed in (by function reference)
-	*
-	* (See IInterfaceable for further documentation.)
-	*/
-
-	this.isInstanceOf = function (func_interface) {
-		
-		return this.parentList.indexOf(func_interface) > -1;
-	};
-
-
-	/*----------------------------------------------------------------------------------------
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 	
-	this.$renderContext.addClass('iviewable'); // set shared view class on main HTML element
+	this.$renderContext.addClass('view'); // set shared view class on main HTML element
 }
 
 /*----------------------------------------------------------------------------------------
@@ -122,9 +80,31 @@ void app.IInterfaceable.mixInto(app.IObservable, app.View);
 void app.IInterfaceable.mixInto(app.IObserver, app.View);
 
 
+/*----------------------------------------------------------------------------------------
+* Public instance methods (abstract)
+*---------------------------------------------------------------------------------------*/
+
+/** Determine whether update notification broadcast by IObservable applies to this view.
+*
+* If the view is active, the type and id of the broadcast data model should match that currently being presented.
+*
+* If the view is inactive, only the type of the model needs to match.
+*
+* @param {IModelable} obj Reference to the data model object to be rendered in the UI, or null (to reset the view).
+*
+* @return {Boolean} True if this view should respond to the notification, otherwise false-
+*
+* @throws {AbstractMethodError} If attempting to invoke directly on abstract class
+*/
+
+this.doUpdate = function(IModelable) {
+	
+	throw new AbstractMethodError('Method signature "update()" must be realized in implementing classes');
+};
+
 
 /*----------------------------------------------------------------------------------------
-* Public instance methods (must be defined outside main function/class body)
+* Public instance methods (implemented, on prototype)
 *---------------------------------------------------------------------------------------*/
 
 /** Factory method for creating floating main action button for views.
@@ -1330,6 +1310,17 @@ app.View.prototype.hide = function(obj_options) {
 
 	this.$renderContext.hide(obj_options ? obj_options : 'fast');
 }
+
+
+/** Returns true if class implements the interface passed in (by function reference)
+*
+* (See IInterfaceable for further documentation.)
+*/
+
+app.View.prototype.isInstanceOf = function (func_interface) {
+	
+	return this.parentList.indexOf(func_interface) > -1;
+};
 
 
 /** Utility for showing view in the UI on demand.
