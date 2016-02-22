@@ -57,22 +57,16 @@ app.PersonView.prototype.constructor = app.PersonView; //Reset constructor prope
 
 app.PersonView.prototype.cancel = function() {
 
-	// Discard temporary object if we were about to add a new event
+	this.onUnLoad();
 
-	var person = app.Person.registry.getObjectById(this.model.id());
+	app.FormView.prototype.cancel.call( // true if model is one that we just created anew, and now want to discard
 
-	if (!app.controller.selectedEvent().isGuest(person)) {
+		this, // make sure 'this' points in the right direction
 
-		app.Person.registry.removeObject(person); // remove from Person registry
+		this.model // model is defined
 
-		person = undefined; // dereference object to expose it to garbage collection
-	}
-
-	// Return to previous view
-
-	window.history.back();
-
-	// for now, simply discard any entries made by user to an existing guest
+		&& !app.controller.selectedEvent().isGuest(this.model)  // model is not know by event
+	);
 }
 
 
@@ -324,6 +318,14 @@ app.PersonView.prototype.render = function(Person_person) {
 				}
 
 			}.bind(this));
+
+
+			/*
+			$('#nav-delete-icon').click(function(event) {
+
+				console.log('delete person');
+			});
+			*/
 	}
 
 	else { // present default message
@@ -384,6 +386,10 @@ app.PersonView.prototype.submit = function(event) {
 			parseInt($('#guest-id').val())
 		);
 		
+		
+		this.onUnLoad();
+
+
 		return true;
 	}
 

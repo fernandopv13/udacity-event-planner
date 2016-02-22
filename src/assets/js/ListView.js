@@ -7,7 +7,7 @@
 var app = app || {};
 
 
-/** @classdesc Base class for list views. Provides default method implementations specific
+/** @classdesc Abstract base class for list views. Provides default method implementations specific
 *
 * to list views, as well as an easy way to identify list views as such at runtime.
 *

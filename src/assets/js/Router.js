@@ -46,6 +46,8 @@ app.Router.prototype.onPopState = function(PopStateEvent_event) {
 
 		id = PopStateEvent_event.state.id;
 
+		//console.log('popped: ' + className + ', ' + id);
+
 		switch (className) {
 
 			case 'AccountProfileView':
@@ -106,6 +108,8 @@ app.Router.prototype.onViewChange = function(View_view) {
 
 			if (!history.state || history.state.className !== className) { // don't set state if navigating back
 
+				//console.log('pushing: ' + className + ', ' + id);
+
 				history.pushState(
 				{
 					className: className,
@@ -121,6 +125,11 @@ app.Router.prototype.onViewChange = function(View_view) {
 
 					+ '?id=' + id // add model object id
 				);
+			}
+
+			else {
+
+				//console.log('did not push');
 			}
 		}
 

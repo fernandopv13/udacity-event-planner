@@ -65,13 +65,15 @@ app.EventView.prototype.constructor = app.EventView; // Reset constructor proper
 
 app.EventView.prototype.cancel = function() {
 
+	this.onUnLoad();
+
 	app.FormView.prototype.cancel.call( // true if model is one that we just created anew, and now want to discard
 
 		this, // make sure 'this' points in the right direction
 
-		model // model is defined
+		this.model // model is defined
 
-		&& !app.controller.selectedAccount().isInAccount(model)  // model is not know by account
+		&& !app.controller.selectedAccount().isInAccount(this.model)  // model is not know by account
 
 	);
 }
@@ -352,8 +354,54 @@ app.EventView.prototype.render = function(Event_event) {
 			containerDiv.appendChild(outerDiv);
 
 
-		// Add capacity field
+		// Add capacity field and edit guest list button
 
+			outerDiv = this.createNumberField(
+			
+				's6',
+
+				'event-capacity',
+
+				'Capacity',
+
+				true,
+
+				event.capacity() ? event.capacity() : 0,
+
+				0,
+
+				null,
+
+				1,
+
+				'Please enter capacity (0 or greater)'
+			);
+
+			containerDiv.appendChild(outerDiv);
+
+				
+			innerDiv =  this.createElement( // inner div
+			{
+				element: 'div',
+
+				classList: ['col', 's6']
+			});
+
+
+			innerDiv.appendChild(this.createElement( // button
+			{
+				element: 'a',
+
+				attributes: {id: 'event-edit-guests-button'},
+				
+				classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+
+				innerHTML: 'Edit guest list'
+			}));
+
+			outerDiv.appendChild(innerDiv);
+
+			/*
 			containerDiv.appendChild(this.createNumberField(
 
 				's12',
@@ -375,9 +423,12 @@ app.EventView.prototype.render = function(Event_event) {
 				'Please enter capacity (0 or greater)'
 			));
 
+			*/
+
 
 		// Add guest list button
 
+			/*
 			containerDiv.appendChild(function() {
 
 				var outerDiv =  this.createElement( // outer div
@@ -402,6 +453,7 @@ app.EventView.prototype.render = function(Event_event) {
 				return outerDiv;
 
 			}.bind(this)());
+			*/
 
 
 		// Add host field
@@ -543,6 +595,8 @@ app.EventView.prototype.render = function(Event_event) {
 			
 			$('#event-edit-guests-button').click(function(event) { // edit guest list button
 
+				this.onUnLoad();
+				
 				this.notifyObservers(this, event); // delegate event handling to controller
 	
 			}.bind(this));
@@ -570,6 +624,13 @@ app.EventView.prototype.render = function(Event_event) {
 				}
 
 			}.bind(this));
+
+			/*
+			$('#nav-delete-icon').click(function(event) {
+
+				console.log('delete event');
+			});
+			*/
 	}
 
 	else { // present default message
@@ -681,7 +742,9 @@ app.EventView.prototype.submit = function(event) {
 			parseInt($('#event-id').val())
 		);
 
-		//this.clear(); // set form ready to receive updates again
+		
+		this.onUnload();
+
 
 		return true;
 	}

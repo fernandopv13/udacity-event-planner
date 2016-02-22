@@ -21,7 +21,7 @@
 		
 		<style>
 
-			/* {border: 1px solid blue;}*/
+			/*{border: 1px solid blue;}*/
 
 			.custom-validate {
 				color: #F44336;
@@ -46,6 +46,7 @@
 			.required-indicator {
 				padding-left: 0.25em;
 				color: red;
+				font-style: italic;
 			}
 			
 			
@@ -133,7 +134,7 @@
 			
 			/** Hide all views and some view details by default */
 
-			.iviewable, #account-settings-password-hints, #account-settings-password-confirmation-parent {
+			.view, #account-settings-password-hints, #account-settings-password-confirmation-parent, #nav-delete-icon {
 				display: none;
 			}
 
@@ -143,6 +144,18 @@
 			.fixed-action-btn {
 				bottom: 45px;
 				right: 24px;
+			}
+
+
+			/** 'Edit gust list' button in event form */
+
+			#event-edit-guests-button {
+				color: blue;
+				margin-top: 25px;
+			}
+
+			.switch-container {
+				text-align: right;
 			}
 
 		</style>
@@ -178,18 +191,25 @@
 					<a href="#!" class="brand-logo">Meetup Planner</a>
 
 					<a href="#" data-activates="nav-side" class="button-collapse"><i class="material-icons">menu</i></a>
-
+					
 					<ul class="right hide-on-med-and-down">
 
-						<li><a href="!#"><i class="material-icons left">search</i>Search</a></li>
+						<!--<li><a href="!#"><i class="material-icons left">search</i>Search</a></li>-->
 
-						<li><a class="dropdown-button" href="#!" data-activates="nav-dropdown"><i class="material-icons left">account_circle</i>Account</a></li>
+						<li><a class="dropdown-button" href="#!" data-activates="nav-dropdown"><i class="material-icons left">more_vert</i></a></li>
 
 					</ul>
 
+					<ul class="right">
+
+						<li id='nav-delete-icon'><i class="material-icons left modal-trigger">delete</i></li>
+
+					</ul>
+
+					
 					<ul id="nav-side" class="side-nav">
 
-						<li><a href="#!Search"><i class="material-icons left">search</i>Search</a></li>
+						<!--<li><a href="#!Search"><i class="material-icons left">search</i>Search</a></li>-->
 
 						<li><a href="#!Settings"><i class="material-icons left">settings</i>Account Settings</a></li>
 
@@ -207,47 +227,74 @@
 		</div>
 
 		
-		<!-- Page content -->
-		
-		<div class="container"> 
-			
-			<!-- Test sandbox-->
-			
-			<!-- Preload spinner -->
+		<!-- Shared modal dialog -->
 
-			<div id="preloader" class="valign-wrapper" style="height:160px;">
+			<!-- Modal Trigger -->
+			<!--a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a-->
+
+			<!-- Modal Structure -->
+
+			<div id="confirm-delete-modal" class="modal">
+
+				<div id="confirm-delete-modal-content"  class="modal-content">
+
+					<h4 id="confirm-delete-modal-header">Delete Item</h4>
+
+					<p id="confirm-delete-modal-body">Deletion cannot be undone. Continue?</p>
 				
-				<div class="valign" style="width:90%;text-align:center;">
+				</div>
+				
+				<div class="modal-footer">
+					
+					<a href="#!" id="confirm-delete-modal-cancel" class="modal-action modal-close waves-effect waves-green btn-flat">No, keep it</a>
 
-					<div>Loading the app...</div>
-
-					<div class="progress"><div class="indeterminate"></div></div>
+					<a href="#!" id="confirm-delete-modal-ok" class="modal-action modal-close waves-effect waves-green btn-flat">OK, delete</a>
 
 				</div>
 
 			</div>
 
-			<!-- Placeholders for dynamically generated main content views -->
+		<!-- Page content -->
 
-			<div id="signup-view" class="row"></div>
+			<div class="container"> 
+				
+				<!-- Test sandbox-->
+				
+				<!-- Preload spinner -->
 
-			<div id="signup-permissions-view" class="row"></div>
+				<div id="preloader" class="valign-wrapper" style="height:160px;">
+					
+					<div class="valign" style="width:90%;text-align:center;">
 
-			<div id="login-view" class="row"></div>
+						<div>Loading the app...</div>
 
-			<div id="account-settings-view" class="row"></div>
+						<div class="progress"><div class="indeterminate"></div></div>
 
-			<div id="account-profile-view" class="row"></div>
+					</div>
 
-			<div id="event-list-view" class="row"></div>
+				</div>
 
-			<div id="event-view" class="row"></div>
+				<!-- Placeholders for dynamically generated main content views -->
 
-			<div id="guest-list-view" class="row"></div>
+				<div id="signup-view" class="row view"></div>
 
-			<div id="guest-view" class="row"></div>
-		
-		</div>
+				<div id="signup-permissions-view" class="row view"></div>
+
+				<div id="login-view" class="row view"></div>
+
+				<div id="account-settings-view" class="row view"></div>
+
+				<div id="account-profile-view" class="row view"></div>
+
+				<div id="event-list-view" class="row view"></div>
+
+				<div id="event-view" class="row view"></div>
+
+				<div id="guest-list-view" class="row view"></div>
+
+				<div id="guest-view" class="row view"></div>
+			
+			</div>
 
 		<!-- Library source files -->
 			<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
@@ -301,36 +348,10 @@
 
 					app.controller.onNavSelection(event);					
 				});
-
 				
-				/*
-				$('#nav-side').click(function(event) {
-
-					console.log(event.target.href.split('!')[1]);//.childNodes[1].nodeValue);
-				});
-				*/
-
-				
-				// Parse URL hashbangs for which view and object to display
-
-				/*var hash = document.location.hash;
-
-				if (hash !== '') {
-
-					hash = hash.slice(2); // pop 'hashbang'
-
-					var view = hash.split('?')[0]; id = hash.split('?')[1].split('=')[1];
-
-					//controller.router.route(view, id); // sub-view
-				}
-
-				else { // main view
-
-					//controller.router.route(...);
-				}
-				*/
-
+				//$('.modal-trigger').leanModal();
 			});
+
 
 			window.onload = function() { // $(document).ready()) may fire too early, som going old school
 				
@@ -342,4 +363,3 @@
 	</body>
 
 </html>
-;

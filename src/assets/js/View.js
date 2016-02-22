@@ -7,7 +7,7 @@ var app = app || {}; // create a simple namespace for the module
 * public abstract class View implements IInterfaceable IObservable IObserver
 *********************************************************************************************/
 
-/** @classdesc Base class for the 'V' part of our MVC framework.
+/** @classdesc Abstract base class for the 'V' part of our MVC framework.
 *
 * Presents information from the data model in the UI. Handles all UI related work.
 *
@@ -32,6 +32,104 @@ var app = app || {}; // create a simple namespace for the module
 
 app.View = function(Function_modelClass, str_elementId, str_heading) {
 	
+	/*----------------------------------------------------------------------------------------
+	* Factory methods providing inheritable accessors for private class members (through dependency injection)
+	*---------------------------------------------------------------------------------------*/
+	
+	/* Polymorphic factory method for creating inheritable accessors to private properties (values).
+	*
+	* param {Object} property The property to create an accessor for
+	*
+	* param {Object} type The primitive type required by the property. Optional, provided if type checking is required.
+	*
+	* param {Function} type Class (by function reference) required by the property. Optional, provided if type checking is required.
+	*
+	* param {String} className The name of the class required by the accessor, if any. Otherwise not required.
+	*
+	* return {Function} Accessor method for property. Both sets and gets, always returning the current value.
+	*
+	* throws {IllegalArgumentError} If one or more parameters are not of the type expected by the signature
+	*
+	* throws {ReferenceError} If no parameters are provided
+	*/
+
+	function Accessor(obj_prop, obj_type, str_className) {
+
+		function Accessor_(obj_prop) { // basic unified accessor without type checking
+			
+			return function(obj_val) {
+
+				if (obj_val) {obj_prop = obj_val;}
+
+				return obj_prop; // objects from subclass have their own copy of the private var, and can access it
+			;}
+		}
+		
+		function Accessor__(obj_prop, obj_strnumboolsym) { // unified accessor with type checking for primitive types
+
+			// check that type is primitive (bool, int, str, boo, symbol, undefined, null)
+
+		;}
+
+		
+		function Accessor___(obj_prop, Function_type, str_className) {  // unified accessor with type checking for complex types (i.e. classes)
+
+			// check that type is function, and class name provided
+		;}
+
+		
+		// Parse params to invoke the polyphormic responce
+
+		if (arguments.length === 1) {
+
+			return Accessor_(obj_prop);
+		}
+
+		if (arguments.length === 2) {
+
+			return Accessor__(obj_prop, obj_type);
+		}
+
+		else if (arguments.length === 3) {
+
+			 return Accessor___(obj_prop, Function_type, str_className);
+		}
+
+		else {
+
+			// throw error
+		}
+
+		
+	};
+
+	
+	/*----------------------------------------------------------------------------------------
+	* Private instance fields (encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+
+	var _className, _heading, _model, _modelClass, _observers = [], _parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.View], _$renderContext;
+
+
+	/*----------------------------------------------------------------------------------------
+	* Accessors for private instance fields (dependency injection provides access for subclasses)
+	*---------------------------------------------------------------------------------------*/
+
+	this.classNameAccessor = new Accessor(_className);
+
+	this.headingAccessor = new Accessor(_heading);
+
+	this.modelAccessor = new Accessor(_model);
+
+	this.modelClassAccessor = new Accessor(_modelClass);
+
+	this.observersAccessor = new Accessor(_observers);
+
+	this.parentListAccessor = new Accessor(_parentList);
+
+	this.$renderContextAccessor = new Accessor(_$renderContext);
+
+
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
@@ -61,6 +159,12 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	
 	this.$renderContext.addClass('view'); // set shared view class on main HTML element
 }
+
+/*----------------------------------------------------------------------------------------
+Factories for 'inherited' instance methods using dependency injection.
+Approach provides access to private variables in subclass
+*---------------------------------------------------------------------------------------*/
+
 
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
@@ -401,7 +505,7 @@ app.View.prototype.createEmailField = function (str_width, str_EmailId, str_labe
 		
 		classList: email && email.address() ? ['form-label', 'active'] : ['form-label'],
 		
-		dataset: {error: 'Please enter email in "address@server.domain" format'},
+		dataset: {error: 'Must be like "address@server.domain"'},
 		
 		innerHTML: str_label
 	});
@@ -976,7 +1080,7 @@ app.View.prototype.createSwitchField = function (str_width, str_switchId, str_la
 	var outerDiv =  this.createElement( // outer div
 	{
 		element: 'div',
-		
+
 		classList: ['row']
 	});
 
@@ -1006,7 +1110,7 @@ app.View.prototype.createSwitchField = function (str_width, str_switchId, str_la
 	{
 		element: 'div',			
 		
-		classList: ['input-field', 'col', 's' + (12 - parseInt(str_width.slice(1)))]
+		classList: ['switch-container', 'col', 's' + (12 - parseInt(str_width.slice(1)))]
 	});
 
 	outerDiv.appendChild(innerDiv);

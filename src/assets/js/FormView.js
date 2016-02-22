@@ -1,13 +1,13 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class FormView extends View
+* public abstract class FormView extends View
 ******************************************************************************/
 
 var app = app || {};
 
 
-/** @classdesc Base class for form views. Provides default method implementations specific
+/** @classdesc Abstract base class for form views. Provides default method implementations specific
 *
 * to form views, as well as an easy way to identify form views as such at runtime.
 *
@@ -60,9 +60,9 @@ app.FormView.prototype.cancel = function(bool_deleteModel) {
 
 	if (bool_deleteModel) { // model was new object that is no longer needed
 
-		var obj = app[this.modelClass].registry.getObjectById(this.modelId); // get reference to model
+		var obj = this.modelClass.registry.getObjectById(this.modelId); // get reference to model
 
-		app[this.modelClass].registry.removeObject(obj); // remove from class' registry
+		this.modelClass.registry.removeObject(obj); // remove from class' registry
 
 		obj = undefined; // dereference object to expose it to garbage collection
 	}
@@ -84,7 +84,9 @@ app.FormView.prototype.cancel = function(bool_deleteModel) {
 
 app.FormView.prototype.doUpdate = function(IModelable) {
 
-	if (this.constructor !== app.controller.currentView().constructor) { // form is not in focus (i.e. being displayed)
+	// no current view (boot), or form is not in focus (i.e. being displayed)
+
+	if (!app.controller.currentView() || this.constructor !== app.controller.currentView().constructor) {
 
 		if (IModelable === null) { // i.e. reset
 
@@ -99,3 +101,43 @@ app.FormView.prototype.doUpdate = function(IModelable) {
 
 	return false;
 }
+
+
+app.FormView.prototype.onLoad = function() {
+
+	$('#nav-delete-icon').show('slow');
+
+	
+	// Set up modal for delete confirmation
+
+		$('#confirm-delete-modal-cancel').click(function() {
+
+			$('#confirm-delete-modal').closeModal();
+
+		}.bind(this));
+
+
+		$('#confirm-delete-modal-ok').click(function() {
+
+			$('#confirm-delete-modal').closeModal();
+
+			this.cancel(false);
+
+			app.controller.onDeleteSelected(this.model);
+
+		}.bind(this));
+
+
+		$('#nav-delete-icon').click(function(event) {
+
+			$('#confirm-delete-modal').openModal();
+		});
+};
+
+
+app.FormView.prototype.onUnLoad = function() {
+
+	$('#nav-delete-icon').hide('fast');
+
+	$('#nav-delete-icon').off(); // remove all event handlers from delete icon
+};

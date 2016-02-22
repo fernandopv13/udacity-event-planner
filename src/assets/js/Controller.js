@@ -61,17 +61,35 @@ app.Controller = function() {
 	* @throws {IllegalArgumentError} If attempting to set a view that is not a View, or null
 	*/
 	
-	this.currentView = function (View_view) {
+	this.currentView = function (View_view, IModelable_model) {
 	
-		if (arguments.length > 0) {
+		if (arguments.length > 0) { // setting
 
 			if (View_view === null || View_view.isInstanceOf(app.View)) {
 			
+				
+				this.notifyObservers(IModelable_model); // first notify observers: forms won't update if they are the current view
+
+
 				for (var view in _views) {_views[view].hide('fast');} // hide all views
 
 				_currentView = View_view; // set current view
 
 				_currentView.show('slow'); // show current view
+
+				
+				if (View_view.isInstanceOf(app.FormView)) { // if form, show form specific nav/icons
+
+					app.FormView.prototype.onLoad.call(View_view);
+				}
+
+				else { // else, hide form specific nav/icons
+
+					app.FormView.prototype.onUnLoad.call(View_view);
+				}
+
+				
+				_router.onViewChange(View_view); // update browser history
 			}
 
 			else {
@@ -266,7 +284,7 @@ app.Controller = function() {
 
 	function ____update(IModelable) { // Update received from data model. Object represents itself.
 
-		// If a new event or guest was added, first register it with its account or event
+		// If a new event or guest was added, first register it with its account or event...
 
 		switch (IModelable.constructor) {
 
@@ -298,7 +316,7 @@ app.Controller = function() {
 		}
 
 
-		// then notify observers (i.e. views)
+		// ...then notify observers (i.e. views)
 
 		this.notifyObservers(IModelable);
 	}
@@ -452,13 +470,45 @@ app.Controller = function() {
 
 		this.selectedGuest(null);
 
-		this.currentView(_views.eventListView); // set view so observers can know which is current
+		this.currentView(_views.eventListView, this.selectedAccount());
 
-		this.notifyObservers(this.selectedAccount()); // notify observers
+		//this.notifyObservers(this.selectedAccount()); // notify observers
 
-		_router.onViewChange(_views.eventListView); // update browser history
+		//this.currentView(_views.eventListView); // set view so observers can know which is current
+
+		//_router.onViewChange(_views.eventListView); // update browser history
 	};
 
+
+	this.onDeleteSelected = function(IModelable) {
+
+		switch(IModelable.constructor) {
+
+			case app.Event: // remove event completely from app
+
+				app.Account.registry.removeObject(IModelable);
+
+				this.selectedAccount().removeEvent(IModelable);
+
+				this.currentView().model = undefined;
+
+				IModelable = undefined;
+
+				Materialize.toast('Event was deleted', 4000);
+
+				break;
+
+			case app.Person: // remove person (guest) from this event
+
+				this.selectedEvent().removeGuest(IModelable);
+
+				Materialize.toast(IModelable.name() + ' was taken off the guest list', 4000);
+
+				break;
+		}
+
+		Materialize.toast('Item was deleted', 4000);
+	}
 
 	this.onEventSelected = function(int_eventId) {
 
@@ -466,11 +516,13 @@ app.Controller = function() {
 
 		this.selectedGuest(null);
 
-		this.notifyObservers(this.selectedEvent()); // notify observers
+		this.currentView(_views.eventView, this.selectedEvent());
 
-		this.currentView(_views.eventView); // set view so observers can know which is current
+		//this.notifyObservers(this.selectedEvent()); // notify observers
 
-		_router.onViewChange(_views.eventView); // update browser history
+		//this.currentView(_views.eventView); // set view so observers can know which is current
+
+		//_router.onViewChange(_views.eventView); // update browser history
 	};
 
 
@@ -478,11 +530,13 @@ app.Controller = function() {
 
 		this.selectedGuest(null);
 		
-		this.notifyObservers(this.selectedEvent()); // notify observers
+		this.currentView(_views.guestListView, this.selectedEvent());
 
-		this.currentView(_views.guestListView); // set view so observers can know which is current
+		//this.notifyObservers(this.selectedEvent()); // notify observers
 
-		_router.onViewChange(_views.guestListView); // update browser history
+		//this.currentView(_views.guestListView); // set view so observers can know which is current
+
+		//_router.onViewChange(_views.guestListView); // update browser history
 	};
 
 
@@ -490,11 +544,13 @@ app.Controller = function() {
 
 		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
 
-		this.notifyObservers(this.selectedGuest()); // notify observers
+		this.currentView(_views.guestView, this.selectedGuest());
 
-		this.currentView(_views.guestView); // set view so observers can know which is current
+		//this.notifyObservers(this.selectedGuest()); // notify observers
 
-		_router.onViewChange(_views.guestView); // update browser history
+		//this.currentView(_views.guestView); // set view so observers can know which is current
+
+		//_router.onViewChange(_views.guestView); // update browser history
 	};
 
 
@@ -510,13 +566,13 @@ app.Controller = function() {
 
 			case 'Settings':
 
-				this.currentView(_views.accountSettingsView);
+				this.currentView(_views.accountSettingsView, this.selectedAccount());
 
 				break;
 
 			case 'Profile':
 
-				this.currentView(_views.accountProfileView);
+				this.currentView(_views.accountProfileView, this.selectedAccount());
 				
 				break;
 
@@ -530,6 +586,8 @@ app.Controller = function() {
 		}
 	}
 
+
+	/** Passes history onpopstate events on to router */
 
 	this.onPopState = function(event) {
 
@@ -619,6 +677,8 @@ app.Controller = function() {
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
+
+//void app.IInterfaceable.mixInto(app.IInterfaceable, app.Controller);
 
 void app.IInterfaceable.mixInto(app.IObservable, app.Controller);
 
