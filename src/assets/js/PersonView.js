@@ -25,7 +25,12 @@ app.PersonView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Initializes instance members inherited from parent class*/
+	// Set temporary literal for use by parent class constructor
+
+	this.className = 'PersonView';
+
+	
+	/** Initialize instance members inherited from parent class*/
 	
 	app.FormView.call(this, app.Person, str_elementId, str_heading);
 	
@@ -34,9 +39,7 @@ app.PersonView = function(str_elementId, str_heading) {
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	this.className = 'PersonView';
-
-	this.parentList.push(app.PersonView);
+	this.parentList().push(app.PersonView);
 };
 
 /*----------------------------------------------------------------------------------------
@@ -63,7 +66,7 @@ app.PersonView.prototype.cancel = function() {
 
 		this, // make sure 'this' points in the right direction
 
-		this.model // model is defined
+		this.model() // model is defined
 
 		&& !app.controller.selectedEvent().isGuest(this.model)  // model is not know by event
 	);
@@ -110,7 +113,7 @@ app.PersonView.prototype.render = function(Person_person) {
 
 		// Add heading
 			
-			containerDiv.appendChild(this.createHeading('s12', this.heading));
+			containerDiv.appendChild(this.createHeading('s12', this.heading()));
 
 			
 		// Add hidden person id field
@@ -260,9 +263,9 @@ app.PersonView.prototype.render = function(Person_person) {
 		
 		// Update DOM
 
-			this.$renderContext.empty();
+			this.$renderContext().empty();
 
-			this.$renderContext.append(formElement);
+			this.$renderContext().append(formElement);
 
 
 		// (Re)assign event handlers to form elements
@@ -330,9 +333,9 @@ app.PersonView.prototype.render = function(Person_person) {
 
 	else { // present default message
 
-		this.$renderContext.empty();
+		this.$renderContext().empty();
 
-		this.$renderContext.append(this.createElement(
+		this.$renderContext().append(this.createElement(
 		{
 			element: 'p',
 
@@ -403,9 +406,7 @@ app.PersonView.prototype.update = function(IModelable) {
 	
 	if (IModelable === null || IModelable.constructor === app.Person) {
 
-		this.model = IModelable;
-
-		//this.modelId = IModelable ? IModelable.id(): null;
+		this.model(IModelable);
 
 		this.render(IModelable);
 	}

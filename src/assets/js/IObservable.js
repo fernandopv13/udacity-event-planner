@@ -57,7 +57,9 @@ app.IObservable = function() {
 
 app.IObservable.prototype.default_notifyObservers = function(Object_obj, int_objId) {
 
-	this.observers.forEach(function(observer) {
+	var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
+
+	observers.forEach(function(observer) {
 
 		Object_obj = Object_obj ? Object_obj : this;
 
@@ -88,25 +90,27 @@ app.IObservable.prototype.default_notifyObservers = function(Object_obj, int_obj
 
 app.IObservable.prototype.default_registerObserver = function(IObserver_observer) {
 
-		if (IObserver_observer.isInstanceOf && IObserver_observer.isInstanceOf(app.IObserver)) {
+	var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
 
-			if (this.observers.indexOf(IObserver_observer) < 0) { // skip duplicates
+	if (IObserver_observer.isInstanceOf && IObserver_observer.isInstanceOf(app.IObserver)) {
 
-				this.observers.push(IObserver_observer);
-			}
+		if (observers.indexOf(IObserver_observer) < 0) { // skip duplicates
 
-			else {
-
-				return null; // duplicate, not added
-			}
+			observers.push(IObserver_observer);
 		}
 
 		else {
 
-			throw new IllegalArgumentError('Observer must implement IObserver');
+			return null; // duplicate, not added
 		}
+	}
 
-		return IObserver_observer; // add succesful
+	else {
+
+		throw new IllegalArgumentError('Observer must implement IObserver');
+	}
+
+	return IObserver_observer; // add succesful
 };
 
 
@@ -123,16 +127,18 @@ app.IObservable.prototype.default_registerObserver = function(IObserver_observer
 
 app.IObservable.prototype.default_removeObserver = function(IObserver_observer) {
 
+	var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
+
 	if (IObserver_observer.isInstanceOf && IObserver_observer.isInstanceOf(app.IObserver)) {
 
-		var ix = this.observers.indexOf(IObserver_observer);
+		var ix = observers.indexOf(IObserver_observer);
 
 		if (ix === -1) { // not found, return null
 
 			return null;
 		}
 
-		this.observers = this.observers.length > 1 ? this.observers.splice(ix, 1) : [];
+		observers = observers.length > 1 ? observers.splice(ix, 1) : [];
 
 		/*
 		while (ix > -1 && this.observers.length > 1) { // remove duplicates, avoiding infinite loop

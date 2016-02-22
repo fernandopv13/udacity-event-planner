@@ -26,6 +26,11 @@ app.FormView = function(Function_modelClass, str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
+	// Set temporary literal for use by parent class constructor (unless already defined in calling class)
+
+	if (!this.className) {this.className = 'FormView';}
+
+	
 	/** Initializes instance members inherited from parent class*/
 	
 	app.View.call(this, Function_modelClass, str_elementId, str_heading);
@@ -35,9 +40,7 @@ app.FormView = function(Function_modelClass, str_elementId, str_heading) {
 	* Other object initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	this.className = 'FormView';
-
-	this.parentList.push(app.FormView);
+	this.parentList().push(app.FormView);
 };
 
 	
@@ -60,9 +63,9 @@ app.FormView.prototype.cancel = function(bool_deleteModel) {
 
 	if (bool_deleteModel) { // model was new object that is no longer needed
 
-		var obj = this.modelClass.registry.getObjectById(this.modelId); // get reference to model
+		var obj = this.modelClass().registry.getObjectById(this.modelId); // get reference to model
 
-		this.modelClass.registry.removeObject(obj); // remove from class' registry
+		this.modelClass().registry.removeObject(obj); // remove from class' registry
 
 		obj = undefined; // dereference object to expose it to garbage collection
 	}
@@ -93,7 +96,7 @@ app.FormView.prototype.doUpdate = function(IModelable) {
 			return true;
 		}
 
-		else if (IModelable.constructor === this.modelClass) { // classes match
+		else if (IModelable.constructor === this.modelClass()) { // classes match
 
 			return true;
 		}
@@ -123,7 +126,7 @@ app.FormView.prototype.onLoad = function() {
 
 			this.cancel(false);
 
-			app.controller.onDeleteSelected(this.model);
+			app.controller.onDeleteSelected(this.model());
 
 		}.bind(this));
 

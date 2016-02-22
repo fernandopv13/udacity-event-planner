@@ -27,7 +27,12 @@ app.EventListView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Initializes instance members inherited from parent class*/
+	// Set temporary literal for use by parent class constructor
+
+	this.className = 'EventListView';
+
+	
+	/** Initialize instance members inherited from parent class*/
 	
 	app.ListView.call(this, app.Account, str_elementId, str_heading);
 
@@ -36,9 +41,7 @@ app.EventListView = function(str_elementId, str_heading) {
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	this.className = 'EventListView';
-
-	this.parentList.push(app.EventListView);
+	this.parentList().push(app.EventListView);
 };
 
 /*----------------------------------------------------------------------------------------
@@ -131,7 +134,7 @@ app.EventListView.prototype.render = function(Account_account) {
 
 		classList: ['collection-header'],
 
-		innerHTML: this.heading
+		innerHTML: this.heading()
 	}));
 
 			
@@ -157,11 +160,11 @@ app.EventListView.prototype.render = function(Account_account) {
 	
 	// Update DOM
 
-	this.$renderContext.empty();
+	this.$renderContext().empty();
 
-	this.$renderContext.append(UlElement);
+	this.$renderContext().append(UlElement);
 	
-	this.$renderContext.append(this.createFloatingActionButton('event-list-add', 'add', 'red', 'Add event'));
+	this.$renderContext().append(this.createFloatingActionButton('event-list-add', 'add', 'red', 'Add event'));
 
 
 	// Attach event handlers (other than for list item click)
@@ -179,7 +182,7 @@ app.EventListView.prototype.update = function(IModelable) {
 	
 	if (this.doUpdate(IModelable)) {
 
-		this.model = IModelable;
+		this.model(IModelable);
 
 		this.render(IModelable);
 	}

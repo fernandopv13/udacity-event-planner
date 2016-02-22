@@ -27,6 +27,11 @@ app.ListView = function(Function_modelClass, str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
+	// Set temporary literal for use by parent class constructor (unless already defined in calling class)
+
+	if (!this.className) {this.className = 'ListView';}
+
+	
 	/** Initializes instance members inherited from parent class*/
 	
 	app.View.call(this, Function_modelClass, str_elementId, str_heading);
@@ -36,9 +41,7 @@ app.ListView = function(Function_modelClass, str_elementId, str_heading) {
 	* Other object initialization (using parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 	
-	this.className = 'ListView';
-
-	this.parentList.push(app.ListView);
+	this.parentList().push(app.ListView);
 		
 };
 
@@ -70,7 +73,7 @@ app.ListView.prototype.doUpdate = function(IModelable) {
 			return true;
 		}
 
-	else if (IModelable.constructor === this.modelClass) { // classes match
+	else if (IModelable.constructor === this.modelClass()) { // classes match
 
 		return true;
 	}

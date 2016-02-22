@@ -31,7 +31,12 @@ app.EventView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Initializes instance members inherited from parent class*/
+	// Set temporary literal for use by parent class constructor
+
+	this.className = 'EventView';
+
+	
+	/** Initialize instance members inherited from parent class*/
 	
 	app.FormView.call(this, app.Event, str_elementId, str_heading);
 	
@@ -40,9 +45,7 @@ app.EventView = function(str_elementId, str_heading) {
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 
-	this.className = 'EventView';
-
-	this.parentList.push(app.EventView);
+	this.parentList().push(app.EventView);
 };
 
 /*----------------------------------------------------------------------------------------
@@ -71,7 +74,7 @@ app.EventView.prototype.cancel = function() {
 
 		this, // make sure 'this' points in the right direction
 
-		this.model // model is defined
+		this.model() // model is defined
 
 		&& !app.controller.selectedAccount().isInAccount(this.model)  // model is not know by account
 
@@ -119,7 +122,7 @@ app.EventView.prototype.render = function(Event_event) {
 		
 		// Add heading
 			
-			containerDiv.appendChild(this.createHeading('s12', this.heading));
+			containerDiv.appendChild(this.createHeading('s12', this.heading()));
 			
 
 		// Add hidden event id field
@@ -540,9 +543,9 @@ app.EventView.prototype.render = function(Event_event) {
 		
 		// Update DOM
 
-			this.$renderContext.empty();
+			this.$renderContext().empty();
 
-			this.$renderContext.append(formElement);
+			this.$renderContext().append(formElement);
 
 
 		// (Re)assign event handlers to form elements
@@ -635,9 +638,9 @@ app.EventView.prototype.render = function(Event_event) {
 
 	else { // present default message
 
-		this.$renderContext.empty();
+		this.$renderContext().empty();
 
-		this.$renderContext.append(this.createElement(
+		this.$renderContext().append(this.createElement(
 		{
 			element: 'p',
 
@@ -840,7 +843,7 @@ app.EventView.prototype.update = function(IModelable) {
 	
 	if (this.doUpdate(IModelable)) {
 
-		this.model = IModelable;
+		this.model(IModelable);
 
 		this.render(IModelable);
 	}

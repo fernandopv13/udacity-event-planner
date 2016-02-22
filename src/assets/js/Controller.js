@@ -35,17 +35,11 @@ app.Controller = function() {
 
 	_views, // collection of views we need to keep track of
 
-	_router; // router managing browser history
+	_router, // router managing browser history
+
+	_observers = []; // Array of IObservers. Expected by IObservable.
 
 	
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation
-							//any way in order to expose collection to default IObservable methods
-	
-		
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
@@ -100,6 +94,19 @@ app.Controller = function() {
 		
 		return _currentView;
 	};
+
+
+	/** Gets the collection of IObservers of the controller */
+
+	this.observers = function() {
+
+		if (arguments.length > 0) {
+
+			throw new IllegalArgumentError('Property is read-only');
+		}
+
+		return _observers;
+	}
 
 
 	/** Gets or sets the currently selected (active) account
@@ -425,7 +432,7 @@ app.Controller = function() {
 
 	this.notifyObservers = function(IModelable) {
 
-		this.observers.forEach(function(observer) {
+		_observers.forEach(function(observer) {
 
 			observer.update(IModelable);
 		});

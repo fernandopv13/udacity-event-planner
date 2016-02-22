@@ -25,7 +25,12 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Initializes instance members inherited from parent class*/
+	// Set temporary literal for use by parent class constructor
+
+	this.className = 'AccountProfileView';
+
+	
+	/** Initialize instance members inherited from parent class*/
 	
 	app.FormView.call(this, app.Account, str_elementId, str_heading);
 	
@@ -34,9 +39,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	this.className = 'AccountProfileView';
-
-	this.parentList.push(app.AccountProfileView);
+	this.parentList().push(app.AccountProfileView);
 };
 
 /*----------------------------------------------------------------------------------------
@@ -103,7 +106,7 @@ app.AccountProfileView.prototype.render = function(IModelable_account) {
 		
 		// Add heading
 			
-			containerDiv.appendChild(this.createHeading('s12', this.heading));
+			containerDiv.appendChild(this.createHeading('s12', this.heading()));
 
 			
 		// Add hidden person id field
@@ -261,9 +264,9 @@ app.AccountProfileView.prototype.render = function(IModelable_account) {
 						
 		// Update DOM
 
-			this.$renderContext.empty();
+			this.$renderContext().empty();
 
-			this.$renderContext.append(formElement);
+			this.$renderContext().append(formElement);
 		
 
 		// (Re)assign event handlers to form elements
@@ -323,9 +326,9 @@ app.AccountProfileView.prototype.render = function(IModelable_account) {
 
 	else { // present default message
 
-		this.$renderContext.empty();
+		this.$renderContext().empty();
 
-		this.$renderContext.append(this.createElement(
+		this.$renderContext().append(this.createElement(
 		{
 			element: 'p',
 
@@ -388,7 +391,7 @@ app.AccountProfileView.prototype.update = function(IModelable) {
 	
 	if (this.doUpdate(IModelable)) {
 
-		this.model = IModelable;
+		this.model(IModelable);
 
 		this.render(IModelable);
 	}

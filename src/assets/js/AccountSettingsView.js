@@ -25,7 +25,12 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Initializes instance members inherited from parent class*/
+	// Set temporary literal for use by parent class constructor
+
+	this.className = 'AccountSettingsView';
+
+	
+	/** Initialize instance members inherited from parent class*/
 	
 	app.FormView.call(this, app.Account, str_elementId, str_heading);
 	
@@ -34,9 +39,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 
-	this.className = 'AccountSettingsView';
-
-	this.parentList.push(app.AccountSettingsView);
+	this.parentList().push(app.AccountSettingsView);
 };
 
 /*----------------------------------------------------------------------------------------
@@ -105,7 +108,7 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 
 		// Add heading
 			
-			containerDiv.appendChild(this.createHeading('s12', this.heading));
+			containerDiv.appendChild(this.createHeading('s12', this.heading()));
 
 
 		// Add hidden account id field
@@ -283,9 +286,9 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 		
 		// Update DOM
 
-			this.$renderContext.empty();
+			this.$renderContext().empty();
 
-			this.$renderContext.append(formElement);
+			this.$renderContext().append(formElement);
 
 
 		// (Re)assign account handlers to form elements
@@ -366,9 +369,9 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 
 	else { // present default message
 
-		this.$renderContext.empty();
+		this.$renderContext().empty();
 
-		this.$renderContext.append(this.createElement(
+		this.$renderContext().append(this.createElement(
 		{
 			element: 'p',
 
@@ -451,7 +454,7 @@ app.AccountSettingsView.prototype.update = function(IModelable) {
 	
 	if (this.doUpdate(IModelable)) {
 
-		this.model = IModelable;
+		this.model(IModelable) ;
 
 		//this.modelId = IModelable ? IModelable.id() : null;
 

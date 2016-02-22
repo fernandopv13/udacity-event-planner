@@ -40,7 +40,7 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	*
 	* param {Object} property The property to create an accessor for
 	*
-	* param {Object} type The primitive type required by the property. Optional, provided if type checking is required.
+	* param {String} type The primitive type required by the property (by the string typeof would return). Optional, provided if type checking is required.
 	*
 	* param {Function} type Class (by function reference) required by the property. Optional, provided if type checking is required.
 	*
@@ -53,81 +53,169 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	* throws {ReferenceError} If no parameters are provided
 	*/
 
-	function Accessor(obj_prop, obj_type, str_className) {
+	function Accessor(obj_prop, bool_readOnly, obj_type, str_className) {
+
+		// Copy params into local function closure
+
+		var acc_type = obj_type, acc_className = str_className;
+
+		
+		// Define polymorphic inner functions
 
 		function Accessor_(obj_prop) { // basic unified accessor without type checking
 			
 			return function(obj_val) {
 
-				if (obj_val) {obj_prop = obj_val;}
+				if (obj_val != undefined) {
 
-				return obj_prop; // objects from subclass have their own copy of the private var, and can access it
-			;}
+					obj_prop = obj_val;
+				}
+
+				return obj_prop; // objects from subclass get their own copy of the private property, and can access it
+			}
 		}
 		
-		function Accessor__(obj_prop, obj_strnumboolsym) { // unified accessor with type checking for primitive types
+		function Accessor__(obj_prop, str_primitive) { // unified accessor with type checking for primitive types
 
-			// check that type is primitive (bool, int, str, boo, symbol, undefined, null)
+			if (['boolean', 'number', 'string', 'symbol', 'undefined'].indexOf(str_primitive) > -1) {
 
-		;}
+				return function(obj_val) {
+
+					if (obj_val !== undefined) {
+
+						if(['boolean', 'number', 'string', 'symbol', 'undefined'].indexOf(typeof obj_val) > -1) {
+
+							obj_prop = obj_val;
+						}
+
+						else {
+
+							throw new IllegalArgumentError('Expected JavaScript primitive');
+						}
+					}
+
+					return obj_prop;
+				}
+			}
+
+			else {
+
+				throw new IllegalArgumentError('Type must be a JavaScript primitive');
+			}
+		}
 
 		
 		function Accessor___(obj_prop, Function_type, str_className) {  // unified accessor with type checking for complex types (i.e. classes)
 
-			// check that type is function, and class name provided
-		;}
+			if (typeof Function_type === 'function') {
+
+				if (typeof str_className === 'string') {
+
+					return function(obj_val) {
+
+						if (obj_val !== undefined) {
+
+							if (obj_val.constructor === acc_type || obj_val.isInstanceOf(acc_type)) {
+
+								obj_prop = obj_val;
+							}
+
+							else {
+
+								throw new IllegalArgumentError('Expected ' + acc_className);
+							}
+						}
+
+						return obj_prop;
+					}
+				}
+
+				else {
+
+					throw new IllegalArgumentError('className must be a String');
+				}
+			}
+
+			else {
+
+				throw new IllegalArgumentError('Type must be a Class (by function reference)');
+			}
+		}
 
 		
 		// Parse params to invoke the polyphormic responce
 
-		if (arguments.length === 1) {
+			if (bool_readOnly) { // simple getter; does not need elaborate type checking and error messaging
 
-			return Accessor_(obj_prop);
-		}
+				return function() {
 
-		if (arguments.length === 2) {
+					if (arguments.length > 0) {
 
-			return Accessor__(obj_prop, obj_type);
-		}
+						throw new IllegalArgumentError('Property is read-only');
+					}
 
-		else if (arguments.length === 3) {
+					return obj_prop;
+				}
+			}
 
-			 return Accessor___(obj_prop, Function_type, str_className);
-		}
+			else if (arguments.length === 2) {
 
-		else {
+				return new Accessor_(obj_prop);
+			}
 
-			// throw error
-		}
+			else if (arguments.length === 3) {
 
-		
-	};
+				return new Accessor__(obj_prop, obj_type);
+			}
+
+			else if (arguments.length === 4) {
+
+				 return new Accessor___(obj_prop, obj_type, str_className);
+			}
+
+			else {
+
+				throw new ReferenceError('At least two arguments required by Accessor constructor');
+			}
+	}
 
 	
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 
-	var _className, _heading, _model, _modelClass, _observers = [], _parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.View], _$renderContext;
+	var _className = (this.className ? this.className : 'View'), // name of this view class (override if provided by subclass constructor)
 
+	_heading = str_heading, // content of the view's main heading
 
+	_model = null, // the model currently displayed by the view, or null
+
+	_modelClass = Function_modelClass, // the class of data model supported by this view (by function reference)
+	
+	_observers = [], // Array of IObservers receiving updates from this view
+
+	_parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.View], // list of interfaces implemented by this class (by function reference)
+
+	_$renderContext = $('#' + str_elementId); // the HTML element the view will render itself into when updated (set in realizing classes)
+	
+		
 	/*----------------------------------------------------------------------------------------
-	* Accessors for private instance fields (dependency injection provides access for subclasses)
+	* Accessors for private instance fields (dependency injection enables access for subclasses)
 	*---------------------------------------------------------------------------------------*/
 
-	this.classNameAccessor = new Accessor(_className);
+	this.className = new Accessor(_className, true); // replace temporary literal with read-only accessor
 
-	this.headingAccessor = new Accessor(_heading);
+	this.heading = new Accessor(_heading, false, 'string');
 
-	this.modelAccessor = new Accessor(_model);
+	this.model = new Accessor(_model, false, app.IModelable, 'IModelable');
 
-	this.modelClassAccessor = new Accessor(_modelClass);
+	this.modelClass = new Accessor(_modelClass, true);
 
-	this.observersAccessor = new Accessor(_observers);
+	this.observers = new Accessor(_observers, true);
 
-	this.parentListAccessor = new Accessor(_parentList);
+	this.parentList = new Accessor(_parentList, true);
 
-	this.$renderContextAccessor = new Accessor(_$renderContext);
+	this.$renderContext = new Accessor(_$renderContext, false);
 
 
 	/*----------------------------------------------------------------------------------------
@@ -136,6 +224,7 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	
 	// No way of keeping these private if we want to access them in subclasses, so breaking encapsulation
 
+	/*
 	this.className = 'View'; // name of this view class
 
 	this.heading = str_heading; // content of the view's main heading
@@ -151,13 +240,13 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	this.parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.View]; // list of interfaces implemented by this class (by function reference)
 
 	this.$renderContext = $('#' + str_elementId); // the HTML element the view will render itself into when updated (set in realizing classes)
-	
+	*/
 
 	/*----------------------------------------------------------------------------------------
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 	
-	this.$renderContext.addClass('view'); // set shared view class on main HTML element
+	_$renderContext.addClass('view'); // set shared view class on main HTML element
 }
 
 /*----------------------------------------------------------------------------------------
@@ -1417,7 +1506,7 @@ app.View.prototype.displayValidation = function(event, str_fieldId, str_errorMsg
 
 app.View.prototype.hide = function(obj_options) {
 
-	this.$renderContext.hide(obj_options ? obj_options : 'fast');
+	this.$renderContext().hide(obj_options ? obj_options : 'fast');
 }
 
 
@@ -1428,7 +1517,7 @@ app.View.prototype.hide = function(obj_options) {
 
 app.View.prototype.isInstanceOf = function (func_interface) {
 	
-	return this.parentList.indexOf(func_interface) > -1;
+	return this.parentList().indexOf(func_interface) > -1;
 };
 
 
@@ -1441,7 +1530,7 @@ app.View.prototype.isInstanceOf = function (func_interface) {
 
 app.View.prototype.show = function(obj_options) {
 
-	this.$renderContext.show(obj_options ? obj_options : 'slow');
+	this.$renderContext().show(obj_options ? obj_options : 'slow');
 }
 
 

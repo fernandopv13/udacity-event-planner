@@ -21,11 +21,16 @@ var app = app || {};
 
 app.GuestListView = function(str_elementId, str_heading) {
 
-		/*----------------------------------------------------------------------------------------
+	/*----------------------------------------------------------------------------------------
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Initializes instance members inherited from parent class*/
+	// Set temporary literal for use by parent class constructor
+
+	this.className = 'GuestListView';
+
+	
+	/** Initialize instance members inherited from parent class*/
 	
 	app.ListView.call(this, app.Event, str_elementId, str_heading);
 
@@ -34,9 +39,7 @@ app.GuestListView = function(str_elementId, str_heading) {
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	this.className = 'GuestListView';
-
-	this.parentList.push(app.GuestListView);
+	this.parentList().push(app.GuestListView);
 };
 
 /*----------------------------------------------------------------------------------------
@@ -162,7 +165,7 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 		classList: ['collection-header'],
 
-		innerHTML: this.heading
+		innerHTML: this.heading()
 	}));
 
 			
@@ -189,11 +192,11 @@ app.GuestListView.prototype.render = function(Event_event) {
 	
 	// Update DOM
 	
-	this.$renderContext.empty();
+	this.$renderContext().empty();
 
-	this.$renderContext.append(UlElement);
+	this.$renderContext().append(UlElement);
 
-	this.$renderContext.append(this.createFloatingActionButton('guest-list-add', 'add', 'red', 'Add guest'));
+	this.$renderContext().append(this.createFloatingActionButton('guest-list-add', 'add', 'red', 'Add guest'));
 
 
 	// Attach event handlers (other than for list item click)
@@ -211,7 +214,7 @@ app.GuestListView.prototype.update = function(IModelable) {
 	
 	if (this.doUpdate(IModelable)) {
 
-		this.model = IModelable
+		this.model(IModelable);
 
 		this.render(IModelable);
 

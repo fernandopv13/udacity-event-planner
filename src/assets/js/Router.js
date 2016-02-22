@@ -102,7 +102,7 @@ app.Router.prototype.onViewChange = function(View_view) {
 
 	if (history.pushState) {
 
-		var className = View_view.className, id = View_view.model.id();
+		var className = View_view.className(), id = View_view.model().id();
 
 		try {// needs to be run off a server to work
 
@@ -127,10 +127,12 @@ app.Router.prototype.onViewChange = function(View_view) {
 				);
 			}
 
+			/*
 			else {
 
-				//console.log('did not push');
+				console.log('did not push');
 			}
+			*/
 		}
 
 		catch(e) {
