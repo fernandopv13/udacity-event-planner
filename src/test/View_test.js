@@ -64,48 +64,48 @@ describe('class View', function(){
 	
 	describe('View instance', function() {
 
-		it('has a public className attribute', function() {
+		it('can get its class name', function() {
 
-			expect(testView.className).toBeDefined();
+			expect(testView.className()).toBeDefined();
 		});
 
 
-		it('has a public heading attribute', function() {
+		it('can get its heading', function() {
 
-			expect(testView.heading).toBeDefined();
+			expect(testView.heading()).toBeDefined();
 		});
 
 
-		it('has a public model attribute', function() {
+		it('can get the data model it is currently presenting', function() {
 
-			expect(testView.model).toBeDefined();
+			expect(typeof testView.model).toBe('function');
 		});
 
 
-		it('has a public modelClass attribute', function() {
+		it('can get the data model class it requires', function() {
 
-			expect(testView.modelClass).toBeDefined();
+			expect(typeof testView.modelClass).toBe('function');
 		});
 
-		it('has a public observers attribute that is an array', function() {
+		it('can get an array of its observers', function() {
 
-			expect(testView.observers).toBeDefined();
+			expect(typeof testView.observers).toBe('function');
 
-			expect(testView.observers.constructor).toBe(Array);
+			expect(testView.observers().constructor).toBe(Array);
 		});
 
 
-		it('has a public parentList attribute that is an array', function() {
+		it('can get an array of its parent classes and interfaces', function() {
 
-			expect(testView.parentList).toBeDefined();
+			expect(typeof testView.parentList).toBe('function');
 
-			expect(testView.parentList.constructor).toBe(Array);
+			expect(testView.parentList().constructor).toBe(Array);
 		});
 
 
 		it('has a public $renderContext attribute', function() {
 
-			expect(testView.$renderContext).toBeDefined();
+			expect(typeof testView.$renderContext).toBe('function');
 		});
 
 

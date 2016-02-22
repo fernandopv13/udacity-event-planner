@@ -66,7 +66,7 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 			
 			return function(obj_val) {
 
-				if (obj_val != undefined) {
+				if (obj_val !== undefined) {
 
 					obj_prop = obj_val;
 				}
