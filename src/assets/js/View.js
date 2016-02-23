@@ -54,6 +54,8 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	* throws {ReferenceError} If no parameters are provided
 	*/
 
+	/*
+
 	function Accessor(obj_prop, bool_readOnly, obj_type, str_className) {
 
 		// Copy params into local function closure
@@ -181,7 +183,8 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 				throw new ReferenceError('At least two arguments required by Accessor constructor');
 			}
 	}
-
+	*/
+	
 	
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
@@ -208,21 +211,21 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	* Accessors for private instance fields (dependency injection enables access for subclasses)
 	*---------------------------------------------------------------------------------------*/
 
-	this.className = new Accessor(_className, true); // replace temporary literal with read-only accessor
+	this.className = new app.Accessor(_className, true); // replace temporary literal with read-only accessor
 
-	this.heading = new Accessor(_heading, false, 'string');
+	this.heading = new app.Accessor(_heading, false, 'string');
 
-	this.model = new Accessor(_model, false, app.Model, 'Model');
+	this.model = new app.Accessor(_model, false, app.Model, 'Model');
 
-	this.modelClass = new Accessor(_modelClass, true);
+	this.modelClass = new app.Accessor(_modelClass, true);
 
-	this.observers = new Accessor(_observers, true);
+	this.observers = new app.Accessor(_observers, true);
 
-	this.parentList = new Accessor(_parentList, true);
+	this.parentList = new app.Accessor(_parentList, true);
 
-	this.$renderContext = new Accessor(_$renderContext, false);
+	this.$renderContext = new app.Accessor(_$renderContext, false);
 	
-	this.ssuper = new Accessor(_super, true); // 'super' may be a reserved word, so slight name change
+	this.ssuper = new app.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
 
 
 	/*----------------------------------------------------------------------------------------

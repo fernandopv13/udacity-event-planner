@@ -49,6 +49,7 @@ app.Model = function() {
 	* throws {ReferenceError} If no parameters are provided
 	*/
 
+	/*
 	function Accessor(obj_prop, bool_readOnly, obj_type, str_className) {
 
 		// Copy params into local function closure
@@ -174,7 +175,7 @@ app.Model = function() {
 				throw new ReferenceError('At least two arguments required by Accessor constructor');
 			}
 	}
-
+	*/
 	
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
@@ -196,15 +197,15 @@ app.Model = function() {
 	* Accessors for private instance fields (dependency injection enables access for subclasses)
 	*---------------------------------------------------------------------------------------*/
 
-	this.className = new Accessor(_className, true); // replace temporary literal with read-only accessor
+	this.className = new app.Accessor(_className, true); // replace temporary literal with read-only accessor
 
-	this.id = new Accessor(_id, true);
+	this.id = new app.Accessor(_id, true);
 
-	this.observers = new Accessor(_observers, true);
+	this.observers = new app.Accessor(_observers, true);
 
-	this.parentList = new Accessor(_parentList, true);
+	this.parentList = new app.Accessor(_parentList, true);
 	
-	this.ssuper = new Accessor(_super, true); // 'super' may be a reserved word, so slight name change
+	this.ssuper = new app.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
 	
 	/*----------------------------------------------------------------------------------------
 	* Other initialization
