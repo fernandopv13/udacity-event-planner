@@ -228,23 +228,7 @@ void app.IInterfaceable.mixInto(app.ISerializable, app.Model);
 
 
 /*----------------------------------------------------------------------------------------
-* Abstract public instance methods
-*---------------------------------------------------------------------------------------*/
-
-/** Update data model in reponse to UI event
-*
-* @param {Model} obj Temporary object holding the updated information. Is of same class as Modelable itself.
-*
-* @param {int} id ID of the object to be updated
-*
-* @return {void}
-*
-* @throws {AbstractMethodError} If attempting to invoke directly on interface (abstract method signature)
-*/
-
-
-/*----------------------------------------------------------------------------------------
-* Public instance methods (implemented, on prototype)
+* Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
 
 
@@ -259,9 +243,17 @@ app.Model.prototype.isInstanceOf = function (func_interface) {
 };
 
 
-/** Does housekeeping common to all Models after updating themselves, 
+/** Does housekeeping common to all Models after they have updated themselves.
 *
-* i.e. autosaves (if enabled), notifies observers, registers with controller, and destroys temporary data object.
+* Override in subclsees to do the actual updating, then call this.
+*
+* @param {Model} obj Temporary object holding the updated information. Is of same class as Modelable itself.
+*
+* @param {int} id ID of the object to be updated
+*
+* @return {void}
+*
+* @throws {AbstractMethodError} If attempting to invoke directly on interface (abstract method signature)
 */
 
 app.Model.prototype.update = function(Model_obj) {

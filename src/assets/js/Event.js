@@ -55,21 +55,10 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 
 	/*----------------------------------------------------------------------------------------
-	* Other initialization
-	*---------------------------------------------------------------------------------------*/
-
-	this.parentList().push(app.Event);
-	
-	
-	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
 	// Any strong typing is enforced by the accessor methods.
-	
-	//var	_className = 'Event', // (String) Name of this class
-	
-	//_id, // (int) Unique event ID obtained from Event object registry
 	
 	var _name,
 	
@@ -89,16 +78,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 	_host;
 
-	//_implements = [app.IInterfaceable, app.Model, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
-		
-
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	//this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
-	
-	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
@@ -141,27 +120,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		return _capacity;
 	};
 
-
-	/** Gets name of object's class. Class name is read-only.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {String} name The name of the object's class
-	*	
-	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	/*
-	this.className = function () {
-		
-		if(arguments.length === 0) { return _className;}
-		
-		else {
-			
-			throw new Error('Illegal parameter: className is read-only');
-		}
-	};
-	*/
 	
 	/** Gets or sets description
 	*
@@ -286,27 +244,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 	
 	
-	/** Gets unique event ID. ID can only be set from within the object itself.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {int} An integer, if called with no parameters
-	*	
-	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	/*
-	this.id = function () {
-		
-		if(arguments.length === 0) { return _id;}
-		
-		else {
-			
-			throw new Error('Illegal parameter: id is read-only');
-		}
-	};
-	*/
-
 	/** Gets or sets default location for the event. Location may be a string with the position's name, or a Position object
 	*
 	* @param {String} location The default location (as a string with the location's name)
@@ -337,26 +274,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 
 
-	/** Gets or sets location
-	*
-	* @param {String} location The location of the event (optional, supply if setting)
-	*
-	* @return {String} The location of the event
-	*/
-	
-	/*
-	this.location = function (str_location) {
-		
-		if (arguments.length !== 0) {
-			
-			_location = str_location;
-		}
-		
-		return _location;
-	};
-	*/
-
-	
 	/** Gets or sets name
 	*
 	* @param {String} name The name of the event (optional, supply if setting)
@@ -497,19 +414,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 
 	
-	/** Returns true if class implements the interface passed in (by function reference)
-	*
-	* (See IInterfaceable for further documentation.)
-	*/
-	
-	/*
-	this.isInstanceOf = function (func_interface) {
-		
-		return _implements.indexOf(func_interface) > -1;
-	};
-	*/
-
-
 	/** Re-establishes references to complex members after they have been deserialized
 	*
 	* (Method realization required by ISerializable.)
@@ -687,13 +591,12 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 		
+	this.parentList().push(app.Event);
+	
+
 	// Single param that is integer => deserialize from local storage
 
 	if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
-		
-		// Reset original ID (expected by readObject())
-	
-		//_id = arguments[0];
 		
 		// Read in JSON from local storage
 		
@@ -704,11 +607,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	// Normal instantiation
 	
 	else {
-		
-		// Set unique ID
-		
-		//_id = this.constructor.registry.getNextId();
-		
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		

@@ -45,34 +45,14 @@ app.Email = function(str_address) {
 	
 
 	/*----------------------------------------------------------------------------------------
-	* Other initialization
-	*---------------------------------------------------------------------------------------*/
-
-	this.parentList().push(app.Email);
-	
-
-	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
 	// Any strong typing is enforced by the setter methods.
 		
-	//var	_className = 'Email', // (String) Name of this class
-	
-	//_id, // (int) Unique email ID obtained from Email object registry
-	
 	var _address, // (String) A string containing the email address.
 	
 	_isValid = null; // (Boolean) true if email's validity, true or false, has been set (i.e. verified) manually. A null value indicates that the address has not been verified.
-	
-	//_implements = [app.IInterfaceable, app.Model, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
-
-
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	//this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -103,57 +83,6 @@ app.Email = function(str_address) {
 	}
 
 
-	/** Gets name of object's class. Class name is read-only.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {String} name The name of the object's class
-	*	
-	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	/*
-	this.className = function () {
-		
-		if(arguments.length === 0) { return _className;}
-		
-		else {
-			
-			throw new Error('Illegal parameter: className is read-only');
-		}
-	};
-	*/
-	
-	
-	/** Gets unique email ID. ID can only be set from within the object itself.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {int} An integer, if called with no parameters
-	*	
-	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	/*
-	this.id = function () {
-		
-		if(arguments.length === 0) { return _id;}
-		
-		else {
-			
-			throw new Error('Illegal parameter: id is read-only');
-		}
-	};
-	*/
-	
-	
-	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
-	*---------------------------------------------------------------------------------------*/
-	
-	// None so far
-	
-	
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
@@ -223,18 +152,6 @@ app.Email = function(str_address) {
 	};
 	
 
-	/** Returns true if class implements the interface passed in (by function reference)
-	*
-	* (See IInterfaceable for further documentation.)
-	*/
-	
-	/*this.isInstanceOf = function (func_interface) {
-		
-		return _implements.indexOf(func_interface) > -1;
-	};*/
-
-
-	
 	/** Re-establishes references to complex members after they have been deserialized
 	*
 	* (Method realization required by ISerializable.)
@@ -248,20 +165,6 @@ app.Email = function(str_address) {
 	}
 	
 
-	/** Updates email when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Email} email Object holding the data to update this email with
-	*
-	* @return {Boolean} true if copy was successful, else error or false
-	*
-	* @todo Not implemented
-	*/
-
-	//app.Email.prototype.update = function(Email_email, int_objId) {}
-
-	
 	/** Converts email to JSON object
 	*
 	* (Method realization required by ISerializable.)
@@ -285,17 +188,15 @@ app.Email = function(str_address) {
 	
 	
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 	
+	this.parentList().push(app.Email);
+
+
 	// Single param that is integer => deserialize from local storage
 
 	if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
-		
-		// Reset original ID (expected by readObject())
-	
-		//_id = arguments[0];
-		
 		
 		// Read in JSON from local storage
 		
@@ -306,11 +207,6 @@ app.Email = function(str_address) {
 	// Normal instantiation
 
 	else {
-		
-		// Set unique ID
-		
-		//_id = this.constructor.registry.getNextId();
-		
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		

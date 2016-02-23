@@ -46,22 +46,11 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	
 	app.Model.call(this);
 	
-
-	/*----------------------------------------------------------------------------------------
-	* Other initialization
-	*---------------------------------------------------------------------------------------*/
-
-	this.parentList().push(app.Account);
 	
-
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	//var	_className = 'Account', // (String) Name of this class
-	
-	//_id,  // (int) Unique account ID obtained from Account object registry
-
 	var _email,
 	
 	_password,
@@ -78,8 +67,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	_defaultLocation;
 
-	//_implements = [app.IInterfaceable, app.Model, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
-
+	
 	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
@@ -125,27 +113,6 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	}
 	
 	
-	/** Gets name of object's class. Class name is read-only.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {String} name The name of the object's class
-	*	
-	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	/*
-	this.className = function () {
-		
-		if(arguments.length === 0) { return _className;}
-		
-		else {
-			
-			throw new IllegalArgumentError('className is read-only');
-		}
-	};
-	*/
-
 	/** Gets or sets default event capacity for the account
 	*
 	* @param {int} capacity The default capacity
@@ -241,6 +208,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		return _email;
 	}
 
+	
 	/** Gets or sets geolocation access permission for the account
 	*
 	* @param {Boolean} Permission The permission
@@ -269,28 +237,6 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	};
 
 
-	/** Gets unique account ID. ID can only be set from within the object itself.
-	*
-	* (Method realization required by ISerializable)
-	*
-	* @return {int} An integer, if called with no parameters
-	*	
-	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	/*
-	this.id = function () {
-		
-		if(arguments.length === 0) { return _id;}
-		
-		else {
-			
-			throw new IllegalArgumentError('ID is read-only');
-		}
-	};
-	*/
-
-	
 	/** Gets or sets local storage access permission for the account
 	*
 	* @param {Boolean} Permission The permission
@@ -363,14 +309,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		return _password;
 	};
 	
-	
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	//this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation anyway in order to expose list to default IObservable methods
-	
-	
+		
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
@@ -449,20 +388,6 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	};
 
 
-	/** Returns true if class implements the interface passed in (by function reference)
-	*
-	* (See IInterfaceable for further documentation.)
-	*/
-	
-	/*
-	this.isInstanceOf = function (func_interface) {
-		
-		return _implements.indexOf(func_interface) > -1;
-	};
-
-	*/
-
-	
 	/** Re-establishes references to complex members after they have been deserialized.
 	*
 	* (Method realization required by ISerializable.)
@@ -562,17 +487,15 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	
 		
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
+	
+	this.parentList().push(app.Account);
+	
 	
 	// Single param that is integer => deserialize from local storage
 
 	if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
-		
-		// Reset original ID (expected by readObject())
-	
-		//_id = arguments[0];
-		
 		
 		// Read in JSON from local storage
 		
@@ -584,11 +507,6 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	else {
 			
-		// Set unique ID
-		
-		//_id = this.constructor.registry.getNextId();
-		
-		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
 		if (Email_email) {this.email(Email_email);}

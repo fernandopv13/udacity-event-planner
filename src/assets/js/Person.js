@@ -53,24 +53,11 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	
 
 	/*----------------------------------------------------------------------------------------
-	* Other initialization
-	*---------------------------------------------------------------------------------------*/
-
-	this.parentList().push(app.Person);
-
-	this.parentList().push(app.IHost);
-	
-
-	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
 	// Any strong typing is enforced by the setter methods.
 		
-	//var	_className = 'Person', // (String) Name of this class
-
-	//_id, // (int) Unique person ID obtaining from Person object registry
-	
 	var _name,
 	
 	_employer,
@@ -82,15 +69,6 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	_birthday,
 
 	_imgUrl; // URL to avatar image for person
-	
-	//_implements = [app.IHost, app.IInterfaceable, app.Model, app.IObservable, app.IObserver, app.ISerializable]; // list of interfaces implemented by this class (by function reference)
-	
-	
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	//this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -135,28 +113,6 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	};
 
 
-	/** Gets name of object's class. Class name is read-only.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {String} name The name of the object's class
-	*	
-	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	/*
-	this.className = function () {
-		
-		if (arguments.length === 0) { return _className;}
-		
-		else {
-			
-			throw new Error('Illegal parameter: className is read-only');
-		}
-	};
-	*/
-		
-	
 	/** Gets or sets email
 	*
 	* @param {Email} email The person's current email (optional, supply if setting)
@@ -251,28 +207,6 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	}
 	
 
-	/** Gets unique person ID. ID can only be set from within the object itself.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {int} An integer, if called with no parameters
-	*	
-	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	/*
-	this.id = function () {
-		
-		if (arguments.length === 0) { return _id;}
-		
-		else {
-			
-			throw new Error('Illegal parameter: id is read-only');
-		}
-	};
-	*/
-	
-	
 	/** Gets or sets URL to portrait image (avatar)
 	*
 	* @param {String} imageUrl The URL to the image file
@@ -330,20 +264,6 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond simple accessors)
 	*---------------------------------------------------------------------------------------*/
-
-
-	/** Returns true if class implements the interface passed in (by function reference)
-	*
-	* (See IInterfaceable for further documentation.)
-	*/
-	
-	/*
-	this.isInstanceOf = function (func_interface) {
-		
-		return _implements.indexOf(func_interface) > -1;
-	};*/
-
-
 
 	/** Re-establishes references to complex members after they have been deserialized
 	*
@@ -449,17 +369,17 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 
 
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 	
+	this.parentList().push(app.Person);
+
+	this.parentList().push(app.IHost);
+	
+
 	// Single param that is integer => deserialize from local storage
 
 	if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
-		
-		// Reset original ID (expected by readObject())
-	
-		//_id = arguments[0];
-		
 		
 		// Read in JSON from local storage
 		
@@ -471,11 +391,6 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 
 	else {
 	
-		// Set unique ID
-		
-		//_id = this.constructor.registry.getNextId();
-		
-		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
 		if (str_name) {this.name(str_name);}

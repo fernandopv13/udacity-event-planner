@@ -45,20 +45,11 @@ app.Password = function(str_password) {
 	
 
 	/*----------------------------------------------------------------------------------------
-	* Other initialization
-	*---------------------------------------------------------------------------------------*/
-
-	this.parentList().push(app.Password);
-	
-	
-	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
 	// Any strong typing is enforced by the setter methods.
 		
-	//var _id, // (int) Unique password ID obtained from Password object registry
-	
 	var _password; // (String) A string containing the password address.
 
 	
@@ -66,28 +57,6 @@ app.Password = function(str_password) {
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
-	/** Gets unique password ID. ID can only be set from within the object itself.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {int} An integer, if called with no parameters
-	*	
-	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	/*
-	this.id = function () {
-		
-		if(arguments.length === 0) { return _id;}
-		
-		else {
-			
-			throw new IllegalArgumentError('id is read-only');
-		}
-	};
-	*/
-	
-	
 	/** Gets or sets password
 	*
 	* @param {String} password The password
@@ -163,19 +132,6 @@ app.Password = function(str_password) {
 		return true;
 	}
 	
-	/** Updates password when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Password} password Object holding the data to update this event with
-	*
-	* @return {Boolean} true if copy was successful, else error or false
-	*
-	* @todo Not implemented
-	*/
-
-	//app.Password.prototype.update = function(Password_password, int_objId) {}
-
 	
 	/** Converts password to JSON object
 	*
@@ -198,8 +154,11 @@ app.Password = function(str_password) {
 	
 	
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
+	
+	this.parentList().push(app.Password);
+	
 	
 	// Single param that is integer => deserialize from local storage
 
