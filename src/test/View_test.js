@@ -68,6 +68,12 @@ describe('class View', function(){
 
 			expect(testView.className()).toBeDefined();
 		});
+		
+		
+		xit('rejects attempt to set its class name', function() {
+
+			//;
+		});
 
 
 		it('can get its heading', function() {
@@ -102,11 +108,29 @@ describe('class View', function(){
 			expect(testView.parentList().constructor).toBe(Array);
 		});
 
+		
+		xit('rejects attempt to set its parent classes and interfaces', function() {
+
+			//;
+		});
+		
 
 		it('has a public $renderContext attribute', function() {
 
 			expect(typeof testView.$renderContext).toBe('function');
 		});
+		
+		
+		it('can get a reference to it parent class, if inheriting', function() {
+
+			expect(testView.ssuper()).toBe(Object);
+		});
+		
+		
+		xit('rejects attempt to set its parent class', function() {
+
+			//;
+		})
 
 
 		it('can create a new DOM element', function(){

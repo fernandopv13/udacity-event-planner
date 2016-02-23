@@ -210,17 +210,17 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 /** Update event presentation when model has changed */
 
-app.GuestListView.prototype.update = function(IModelable) {
+app.GuestListView.prototype.update = function(Model) {
 	
-	if (this.doUpdate(IModelable)) {
+	if (this.doUpdate(Model)) {
 
-		this.model(IModelable);
+		this.model(Model);
 
-		this.render(IModelable);
+		this.render(Model);
 
 	}
 
-	else if (IModelable.constructor === app.Person) { // possible change to guest, so update list
+	else if (Model.constructor === app.Person) { // possible change to guest, so update list
 
 		this.render(app.controller.selectedEvent());
 

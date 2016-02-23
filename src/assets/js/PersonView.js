@@ -402,13 +402,13 @@ app.PersonView.prototype.submit = function(event) {
 
 /** Updates guest presentation when notified by controller of change */
 
-app.PersonView.prototype.update = function(IModelable) {
+app.PersonView.prototype.update = function(Model) {
 	
-	if (IModelable === null || IModelable.constructor === app.Person) {
+	if (Model === null || Model.constructor === app.Person) {
 
-		this.model(IModelable);
+		this.model(Model);
 
-		this.render(IModelable);
+		this.render(Model);
 	}
 
 	// else do nothing

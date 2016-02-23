@@ -4,14 +4,14 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Password implements ISerializable
+* public class Password extends Model
 **********************************************************************************************/
 
 /** @classdesc Describes a password.
 *
 * @constructor
 *
-* @implements  ISerializable
+* @extends Model
 *
 * @return {Password} A password
 *
@@ -26,6 +26,30 @@ var app = app || {}; // create a simple namespace for the app
 
 app.Password = function(str_password) {
 
+	/*----------------------------------------------------------------------------------------
+	* Call (chain) parent class constructor
+	*---------------------------------------------------------------------------------------*/
+	
+	// Set temporary literals to be used as defaults by, and replaced with, accessors by parent class constructor.
+
+	this.className = 'Password';
+
+	this.id = (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) ? arguments[0] : this.constructor.registry.getNextId();
+		
+	this.ssuper = app.Model;
+
+	
+	/** Initialize instance members inherited from parent class*/
+	
+	app.Model.call(this);
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Other initialization
+	*---------------------------------------------------------------------------------------*/
+
+	this.parentList().push(app.Password);
+	
 	
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
@@ -33,46 +57,15 @@ app.Password = function(str_password) {
 	
 	// Any strong typing is enforced by the setter methods.
 		
-	var	_className = 'Password', // (String) Name of this class
+	//var _id, // (int) Unique password ID obtained from Password object registry
 	
-	_id, // (int) Unique password ID obtained from Password object registry
-	
-	_password, // (String) A string containing the password address.
+	var _password; // (String) A string containing the password address.
 
-	_implements = [app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
-		
-	
-	/*----------------------------------------------------------------------------------------
-	* Public instance fields (non-encapsulated data members)
-	*---------------------------------------------------------------------------------------*/
-	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
-	
 	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
-	/** Gets name of object's class. Class name is read-only.
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @return {String} name The name of the object's class
-	*	
-	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
-	*/
-	
-	this.className = function () {
-		
-		if(arguments.length === 0) { return _className;}
-		
-		else {
-			
-			throw new IllegalArgumentError('className is read-only');
-		}
-	};
-	
-	
 	/** Gets unique password ID. ID can only be set from within the object itself.
 	*
 	* (Method realization required by ISerializable.)
@@ -82,6 +75,7 @@ app.Password = function(str_password) {
 	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.id = function () {
 		
 		if(arguments.length === 0) { return _id;}
@@ -91,6 +85,7 @@ app.Password = function(str_password) {
 			throw new IllegalArgumentError('id is read-only');
 		}
 	};
+	*/
 	
 	
 	/** Gets or sets password
@@ -155,29 +150,6 @@ app.Password = function(str_password) {
 		return _password;
 	}
 	
-	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
-	*---------------------------------------------------------------------------------------*/
-	
-	// None so far
-	
-	
-	/*----------------------------------------------------------------------------------------
-	* Public instance methods (beyond accessors)
-	*---------------------------------------------------------------------------------------*/
-	
-	/** Returns true if class implements the interface passed in (by function reference)
-	*
-	* (See IInterfaceable for further documentation.)
-	*/
-	
-	/*
-	this.isInstanceOf = function (func_interface) {
-		
-		return _implements.indexOf(func_interface) > -1;
-	};
-	*/
-	
 
 	/** Re-establishes references to complex members after they have been deserialized
 	*
@@ -218,7 +190,7 @@ app.Password = function(str_password) {
 			
 			_className: 'Password',
 			
-			_id: _id,
+			_id: this.id(),
 			
 			_password: _password
 		};
@@ -233,11 +205,6 @@ app.Password = function(str_password) {
 
 	if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
 		
-		// Reset original ID (expected by readObject())
-	
-		_id = arguments[0];
-		
-		
 		// Read in JSON from local storage
 		
 		void this.readObject();
@@ -248,11 +215,6 @@ app.Password = function(str_password) {
 
 	else {
 		
-		// Set unique ID
-		
-		_id = this.constructor.registry.getNextId();
-		
-		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
 		if (str_password) {this.password(str_password)} // Set password
@@ -260,6 +222,16 @@ app.Password = function(str_password) {
 	
 	this.constructor.registry.add(this); // Will only happend if param parsing passes w/o error
 };
+
+
+/*----------------------------------------------------------------------------------------
+* Inherit from Model
+*---------------------------------------------------------------------------------------*/	
+
+app.Password.prototype = Object.create(app.Model.prototype); // Set up inheritance
+
+app.Password.prototype.constructor = app.Password; // Reset constructor property
+
 
 
 /*----------------------------------------------------------------------------------------
@@ -341,18 +313,4 @@ app.Password.hasValidPunctuationCount = function(str_password) {return (/[\!\@\#
 app.Password.hasIllegalCharacters = function(str_password) {return str_password.match(/[^A-z0-9\!\@\#\$\%\^\&\*]/g)};
 
 
-/*----------------------------------------------------------------------------------------
-Mix in default methods from implemented interfaces, unless overridden by class or ancestor
-*---------------------------------------------------------------------------------------*/
 
-void app.IInterfaceable.mixInto(app.IInterfaceable, app.Password);
-
-void app.IInterfaceable.mixInto(app.IModelable, app.Password);
-
-void app.IInterfaceable.mixInto(app.IObservable, app.Password);
-
-void app.IInterfaceable.mixInto(app.IObserver, app.Password);
-
-void app.IInterfaceable.mixInto(app.ISerializable, app.Password);
-
-app.Password.registry.clear(); // remove object created by mixInto()

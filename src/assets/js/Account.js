@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /**********************************************************************************************
-* public class Account implements IInterfaceable, IModelable, ISerializable
+* public class Account extends Model
 **********************************************************************************************/
 
 var app = app || {};
@@ -11,11 +11,7 @@ var app = app || {};
 *
 * @constructor
 *
-* @implements IInterfaceable
-*
-* @implements IModelable
-*
-* @implements ISerializable
+* @extends Model
 *
 * @param {Email} email Email identifying the account
 *
@@ -33,16 +29,40 @@ var app = app || {};
 
 app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
+	/*----------------------------------------------------------------------------------------
+	* Call (chain) parent class constructor
+	*---------------------------------------------------------------------------------------*/
+	
+	// Set temporary literals to be used as defaults by, and replaced with, accessors by parent class constructor.
+
+	this.className = 'Account';
+
+	this.id = (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) ? arguments[0] : this.constructor.registry.getNextId();
+		
+	this.ssuper = app.Model;
+
+	
+	/** Initialize instance members inherited from parent class*/
+	
+	app.Model.call(this);
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Other initialization
+	*---------------------------------------------------------------------------------------*/
+
+	this.parentList().push(app.Account);
+	
 
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var	_className = 'Account', // (String) Name of this class
+	//var	_className = 'Account', // (String) Name of this class
 	
-	_id,  // (int) Unique account ID obtained from Account object registry
+	//_id,  // (int) Unique account ID obtained from Account object registry
 
-	_email,
+	var _email,
 	
 	_password,
 
@@ -56,9 +76,9 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 
 	_defaultCapacity = 50,
 
-	_defaultLocation,
+	_defaultLocation;
 
-	_implements = [app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+	//_implements = [app.IInterfaceable, app.Model, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 
 	
 	/*----------------------------------------------------------------------------------------
@@ -114,6 +134,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.className = function () {
 		
 		if(arguments.length === 0) { return _className;}
@@ -123,7 +144,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			throw new IllegalArgumentError('className is read-only');
 		}
 	};
-
+	*/
 
 	/** Gets or sets default event capacity for the account
 	*
@@ -257,6 +278,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	* @throws {IllegalArgumentError} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.id = function () {
 		
 		if(arguments.length === 0) { return _id;}
@@ -266,8 +288,9 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			throw new IllegalArgumentError('ID is read-only');
 		}
 	};
-	
+	*/
 
+	
 	/** Gets or sets local storage access permission for the account
 	*
 	* @param {Boolean} Permission The permission
@@ -342,17 +365,10 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	
 	
 	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
-	*---------------------------------------------------------------------------------------*/
-	
-	// None so far
-	
-
-	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation anyway in order to expose list to default IObservable methods
+	//this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation anyway in order to expose list to default IObservable methods
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -438,10 +454,13 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	* (See IInterfaceable for further documentation.)
 	*/
 	
+	/*
 	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
+
+	*/
 
 	
 	/** Re-establishes references to complex members after they have been deserialized.
@@ -523,7 +542,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 			_className: 'Account',
 			
-			_id: _id,
+			_id: this.id(),
 			
 			_email: _email ? {_className: _email.className(), _id: _email.id()} : undefined,
 			
@@ -552,7 +571,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 		
 		// Reset original ID (expected by readObject())
 	
-		_id = arguments[0];
+		//_id = arguments[0];
 		
 		
 		// Read in JSON from local storage
@@ -567,7 +586,7 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 		// Set unique ID
 		
-		_id = this.constructor.registry.getNextId();
+		//_id = this.constructor.registry.getNextId();
 		
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
@@ -584,6 +603,15 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	
 	this.constructor.registry.add(this); // Will only happend if initialization passes w/o error
 };
+
+
+/*----------------------------------------------------------------------------------------
+* Inherit from Model
+*---------------------------------------------------------------------------------------*/	
+
+app.Account.prototype = Object.create(app.Model.prototype); // Set up inheritance
+
+app.Account.prototype.constructor = app.Account; // Reset constructor property
 
 
 /*----------------------------------------------------------------------------------------
@@ -636,9 +664,9 @@ app.Account.prototype.update = function(Account_account, int_objId) {
 		this.localStorageAllowed(source.localStorageAllowed());
 	
 		
-		// Do some housekeeping (calls IModelable default)
+		// Do some housekeeping (calls method in parent class)
 
-		this.onUpdate(Account_account);
+		this.ssuper().prototype.update.call(this, Account_account);
 
 		
 		return true;
@@ -646,7 +674,6 @@ app.Account.prototype.update = function(Account_account, int_objId) {
 
 	return false; // this should never happen, keeping just in case
 }
-
 
 /*----------------------------------------------------------------------------------------
 * Public class (static) members
@@ -658,20 +685,3 @@ app.Account.prototype.update = function(Account_account, int_objId) {
 */
 
 app.Account.registry = new app.ObjectRegistry(app.Account, 'Account');
-
-
-/*----------------------------------------------------------------------------------------
-Mix in default methods from implemented interfaces, unless overridden by class or ancestor
-*---------------------------------------------------------------------------------------*/
-
-void app.IInterfaceable.mixInto(app.IInterfaceable, app.Account);
-
-void app.IInterfaceable.mixInto(app.IModelable, app.Account);
-
-void app.IInterfaceable.mixInto(app.IObservable, app.Account);
-
-void app.IInterfaceable.mixInto(app.IObserver, app.Account);
-
-void app.IInterfaceable.mixInto(app.ISerializable, app.Account);
-
-app.Account.registry.clear(); // remove objects created by mixInto()

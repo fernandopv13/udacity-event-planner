@@ -4,18 +4,14 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Event implements IInterfaceable, IModelable, ISerializable
+* public class Event extends Model
 **********************************************************************************************/
 
 /** @classdesc Holds information about an event.
 *
 * @constructor
 *
-* @implements IInterfaceable
-*
-* @implements IModelable
-*
-* @implements ISerializable
+* @extends Model
 *
 * @param {String} name The name of the event
 *
@@ -40,6 +36,30 @@ var app = app || {}; // create a simple namespace for the app
 
 app.Event = function(str_name, str_type, date_start, date_end, str_location, str_description, ihost_host, int_capacity) {
 	
+	/*----------------------------------------------------------------------------------------
+	* Call (chain) parent class constructor
+	*---------------------------------------------------------------------------------------*/
+	
+	// Set temporary literals to be used as defaults by, and replaced with, accessors by parent class constructor.
+
+	this.className = 'Event';
+
+	this.id = (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) ? arguments[0] : this.constructor.registry.getNextId();
+		
+	this.ssuper = app.Model;
+
+	
+	/** Initialize instance members inherited from parent class*/
+	
+	app.Model.call(this);
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Other initialization
+	*---------------------------------------------------------------------------------------*/
+
+	this.parentList().push(app.Event);
+	
 	
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
@@ -47,11 +67,11 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 	// Any strong typing is enforced by the accessor methods.
 	
-	var	_className = 'Event', // (String) Name of this class
+	//var	_className = 'Event', // (String) Name of this class
 	
-	_id, // (int) Unique event ID obtained from Event object registry
+	//_id, // (int) Unique event ID obtained from Event object registry
 	
-	_name,
+	var _name,
 	
 	_type,
 	
@@ -67,16 +87,16 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 	_description,
 	
-	_host,
+	_host;
 
-	_implements = [app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+	//_implements = [app.IInterfaceable, app.Model, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 		
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	//this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -131,6 +151,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.className = function () {
 		
 		if(arguments.length === 0) { return _className;}
@@ -140,7 +161,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			throw new Error('Illegal parameter: className is read-only');
 		}
 	};
-	
+	*/
 	
 	/** Gets or sets description
 	*
@@ -274,6 +295,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.id = function () {
 		
 		if(arguments.length === 0) { return _id;}
@@ -283,7 +305,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			throw new Error('Illegal parameter: id is read-only');
 		}
 	};
-
+	*/
 
 	/** Gets or sets default location for the event. Location may be a string with the position's name, or a Position object
 	*
@@ -416,14 +438,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	};
 	
 	
-	
-	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
-	*---------------------------------------------------------------------------------------*/
-	
-	// None so far
-		
-	
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
@@ -488,10 +502,12 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* (See IInterfaceable for further documentation.)
 	*/
 	
+	/*
 	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
 	};
+	*/
 
 
 	/** Re-establishes references to complex members after they have been deserialized
@@ -574,9 +590,9 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		return {
 			
-			_className: 'Event',
+			_className: this.className(),
 			
-			_id: _id,
+			_id: this.id(),
 			
 			_start: _start,
 			
@@ -655,9 +671,9 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			this.host(Event_event.host());
 
 			
-			// Do some housekeeping (calls IModelable default)
+			// Do some housekeeping (calls method in parent class)
 
-			this.onUpdate(Event_event);
+			this.ssuper().prototype.update.call(this, Event_event);
 
 			
 			return true;
@@ -668,7 +684,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 		
 	/*----------------------------------------------------------------------------------------
-	* Parameter parsing (constructor 'polymorphism')
+	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 		
 	// Single param that is integer => deserialize from local storage
@@ -677,7 +693,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		// Reset original ID (expected by readObject())
 	
-		_id = arguments[0];
+		//_id = arguments[0];
 		
 		// Read in JSON from local storage
 		
@@ -691,7 +707,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		// Set unique ID
 		
-		_id = this.constructor.registry.getNextId();
+		//_id = this.constructor.registry.getNextId();
 		
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
@@ -716,6 +732,14 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	this.constructor.registry.add(this); // Will only happend if param passing passes w/o error
 };
 
+/*----------------------------------------------------------------------------------------
+* Inherit from Model
+*---------------------------------------------------------------------------------------*/	
+
+app.Event.prototype = Object.create(app.Model.prototype); // Set up inheritance
+
+app.Event.prototype.constructor = app.Event; // Reset constructor property
+
 
 /*----------------------------------------------------------------------------------------
 * Public class (static) members
@@ -724,20 +748,3 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 /** Provides non-mutable, unique event IDs */
 
 app.Event.registry = new app.ObjectRegistry(app.Event, 'Event');
-
-
-/*----------------------------------------------------------------------------------------
-Mix in default methods from implemented interfaces, unless overridden by class or ancestor
-*---------------------------------------------------------------------------------------*/
-
-void app.IInterfaceable.mixInto(app.IInterfaceable, app.Event);
-
-void app.IInterfaceable.mixInto(app.IModelable, app.Event);
-
-void app.IInterfaceable.mixInto(app.IObservable, app.Event);
-
-void app.IInterfaceable.mixInto(app.IObserver, app.Event);
-
-void app.IInterfaceable.mixInto(app.ISerializable, app.Event);
-
-app.Event.registry.clear(); // remove objects created by mixInto()

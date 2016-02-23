@@ -15,36 +15,6 @@ describe('class Organization', function(){
 	});
 
 
-	it('implements the IInterfaceable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Organization, app.IInterfaceable)).toBe(true);
-	});
-
-	
-	xit('implements the IModelable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Organization, app.IModelable)).toBe(true);
-	});
-
-
-	it('implements the IObservable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Organization, app.IObservable)).toBe(true);
-	});
-
-
-	xit('implements the IObserver interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Organization, app.IObserver)).toBe(true);
-	});
-	
-	
-	it('implements the ISerializable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Organization, app.ISerializable)).toBe(true);
-	});
-		
-		
 	it('can be instantiated with no parameters', function() {
 		
 		expect((new app.Organization()).constructor).toBe(app.Organization);
@@ -79,6 +49,38 @@ describe('class Organization', function(){
 		});
 		
 		
+		it('inherits from Model', function() {
+
+			// IInterfaceable
+
+			expect(typeof testOrg.isInstanceOf).toBe('function');
+
+			//Model
+
+			expect(testOrg.isInstanceOf(app.Model)).toBe(true);
+
+			expect(typeof testOrg.className).toBe('function');
+
+			expect(typeof testOrg.id).toBe('function');
+
+			expect(typeof testOrg.observers).toBe('function');
+
+			expect(typeof testOrg.ssuper).toBe('function');
+
+			//IObservable
+
+			expect(typeof testOrg.notifyObservers).toBe('function');
+
+			expect(typeof testOrg.registerObserver).toBe('function');
+
+			expect(typeof testOrg.removeObserver).toBe('function');
+
+			//IObserver
+
+			expect(typeof testOrg.update).toBe('function');
+		});
+
+
 		it('can set and get its name', function() {
 		
 			testOrg.name('testName');
@@ -105,26 +107,6 @@ describe('class Organization', function(){
 		});
 		
 
-		it('can tell if it is an instance of ISerializable', function() {
-
-			expect(testOrg.isInstanceOf(app.ISerializable)).toBe(true);
-
-			expect(testOrg.isInstanceOf(Error)).toBe(false);
-		});
-
-
-		// IInterfaceable testing
-
-		it('can tell if it is an implementation of a custom app interface', function() {
-
-			expect(testOrg.isInstanceOf(app.IInterfaceable)).toBe(true);
-
-			expect(testOrg.isInstanceOf(app.IModelable)).toBe(true);
-
-			expect(testOrg.isInstanceOf(Array)).toBe(false);
-		});
-		
-		
 		// ISerializable testing
 
 		it('can get its class name', function() {
@@ -139,7 +121,7 @@ describe('class Organization', function(){
 		});
 		
 		
-		it('rejects attempt to set ID (b/c read-only', function() {
+		it('rejects attempt to set ID (b/c read-only)', function() {
 		
 			try {
 				
@@ -148,7 +130,7 @@ describe('class Organization', function(){
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 		});
 		

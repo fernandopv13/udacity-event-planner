@@ -839,13 +839,13 @@ app.EventView.prototype.suggestLocations = function() {
 
 /** Updates event presentation when notified by controller of change */
 
-app.EventView.prototype.update = function(IModelable) {
+app.EventView.prototype.update = function(Model) {
 	
-	if (this.doUpdate(IModelable)) {
+	if (this.doUpdate(Model)) {
 
-		this.model(IModelable);
+		this.model(Model);
 
-		this.render(IModelable);
+		this.render(Model);
 	}
 
 	// else do nothing

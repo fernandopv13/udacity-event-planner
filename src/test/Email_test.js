@@ -36,7 +36,7 @@ describe('class Email', function(){
 		expect(app.Email.registry.type()).toBe(app.Email);
 	});
 	
-	describe('Email instance', function() {
+	describe('instance', function() {
 		
 		var testMail, oldPermission;
 		
@@ -51,6 +51,38 @@ describe('class Email', function(){
 		});
 		
 		
+		it('inherits from Model', function() {
+
+			// IInterfaceable
+
+			expect(typeof testMail.isInstanceOf).toBe('function');
+
+			//Model
+
+			expect(testMail.isInstanceOf(app.Model)).toBe(true);
+
+			expect(typeof testMail.className).toBe('function');
+
+			expect(typeof testMail.id).toBe('function');
+
+			expect(typeof testMail.observers).toBe('function');
+
+			expect(typeof testMail.ssuper).toBe('function');
+
+			//IObservable
+
+			expect(typeof testMail.notifyObservers).toBe('function');
+
+			expect(typeof testMail.registerObserver).toBe('function');
+
+			expect(typeof testMail.removeObserver).toBe('function');
+
+			//IObserver
+
+			expect(typeof testMail.update).toBe('function');
+		});
+		
+
 		it('can set and get its address', function() {
 		
 			testMail.address('name@server.domain');
@@ -156,7 +188,7 @@ describe('class Email', function(){
 		});
 		
 		
-		it('rejects attempt to set ID (b/c read-only', function() {
+		it('rejects attempt to set ID (b/c read-only)', function() {
 		
 			try {
 				
@@ -165,7 +197,7 @@ describe('class Email', function(){
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 		});
 		

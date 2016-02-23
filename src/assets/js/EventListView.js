@@ -178,13 +178,13 @@ app.EventListView.prototype.render = function(Account_account) {
 
 /** Updates event list presentation when notified by controller of change */
 
-app.EventListView.prototype.update = function(IModelable) {
+app.EventListView.prototype.update = function(Model) {
 	
-	if (this.doUpdate(IModelable)) {
+	if (this.doUpdate(Model)) {
 
-		this.model(IModelable);
+		this.model(Model);
 
-		this.render(IModelable);
+		this.render(Model);
 	}
 
 	// else do nothing

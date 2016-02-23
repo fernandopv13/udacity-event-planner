@@ -450,15 +450,15 @@ app.AccountSettingsView.prototype.submit = function(event) {
 
 /** Updates account presentation when notified by controller of change */
 
-app.AccountSettingsView.prototype.update = function(IModelable) {
+app.AccountSettingsView.prototype.update = function(Model) {
 	
-	if (this.doUpdate(IModelable)) {
+	if (this.doUpdate(Model)) {
 
-		this.model(IModelable) ;
+		this.model(Model) ;
 
-		//this.modelId = IModelable ? IModelable.id() : null;
+		//this.modelId = Model ? Model.id() : null;
 
-		this.render(IModelable);
+		this.render(Model);
 	}
 
 	// else do nothing

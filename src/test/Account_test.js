@@ -28,36 +28,6 @@ describe('class Account', function(){
 	app.Email = app.Email || function() {};
 			
 	
-	it('implements the IInterfaceable interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Account, app.IInterfaceable)).toBe(true);
-	});
-
-	
-	it('implements the IModelable interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Account, app.IModelable)).toBe(true);
-	});
-
-
-	it('implements the IObservable interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Account, app.IObservable)).toBe(true);
-	});
-
-
-	xit('implements the IObserver interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Account, app.IObserver)).toBe(true);
-	});
-
-
-	it('implements the ISerializable interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Account, app.ISerializable)).toBe(true);
-	});
-	
-	
 	it('can be created with an email and a valid password', function() {
 		
 		expect((new app.Account(new app.Email(), new app.Password('123!abcDEF'))).constructor).toBe(app.Account);
@@ -126,7 +96,7 @@ describe('class Account', function(){
 	});
 	
 	
-	describe('Account instance', function() {
+	describe('instance', function() {
 		
 		var testAccount, oldPermission, testObserver;
 		
@@ -144,6 +114,38 @@ describe('class Account', function(){
 		});
 		
 		
+		it('inherits from Model', function() {
+
+			// IInterfaceable
+
+			expect(typeof testAccount.isInstanceOf).toBe('function');
+
+			//Model
+
+			expect(testAccount.isInstanceOf(app.Model)).toBe(true);
+
+			expect(typeof testAccount.className).toBe('function');
+
+			expect(typeof testAccount.id).toBe('function');
+
+			expect(typeof testAccount.observers).toBe('function');
+
+			expect(typeof testAccount.ssuper).toBe('function');
+
+			//IObservable
+
+			expect(typeof testAccount.notifyObservers).toBe('function');
+
+			expect(typeof testAccount.registerObserver).toBe('function');
+
+			expect(typeof testAccount.removeObserver).toBe('function');
+
+			//IObserver
+
+			expect(typeof testAccount.update).toBe('function');
+		});
+		
+
 		it('can set and get its email', function() {
 		
 			testAccount.email(new app.Email('test@noserver.nodomain'));
@@ -411,18 +413,6 @@ describe('class Account', function(){
 		});
 
 		
-		// IInterfaceable testing
-
-		it('can tell if it is an implementation of a custom app interface', function() {
-
-			expect(testAccount.isInstanceOf(app.IInterfaceable)).toBe(true);
-
-			expect(testAccount.isInstanceOf(app.IModelable)).toBe(true);
-
-			expect(testAccount.isInstanceOf(Array)).toBe(false);
-		});
-
-
 		// IObservable testing
 
 		it('can register an observer', function(){
@@ -433,7 +423,7 @@ describe('class Account', function(){
 
 			expect(testAccount.registerObserver(testObserver2)).not.toBe(null);
 
-			expect(testAccount.observers.length).toBe(2);
+			expect(testAccount.observers().length).toBe(2);
 		});
 		
 
@@ -480,11 +470,11 @@ describe('class Account', function(){
 
 			testAccount.registerObserver(testObserver2);
 
-			expect(testAccount.observers.length).toBe(2);
+			expect(testAccount.observers().length).toBe(2);
 
 			expect(testAccount.removeObserver(testObserver2)).toBe(testObserver2);
 
-			expect(testAccount.observers.length).toBe(1);
+			expect(testAccount.observers().length).toBe(1);
 		});
 		
 		

@@ -15,6 +15,8 @@ var app = app || {}; // create a simple namespace for the module
 *
 * NOTE: Views must only notify observers as a direct result of user actions in the UI. Otherwise the MVC objects will likely enter an infinite update loop.
 *
+* (Interfaces implemented as mixins, using static method in IInterface.)
+*
 * @implements IInterface
 *
 * @implements IObservable
@@ -26,9 +28,8 @@ var app = app || {}; // create a simple namespace for the module
 * @return {View} Not supposed to be instantiated, except when extended by subclasses.
 *
 * @author Ulrik H. Gade, February 2016
-*
-* @todo refactor out separate reference modelId; redundant when we have direct reference to model
 */
+
 
 app.View = function(Function_modelClass, str_elementId, str_heading) {
 	
@@ -138,6 +139,8 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 
 			else {
 
+				console.log(Function_type);
+
 				throw new IllegalArgumentError('Type must be a Class (by function reference)');
 			}
 		}
@@ -192,11 +195,13 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 
 	_modelClass = Function_modelClass, // the class of data model supported by this view (by function reference)
 	
-	_observers = [], // Array of IObservers receiving updates from this view
+	_observers = [], // Array of IObservers receiving updates from this view, required in order to implement IObservable
 
 	_parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.View], // list of interfaces implemented by this class (by function reference)
 
-	_$renderContext = $('#' + str_elementId); // the HTML element the view will render itself into when updated (set in realizing classes)
+	_$renderContext = $('#' + str_elementId), // the HTML element the view will render itself into when updated (set in realizing classes)
+	
+	_super = (this.ssuper ? this.ssuper : Object); // reference to immediate parent class (by function) if provided by subclass, otherwise Object
 	
 		
 	/*----------------------------------------------------------------------------------------
@@ -207,7 +212,7 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 
 	this.heading = new Accessor(_heading, false, 'string');
 
-	this.model = new Accessor(_model, false, app.IModelable, 'IModelable');
+	this.model = new Accessor(_model, false, app.Model, 'Model');
 
 	this.modelClass = new Accessor(_modelClass, true);
 
@@ -216,6 +221,8 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	this.parentList = new Accessor(_parentList, true);
 
 	this.$renderContext = new Accessor(_$renderContext, false);
+	
+	this.ssuper = new Accessor(_super, true); // 'super' may be a reserved word, so slight name change
 
 
 	/*----------------------------------------------------------------------------------------
@@ -276,14 +283,14 @@ void app.IInterfaceable.mixInto(app.IObserver, app.View);
 *
 * If the view is inactive, only the type of the model needs to match.
 *
-* @param {IModelable} obj Reference to the data model object to be rendered in the UI, or null (to reset the view).
+* @param {Model} obj Reference to the data model object to be rendered in the UI, or null (to reset the view).
 *
 * @return {Boolean} True if this view should respond to the notification, otherwise false-
 *
 * @throws {AbstractMethodError} If attempting to invoke directly on abstract class
 */
 
-app.View.prototype.doUpdate = function(IModelable) {
+app.View.prototype.doUpdate = function(Model) {
 	
 	throw new AbstractMethodError('Method signature "doUpdate()" must be realized in implementing classes');
 };
@@ -296,7 +303,7 @@ app.View.prototype.doUpdate = function(IModelable) {
 * @throws {AbstractMethodError} If attempting to invoke directly on abstract class
 */
 
-app.View.prototype.update = function(IModelable) {
+app.View.prototype.update = function(Model) {
 	
 	throw new AbstractMethodError('Method signature "update()" must be realized in implementing classes');
 };
@@ -1510,7 +1517,7 @@ app.View.prototype.hide = function(obj_options) {
 }
 
 
-/** Returns true if class implements the interface passed in (by function reference)
+/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference)
 *
 * (See IInterfaceable for further documentation.)
 */

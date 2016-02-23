@@ -55,35 +55,35 @@ app.Controller = function() {
 	* @throws {IllegalArgumentError} If attempting to set a view that is not a View, or null
 	*/
 	
-	this.currentView = function (View_view, IModelable_model) {
+	this.currentView = function (View, Model) {
 	
 		if (arguments.length > 0) { // setting
 
-			if (View_view === null || View_view.isInstanceOf(app.View)) {
+			if (View === null || View.isInstanceOf(app.View)) {
 			
 				
-				this.notifyObservers(IModelable_model); // first notify observers: forms won't update if they are the current view
+				this.notifyObservers(Model); // first notify observers: forms won't update if they are the current view
 
 
 				for (var view in _views) {_views[view].hide('fast');} // hide all views
 
-				_currentView = View_view; // set current view
+				_currentView = View; // set current view
 
 				_currentView.show('slow'); // show current view
 
 				
-				if (View_view.isInstanceOf(app.FormView)) { // if form, show form specific nav/icons
+				if (View.isInstanceOf(app.FormView)) { // if form, show form specific nav/icons
 
-					app.FormView.prototype.onLoad.call(View_view);
+					app.FormView.prototype.onLoad.call(View);
 				}
 
 				else { // else, hide form specific nav/icons
 
-					app.FormView.prototype.onUnLoad.call(View_view);
+					app.FormView.prototype.onUnLoad.call(View);
 				}
 
 				
-				_router.onViewChange(View_view); // update browser history
+				_router.onViewChange(View); // update browser history
 			}
 
 			else {
@@ -203,12 +203,12 @@ app.Controller = function() {
 	*
 	* @param {View} view Reference to a View (assumed to be a list view).
 	*
-	* @param {int} id Id of IModelable tapped/clicked on. IModelable type is inferred from type of View.
+	* @param {int} id Id of Model tapped/clicked on. Model type is inferred from type of View.
 	*
 	* @return {void}
 	*/
 
-	function _update(View, int_id) { // Click received in list of IModelable s displayed by View
+	function _update(View, int_id) { // Click received in list of Model s displayed by View
 
 			/* Using the more generic update(View, Event) form might void the need for this.
 			* But that would make retrieving the id of the clicked object more tightly coupled
@@ -265,18 +265,18 @@ app.Controller = function() {
 	*
 	* Called by public update() method, which also does error handling.
 	*
-	* @param {IModelable} model Reference to a temporary IModelable holding the data to be used for the update. Is of the same class as the IModelable to be updated.
+	* @param {Model} model Reference to a temporary Model holding the data to be used for the update. Is of the same class as the Model to be updated.
 	*
-	* @param {int} id Id of the IModelable to be updated. Disregarded when creating a new object.
+	* @param {int} id Id of the Model to be updated. Disregarded when creating a new object.
 	*
 	* @return {void}
 	*/
 	
-	function ___update(IModelable, int_id) { // Submission received from form representing IModelable of same class and id as parameters
+	function ___update(Model, int_id) { // Submission received from form representing Model of same class and id as parameters
 
-		var sourceObj = IModelable.constructor.registry.getObjectById(int_id); // update data model
+		var sourceObj = Model.constructor.registry.getObjectById(int_id); // update data model
 
-		sourceObj.update(IModelable, int_id);
+		sourceObj.update(Model, int_id);
 	}
 
 
@@ -284,22 +284,22 @@ app.Controller = function() {
 	*
 	* Called by public update() method, which also does error handling.
 	*
-	* @param {IModelable} model The IModelable that has changed state and therefore invoked the update.
+	* @param {Model} model The Model that has changed state and therefore invoked the update.
 	*
 	* @return {void}
 	*/
 
-	function ____update(IModelable) { // Update received from data model. Object represents itself.
+	function ____update(Model) { // Update received from data model. Object represents itself.
 
 		// If a new event or guest was added, first register it with its account or event...
 
-		switch (IModelable.constructor) {
+		switch (Model.constructor) {
 
 			case app.Event: // event
 
-				if (!this.selectedAccount().isInAccount(IModelable)) { // account does not know event
+				if (!this.selectedAccount().isInAccount(Model)) { // account does not know event
 
-					this.selectedAccount().addEvent(IModelable); // so add it
+					this.selectedAccount().addEvent(Model); // so add it
 				}
 
 				break;
@@ -308,13 +308,13 @@ app.Controller = function() {
 
 				//Bit of a hack to exclude account holder from guest list, but acceptable for now
 
-				if (IModelable.id() !== this.selectedAccount().accountHolder().id()) { // account holder cannot be guest
+				if (Model.id() !== this.selectedAccount().accountHolder().id()) { // account holder cannot be guest
 
 					if (this.selectedEvent()) { // an event has been selected
 
-						if (!this.selectedEvent().isGuest(IModelable)) { // event doesn't know person
+						if (!this.selectedEvent().isGuest(Model)) { // event doesn't know person
 
-							this.selectedEvent().addGuest(IModelable); // so add as guest
+							this.selectedEvent().addGuest(Model); // so add as guest
 						}
 					}
 				}
@@ -325,7 +325,7 @@ app.Controller = function() {
 
 		// ...then notify observers (i.e. views)
 
-		this.notifyObservers(IModelable);
+		this.notifyObservers(Model);
 	}
 
 
@@ -367,7 +367,7 @@ app.Controller = function() {
 			}
 
 
-		// Register controller as observer of every IModelable in the data model
+		// Register controller as observer of every Model in the data model
 
 			[app.Account, app.Event, app.Organization, app.Person].forEach(function(klass){
 
@@ -427,14 +427,14 @@ app.Controller = function() {
 
 	/** Notifies observes (views) of change to the data model
 	*
-	* @param {IModelable} Reference to the data model object that caused the update
+	* @param {Model} Reference to the data model object that caused the update
 	*/
 
-	this.notifyObservers = function(IModelable) {
+	this.notifyObservers = function(Model) {
 
 		_observers.forEach(function(observer) {
 
-			observer.update(IModelable);
+			observer.update(Model);
 		});
 	}
 
@@ -487,19 +487,19 @@ app.Controller = function() {
 	};
 
 
-	this.onDeleteSelected = function(IModelable) {
+	this.onDeleteSelected = function(Model) {
 
-		switch(IModelable.constructor) {
+		switch(Model.constructor) {
 
 			case app.Event: // remove event completely from app
 
-				app.Account.registry.removeObject(IModelable);
+				app.Account.registry.removeObject(Model);
 
-				this.selectedAccount().removeEvent(IModelable);
+				this.selectedAccount().removeEvent(Model);
 
 				this.currentView().model = undefined;
 
-				IModelable = undefined;
+				Model = undefined;
 
 				Materialize.toast('Event was deleted', 4000);
 
@@ -507,9 +507,9 @@ app.Controller = function() {
 
 			case app.Person: // remove person (guest) from this event
 
-				this.selectedEvent().removeGuest(IModelable);
+				this.selectedEvent().removeGuest(Model);
 
-				Materialize.toast(IModelable.name() + ' was taken off the guest list', 4000);
+				Materialize.toast(Model.name() + ' was taken off the guest list', 4000);
 
 				break;
 		}
@@ -610,7 +610,7 @@ app.Controller = function() {
 	*
 	* @return {void}
 	*
-	* @throws {IllegalArgumentError} If first parameter provided is neither an IModelable nor a View.
+	* @throws {IllegalArgumentError} If first parameter provided is neither an Model nor a View.
 	*
 	* @throws {IllegalArgumentError} If second parameter provided (when present) is neither an integer nor a native browser event.
 	*
@@ -627,7 +627,7 @@ app.Controller = function() {
 
 				var int_id = parseInt(intOrEvent);
 
-				if (Object_obj.isInstanceOf(app.IModelable)) { // form submitted
+				if (Object_obj.isInstanceOf(app.Model)) { // form submitted
 
 					___update.call(this, Object_obj, int_id);
 				}
@@ -639,7 +639,7 @@ app.Controller = function() {
 
 				else { // Wrong type
 
-					throw new IllegalArgumentError('Expected IModelable or View');
+					throw new IllegalArgumentError('Expected Model or View');
 				}
 			}
 
@@ -654,14 +654,14 @@ app.Controller = function() {
 			}
 		}
 
-		else if (Object_obj.isInstanceOf(app.IModelable)) { // IModelable and no second param => data model updated
+		else if (Object_obj.isInstanceOf(app.Model)) { // Model and no second param => data model updated
 
-			____update.call(this, Object_obj); // IModelable
+			____update.call(this, Object_obj); // Model
 		}
 
 		else { // wrong type
 
-			throw new IllegalArgumentError('Expected IModelable');
+			throw new IllegalArgumentError('Expected Model');
 		}
 	}
 	

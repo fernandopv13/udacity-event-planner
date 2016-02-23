@@ -4,14 +4,14 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Email implements ISerializable
+* public class Email extends Model
 **********************************************************************************************/
 
 /** @classdesc Describes an email address.
 *
 * @constructor
 *
-* @implements ISerializable
+* @extends Model
 **
 * @return {Email} An email
 *
@@ -26,29 +26,53 @@ var app = app || {}; // create a simple namespace for the app
 
 app.Email = function(str_address) {
 
+	/*----------------------------------------------------------------------------------------
+	* Call (chain) parent class constructor
+	*---------------------------------------------------------------------------------------*/
 	
+	// Set temporary literals to be used as defaults by, and replaced with, accessors by parent class constructor.
+
+	this.className = 'Email';
+
+	this.id = (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) ? arguments[0] : this.constructor.registry.getNextId();
+		
+	this.ssuper = app.Model;
+
+	
+	/** Initialize instance members inherited from parent class*/
+	
+	app.Model.call(this);
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Other initialization
+	*---------------------------------------------------------------------------------------*/
+
+	this.parentList().push(app.Email);
+	
+
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
 	// Any strong typing is enforced by the setter methods.
 		
-	var	_className = 'Email', // (String) Name of this class
+	//var	_className = 'Email', // (String) Name of this class
 	
-	_id, // (int) Unique email ID obtained from Email object registry
+	//_id, // (int) Unique email ID obtained from Email object registry
 	
-	_address, // (String) A string containing the email address.
+	var _address, // (String) A string containing the email address.
 	
-	_isValid = null, // (Boolean) true if email's validity, true or false, has been set (i.e. verified) manually. A null value indicates that the address has not been verified.
+	_isValid = null; // (Boolean) true if email's validity, true or false, has been set (i.e. verified) manually. A null value indicates that the address has not been verified.
 	
-	_implements = [app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+	//_implements = [app.IInterfaceable, app.Model, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	//this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -76,7 +100,10 @@ app.Email = function(str_address) {
 		return _address;
 
 
-	}/** Gets name of object's class. Class name is read-only.
+	}
+
+
+	/** Gets name of object's class. Class name is read-only.
 	*
 	* (Method realization required by ISerializable.)
 	*
@@ -85,6 +112,7 @@ app.Email = function(str_address) {
 	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.className = function () {
 		
 		if(arguments.length === 0) { return _className;}
@@ -94,6 +122,7 @@ app.Email = function(str_address) {
 			throw new Error('Illegal parameter: className is read-only');
 		}
 	};
+	*/
 	
 	
 	/** Gets unique email ID. ID can only be set from within the object itself.
@@ -105,6 +134,7 @@ app.Email = function(str_address) {
 	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.id = function () {
 		
 		if(arguments.length === 0) { return _id;}
@@ -114,6 +144,7 @@ app.Email = function(str_address) {
 			throw new Error('Illegal parameter: id is read-only');
 		}
 	};
+	*/
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -242,9 +273,9 @@ app.Email = function(str_address) {
 		
 		return {
 			
-			_className: 'Email',
+			_className: this.className(),
 			
-			_id: _id,
+			_id: this.id(),
 			
 			_address: _address,
 			
@@ -263,7 +294,7 @@ app.Email = function(str_address) {
 		
 		// Reset original ID (expected by readObject())
 	
-		_id = arguments[0];
+		//_id = arguments[0];
 		
 		
 		// Read in JSON from local storage
@@ -278,7 +309,7 @@ app.Email = function(str_address) {
 		
 		// Set unique ID
 		
-		_id = this.constructor.registry.getNextId();
+		//_id = this.constructor.registry.getNextId();
 		
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
@@ -291,18 +322,18 @@ app.Email = function(str_address) {
 
 
 /*----------------------------------------------------------------------------------------
+* Inherit from Model
+*---------------------------------------------------------------------------------------*/	
+
+app.Email.prototype = Object.create(app.Model.prototype); // Set up inheritance
+
+app.Email.prototype.constructor = app.Email; // Reset constructor property
+
+
+/*----------------------------------------------------------------------------------------
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 
 /** Provides non-mutable, unique email IDs */
 
 app.Email.registry = new app.ObjectRegistry(app.Email, 'Email');
-
-
-/*----------------------------------------------------------------------------------------
-Mix in default methods from implemented interfaces, unless overridden by class or ancestor
-*---------------------------------------------------------------------------------------*/
-
-void app.IInterfaceable.mixInto(app.ISerializable, app.Email);
-
-app.Email.registry.clear(); // remove object created by mixInto()

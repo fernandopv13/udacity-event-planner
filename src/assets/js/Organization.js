@@ -4,7 +4,7 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class IHost implements IHost, IInterfaceable, IModelable, ISerializable
+* public class IHost implements IHost, extends Model
 **********************************************************************************************/
 
 /** @classdesc Describes an organization that may host an event.
@@ -13,11 +13,7 @@ var app = app || {}; // create a simple namespace for the app
 *
 * @implements IHost
 *
-* @implements IInterfaceable
-*
-* @implements IModelable
-*
-* @implements ISerializable
+* @extends Model
 *
 * @param {String} name The organization's name
 *
@@ -28,27 +24,53 @@ var app = app || {}; // create a simple namespace for the app
 
 app.Organization = function(str_name) {
 	
+	/*----------------------------------------------------------------------------------------
+	* Call (chain) parent class constructor
+	*---------------------------------------------------------------------------------------*/
 	
+	// Set temporary literals to be used as defaults by, and replaced with, accessors by parent class constructor.
+
+	this.className = 'Organization';
+
+	this.id = (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) ? arguments[0] : this.constructor.registry.getNextId();
+		
+	this.ssuper = app.Model;
+
+	
+	/** Initialize instance members inherited from parent class*/
+	
+	app.Model.call(this);
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Other initialization
+	*---------------------------------------------------------------------------------------*/
+
+	this.parentList().push(app.Organization);
+
+	this.parentList().push(app.IHost);
+	
+
 	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
 	// Any strong typing is enforced by the setter methods.
 		
-	var	_className = 'Organization', // (String) Name of this class
+	//var	_className = 'Organization', // (String) Name of this class
 	
-	_id, // (int) Unique organization ID obtaining from Organization object registry
+	//_id, // (int) Unique organization ID obtaining from Organization object registry
 	
-	_name,
+	var _name;
 
-	_implements = [app.IHost, app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
+	//_implements = [app.IHost, app.IInterfaceable, app.Model, app.IObservable, app.IObserver, app.ISerializable];  // list of interfaces implemented by this class (by function reference)
 	
 	
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	//this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -64,6 +86,7 @@ app.Organization = function(str_name) {
 	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.className = function () {
 		
 		if(arguments.length === 0) { return _className;}
@@ -73,6 +96,7 @@ app.Organization = function(str_name) {
 			throw new Error('Illegal parameter: className is read-only');
 		}
 	};
+	*/
 	
 	
 	/** Gets unique organization ID. ID can only be set from within the object itself.
@@ -84,6 +108,7 @@ app.Organization = function(str_name) {
 	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.id = function () {
 		
 		if(arguments.length === 0) { return _id;}
@@ -93,6 +118,7 @@ app.Organization = function(str_name) {
 			throw new Error('Illegal parameter: id is read-only');
 		}
 	};
+	*/
 	
 	
 	/** Gets or sets name
@@ -155,10 +181,12 @@ app.Organization = function(str_name) {
 	*	
 	*/
 	
+	/*
 	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
-	};
+	};*/
+
 
 
 	/** Re-establishes references to complex members after they have been deserialized
@@ -201,9 +229,9 @@ app.Organization = function(str_name) {
 		
 		return {
 			
-			_className: _className,
+			_className: this.className(),
 			
-			_id: _id,
+			_id: this.id(),
 			
 			_name: _name
 		};
@@ -221,7 +249,7 @@ app.Organization = function(str_name) {
 		
 		// Reset original ID (expected by readObject())
 	
-		_id = arguments[0];
+		//_id = arguments[0];
 		
 		
 		// Read in JSON from local storage
@@ -236,7 +264,7 @@ app.Organization = function(str_name) {
 		
 		// Set unique ID
 		
-		_id = this.constructor.registry.getNextId();  // Set unique ID
+		//_id = this.constructor.registry.getNextId();  // Set unique ID
 		
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
@@ -249,10 +277,19 @@ app.Organization = function(str_name) {
 
 
 /*----------------------------------------------------------------------------------------
+* Inherit from Model
+*---------------------------------------------------------------------------------------*/	
+
+app.Organization.prototype = Object.create(app.Model.prototype); // Set up inheritance
+
+app.Organization.prototype.constructor = app.Organization; // Reset constructor property
+
+
+/*----------------------------------------------------------------------------------------
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 
-/** Provides non-mutable, unique organization IDs */
+/** Provides non-mutable, unique organization IDs (must be available before mixin in interfaces) */
 
 app.Organization.registry = new app.ObjectRegistry(app.Organization, 'Organization');
 
@@ -261,14 +298,8 @@ app.Organization.registry = new app.ObjectRegistry(app.Organization, 'Organizati
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.IInterfaceable.mixInto(app.IInterfaceable, app.Organization);
-
-void app.IInterfaceable.mixInto(app.IModelable, app.Organization);
-
-void app.IInterfaceable.mixInto(app.IObservable, app.Organization);
-
-void app.IInterfaceable.mixInto(app.IObserver, app.Organization);
-
-void app.IInterfaceable.mixInto(app.ISerializable, app.Organization);
+void app.IInterfaceable.mixInto(app.IHost, app.Organization);
 
 app.Organization.registry.clear(); // remove objects created by mixInto()
+
+

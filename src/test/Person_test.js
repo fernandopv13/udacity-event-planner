@@ -42,42 +42,6 @@ describe('class Person', function(){
 	
 	// Start testing
 	
-	it('implements the IHost interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IHost)).toBe(true);
-	});
-		
-	
-	it('implements the IInterfaceable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IInterfaceable)).toBe(true);
-	});
-
-	
-	it('implements the IModelable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IModelable)).toBe(true);
-	});
-
-
-	it('implements the IObservable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IObservable)).toBe(true);
-	});
-
-
-	it('implements the IObserver interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Person, app.IObserver)).toBe(true);
-	});
-
-
-	it('implements the ISerializable interface', function() { // uses InterfaceTester.js
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Person, app.ISerializable)).toBe(true);
-	});
-
-		
 	it('can be instantiated with no parameters', function() {
 		
 		expect((new app.Person()).constructor).toBe(app.Person);
@@ -130,7 +94,7 @@ describe('class Person', function(){
 	});
 	
 	
-	describe('Person instance', function() {
+	describe('instance', function() {
 	
 		var testPerson, oldPermission;
 		
@@ -146,6 +110,38 @@ describe('class Person', function(){
 		});
 		
 		
+		it('inherits from Model', function() {
+
+			// IInterfaceable
+
+			expect(typeof testPerson.isInstanceOf).toBe('function');
+
+			//Model
+
+			expect(testPerson.isInstanceOf(app.Model)).toBe(true);
+
+			expect(typeof testPerson.className).toBe('function');
+
+			expect(typeof testPerson.id).toBe('function');
+
+			expect(typeof testPerson.observers).toBe('function');
+
+			expect(typeof testPerson.ssuper).toBe('function');
+
+			//IObservable
+
+			expect(typeof testPerson.notifyObservers).toBe('function');
+
+			expect(typeof testPerson.registerObserver).toBe('function');
+
+			expect(typeof testPerson.removeObserver).toBe('function');
+
+			//IObserver
+
+			expect(typeof testPerson.update).toBe('function');
+		});
+
+
 		it('can set and get its name', function() {
 		
 			testPerson.name('testName');
@@ -275,26 +271,6 @@ describe('class Person', function(){
 		});
 		
 		
-		it('can tell if it is an instance of ISerializable', function() {
-
-			expect(testPerson.isInstanceOf(app.ISerializable)).toBe(true);
-
-			expect(testPerson.isInstanceOf(Error)).toBe(false);
-		});
-		
-
-		// IInterfaceable testing
-
-		it('can tell if it is an implementation of a custom app interface', function() {
-
-			expect(testPerson.isInstanceOf(app.IInterfaceable)).toBe(true);
-
-			expect(testPerson.isInstanceOf(app.IHost)).toBe(true);
-
-			expect(testPerson.isInstanceOf(Array)).toBe(false);
-		});
-		
-
 		// ISerializable testing
 
 		it('can get its class name', function() {
@@ -309,7 +285,7 @@ describe('class Person', function(){
 		});
 		
 		
-		it('rejects attempt to set ID (b/c read-only', function() {
+		it('rejects attempt to set ID (b/c read-only)', function() {
 		
 			try {
 				
@@ -318,7 +294,7 @@ describe('class Person', function(){
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 		});
 		
@@ -338,7 +314,7 @@ describe('class Person', function(){
 			testPerson.birthday(new Date());
 			
 			var obj = JSON.parse(JSON.stringify(testPerson));
-			
+
 			expect(typeof obj).toBe('object');
 			
 			expect(obj._className).toBeDefined();

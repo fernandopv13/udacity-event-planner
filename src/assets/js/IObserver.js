@@ -43,17 +43,13 @@ app.IObserver = function() {
 
 	app.IObserver.prototype.update = function() {
 		
-		throw new AbstractMethodError(app.IObserver.prototype.update.errorMessage);
+		throw new AbstractMethodError('Method signature "update()" must be realized in derived classes');
 	};
-	
-	this.constructor.prototype.update.errorMessage = 'Method signature "update()" must be realized in derived classes';
 	
 	
 	/*----------------------------------------------------------------------------------------
 	* Block instantiation
 	*---------------------------------------------------------------------------------------*/
 	
-	this.constructor.constructorErrorMessage = 'Interface IObserver cannot be instantiated. Realize in implementing classes.';
-	
-	throw new InstantiationError(this.constructor.constructorErrorMessage);
+	throw new InstantiationError('Interface IObserver cannot be instantiated. Realize in implementing classes.');
 }

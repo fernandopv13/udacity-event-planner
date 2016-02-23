@@ -49,18 +49,18 @@ app.IViewable = function() {
 	};
 	
 
-	/** Update (i.e. render) UI on demand if passed an IModelable of the type this view observes. Otherwise ignores call.
+	/** Update (i.e. render) UI on demand if passed an Model of the type this view observes. Otherwise ignores call.
 	*
-	* Overrides inherited IObserver method to limit acceptable parameter type to IModelable.
+	* Overrides inherited IObserver method to limit acceptable parameter type to Model.
 	*
-	* @param {IModelable} obj Reference to the data model object to be rendered in the UI, or null (to reset the view).
+	* @param {Model} obj Reference to the data model object to be rendered in the UI, or null (to reset the view).
 	*
 	* @return {void}
 	*
 	* @throws {AbstractMethodError} If attempting to invoke directly on interface
 	*/
 
-	app.IViewable.prototype.update = function(IModelable) {
+	app.IViewable.prototype.update = function(Model) {
 		
 		throw new AbstractMethodError('Method signature "update()" must be realized in implementing classes');
 	};

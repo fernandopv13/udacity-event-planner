@@ -4,7 +4,7 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Perosn implements IInterfaceable, IModelable, ISerializable
+* public class Perosn extends Model
 **********************************************************************************************/
 
 /** @classdesc Describes a person who may host and/or participate in an event.
@@ -13,11 +13,7 @@ var app = app || {}; // create a simple namespace for the app
 *
 * @implements IHost
 *
-* @implements IInterfaceable
-*
-* @implements IModelable
-*
-* @implements ISerializable
+* @extends Model
 *
 * @param {String} name The full name of the person
 *
@@ -39,16 +35,43 @@ var app = app || {}; // create a simple namespace for the app
 app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email, Date_birthday, str_imgUrl) {
 
 	/*----------------------------------------------------------------------------------------
+	* Call (chain) parent class constructor
+	*---------------------------------------------------------------------------------------*/
+	
+	// Set temporary literals to be used as defaults by, and replaced with, accessors by parent class constructor.
+
+	this.className = 'Person';
+
+	this.id = (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) ? arguments[0] : this.constructor.registry.getNextId();
+		
+	this.ssuper = app.Model;
+
+	
+	/** Initialize instance members inherited from parent class*/
+	
+	app.Model.call(this);
+	
+
+	/*----------------------------------------------------------------------------------------
+	* Other initialization
+	*---------------------------------------------------------------------------------------*/
+
+	this.parentList().push(app.Person);
+
+	this.parentList().push(app.IHost);
+	
+
+	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
 	// Any strong typing is enforced by the setter methods.
 		
-	var	_className = 'Person', // (String) Name of this class
+	//var	_className = 'Person', // (String) Name of this class
 
-	_id, // (int) Unique person ID obtaining from Person object registry
+	//_id, // (int) Unique person ID obtaining from Person object registry
 	
-	_name,
+	var _name,
 	
 	_employer,
 	
@@ -58,16 +81,16 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 
 	_birthday,
 
-	_imgUrl, // URL to avatar image for person
+	_imgUrl; // URL to avatar image for person
 	
-	_implements = [app.IHost, app.IInterfaceable, app.IModelable, app.IObservable, app.IObserver, app.ISerializable]; // list of interfaces implemented by this class (by function reference)
+	//_implements = [app.IHost, app.IInterfaceable, app.Model, app.IObservable, app.IObserver, app.ISerializable]; // list of interfaces implemented by this class (by function reference)
 	
 	
 	/*----------------------------------------------------------------------------------------
 	* Public instance fields (non-encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
+	//this.observers = []; // Array of IObservers. Not private b/c we need to break encapsulation any way in order to expose list to default IObservable methods
 	
 	
 	/*----------------------------------------------------------------------------------------
@@ -121,6 +144,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.className = function () {
 		
 		if (arguments.length === 0) { return _className;}
@@ -130,6 +154,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 			throw new Error('Illegal parameter: className is read-only');
 		}
 	};
+	*/
 		
 	
 	/** Gets or sets email
@@ -235,6 +260,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	* @throws {Error} If called with one or more parameters (so mistake is easily detectable)
 	*/
 	
+	/*
 	this.id = function () {
 		
 		if (arguments.length === 0) { return _id;}
@@ -244,6 +270,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 			throw new Error('Illegal parameter: id is read-only');
 		}
 	};
+	*/
 	
 	
 	/** Gets or sets URL to portrait image (avatar)
@@ -300,13 +327,6 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	}
 	
 
-		
-	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
-	*---------------------------------------------------------------------------------------*/
-	
-	// None so far
-	
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond simple accessors)
 	*---------------------------------------------------------------------------------------*/
@@ -317,10 +337,12 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	* (See IInterfaceable for further documentation.)
 	*/
 	
+	/*
 	this.isInstanceOf = function (func_interface) {
 		
 		return _implements.indexOf(func_interface) > -1;
-	};
+	};*/
+
 
 
 	/** Re-establishes references to complex members after they have been deserialized
@@ -357,9 +379,9 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 		
 		return {
 			
-			_className: _className,
+			_className: this.className(),
 			
-			_id: _id,
+			_id: this.id(),
 			
 			_name: _name,
 
@@ -414,9 +436,9 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 			this.birthday(Person_person.birthday() ? Person_person.birthday() : null);
 
 			
-			// Do some housekeeping (calls IModelable default)
+			// Do some housekeeping (calls method in parent class)
 
-			this.onUpdate(Person_person);
+			this.ssuper().prototype.update.call(this, Person_person);
 			
 
 			return true;
@@ -436,7 +458,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 		
 		// Reset original ID (expected by readObject())
 	
-		_id = arguments[0];
+		//_id = arguments[0];
 		
 		
 		// Read in JSON from local storage
@@ -451,7 +473,7 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	
 		// Set unique ID
 		
-		_id = this.constructor.registry.getNextId();
+		//_id = this.constructor.registry.getNextId();
 		
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
@@ -470,11 +492,21 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	this.constructor.registry.add(this); // Will only happend if param passing passes w/o error
 };
 
+
+/*----------------------------------------------------------------------------------------
+* Inherit from Model
+*---------------------------------------------------------------------------------------*/	
+
+app.Person.prototype = Object.create(app.Model.prototype); // Set up inheritance
+
+app.Person.prototype.constructor = app.Person; // Reset constructor property
+
+
 /*----------------------------------------------------------------------------------------
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 
-/** Provides registry and unique object ID services to this class  */
+/** Provides registry and unique object ID services to this class (must be available before mixin in interfaces)  */
 
 app.Person.registry = new app.ObjectRegistry(app.Person, 'Person');
 
@@ -483,14 +515,8 @@ app.Person.registry = new app.ObjectRegistry(app.Person, 'Person');
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.IInterfaceable.mixInto(app.IInterfaceable, app.Person);
-
-void app.IInterfaceable.mixInto(app.IModelable, app.Person);
-
-void app.IInterfaceable.mixInto(app.IObservable, app.Person);
-
-void app.IInterfaceable.mixInto(app.IObserver, app.Person);
-
-void app.IInterfaceable.mixInto(app.ISerializable, app.Person);
+void app.IInterfaceable.mixInto(app.IHost, app.Person);
 
 app.Person.registry.clear(); // remove objects created by mixInto()
+
+

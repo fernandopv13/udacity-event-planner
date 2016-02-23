@@ -77,24 +77,6 @@ describe('class Event', function(){
 	}
 
 
-	it('implements the IObservable interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Event, app.IObservable)).toBe(true);
-	});
-
-
-	it('implements the IObserver interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Event, app.IObserver)).toBe(true);
-	});
-
-
-	it('implements the ISerializable interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.Event, app.ISerializable)).toBe(true);
-	});
-		
-	
 	it('can be instantiated with no parameters', function() {
 		
 		expect((new app.Event()).constructor).toBe(app.Event);
@@ -133,6 +115,38 @@ describe('class Event', function(){
 		});
 		
 		
+		it('inherits from Model', function() {
+
+			// IInterfaceable
+
+			expect(typeof testEvent.isInstanceOf).toBe('function');
+
+			//Model
+
+			expect(testEvent.isInstanceOf(app.Model)).toBe(true);
+
+			expect(typeof testEvent.className).toBe('function');
+
+			expect(typeof testEvent.id).toBe('function');
+
+			expect(typeof testEvent.observers).toBe('function');
+
+			expect(typeof testEvent.ssuper).toBe('function');
+
+			//IObservable
+
+			expect(typeof testEvent.notifyObservers).toBe('function');
+
+			expect(typeof testEvent.registerObserver).toBe('function');
+
+			expect(typeof testEvent.removeObserver).toBe('function');
+
+			//IObserver
+
+			expect(typeof testPerson.update).toBe('function');
+		});
+
+
 		it('can set and get its name', function() {
 		
 			testEvent.name('testName');
@@ -548,30 +562,18 @@ describe('class Event', function(){
 
 			testEvent.registerObserver(testObserver2);
 
-			expect(testEvent.observers.constructor).toBe(Array);
+			expect(testEvent.observers().constructor).toBe(Array);
 
-			expect(testEvent.observers.length).toBe(2);
+			expect(testEvent.observers().length).toBe(2);
 
-			expect(testEvent.observers[0].constructor).toBe(TestObserver);
+			expect(testEvent.observers()[0].constructor).toBe(TestObserver);
 
-			expect(testEvent.observers[1].constructor).toBe(TestObserver);
+			expect(testEvent.observers()[1].constructor).toBe(TestObserver);
 
-			expect(testEvent.observers[2]).not.toBeDefined();
+			expect(testEvent.observers()[2]).not.toBeDefined();
 		});
 
 		
-		// IInterfaceable testing
-
-		it('can tell if it is an implementation of a custom app interface', function() {
-
-			expect(testEvent.isInstanceOf(app.IInterfaceable)).toBe(true);
-
-			expect(testEvent.isInstanceOf(app.IModelable)).toBe(true);
-
-			expect(testEvent.isInstanceOf(Array)).toBe(false);
-		});
-
-
 		// IObserver testing
 
 		it('can update itself when notified of change by Observable', function() {
@@ -681,7 +683,7 @@ describe('class Event', function(){
 			
 			catch(e) {
 				
-				expect(e.message).toBe('Illegal parameter: id is read-only');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 		});
 		

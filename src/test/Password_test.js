@@ -85,7 +85,7 @@ describe('class Password', function(){
 	});
 	
 
-	describe('Password instance', function() {
+	describe('instance', function() {
 		
 		var testPassword, oldPermission;
 		
@@ -97,6 +97,38 @@ describe('class Password', function(){
 			
 			app.prefs.isLocalStorageAllowed(true);
 		
+		});
+		
+
+		it('inherits from Model', function() {
+
+			// IInterfaceable
+
+			expect(typeof testPassword.isInstanceOf).toBe('function');
+
+			//Model
+
+			expect(testPassword.isInstanceOf(app.Model)).toBe(true);
+
+			expect(typeof testPassword.className).toBe('function');
+
+			expect(typeof testPassword.id).toBe('function');
+
+			expect(typeof testPassword.observers).toBe('function');
+
+			expect(typeof testPassword.ssuper).toBe('function');
+
+			//IObservable
+
+			expect(typeof testPassword.notifyObservers).toBe('function');
+
+			expect(typeof testPassword.registerObserver).toBe('function');
+
+			expect(typeof testPassword.removeObserver).toBe('function');
+
+			//IObserver
+
+			expect(typeof testPassword.update).toBe('function');
 		});
 		
 		

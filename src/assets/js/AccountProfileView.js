@@ -74,13 +74,13 @@ app.AccountProfileView.prototype.cancel = function() {
 * @return void
  */
 
-app.AccountProfileView.prototype.render = function(IModelable_account) {
+app.AccountProfileView.prototype.render = function(Model_account) {
 
 	var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
-	if (IModelable_account !== null && IModelable_account.accountHolder()) { // account holder exists
+	if (Model_account !== null && Model_account.accountHolder()) { // account holder exists
 		
-		var person = IModelable_account.accountHolder();
+		var person = Model_account.accountHolder();
 
 		// Setup up form and container div
 
@@ -387,13 +387,13 @@ app.AccountProfileView.prototype.submit = function(event) {
 * See IViewable for further details.
  */
 
-app.AccountProfileView.prototype.update = function(IModelable) {
+app.AccountProfileView.prototype.update = function(Model) {
 	
-	if (this.doUpdate(IModelable)) {
+	if (this.doUpdate(Model)) {
 
-		this.model(IModelable);
+		this.model(Model);
 
-		this.render(IModelable);
+		this.render(Model);
 	}
 
 	// else do nothing

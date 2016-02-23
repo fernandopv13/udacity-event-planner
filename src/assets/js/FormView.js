@@ -85,18 +85,18 @@ app.FormView.prototype.cancel = function(bool_deleteModel) {
 * Realization required by abstract View class. See this for further documentation.
  */
 
-app.FormView.prototype.doUpdate = function(IModelable) {
+app.FormView.prototype.doUpdate = function(Model) {
 
 	// no current view (boot), or form is not in focus (i.e. being displayed)
 
 	if (!app.controller.currentView() || this.constructor !== app.controller.currentView().constructor) {
 
-		if (IModelable === null) { // i.e. reset
+		if (Model === null) { // i.e. reset
 
 			return true;
 		}
 
-		else if (IModelable.constructor === this.modelClass()) { // classes match
+		else if (Model.constructor === this.modelClass()) { // classes match
 
 			return true;
 		}

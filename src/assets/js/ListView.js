@@ -66,14 +66,14 @@ app.ListView.prototype.constructor = app.ListView; // Reset constructor property
 * Realization required by abstract View class. See this for further documentation.
  */
 
-app.ListView.prototype.doUpdate = function(IModelable) {
+app.ListView.prototype.doUpdate = function(Model) {
 
-	if (IModelable === null) { // i.e. reset
+	if (Model === null) { // i.e. reset
 
 			return true;
 		}
 
-	else if (IModelable.constructor === this.modelClass()) { // classes match
+	else if (Model.constructor === this.modelClass()) { // classes match
 
 		return true;
 	}

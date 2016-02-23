@@ -62,7 +62,7 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 		
 		else {
 			
-			throw new Error('Illegal parameter: className is read-only');
+			throw new IllegalArgumentError('Illegal parameter: className is read-only');
 		}
 	};
 	
@@ -82,7 +82,7 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 		
 		else {
 			
-			throw new Error('Illegal parameter: id is read-only');
+			throw new IllegalArgumentError('Illegal parameter: id is read-only');
 		}
 	};
 	
@@ -100,7 +100,7 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 		
 		else {
 			
-			throw new Error('Illegal parameter: objectClassName is read-only');
+			throw new IllegalArgumentError('Illegal parameter: objectClassName is read-only');
 		}
 	};
 	
@@ -153,7 +153,7 @@ app.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {
 				
 				else {
 					
-					throw new Error('Object with same id is already in registry');
+					throw new IllegalArgumentError('Object with same id is already in registry');
 				}
 			}
 			

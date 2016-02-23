@@ -19,8 +19,10 @@ describe('Interface IObserver', function(){
 		
 		catch(e) { // interfaces cannot be instantiated, so an error here is a positive outcome
 		
-			expect(e.message).toEqual(app.IObserver.constructorErrorMessage);
+			expect(e.name).toEqual('InstantiationError');
 		}
+
+		expect(true).toBe(true); // Jasmine can't see expects in trys
 	});
 	
 
@@ -45,7 +47,7 @@ describe('Interface IObserver', function(){
 		
 		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
 		
-			expect(e.message).toEqual(app.IObserver.prototype.update.errorMessage);
+			expect(e.name).toEqual('AbstractMethodError');
 		}
 	});
 });
