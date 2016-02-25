@@ -9,29 +9,15 @@ var app = app || {}; // create a simple namespace for the app
 
 /** @classdesc Holds information about an event.
 *
+* See 'polymorphic', inner helper 'constructors' for supported signatures.
+*
 * @constructor
 *
 * @extends Model
 *
-* @param {String} name The name of the event
-*
-* @param {String} type The type of event (e.g. birthday, bachelor's party, religious holiday etc.)
-*
-* @param {Date} start The date and time when the event starts
-*
-* @param {Date} end The date and time when the event ends
-*
-* @param {String} location The location where the event is held
-*
-* @param {String} description A brief description of the event
-*
-* @param {IHost} host The host of the event
-*
-* @param {int} capacity The capacity (in number of persons) of the event. Default is zero.
-*
 * @return {Event} An Event instance
 *
-* @author Ulrik H. Gade, January 2016
+* @author Ulrik H. Gade, February 2016
 */
 
 app.Event = function(str_name, str_type, date_start, date_end, str_location, str_description, ihost_host, int_capacity) {
@@ -40,7 +26,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	// Set temporary literals to be used as defaults by, and replaced with, accessors by parent class constructor.
+	// Set temporary literals to be used as defaults by, and replaced with accessors, by parent class constructor.
 
 	this.className = 'Event';
 
@@ -68,7 +54,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 	_end,
 	
-	_capacity = 50, // set a reasonable non-zero default
+	_capacity,
 	
 	_guests = [], // (Person array) A collection of guests invited to, or participating in, the event
 	
@@ -77,6 +63,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	_description,
 	
 	_host;
+
 
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
@@ -588,11 +575,72 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	
 		
 	/*----------------------------------------------------------------------------------------
-	* Other initialization (parameter parsing/constructor 'polymorphism')
+	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 		
-	this.parentList().push(app.Event);
+	// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
+
+	/** Constructor signature 1: Single param that is an integer => deserialize from local storage
+	*
+	* @param {int} id Id of the object to be re-instantiated from local storage. Overrides normal, incremental id assignment from ObjectRegistry.
+	*
+	* @return {Event} Returns an Event, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Event_(int_id) {
+
+		void this.readObject();
+	}
+
+
+	/** Constructor signature 2: One or more non-integer params provided => normal initialization.
+	*
+	* Individual params can be skipped, but only in strict reverse order.
+	*
+	* If present, a parameter is assigned using its accessor (for validation).
+	*
+	* @param {String} name The name of the event
+	*
+	* @param {String} type The type of event (e.g. birthday, bachelor's party, religious holiday etc.)
+	*
+	* @param {Date} start The date and time when the event starts
+	*
+	* @param {Date} end The date and time when the event ends
+	*
+	* @param {String} location The location where the event is held
+	*
+	* @param {String} description A brief description of the event
+	*
+	* @param {IHost} host The host of the event
+	*
+	* @param {int} capacity The capacity (in number of persons) of the event. Default is zero.
+	*
+	* @return {Event} Returns an Event, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Event__(str_name, str_type, date_start, date_end, str_location, str_description, ihost_host, int_capacity) {
+
+		// Call accessors for any supplied params (accessors provide simple validation and error handling)
+		
+		if (str_name) {this.name(str_name)}
+		
+		if (str_type) {this.type(str_type)}
+		
+		if (date_start) {this.start(date_start)}
+		
+		if (date_end) {this.end(date_end)}
+		
+		if (str_location) {this.location(str_location)}
+
+		if (str_description) {this.description(str_description)}
+
+		if (ihost_host) {this.host(ihost_host)}
+
+		if (int_capacity >= 0) {this.capacity(int_capacity)}
+	}
+
 	
+	// Parameter parsing to invoke 'polymorphic' constructor response
 
 	// Single param that is integer => deserialize from local storage
 
@@ -600,7 +648,9 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		// Read in JSON from local storage
 		
-		void this.readObject();
+		Event_.call(this, arguments[0]);
+
+		//void this.readObject();
 	}
 	
 	
@@ -610,6 +660,9 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
+		Event__.call(this, str_name, str_type, date_start, date_end, str_location, str_description, ihost_host, int_capacity)
+
+		/*
 		if (str_name) {this.name(str_name)}
 		
 		if (str_type) {this.type(str_type)}
@@ -625,6 +678,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		if (str_description) {this.description(str_description)}
 
 		if (ihost_host) {this.host(ihost_host)}
+		*/
 	}
 
 	this.constructor.registry.add(this); // Will only happend if param passing passes w/o error

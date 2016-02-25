@@ -702,6 +702,8 @@ describe('class Event', function(){
 			
 			testEvent = new app.Event('Fab Festival','Summer Entertainment',new Date());
 			
+			testEvent.capacity(50);
+
 			testEvent.description('Fabulous summer entertainment!');
 			
 			testEvent.host(testOrg);

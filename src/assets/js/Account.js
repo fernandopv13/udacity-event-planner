@@ -13,11 +13,7 @@ var app = app || {};
 *
 * @extends Model
 *
-* @param {Email} email Email identifying the account
-*
-* @param {String} password A secure password for the account
-*
-* @param {Person} accountHolder The person holding the account
+* See 'polymorphic', inner helper 'constructors' for supported signatures.
 *
 * @return {Account} An account instance
 
@@ -487,19 +483,61 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 	
 		
 	/*----------------------------------------------------------------------------------------
-	* Other initialization (parameter parsing/constructor 'polymorphism')
+	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 	
-	this.parentList().push(app.Account);
-	
-	
+	// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
+
+	/** Constructor signature 1: Single param that is an integer => deserialize from local storage
+	*
+	* @param {int} id Id of the object to be re-instantiated from local storage. Overrides normal, incremental id assignment from ObjectRegistry.
+	*
+	* @return {Account} Returns an Account, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Account_(int_id) {
+
+		void this.readObject();
+	}
+
+
+	/** Constructor signature 2: One or more non-integer params provided => normal initialization.
+	*
+	* Individual params can be skipped, but only in strict reverse order.
+	*
+	* If present, a parameter is assigned using its accessor (for validation).
+	*
+	* @param {Email} email Email identifying the account
+	*
+	* @param {String} password A secure password for the account
+	*
+	* @param {Person} accountHolder The person holding the account
+	*
+	* @return {Account} Returns an Account, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Account__(Email_email, Password_password, Person_accountHolder) {
+
+		// Call accessors for any supplied params (accessors provide simple validation and error handling)
+		
+		if (Email_email) {this.email(Email_email);}
+		
+		if (Password_password) {this.password(Password_password);}
+
+		if (Person_accountHolder) {this.accountHolder(Person_accountHolder);}
+	}
+
+
+
 	// Single param that is integer => deserialize from local storage
 
 	if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
 		
 		// Read in JSON from local storage
 		
-		void this.readObject();
+		Account_.call(this, arguments[0]);
+
+		//void this.readObject();
 	}
 	
 
@@ -509,11 +547,15 @@ app.Account = function(Email_email, Password_password, Person_accountHolder) {
 			
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
+		Account__.call(this, Email_email, Password_password, Person_accountHolder);
+
+		/*
 		if (Email_email) {this.email(Email_email);}
 		
 		if (Password_password) {this.password(Password_password);}
 
 		if (Person_accountHolder) {this.accountHolder(Person_accountHolder);}
+		*/
 	}
 
 	

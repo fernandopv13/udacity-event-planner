@@ -9,21 +9,13 @@ var app = app || {}; // create a simple namespace for the app
 
 /** @classdesc Describes a person who may host and/or participate in an event.
 *
+* See 'polymorphic', inner helper 'constructors' for supported signatures.
+*
 * @constructor
 *
 * @implements IHost
 *
 * @extends Model
-*
-* @param {String} name The full name of the person
-*
-* @param {Organization} employer The person's employer
-*
-* @param {String} jobTitle The person's job title
-*
-* @param {Email} email The person's email
-*
-* @param {Date} birthday The person's birthday
 *
 * @return {Person} A Person instance
 *
@@ -372,25 +364,49 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 	
-	this.parentList().push(app.Person);
+	// Make sure isInstanceOf() will return true IHost
 
 	this.parentList().push(app.IHost);
 	
 
-	// Single param that is integer => deserialize from local storage
+	// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
 
-	if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
-		
-		// Read in JSON from local storage
-		
+	/** Constructor signature 1: Single param that is an integer => deserialize from local storage
+	*
+	* @param {int} id Id of the object to be re-instantiated from local storage. Overrides normal, incremental id assignment from ObjectRegistry.
+	*
+	* @return {Person} Returns a Person, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Person_(int_id) {
+
 		void this.readObject();
 	}
-	
-	
-	// Normal instantiation
 
-	else {
-	
+
+	/** Constructor signature 2: One or more non-integer params provided => normal initialization.
+	*
+	* Individual params can be skipped, but only in strict reverse order.
+	*
+	* If present, a parameter is assigned using its accessor (for validation).
+	*
+	* @param {String} name The full name of the person
+	*
+	* @param {Organization} employer The person's employer
+	*
+	* @param {String} jobTitle The person's job title
+	*
+	* @param {Email} email The person's email
+	*
+	* @param {Date} birthday The person's birthday
+	*
+	* @param {String} imgUrl URL to image of person to be used in lists etc. (optional)
+	*
+	* @return {Person} Returns a Person, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Person__(str_name, Organization_employer, str_jobTitle, Email_email, Date_birthday, str_imgUrl) {
+
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
 		if (str_name) {this.name(str_name);}
@@ -402,6 +418,43 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 		if (Email_email) {this.email(Email_email);}
 
 		if (Date_birthday) {this.birthday(Date_birthday);}
+
+		if (str_imgUrl) {this.imgUrl(str_imgUrl);}
+	}
+
+	
+	// Parameter parsing to invoke 'polymorphic' constructor response
+	// Single param that is integer => deserialize from local storage
+
+	if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
+		
+		// Read in JSON from local storage
+		
+		Person_.call(this, arguments[0]);
+
+		//void this.readObject();
+	}
+	
+	
+	// Normal instantiation
+
+	else {
+	
+		Person__.call(this, str_name, Organization_employer, str_jobTitle, Email_email, Date_birthday, str_imgUrl)
+
+		// Call accessors for any supplied params (accessors provide simple validation and error handling)
+		
+		/*
+		if (str_name) {this.name(str_name);}
+				
+		if (Organization_employer) {this.employer(Organization_employer);}
+		
+		if (str_jobTitle) {this.jobTitle(str_jobTitle);}
+		
+		if (Email_email) {this.email(Email_email);}
+
+		if (Date_birthday) {this.birthday(Date_birthday);}
+		*/
 	}
 	
 	this.constructor.registry.add(this); // Will only happend if param passing passes w/o error

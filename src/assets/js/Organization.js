@@ -9,13 +9,13 @@ var app = app || {}; // create a simple namespace for the app
 
 /** @classdesc Describes an organization that may host an event.
 *
+* See 'polymorphic', inner helper 'constructors' for supported signatures.
+*
 * @constructor
 *
 * @implements IHost
 *
 * @extends Model
-*
-* @param {String} name The organization's name
 *
 * @return {Organization} An organization
 *
@@ -136,10 +136,46 @@ app.Organization = function(str_name) {
 	* Other initialization (Parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 	
-	this.parentList().push(app.Organization);
+	// Make sure isInstanceOf() will return true for IHost
 
 	this.parentList().push(app.IHost);
 	
+
+	// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
+
+	/** Constructor signature 1: Single param that is an integer => deserialize from local storage
+	*
+	* @param {int} id Id of the object to be re-instantiated from local storage. Overrides normal, incremental id assignment from ObjectRegistry.
+	*
+	* @return {Event} Returns an Event, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Organization_(int_id) {
+
+		void this.readObject();
+	}
+
+
+	/** Constructor signature 2: One or more non-integer params provided => normal initialization.
+	*
+	* Individual params can be skipped, but only in strict reverse order.
+	*
+	* If present, a parameter is assigned using its accessor (for validation).
+	*
+	* @param {String} name The organization's name
+	*
+	* @return {Event} Returns an Event, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Organization__(str_name) {
+
+		// Call accessors for any supplied params (accessors provide simple validation and error handling)
+		
+		if (str_name) {this.name(str_name)}
+	}
+
+	
+	// Parameter parsing to invoke 'polymorphic' constructor response
 
 	// Single param that is integer => deserialize from local storage
 
@@ -147,7 +183,9 @@ app.Organization = function(str_name) {
 		
 		// Read in JSON from local storage
 		
-		void this.readObject();
+		Organization_.call(this, arguments[0]);
+
+		//void this.readObject();
 	}
 	
 	
@@ -157,7 +195,9 @@ app.Organization = function(str_name) {
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
-		if (str_name) {this.name(str_name)}
+		Organization__.call(this, str_name);
+
+		//if (str_name) {this.name(str_name)}
 	}
 	
 	this.constructor.registry.add(this); // Will only happend if param passing passes w/o error

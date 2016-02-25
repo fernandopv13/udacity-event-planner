@@ -6,21 +6,23 @@
 
 var app = app || {};
 
-/** @classdesc Polymorphic method factory for creating inheritable accessors to private properties of calling class
+/** @classdesc Method factory for creating inheritable accessors to private properties of calling class.
 *
-* param {Object} property The property to create an accessor for
+* See 'polymorhic' inner functions for details on supported method signatures.
 *
-* param {String} type The primitive type required by the property (by the string typeof would return). Optional, provided if type checking is required.
+* @param {Object} property The property to create an accessor for (by reference). Required.
 *
-* param {Function} type Class (by function reference) required by the property. Optional, provided if type checking is required.
+* @param {Boolean} readonly If true, creates a read-only accessor (i.e. a getter), otherwise creates a unified accessor (i.e. combined getter and setter). Required.
+
+* @param {Object} type The type required by the property. Optional.
 *
-* param {String} className The name of the class required by the accessor, if any. Otherwise not required.
+* @param {String} className The name of the class required by the accessor. Optional.
 *
-* return {Function} Accessor method for property. Both sets and gets, always returning the current value.
+* @return {Function} Accessor method for property. Both sets and gets, always returning the current value.
 *
-* throws {IllegalArgumentError} If one or more parameters are not of the type expected by the signature
+* @throws {IllegalArgumentError} If one or more parameters are not of the type expected by the signature
 *
-* throws {ReferenceError} If no parameters are provided
+* @throws {ReferenceError} If no parameters are provided
 *
 * @constructor
 *
@@ -39,6 +41,13 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 	
 	// Inner functions that do the actual 'polymorphic' work
 
+	/** Signature 1
+	*
+	* @param {Object} property The property to create an accessor for
+	*
+	* @return {Function} A basic unified accessor without type checking
+	*/
+
 	function Accessor_(obj_prop) { // basic unified accessor without type checking
 		
 		return function(obj_val) {
@@ -52,6 +61,20 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 		}
 	}
 	
+
+	/** Signature 2
+	*
+	* @param {Object} property The property to create an accessor for
+	*
+	* @param {String} type The primitive type required by the property (by the string typeof would return)
+	*
+	* @return {Function} A unified accessor with type checking for primitive types
+	*
+	* @throws {IllegalArgumentError} If passed a type string that does not represent a primitive type (constructor)
+	*
+	* @throws {IllegalArgumentError} If passed a type parameter that is not a primitive type (accessor function)
+	*/
+
 	function Accessor__(obj_prop, str_primitive) { // unified accessor with type checking for primitive types
 
 		if (['boolean', 'number', 'string', 'symbol', 'undefined'].indexOf(str_primitive) > -1) {
@@ -81,6 +104,23 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 		}
 	}
 
+	
+	/** Signature 3
+	*
+	* @param {Object} property The property to create an accessor for
+	*
+	* @param {Function} type Class (by function reference) required by the property
+	*
+	* @param {String} className The name of the class required by the accessor
+	*
+	* @return {Function} A unified accessor with type checking for complex types (i.e. classes/functions)
+	*
+	* @throws {IllegalArgumentError} If passed a type parameter that is not a class/function (constructor)
+	*
+	* @throws {IllegalArgumentError} If passed a class name parameter that is not a string (constructor)
+	*
+	* @throws {IllegalArgumentError} If passed a type paramater that is not a class7function (accessor function)
+	*/
 	
 	function Accessor___(obj_prop, Function_type, str_className) {  // unified accessor with type checking for complex types (i.e. classes)
 

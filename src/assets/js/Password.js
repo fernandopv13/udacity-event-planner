@@ -9,15 +9,13 @@ var app = app || {}; // create a simple namespace for the app
 
 /** @classdesc Describes a password.
 *
+* See 'polymorphic', inner helper 'constructors' for supported signatures.
+*
 * @constructor
 *
 * @extends Model
 *
 * @return {Password} A password
-*
-* @param {String} password A string containing the password. If present, creates new Object from scratch.
-*
-* @param {int} id An ID for a password retrieved from storage. If present, de-serializes password with original ID.
 *
 * @throws Same errors as password accessor if passing in invalid data.
 *
@@ -157,16 +155,51 @@ app.Password = function(str_password) {
 	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
 	
-	this.parentList().push(app.Password);
+	// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
+
+	/** Constructor signature 1: Single param that is an integer => deserialize from local storage
+	*
+	* @param {int} id Id of the object to be re-instantiated from local storage. Overrides normal, incremental id assignment from ObjectRegistry.
+	*
+	* @return {Password} Returns a Password, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Password_(int_id) {
+
+		void this.readObject();
+	}
+
+
+	/** Constructor signature 2: One or more non-integer params provided => normal initialization.
+	*
+	* Individual params can be skipped, but only in strict reverse order.
+	*
+	* If present, a parameter is assigned using its accessor (for validation).
+	*
+	* @param {String} password A string containing the password. If present, creates new Object from scratch.
+	*
+	* @return {Password} Returns a Password, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Password__(str_password) {
+
+		// Call accessors for any supplied params (accessors provide simple validation and error handling)
+		
+		if (str_password) {this.password(str_password)} // Set password
+	}
+
 	
-	
+	// Parameter parsing to invoke 'polymorphic' constructor response
+
 	// Single param that is integer => deserialize from local storage
 
 	if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
 		
 		// Read in JSON from local storage
 		
-		void this.readObject();
+		Password_.call(this, arguments[0]);
+
+		//void this.readObject();
 	}
 	
 	
@@ -176,7 +209,9 @@ app.Password = function(str_password) {
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
-		if (str_password) {this.password(str_password)} // Set password
+		Password__.call(this, str_password);
+
+		//if (str_password) {this.password(str_password)} // Set password
 	}
 	
 	this.constructor.registry.add(this); // Will only happend if param parsing passes w/o error

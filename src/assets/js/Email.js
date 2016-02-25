@@ -9,15 +9,13 @@ var app = app || {}; // create a simple namespace for the app
 
 /** @classdesc Describes an email address.
 *
+* See 'polymorphic', inner helper 'constructors' for supported signatures.
+*
 * @constructor
 *
 * @extends Model
 **
 * @return {Email} An email
-*
-* @param {String} address A string containing the email address. If present, creates new Object from scratch.
-*
-* @param {Object} address A JSON object containing the data for an email retrieved from storage. If present, de-serializes email with original ID.
 *
 * @throws Same errors as address accessor if passing in invalid data.
 *
@@ -188,11 +186,44 @@ app.Email = function(str_address) {
 	
 	
 	/*----------------------------------------------------------------------------------------
-	* Other initialization (parameter parsing/constructor 'polymorphism')
+	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 	
-	this.parentList().push(app.Email);
+	// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
 
+	/** Constructor signature 1: Single param that is an integer => deserialize from local storage
+	*
+	* @param {int} id Id of the object to be re-instantiated from local storage. Overrides normal, incremental id assignment from ObjectRegistry.
+	*
+	* @return {Email} Returns an Email, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Email_(int_id) {
+
+		void this.readObject();
+	}
+
+
+	/** Constructor signature 2: One or more non-integer params provided => normal initialization.
+	*
+	* Individual params can be skipped, but only in strict reverse order.
+	*
+	* If present, a parameter is assigned using its accessor (for validation).
+	*
+	* @param {String} address A string containing the email address. If present, creates new Object from scratch.
+	*
+	* @return {Email} Returns an Email, by way of the main constructor. This function itself has no return value.
+	*/
+
+	function Email__(str_address) {
+
+		// Call accessors for any supplied params (accessors provide simple validation and error handling)
+		
+		if (str_address) {this.address(str_address)} // Set address
+	}
+
+
+	// Parameter parsing to invoke 'polymorphic' constructor response
 
 	// Single param that is integer => deserialize from local storage
 
@@ -200,7 +231,9 @@ app.Email = function(str_address) {
 		
 		// Read in JSON from local storage
 		
-		void this.readObject();
+		Email_.call(this, arguments[0]);
+
+		//void this.readObject();
 	}
 	
 	
@@ -210,7 +243,9 @@ app.Email = function(str_address) {
 		
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
-		if (str_address) {this.address(str_address)} // Set address
+		//if (str_address) {this.address(str_address)} // Set address
+
+		Email__.call(this, str_address);
 	}
 	
 	this.constructor.registry.add(this); // Will only happend if param passing passes w/o error

@@ -26,7 +26,7 @@ var app = app || {}; // create a simple namespace for the module
 app.IObservable = function() {
 	
 	/*----------------------------------------------------------------------------------------
-	* Method signatures
+	* Abstract method signatures
 	*---------------------------------------------------------------------------------------*/
 	
 	// None so far

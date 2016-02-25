@@ -11,7 +11,9 @@ var app = app || {}; // create a simple namespace for the module
 *
 * Enables loosely coupled messaging among main MVC collaborators.
 *
-* (Interfaces implemented as mixins, using static method in IInterface.)
+* Interfaces implemented as mixins, using static method in IInterface:
+*
+* Please see individual interfaces for documentation of methods that have a default implementation.
 *
 * @implements IInterface
 *
@@ -24,6 +26,8 @@ var app = app || {}; // create a simple namespace for the module
 * @return {Model} Not supposed to be instantiated, except when extended by subclasses.
 *
 * @author Ulrik H. Gade, February 2016
+*
+* @todo: Try to pull some of the boilerplate initialization (e.g. retrieval from storage) from subclasses up into this (the parent)
 */
 
 app.Model = function() {
@@ -187,8 +191,10 @@ app.Model = function() {
 
 	_observers = [], // Array of IObservers receiving updates from this view, required in order to implement IObservable
 
-	_parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.Model], // list of interfaces implemented by this class (by function reference)
+	_parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.ISerializable, app.Model, this.constructor], // list of interfaces implemented by this class (by function reference)
 	
+	// try adding this.constructor to parentList to relieve subclasses from this task
+
 	_super = (this.ssuper ? this.ssuper : Object); // reference to immediate parent class (by function) if provided by subclass, otherwise Object 
 
 	
@@ -253,8 +259,6 @@ app.Model.prototype.isInstanceOf = function (func_interface) {
 * @param {int} id ID of the object to be updated
 *
 * @return {void}
-*
-* @throws {AbstractMethodError} If attempting to invoke directly on interface (abstract method signature)
 */
 
 app.Model.prototype.update = function(Model_obj) {
