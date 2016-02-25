@@ -104,11 +104,15 @@ describe('class Password', function(){
 
 			// IInterfaceable
 
+			expect(testPassword.isInstanceOf(app.IInterfaceable)).toBe(true);
+
 			expect(typeof testPassword.isInstanceOf).toBe('function');
 
 			//Model
 
 			expect(testPassword.isInstanceOf(app.Model)).toBe(true);
+
+			expect(testPassword.isInstanceOf(app.Password)).toBe(true);
 
 			expect(typeof testPassword.className).toBe('function');
 
@@ -120,6 +124,8 @@ describe('class Password', function(){
 
 			//IObservable
 
+			expect(testPassword.isInstanceOf(app.IObservable)).toBe(true);
+
 			expect(typeof testPassword.notifyObservers).toBe('function');
 
 			expect(typeof testPassword.registerObserver).toBe('function');
@@ -128,7 +134,19 @@ describe('class Password', function(){
 
 			//IObserver
 
+			expect(testPassword.isInstanceOf(app.IObserver)).toBe(true);
+
 			expect(typeof testPassword.update).toBe('function');
+
+			// ISerializable
+
+			expect(testPassword.isInstanceOf(app.ISerializable)).toBe(true);
+
+			expect(typeof testPassword.writeObject).toBe('function');
+
+			expect(typeof testPassword.readObject).toBe('function');
+
+			expect(typeof testPassword.removeObject).toBe('function');
 		});
 		
 		
@@ -447,6 +465,42 @@ describe('class Password', function(){
 			// Required by ISerializable but nothing to do for now
 			
 			expect(testPassword.onDeserialized()).toBe(true);
+		});
+
+
+		it('can update itself when notified of change by Observable', function() {
+
+			var id = testPassword.id();
+			
+			testPassword.password('1234#ABcd');
+
+			// Create temporary object to copy from
+
+			var tmpPw = new app.Password('abCD$8765');
+
+			
+			// Verify that object contents are different
+
+				expect(testPassword.id()).toEqual(id);
+
+				expect(testPassword.id()).not.toEqual(tmpPw.id());
+
+				expect(testPassword.password()).not.toEqual(tmpPw.password());
+
+				
+			// Copy data from temporary object
+
+			testPassword.update (tmpPw, id);
+
+
+			// Verify copy
+
+			expect(testPassword.password()).toEqual(tmpPw.password());
+
+			
+			// Verify that temporary object has been removed from registry
+
+			expect(app.Password.registry.getObjectById(tmpPw.id())).toBe(null);
 		});
 		
 		

@@ -310,56 +310,6 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 	};
 	
 	
-	/** Updates person when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Person} person Object holding the data to update this person with
-	*
-	* @return {Boolean} true if copy was successful, else error or false
-	*
-	* @todo Not implemented
-	*/
-
-	this.update = function(Person_person, int_objId) {
-
-		if (Person_person.constructor !== app.Person) { // wrong class
-
-			throw new IllegalArgumentError('Object must be instance of Person');
-		}
-
-		else if (this.id() !== int_objId) { // id mismatch
-
-			throw new IllegalArgumentError('Objects IDs don\'t match');
-		}
-
-		else {
-
-			// Update using accessors for validation
-
-			this.name(Person_person.name());
-
-			this.employer(Person_person.employer() ? Person_person.employer() : null);
-
-			this.jobTitle(Person_person.jobTitle());
-
-			this.email(Person_person.email() ? Person_person.email() : null);
-
-			this.birthday(Person_person.birthday() ? Person_person.birthday() : null);
-
-			
-			// Do some housekeeping (calls method in parent class)
-
-			this.ssuper().prototype.update.call(this, Person_person);
-			
-
-			return true;
-		}
-
-		return false;
-	}
-
-
 	/*----------------------------------------------------------------------------------------
 	* Other initialization (parameter parsing/constructor 'polymorphism')
 	*---------------------------------------------------------------------------------------*/
@@ -468,6 +418,58 @@ app.Person = function(str_name, Organization_employer, str_jobTitle, Email_email
 app.Person.prototype = Object.create(app.Model.prototype); // Set up inheritance
 
 app.Person.prototype.constructor = app.Person; // Reset constructor property
+
+
+/*----------------------------------------------------------------------------------------
+* Public instance methods (on prototype)
+*---------------------------------------------------------------------------------------*/	
+
+/** Updates person when notified of change by observable (controller). Autosaves to local storage if available.
+*
+* (See IObserver for further documentation.)
+*
+* @param {Person} person Object holding the data to update this person with
+*
+* @return {Boolean} true if copy was successful, else error or false
+*/
+
+app.Person.prototype.update = function(Person_person, int_objId) {
+
+	if (Person_person.constructor !== app.Person) { // wrong class
+
+		throw new IllegalArgumentError('Object must be instance of Person');
+	}
+
+	else if (this.id() !== int_objId) { // id mismatch
+
+		throw new IllegalArgumentError('Objects IDs don\'t match');
+	}
+
+	else {
+
+		// Update using accessors for validation
+
+		this.name(Person_person.name());
+
+		this.employer(Person_person.employer() ? Person_person.employer() : null);
+
+		this.jobTitle(Person_person.jobTitle());
+
+		this.email(Person_person.email() ? Person_person.email() : null);
+
+		this.birthday(Person_person.birthday() ? Person_person.birthday() : null);
+
+		
+		// Do some housekeeping (calls method in parent class)
+
+		this.ssuper().prototype.update.call(this, Person_person);
+		
+
+		return true;
+	}
+
+	return false;
+}
 
 
 /*----------------------------------------------------------------------------------------

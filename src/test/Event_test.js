@@ -119,11 +119,15 @@ describe('class Event', function(){
 
 			// IInterfaceable
 
+			expect(testEvent.isInstanceOf(app.IInterfaceable)).toBe(true);
+
 			expect(typeof testEvent.isInstanceOf).toBe('function');
 
 			//Model
 
 			expect(testEvent.isInstanceOf(app.Model)).toBe(true);
+
+			expect(testEvent.isInstanceOf(app.Event)).toBe(true);
 
 			expect(typeof testEvent.className).toBe('function');
 
@@ -135,6 +139,8 @@ describe('class Event', function(){
 
 			//IObservable
 
+			expect(testEvent.isInstanceOf(app.IObservable)).toBe(true);
+
 			expect(typeof testEvent.notifyObservers).toBe('function');
 
 			expect(typeof testEvent.registerObserver).toBe('function');
@@ -143,7 +149,19 @@ describe('class Event', function(){
 
 			//IObserver
 
-			expect(typeof testPerson.update).toBe('function');
+			expect(testEvent.isInstanceOf(app.IObserver)).toBe(true);
+
+			expect(typeof testEvent.update).toBe('function');
+
+			// ISerializable
+
+			expect(testEvent.isInstanceOf(app.ISerializable)).toBe(true);
+
+			expect(typeof testEvent.writeObject).toBe('function');
+
+			expect(typeof testEvent.readObject).toBe('function');
+
+			expect(typeof testEvent.removeObject).toBe('function');
 		});
 
 

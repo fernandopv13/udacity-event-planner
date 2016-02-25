@@ -9,11 +9,11 @@ var app = app || {};
 
 /** @classdesc Holds information about a account.
 *
+* See 'polymorphic', inner helper 'constructors' for supported signatures.
+*
 * @constructor
 *
 * @extends Model
-*
-* See 'polymorphic', inner helper 'constructors' for supported signatures.
 *
 * @return {Account} An account instance
 
@@ -624,7 +624,7 @@ app.Account.prototype.update = function(Account_account, int_objId) {
 		this.localStorageAllowed(source.localStorageAllowed());
 	
 		
-		// Do some housekeeping (calls method in parent class)
+		// Do some housekeeping (calls method in parent class, i.e. Model)
 
 		this.ssuper().prototype.update.call(this, Account_account);
 

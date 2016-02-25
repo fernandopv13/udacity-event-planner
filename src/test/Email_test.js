@@ -55,11 +55,15 @@ describe('class Email', function(){
 
 			// IInterfaceable
 
+			expect(testMail.isInstanceOf(app.IInterfaceable)).toBe(true);
+
 			expect(typeof testMail.isInstanceOf).toBe('function');
 
 			//Model
 
 			expect(testMail.isInstanceOf(app.Model)).toBe(true);
+
+			expect(testMail.isInstanceOf(app.Email)).toBe(true);
 
 			expect(typeof testMail.className).toBe('function');
 
@@ -71,6 +75,8 @@ describe('class Email', function(){
 
 			//IObservable
 
+			expect(testMail.isInstanceOf(app.IObservable)).toBe(true);
+
 			expect(typeof testMail.notifyObservers).toBe('function');
 
 			expect(typeof testMail.registerObserver).toBe('function');
@@ -79,7 +85,19 @@ describe('class Email', function(){
 
 			//IObserver
 
+			expect(testMail.isInstanceOf(app.IObserver)).toBe(true);
+
 			expect(typeof testMail.update).toBe('function');
+
+			// ISerializable
+
+			expect(testMail.isInstanceOf(app.ISerializable)).toBe(true);
+
+			expect(typeof testMail.writeObject).toBe('function');
+
+			expect(typeof testMail.readObject).toBe('function');
+
+			expect(typeof testMail.removeObject).toBe('function');
 		});
 		
 
@@ -390,6 +408,43 @@ describe('class Email', function(){
 			expect(testMail.onDeserialized()).toBe(true);
 		});
 		
+
+		// IObserver testing
+
+		it('can update itself when notified of change by Observable', function() {
+
+			var id = testMail.id();
+			
+			testMail.address('aname@serv.com');
+
+			// Create temporary object to copy from
+
+			var tmpMail = new app.Email('name@server.domain');
+
+			
+			// Verify that object contents are different
+
+				expect(testMail.id()).toEqual(id);
+
+				expect(testMail.id()).not.toEqual(tmpMail.id());
+
+				expect(testMail.address()).not.toEqual(tmpMail.address());
+
+				
+			// Copy data from temporary object
+
+			testMail.update (tmpMail, id);
+
+
+			// Verify copy
+
+			expect(testMail.address()).toEqual(tmpMail.address());
+
+			
+			// Verify that temporary object has been removed from registry
+
+			expect(app.Email.registry.getObjectById(tmpMail.id())).toBe(null);
+		});
 		
 		afterEach(function() {
 			

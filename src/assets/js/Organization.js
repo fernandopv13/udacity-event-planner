@@ -214,6 +214,54 @@ app.Organization.prototype.constructor = app.Organization; // Reset constructor 
 
 
 /*----------------------------------------------------------------------------------------
+* Public instance members (on prototype)
+*---------------------------------------------------------------------------------------*/
+
+/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
+*
+* (See IObserver for further documentation.)
+*
+* @param {Organization} Organization Object holding the data to update with
+*
+* @return {Boolean} true if copy was successful, else error or false
+*
+* @throws {IllegalArgumentError} If object provided is not an instance of Organization
+*
+* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+*/
+
+app.Organization.prototype.update = function(Organization_organization, int_objId) {
+
+	var source = Organization_organization;
+
+	if (source.constructor !== app.Organization) { // wrong class
+
+		throw new IllegalArgumentError('Object must be instance of Organization');
+	}
+
+	else if (this.id() !== int_objId) { // id mismatch
+
+		throw new IllegalArgumentError('Objects IDs don\'t match');
+	}
+
+	else {
+
+		// Update using accessors (for validation)
+
+		this.name(Organization_organization.name());
+	
+		
+		// Do some housekeeping (calls method in parent class, i.e. Model)
+
+		this.ssuper().prototype.update.call(this, Organization_organization);
+
+		
+		return true;
+	}
+
+	return false; // this should never happen, keeping just in case
+}
+/*----------------------------------------------------------------------------------------
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 

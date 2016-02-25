@@ -262,6 +262,55 @@ app.Email.prototype.constructor = app.Email; // Reset constructor property
 
 
 /*----------------------------------------------------------------------------------------
+* Public instance members (on prototype)
+*---------------------------------------------------------------------------------------*/
+
+/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
+*
+* (See IObserver for further documentation.)
+*
+* @param {Email} email Object holding the data to update with
+*
+* @return {Boolean} true if copy was successful, else error or false
+*
+* @throws {IllegalArgumentError} If object provided is not an instance of Email
+*
+* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+*/
+
+app.Email.prototype.update = function(Email_email, int_objId) {
+
+	var source = Email_email;
+
+	if (source.constructor !== app.Email) { // wrong class
+
+		throw new IllegalArgumentError('Object must be instance of Email');
+	}
+
+	else if (this.id() !== int_objId) { // id mismatch
+
+		throw new IllegalArgumentError('Objects IDs don\'t match');
+	}
+
+	else {
+
+		// Update using accessors (for validation)
+
+		this.address(Email_email.address());
+	
+		
+		// Do some housekeeping (calls method in parent class, i.e. Model)
+
+		this.ssuper().prototype.update.call(this, Email_email);
+
+		
+		return true;
+	}
+
+	return false; // this should never happen, keeping just in case
+}
+
+/*----------------------------------------------------------------------------------------
 * Public class (static) members
 *---------------------------------------------------------------------------------------*/
 

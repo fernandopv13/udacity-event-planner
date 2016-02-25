@@ -118,11 +118,15 @@ describe('class Account', function(){
 
 			// IInterfaceable
 
+			expect(testAccount.isInstanceOf(app.IInterfaceable)).toBe(true);
+
 			expect(typeof testAccount.isInstanceOf).toBe('function');
 
 			//Model
 
 			expect(testAccount.isInstanceOf(app.Model)).toBe(true);
+
+			expect(testAccount.isInstanceOf(app.Account)).toBe(true);
 
 			expect(typeof testAccount.className).toBe('function');
 
@@ -134,6 +138,8 @@ describe('class Account', function(){
 
 			//IObservable
 
+			expect(testAccount.isInstanceOf(app.IObservable)).toBe(true);
+
 			expect(typeof testAccount.notifyObservers).toBe('function');
 
 			expect(typeof testAccount.registerObserver).toBe('function');
@@ -142,7 +148,20 @@ describe('class Account', function(){
 
 			//IObserver
 
+			expect(testAccount.isInstanceOf(app.IObserver)).toBe(true);
+
 			expect(typeof testAccount.update).toBe('function');
+
+			// ISerializable
+
+			expect(testAccount.isInstanceOf(app.ISerializable)).toBe(true);
+
+			expect(typeof testAccount.writeObject).toBe('function');
+
+			expect(typeof testAccount.readObject).toBe('function');
+
+			expect(typeof testAccount.removeObject).toBe('function');
+
 		});
 		
 

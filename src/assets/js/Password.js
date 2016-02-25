@@ -227,6 +227,55 @@ app.Password.prototype = Object.create(app.Model.prototype); // Set up inheritan
 app.Password.prototype.constructor = app.Password; // Reset constructor property
 
 
+/*----------------------------------------------------------------------------------------
+* Public instance members (on prototype)
+*---------------------------------------------------------------------------------------*/
+
+/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
+*
+* (See IObserver for further documentation.)
+*
+* @param {Password} Password Object holding the data to update with
+*
+* @return {Boolean} true if copy was successful, else error or false
+*
+* @throws {IllegalArgumentError} If object provided is not an instance of Password
+*
+* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+*/
+
+app.Password.prototype.update = function(Password_password, int_objId) {
+
+	var source = Password_password;
+
+	if (source.constructor !== app.Password) { // wrong class
+
+		throw new IllegalArgumentError('Object must be instance of Password');
+	}
+
+	else if (this.id() !== int_objId) { // id mismatch
+
+		throw new IllegalArgumentError('Objects IDs don\'t match');
+	}
+
+	else {
+
+		// Update using accessors (for validation)
+
+		this.password(Password_password.password());
+	
+		
+		// Do some housekeeping (calls method in parent class, i.e. Model)
+
+		this.ssuper().prototype.update.call(this, Password_password);
+
+		
+		return true;
+	}
+
+	return false; // this should never happen, keeping just in case
+}
+
 
 /*----------------------------------------------------------------------------------------
 * Public class (static) fields

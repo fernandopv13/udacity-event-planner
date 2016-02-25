@@ -114,11 +114,15 @@ describe('class Person', function(){
 
 			// IInterfaceable
 
+			expect(testPerson.isInstanceOf(app.IInterfaceable)).toBe(true);
+
 			expect(typeof testPerson.isInstanceOf).toBe('function');
 
 			//Model
 
 			expect(testPerson.isInstanceOf(app.Model)).toBe(true);
+
+			expect(testPerson.isInstanceOf(app.Person)).toBe(true);
 
 			expect(typeof testPerson.className).toBe('function');
 
@@ -130,6 +134,8 @@ describe('class Person', function(){
 
 			//IObservable
 
+			expect(testPerson.isInstanceOf(app.IObservable)).toBe(true);
+
 			expect(typeof testPerson.notifyObservers).toBe('function');
 
 			expect(typeof testPerson.registerObserver).toBe('function');
@@ -138,7 +144,19 @@ describe('class Person', function(){
 
 			//IObserver
 
+			expect(testPerson.isInstanceOf(app.IObserver)).toBe(true);
+
 			expect(typeof testPerson.update).toBe('function');
+
+			// ISerializable
+
+			expect(testPerson.isInstanceOf(app.ISerializable)).toBe(true);
+
+			expect(typeof testPerson.writeObject).toBe('function');
+
+			expect(typeof testPerson.readObject).toBe('function');
+
+			expect(typeof testPerson.removeObject).toBe('function');
 		});
 
 

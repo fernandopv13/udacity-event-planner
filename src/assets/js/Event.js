@@ -529,6 +529,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
 	*/
 
+	/*
 	this.update = function(Event_event, int_objId) {
 
 		if (Event_event.constructor !== app.Event) { // wrong class
@@ -572,7 +573,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 
 		return false; // this should never happen, keeping just in case
 	}
-	
+	*/
 		
 	/*----------------------------------------------------------------------------------------
 	* Other initialization
@@ -691,6 +692,69 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 app.Event.prototype = Object.create(app.Model.prototype); // Set up inheritance
 
 app.Event.prototype.constructor = app.Event; // Reset constructor property
+
+
+/*----------------------------------------------------------------------------------------
+* Public instance methods (on prototype)
+*---------------------------------------------------------------------------------------*/
+
+/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
+*
+* (See IObserver for further documentation.)
+*
+* @param {Event} event Object holding the data to update with
+*
+* @return {Boolean} true if copy was successful, else error or false
+*
+* @throws {IllegalArgumentError} If object provided is not an instance of Event
+*
+* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+*/
+
+app.Event.prototype.update = function(Event_event, int_objId) {
+
+	if (Event_event.constructor !== app.Event) { // wrong class
+
+		throw new IllegalArgumentError('Object must be instance of Event');
+	}
+
+	else if (this.id() !== int_objId) { // id mismatch
+
+		throw new IllegalArgumentError('Objects IDs don\'t match');
+	}
+
+	else {
+
+		// Update using accessors (for validation)
+
+		this.name(Event_event.name());
+
+		this.type(Event_event.type());
+
+		this.start(Event_event.start() ? Event_event.start() : null);
+
+		this.end(Event_event.end() ? Event_event.end() : null);
+
+		if (Event_event.location()) {this.location(Event_event.location());}
+
+		this.description(Event_event.description());
+
+		this.capacity(Event_event.capacity());
+
+		this.host(Event_event.host());
+
+		
+		// Do some housekeeping (calls method in parent class)
+
+		this.ssuper().prototype.update.call(this, Event_event);
+
+		
+		return true;
+	}
+
+	return false; // this should never happen, keeping just in case
+}
+
 
 
 /*----------------------------------------------------------------------------------------

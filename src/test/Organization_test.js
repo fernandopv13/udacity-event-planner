@@ -53,11 +53,15 @@ describe('class Organization', function(){
 
 			// IInterfaceable
 
+			expect(testOrg.isInstanceOf(app.IInterfaceable)).toBe(true);
+
 			expect(typeof testOrg.isInstanceOf).toBe('function');
 
 			//Model
 
 			expect(testOrg.isInstanceOf(app.Model)).toBe(true);
+
+			expect(testOrg.isInstanceOf(app.Organization)).toBe(true);
 
 			expect(typeof testOrg.className).toBe('function');
 
@@ -69,6 +73,8 @@ describe('class Organization', function(){
 
 			//IObservable
 
+			expect(testOrg.isInstanceOf(app.IObservable)).toBe(true);
+
 			expect(typeof testOrg.notifyObservers).toBe('function');
 
 			expect(typeof testOrg.registerObserver).toBe('function');
@@ -77,7 +83,19 @@ describe('class Organization', function(){
 
 			//IObserver
 
+			expect(testOrg.isInstanceOf(app.IObserver)).toBe(true);
+
 			expect(typeof testOrg.update).toBe('function');
+
+			// ISerializable
+
+			expect(testOrg.isInstanceOf(app.ISerializable)).toBe(true);
+
+			expect(typeof testOrg.writeObject).toBe('function');
+
+			expect(typeof testOrg.readObject).toBe('function');
+
+			expect(typeof testOrg.removeObject).toBe('function');
 		});
 
 
@@ -322,6 +340,42 @@ describe('class Organization', function(){
 		});
 		
 		
+		it('can update itself when notified of change by Observable', function() {
+
+			var id = testOrg.id();
+			
+			testOrg.name('ACME');
+
+			// Create temporary object to copy from
+
+			var tmpOrg = new app.Organization('Coop');
+
+			
+			// Verify that object contents are different
+
+				expect(testOrg.id()).toEqual(id);
+
+				expect(testOrg.id()).not.toEqual(tmpOrg.id());
+
+				expect(testOrg.name()).not.toEqual(tmpOrg.name());
+
+				
+			// Copy data from temporary object
+
+			testOrg.update (tmpOrg, id);
+
+
+			// Verify copy
+
+			expect(testOrg.name()).toEqual(tmpOrg.name());
+
+			
+			// Verify that temporary object has been removed from registry
+
+			expect(app.Organization.registry.getObjectById(tmpOrg.id())).toBe(null);
+		});
+
+
 		afterEach(function(){
 			
 			app.prefs.isLocalStorageAllowed(oldPermission);
