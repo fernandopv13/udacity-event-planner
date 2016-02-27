@@ -578,55 +578,47 @@ app.Account.prototype.constructor = app.Account; // Reset constructor property
 * Public instance members (on prototype)
 *---------------------------------------------------------------------------------------*/
 
-/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
+/** Updates Account instance when notified of change by observable (controller). Autosaves to local storage if available.
 *
 * (See IObserver for further documentation.)
 *
-* @param {Account} account Object holding the data to update with
+* @param {Account} account Object holding the data to update from
+*
+* @param {int} id Id of the account intended to receive the update
 *
 * @return {Boolean} true if copy was successful, else error or false
 *
 * @throws {IllegalArgumentError} If object provided is not an instance of Account
 *
 * @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+*
+* @throws {IllegalArgumentError} If any of the data provided by the source does not fit the validation criteria of the target, as managed by accessors.
 */
 
-app.Account.prototype.update = function(Account_account, int_objId) {
+app.Account.prototype.update = function(Account_a, int_id) {
 
-	var source = Account_account;
-
-	if (source.constructor !== app.Account) { // wrong class
-
-		throw new IllegalArgumentError('Object must be instance of Account');
-	}
-
-	else if (this.id() !== int_objId) { // id mismatch
-
-		throw new IllegalArgumentError('Objects IDs don\'t match');
-	}
-
-	else {
+	if (this.ssuper().prototype.update.call(this, arguments)) { // check whether to respond to this notification
 
 		// Update using accessors (for validation)
 
-		this.email(source.email());
+		this.email(Account_a.email());
 
-		this.password(source.password());
+		this.password(Account_a.password());
 
-		if (source.accountHolder()) {this.accountHolder(source.accountHolder());}
+		if (Account_a.accountHolder()) {this.accountHolder(Account_a.accountHolder());}
 
-		this.defaultCapacity(source.defaultCapacity());
+		this.defaultCapacity(Account_a.defaultCapacity());
 
-		this.defaultLocation(source.defaultLocation());
+		this.defaultLocation(Account_a.defaultLocation());
 
-		this.geoLocationAllowed(source.geoLocationAllowed());
+		this.geoLocationAllowed(Account_a.geoLocationAllowed());
 
-		this.localStorageAllowed(source.localStorageAllowed());
+		this.localStorageAllowed(Account_a.localStorageAllowed());
 	
 		
 		// Do some housekeeping (calls method in parent class, i.e. Model)
 
-		this.ssuper().prototype.update.call(this, Account_account);
+		this.ssuper().prototype.onUpdate.call(this, Account_a);
 
 		
 		return true;

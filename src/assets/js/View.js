@@ -34,582 +34,855 @@ var app = app || {}; // create a simple namespace for the module
 app.View = function(Function_modelClass, str_elementId, str_heading) {
 	
 	/*----------------------------------------------------------------------------------------
-	* Factory methods providing inheritable accessors for private class members (through dependency injection)
-	*---------------------------------------------------------------------------------------*/
-	
-	/* Polymorphic factory method for creating inheritable accessors to private properties (values).
-	*
-	* param {Object} property The property to create an accessor for
-	*
-	* param {String} type The primitive type required by the property (by the string typeof would return). Optional, provided if type checking is required.
-	*
-	* param {Function} type Class (by function reference) required by the property. Optional, provided if type checking is required.
-	*
-	* param {String} className The name of the class required by the accessor, if any. Otherwise not required.
-	*
-	* return {Function} Accessor method for property. Both sets and gets, always returning the current value.
-	*
-	* throws {IllegalArgumentError} If one or more parameters are not of the type expected by the signature
-	*
-	* throws {ReferenceError} If no parameters are provided
-	*/
-
-	
-	/*----------------------------------------------------------------------------------------
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 
-	var _className = (this.className ? this.className : 'View'), // name of this view class (override if provided by subclass constructor)
+		var _className = (this.className ? this.className : 'View'), // name of this view class (override if provided by subclass constructor)
 
-	_heading = str_heading, // content of the view's main heading
+		_heading = str_heading, // content of the view's main heading
 
-	_model = null, // the model currently displayed by the view, or null
+		_model = null, // the model currently displayed by the view, or null
 
-	_modelClass = Function_modelClass, // the class of data model supported by this view (by function reference)
-	
-	_observers = [], // Array of IObservers receiving updates from this view, required in order to implement IObservable
+		_modelClass = Function_modelClass, // the class of data model supported by this view (by function reference)
+		
+		_observers = [], // Array of IObservers receiving updates from this view, required in order to implement IObservable
 
-	_parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.View], // list of interfaces implemented by this class (by function reference)
+		_parentList = [app.IInterfaceable, app.IObservable, app.IObserver, app.View], // list of interfaces implemented by this class (by function reference)
 
-	_$renderContext = $('#' + str_elementId), // the HTML element the view will render itself into when updated (set in realizing classes)
-	
-	_super = (this.ssuper ? this.ssuper : Object); // reference to immediate parent class (by function) if provided by subclass, otherwise Object
-	
+		_$renderContext = $('#' + str_elementId), // the HTML element the view will render itself into when updated (set in realizing classes)
+		
+		_super = (this.ssuper ? this.ssuper : Object); // reference to immediate parent class (by function) if provided by subclass, otherwise Object
+		
 		
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields (dependency injection enables access for subclasses)
 	*---------------------------------------------------------------------------------------*/
 
-	this.className = new app.Accessor(_className, true); // replace temporary literal with read-only accessor
+		this.className = new app.Accessor(_className, true); // replace temporary literal with read-only accessor
 
-	this.heading = new app.Accessor(_heading, false, 'string');
+		this.heading = new app.Accessor(_heading, false, 'string');
 
-	this.model = new app.Accessor(_model, false, app.Model, 'Model');
+		this.model = new app.Accessor(_model, false, app.Model, 'Model');
 
-	this.modelClass = new app.Accessor(_modelClass, true);
+		this.modelClass = new app.Accessor(_modelClass, true);
 
-	this.observers = new app.Accessor(_observers, true);
+		this.observers = new app.Accessor(_observers, true);
 
-	this.parentList = new app.Accessor(_parentList, true);
+		this.parentList = new app.Accessor(_parentList, true);
 
-	this.$renderContext = new app.Accessor(_$renderContext, false);
-	
-	this.ssuper = new app.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
-
+		this.$renderContext = new app.Accessor(_$renderContext, false);
+		
+		this.ssuper = new app.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
 
 	/*----------------------------------------------------------------------------------------
 	* Other initialization
 	*---------------------------------------------------------------------------------------*/
 	
-	_$renderContext.addClass('view'); // set shared view class on main HTML element
+		_$renderContext.addClass('view'); // set shared view class on main HTML element
 }
-
-/*----------------------------------------------------------------------------------------
-Factories for 'inherited' instance methods using dependency injection.
-Approach provides access to private variables in subclass
-*---------------------------------------------------------------------------------------*/
 
 
 /*----------------------------------------------------------------------------------------
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-void app.IInterfaceable.mixInto(app.IInterfaceable, app.View);
+	void app.IInterfaceable.mixInto(app.IInterfaceable, app.View);
 
-void app.IInterfaceable.mixInto(app.IObservable, app.View);
+	void app.IInterfaceable.mixInto(app.IObservable, app.View);
 
-void app.IInterfaceable.mixInto(app.IObserver, app.View);
+	void app.IInterfaceable.mixInto(app.IObserver, app.View);
 
 
 /*----------------------------------------------------------------------------------------
-* Public instance methods (abstract)
+* Public class (static) fields
 *---------------------------------------------------------------------------------------*/
 
-/** Determine whether update notification broadcast by IObservable applies to this view.
-*
-* If the view is active, the type and id of the broadcast data model should match that currently being presented.
-*
-* If the view is inactive, only the type of the model needs to match.
-*
-* @param {Model} obj Reference to the data model object to be rendered in the UI, or null (to reset the view).
-*
-* @return {Boolean} True if this view should respond to the notification, otherwise false-
-*
-* @throws {AbstractMethodError} If attempting to invoke directly on abstract class
-*/
+	app.View.UIAction = {
 
-app.View.prototype.doUpdate = function(Model) {
-	
-	throw new AbstractMethodError('Method signature "doUpdate()" must be realized in implementing classes');
-};
+		CANCEL: 0,
 
+		CREATE: 1,
 
-/** Updates views when notified of changes to the data model.
-*
-* Required by IObservable. Dummy implementation to 'cheat' unit test framework. Realize in derived classes.
-*
-* @throws {AbstractMethodError} If attempting to invoke directly on abstract class
-*/
+		DELETE: 2,
 
-app.View.prototype.update = function(Model) {
-	
-	throw new AbstractMethodError('Method signature "update()" must be realized in implementing classes');
-};
+		NAVIGATE: 3,
+
+		SELECT: 4,
+
+		SUBMIT: 5
+	}
+
 
 /*----------------------------------------------------------------------------------------
 * Public instance methods (implemented, on prototype)
 *---------------------------------------------------------------------------------------*/
 
-/** Factory method for creating floating main action button for views.
-*
-* Currently supports only buttons with a single action (Matrialize allows several actions per button).
-*
-* @return {HTMLDivElement} DIV element
-*/
+	/** Handles cancellation by user of navigation to current view  */
 
-app.View.prototype.createFloatingActionButton = function (str_buttonId, str_icon, str_color, str_label) {
+	app.View.prototype.cancel = function() {
 
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
+		window.history.back(); // return to previous view
 
-		//attributes: {style: 'bottom: 45px; right: 24px;'},
-		
-		classList: ['fixed-action-btn']
-	});
-	
+		this.notifyObservers(this, this.model(), app.View.UIAction.CANCEL);
 
-	var anchorElement =  this.createElement( // inner div
-	{
-		element: 'a',
-
-		attributes: {id: str_buttonId, title: str_label},
-		
-		classList: ['btn-floating', 'btn-large', str_color]
-	});
-
-	outerDiv.appendChild(anchorElement);
-
-
-	anchorElement.appendChild(this.createElement(
-	{
-		element: 'i',
-
-		classList: ['large', 'material-icons'],
-
-		innerHTML: str_icon
-	}));
-
-	return outerDiv;
-}
-
-
-/** Factory method for creating date picker fields for forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
-		
-		classList: ['row']
-	});
-
-
-	var innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
-		
-		classList: ['input-field', 'col', str_width]
-	});
-	
-	outerDiv.appendChild(innerDiv);
-
-
-	var attributes = 
-	{
-		type: 'text',
-		
-		id: str_dateId,
-		
-		value: Date_date ? Date_date.toLocaleDateString() : '',
-		
-		readonly: true
+		// for now, simply discard any entries made by user to an existing guest
 	}
 
-	if (bool_required) {attributes.required = true;}
 
-	innerDiv.appendChild(this.createElement( // input
-	{
-		element: 'input',			
-		
-		attributes: attributes,
-		
-		classList: ['validate', 'datepicker', 'picker__input']
-	}));
-	
-	
-	var labelElement = this.createElement( // label
-	{	
-		element: 'label',			
-		
-		attributes: {for: str_dateId},
-		
-		classList: Date_date ? ['form-label', 'active'] : ['form-label'],
-		
-		dataset: {error: 'Please enter date'},
-		
-		innerHTML: str_label
-	});
-
-	
-	if (bool_required) {
-
-		labelElement.appendChild(this.createElement( // required field indicator
-		{
-			element: 'span',
-
-			classList: ['required-indicator'],
-
-			innerHTML: '*'
-		}));
-	}
-
-	innerDiv.appendChild(labelElement);
-
-	
-	innerDiv.appendChild(this.createElement( // custom error div
-	{	
-		element: 'div',			
-		
-		attributes: {id: str_dateId + '-error'},
-		
-		classList: ['custom-validate']
-	}));
-	
-	
-	return outerDiv;
-}
-
-
-/** Factory method for creating HTML element based on specs provided in JSON object.
-*
-* Relied on by other factory methods for consistent, basic element creation.
-*
-* (So, if some aspect of element creation fails, only this method will need to change.)
-*
-* @param {Object} JSON object literal containing specs of element to be created. Se comments in code for an example.
-*
-* @return {HTMLElement} HTML element
-*/
-
-app.View.prototype.createElement = function(obj_specs) {
-
-	/* Sample JSON specification object using all currently supported features:
-
-	{
-		element: 'input', // the type of element required
-
-		attributes: // an arbitrary collection of name-value pairs
-		{
-			type: 'text',
-
-			id: 'demo-element',
-
-			required: true
-		},
-
-		classList: // an arbitrary list of strings
-		[
-			'row',
-
-			'col',
-
-			's12'
-		],
-
-		dataset: // an arbitrary collection of name-value pairs
-		{
-			success: 'You made it!',
-
-			error: 'Please try again'
-		},
-		
-		innerHTML: 'Hello world'
-
-		listeners:
-		{
-			click: function() {},
-
-			blur: function() {}
-		}
+	/** Factory method for creating floating main action button for views.
+	*
+	* Currently supports only buttons with a single action (Matrialize allows several actions per button).
+	*
+	* @return {HTMLDivElement} DIV element
 	*/
 
-	var element = document.createElement(obj_specs.element), prop;
-				
-	if (obj_specs.attributes) {
-	
-		for (prop in obj_specs.attributes) {
-			
-			element.setAttribute(prop, obj_specs.attributes[prop]);
-		}
-	}
-	
-	if (obj_specs.classList) {
-		
-		obj_specs.classList.forEach(function(str_class) {
-			
-			element.classList.add(str_class);
-		});
-	}
-	
-	if (obj_specs.dataset) {
-	
-		for (prop in obj_specs.dataset) {
-			
-			element.dataset[prop] = obj_specs.dataset[prop];
-		}
-	}
-	
-	if (obj_specs.innerHTML) {
-		
-		element.innerHTML = obj_specs.innerHTML;
-	}
+	app.View.prototype.createFloatingActionButton = function (str_buttonId, str_icon, str_color, str_label) {
 
-	if (obj_specs.listeners) {
-	
-		for (prop in obj_specs.listeners) {
-			
-			element.addEventListener(prop, obj_specs.listeners[prop]);
-		}
-	}
-
-	return element;
-};
-
-
-/** Factory method for creating email fields for forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.View.prototype.createEmailField = function (str_width, str_EmailId, str_label, bool_required, Email_email) {
-
-	var email = Email_email;
-
-	
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
-		
-		classList: ['row']
-	});
-
-	
-
-	var innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
-		
-		classList: ['input-field', 'col', str_width]
-	});
-
-	outerDiv.appendChild(innerDiv);
-	
-
-	var attributes = 
-	{
-		type: 'email',
-		
-		id: str_EmailId,
-		
-		value: email && email.address() ? email.address() : ''
-	}
-
-	if (bool_required) {attributes.required = true;}
-
-	innerDiv.appendChild(this.createElement( // input
-	{
-		element: 'input',			
-		
-		attributes: attributes,
-		
-		classList: ['validate']
-	}));
-	
-	
-	var labelElement = this.createElement( // label
-	{	
-		element: 'label',			
-		
-		attributes: {for: str_EmailId},
-		
-		classList: email && email.address() ? ['form-label', 'active'] : ['form-label'],
-		
-		dataset: {error: 'Must be like "address@server.domain"'},
-		
-		innerHTML: str_label
-	});
-
-	
-	if (bool_required) {
-
-		labelElement.appendChild(this.createElement( // required field indicator
+		var outerDiv =  this.createElement( // outer div
 		{
-			element: 'span',
+			element: 'div',
 
-			classList: ['required-indicator'],
+			//attributes: {style: 'bottom: 45px; right: 24px;'},
+			
+			classList: ['fixed-action-btn']
+		});
+		
 
-			innerHTML: '*'
+		var anchorElement =  this.createElement( // inner div
+		{
+			element: 'a',
+
+			attributes: {id: str_buttonId, title: str_label},
+			
+			classList: ['btn-floating', 'btn-large', str_color]
+		});
+
+		outerDiv.appendChild(anchorElement);
+
+
+		anchorElement.appendChild(this.createElement(
+		{
+			element: 'i',
+
+			classList: ['large', 'material-icons'],
+
+			innerHTML: str_icon
 		}));
+
+		return outerDiv;
 	}
 
-	innerDiv.appendChild(labelElement);
 
-	
-	return outerDiv;
-}
+	/** Factory method for creating date picker fields for forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
+
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
+			
+			classList: ['row']
+		});
 
 
-/** Factory method for creating field descriptions for forms
-*
-* @param {String} description Description of the field
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.View.prototype.createFieldDescription = function (str_description, bool_divider) {
-
-	var innerDiv =  this.createElement( // inner div for description
+		var innerDiv =  this.createElement( // inner div
 		{
 			element: 'div',			
 			
-			classList: ['col', 's12']
+			classList: ['input-field', 'col', str_width]
+		});
+		
+		outerDiv.appendChild(innerDiv);
+
+
+		var attributes = 
+		{
+			type: 'text',
+			
+			id: str_dateId,
+			
+			value: Date_date ? Date_date.toLocaleDateString() : '',
+			
+			readonly: true
+		}
+
+		if (bool_required) {attributes.required = true;}
+
+		innerDiv.appendChild(this.createElement( // input
+		{
+			element: 'input',			
+			
+			attributes: attributes,
+			
+			classList: ['validate', 'datepicker', 'picker__input']
+		}));
+		
+		
+		var labelElement = this.createElement( // label
+		{	
+			element: 'label',			
+			
+			attributes: {for: str_dateId},
+			
+			classList: Date_date ? ['form-label', 'active'] : ['form-label'],
+			
+			dataset: {error: 'Please enter date'},
+			
+			innerHTML: str_label
 		});
 
-	innerDiv.appendChild(this.createElement( // description
-	{	
-		element: 'p',
+		
+		if (bool_required) {
 
-		classList: ['form-label', 'input-field-description'],
+			labelElement.appendChild(this.createElement( // required field indicator
+			{
+				element: 'span',
 
-		innerHTML: str_description
+				classList: ['required-indicator'],
 
-	}));
+				innerHTML: '*'
+			}));
+		}
 
-	if (bool_divider) { // defaults to no divider
+		innerDiv.appendChild(labelElement);
 
-		innerDiv.appendChild(this.createElement({ // divider
+		
+		innerDiv.appendChild(this.createElement( // custom error div
+		{	
+			element: 'div',			
+			
+			attributes: {id: str_dateId + '-error'},
+			
+			classList: ['custom-validate']
+		}));
+		
+		
+		return outerDiv;
+	}
 
+
+	/** Factory method for creating HTML element based on specs provided in JSON object.
+	*
+	* Relied on by other factory methods for consistent, basic element creation.
+	*
+	* (So, if some aspect of element creation fails, only this method will need to change.)
+	*
+	* @param {Object} JSON object literal containing specs of element to be created. Se comments in code for an example.
+	*
+	* @return {HTMLElement} HTML element
+	*/
+
+	app.View.prototype.createElement = function(obj_specs) {
+
+		/* Sample JSON specification object using all currently supported features:
+
+		{
+			element: 'input', // the type of element required
+
+			attributes: // an arbitrary collection of name-value pairs
+			{
+				type: 'text',
+
+				id: 'demo-element',
+
+				required: true
+			},
+
+			classList: // an arbitrary list of strings
+			[
+				'row',
+
+				'col',
+
+				's12'
+			],
+
+			dataset: // an arbitrary collection of name-value pairs
+			{
+				success: 'You made it!',
+
+				error: 'Please try again'
+			},
+			
+			innerHTML: 'Hello world'
+
+			listeners:
+			{
+				click: function() {},
+
+				blur: function() {}
+			}
+		*/
+
+		var element = document.createElement(obj_specs.element), prop;
+					
+		if (obj_specs.attributes) {
+		
+			for (prop in obj_specs.attributes) {
+				
+				element.setAttribute(prop, obj_specs.attributes[prop]);
+			}
+		}
+		
+		if (obj_specs.classList) {
+			
+			obj_specs.classList.forEach(function(str_class) {
+				
+				element.classList.add(str_class);
+			});
+		}
+		
+		if (obj_specs.dataset) {
+		
+			for (prop in obj_specs.dataset) {
+				
+				element.dataset[prop] = obj_specs.dataset[prop];
+			}
+		}
+		
+		if (obj_specs.innerHTML) {
+			
+			element.innerHTML = obj_specs.innerHTML;
+		}
+
+		if (obj_specs.listeners) {
+		
+			for (prop in obj_specs.listeners) {
+				
+				element.addEventListener(prop, obj_specs.listeners[prop]);
+			}
+		}
+
+		return element;
+	};
+
+
+	/** Factory method for creating email fields for forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createEmailField = function (str_width, str_EmailId, str_label, bool_required, Email_email) {
+
+		var email = Email_email;
+
+		
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
+			
+			classList: ['row']
+		});
+
+		
+
+		var innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['input-field', 'col', str_width]
+		});
+
+		outerDiv.appendChild(innerDiv);
+		
+
+		var attributes = 
+		{
+			type: 'email',
+			
+			id: str_EmailId,
+			
+			value: email && email.address() ? email.address() : ''
+		}
+
+		if (bool_required) {attributes.required = true;}
+
+		innerDiv.appendChild(this.createElement( // input
+		{
+			element: 'input',			
+			
+			attributes: attributes,
+			
+			classList: ['validate']
+		}));
+		
+		
+		var labelElement = this.createElement( // label
+		{	
+			element: 'label',			
+			
+			attributes: {for: str_EmailId},
+			
+			classList: email && email.address() ? ['form-label', 'active'] : ['form-label'],
+			
+			dataset: {error: 'Must be like "address@server.domain"'},
+			
+			innerHTML: str_label
+		});
+
+		
+		if (bool_required) {
+
+			labelElement.appendChild(this.createElement( // required field indicator
+			{
+				element: 'span',
+
+				classList: ['required-indicator'],
+
+				innerHTML: '*'
+			}));
+		}
+
+		innerDiv.appendChild(labelElement);
+
+		
+		return outerDiv;
+	}
+
+
+	/** Factory method for creating field descriptions for forms
+	*
+	* @param {String} description Description of the field
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createFieldDescription = function (str_description, bool_divider) {
+
+		var innerDiv =  this.createElement( // inner div for description
+			{
+				element: 'div',			
+				
+				classList: ['col', 's12']
+			});
+
+		innerDiv.appendChild(this.createElement( // description
+		{	
+			element: 'p',
+
+			classList: ['form-label', 'input-field-description'],
+
+			innerHTML: str_description
+
+		}));
+
+		if (bool_divider) { // defaults to no divider
+
+			innerDiv.appendChild(this.createElement({ // divider
+
+				element: 'div',
+
+				classList: ['divider']
+			}));
+		}
+
+		return innerDiv;
+	}
+
+
+	/** Factory method for creating the main heading in forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createHeading = function (str_width, str_heading) {
+
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',			
+			
+			classList: ['row']
+		});
+
+		var innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['col', str_width]
+		});
+
+		innerDiv.appendChild(this.createElement({
+
+			element: 'h4',
+
+			innerHTML: str_heading
+
+		}));
+
+		outerDiv.appendChild(innerDiv);
+		
+		return outerDiv;
+	}
+
+
+	/** Factory method for creating number fields for forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createNumberField = function (str_width, str_fieldId, str_label, bool_required, int_value, int_min, int_max, int_step, str_errorMsg) {
+
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
+			
+			classList: ['row']
+		});
+
+
+		var innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['input-field', 'col', str_width]
+		});
+		
+		outerDiv.appendChild(innerDiv);
+
+
+		var attributes = {type: 'number', id: str_fieldId, value: int_value}
+
+		if (!isNaN(parseInt(int_min))) {attributes.min = int_min;}
+
+		if (!isNaN(parseInt(int_max))) {attributes.max = int_max;}
+
+		if (!isNaN(parseInt(int_step))) {attributes.step = int_step;}
+
+		if (bool_required) {attributes.required = true;}
+
+		innerDiv.appendChild(this.createElement( // input
+		{
+			element: 'input',			
+			
+			attributes: attributes,
+			
+			classList: ['validate']
+		}));
+		
+		
+		var labelElement = this.createElement( // label
+		{	
+			element: 'label',			
+			
+			attributes: {for: str_fieldId},
+			
+			classList: int_value ? ['form-label', 'active'] : ['form-label'],
+			
+			dataset: {error: str_errorMsg},
+			
+			innerHTML: str_label
+		});
+
+		
+		if (bool_required) {
+
+			labelElement.appendChild(this.createElement( // required field indicator
+			{
+				element: 'span',
+
+				classList: ['required-indicator'],
+
+				innerHTML: '*'
+			}));
+		}
+
+		innerDiv.appendChild(labelElement);
+
+
+		return outerDiv;
+	}
+
+
+	/** Factory method for creating password entry fields for forms.
+	*
+	* Includes markup for interactively updated password hints.
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createPasswordField = function (str_width, str_passwordId, str_hintsPrefix, Account_account) {
+
+		var account = Account_account, outerDiv, innerDiv, labelElement, pElement;
+
+		outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
+			
+			classList: ['row']
+		});
+					
+		
+		innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['input-field', 'col', str_width]
+		});
+		
+		outerDiv.appendChild(innerDiv);
+
+
+		innerDiv.appendChild(this.createElement( // input
+		{
+			element: 'input',			
+			
+			attributes:
+			{
+				type: 'text',
+				
+				id: str_passwordId,
+				
+				value: account && account.password() && account.password().password() ? account.password().password() : '',
+
+				required: 'true'
+			},
+			
+			classList: ['validate']
+		}));
+		
+		
+		labelElement = this.createElement( // label
+		{	
+			element: 'label',			
+			
+			attributes: {for: str_passwordId},
+			
+			classList: account && account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
+			
+			dataset: {error: 'Please enter a valid password', success: 'Password is valid'},
+			
+			innerHTML: 'Password'
+		});
+		
+		labelElement.appendChild(this.createElement( // required field indicator
+		{
+			element: 'span',
+
+			classList: ['required-indicator'],
+
+			innerHTML: '*'
+		}));
+
+		innerDiv.appendChild(labelElement);
+
+		
+		innerDiv =  this.createElement( // inner div (for validation hits)
+		{
 			element: 'div',
 
-			classList: ['divider']
+			attributes: {id: str_hintsPrefix},
+			
+			classList: ['col', str_width]
+		});
+
+		outerDiv.appendChild(innerDiv);
+
+
+		pElement = this.createElement(
+		{
+			element: 'p',
+
+			attributes: {id: str_hintsPrefix + '-charcount'},
+
+			classList: ['password-validation-hint'],
+
+			innerHTML: 'Must be at least 8 characters long'
+		});
+
+		pElement.appendChild(this.createElement(
+		{
+			element: 'i',
+
+			classList: ['material-icons', 'left'],
+
+			innerHTML: 'error'
 		}));
-	}
 
-	return innerDiv;
-}
+		innerDiv.appendChild(pElement);
 
-
-/** Factory method for creating the main heading in forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.View.prototype.createHeading = function (str_width, str_heading) {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',			
 		
-		classList: ['row']
-	});
+		pElement = this.createElement(
+		{
+			element: 'p',
 
-	var innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
+			attributes: {id: str_hintsPrefix + '-uppercase'},
+
+			classList: ['password-validation-hint'],
+
+			innerHTML: 'Must contain Upper Case characters'
+		});
+
+		pElement.appendChild(this.createElement(
+		{
+			element: 'i',
+
+			classList: ['material-icons', 'left'],
+
+			innerHTML: 'error'
+		}));
+
+		innerDiv.appendChild(pElement);
+
+
+		pElement = this.createElement(
+		{
+			element: 'p',
+
+			attributes: {id: str_hintsPrefix + '-lowercase'},
+
+			classList: ['password-validation-hint'],
+
+			innerHTML: 'Must contain lower case characters'
+		});
+
+		pElement.appendChild(this.createElement(
+		{
+			element: 'i',
+
+			classList: ['material-icons', 'left'],
+
+			innerHTML: 'error'
+		}));
+
+		innerDiv.appendChild(pElement);
 		
-		classList: ['col', str_width]
-	});
 
-	innerDiv.appendChild(this.createElement({
+		pElement = this.createElement(
+		{
+			element: 'p',
 
-		element: 'h4',
+			attributes: {id: str_hintsPrefix + '-number'},
 
-		innerHTML: str_heading
+			classList: ['password-validation-hint'],
 
-	}));
+			innerHTML: 'Must contain numbers'
+		});
 
-	outerDiv.appendChild(innerDiv);
-	
-	return outerDiv;
-}
+		pElement.appendChild(this.createElement(
+		{
+			element: 'i',
+
+			classList: ['material-icons', 'left'],
+
+			innerHTML: 'error'
+		}));
+
+		innerDiv.appendChild(pElement);
 
 
-/** Factory method for creating number fields for forms
-*
-* @return {HTMLDivElement} DIV element
-*/
+		pElement = this.createElement(
+		{
+			element: 'p',
 
-app.View.prototype.createNumberField = function (str_width, str_fieldId, str_label, bool_required, int_value, int_min, int_max, int_step, str_errorMsg) {
+			attributes: {id: str_hintsPrefix + '-punctuation'},
 
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
+			classList: ['password-validation-hint'],
+
+			innerHTML: 'Must contain one or more of !@#$%^&'
+		});
+
+		pElement.appendChild(this.createElement(
+		{
+			element: 'i',
+
+			classList: ['material-icons', 'left'],
+
+			innerHTML: 'error'
+		}));
+
+		innerDiv.appendChild(pElement);
+
+
+		pElement = this.createElement(
+		{
+			element: 'p',
+
+			attributes: {id: str_hintsPrefix + '-illegal'},
+
+			classList: ['password-validation-hint'],
+
+			innerHTML: 'Must not contain illegal characters'
+		});
+
+		pElement.appendChild(this.createElement(
+		{
+			element: 'i',
+
+			classList: ['material-icons', 'left'],
+
+			innerHTML: 'error'
+		}));
+
+		innerDiv.appendChild(pElement);
 		
-		classList: ['row']
-	});
-
-
-	var innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
 		
-		classList: ['input-field', 'col', str_width]
-	});
-	
-	outerDiv.appendChild(innerDiv);
+		return outerDiv;
+	};
 
 
-	var attributes = {type: 'number', id: str_fieldId, value: int_value}
+	/** Factory method for creating password confirmation fields for forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
 
-	if (!isNaN(parseInt(int_min))) {attributes.min = int_min;}
 
-	if (!isNaN(parseInt(int_max))) {attributes.max = int_max;}
+	app.View.prototype.createPasswordConfirmationField = function (str_width, str_confirmationId) {
 
-	if (!isNaN(parseInt(int_step))) {attributes.step = int_step;}
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
 
-	if (bool_required) {attributes.required = true;}
-
-	innerDiv.appendChild(this.createElement( // input
-	{
-		element: 'input',			
+			attributes: {id: str_confirmationId + '-parent'},
+			
+			classList: ['row']
+		});
+					
 		
-		attributes: attributes,
-		
-		classList: ['validate']
-	}));
-	
-	
-	var labelElement = this.createElement( // label
-	{	
-		element: 'label',			
-		
-		attributes: {for: str_fieldId},
-		
-		classList: int_value ? ['form-label', 'active'] : ['form-label'],
-		
-		dataset: {error: str_errorMsg},
-		
-		innerHTML: str_label
-	});
+		var innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['input-field', 'col', str_width]
+		});
 
-	
-	if (bool_required) {
+		outerDiv.appendChild(innerDiv);
+		
 
+		innerDiv.appendChild(this.createElement( // input
+		{
+			element: 'input',			
+			
+			attributes:
+			{
+				type: 'text',
+				
+				id: str_confirmationId,
+				
+				value: '',
+
+				required: 'true'
+			},
+			
+			classList: ['validate']
+		}));
+		
+		
+		var labelElement = this.createElement( // label
+		{	
+			element: 'label',			
+			
+			attributes: {for: str_confirmationId},
+			
+			classList: ['form-label'],
+			
+			dataset: {error: 'Please confirm password', succes: 'Matches password'},
+			
+			innerHTML: 'Confirm Password'
+		});
+		
 		labelElement.appendChild(this.createElement( // required field indicator
 		{
 			element: 'span',
@@ -618,963 +891,696 @@ app.View.prototype.createNumberField = function (str_width, str_fieldId, str_lab
 
 			innerHTML: '*'
 		}));
+
+		innerDiv.appendChild(labelElement);
+
+		
+		return outerDiv;
+	};
+
+
+	/** Factory method for creating required field explanations for forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createRequiredFieldExplanation = function () {
+
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',			
+			
+			classList: ['row']
+		});
+		
+		outerDiv.appendChild(this.createElement({
+		
+			element: 'p',
+			
+			classList: ['required-indicator'],
+				
+			innerHTML: '* indicates a required field'
+		}));
+					
+		
+		return outerDiv;
 	}
 
-	innerDiv.appendChild(labelElement);
 
+	/** Factory method for creating submit and cancel buttons for forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
 
-	return outerDiv;
-}
+	app.View.prototype.createSubmitCancelButtons = function(str_buttonIdPrefix) {
 
-
-/** Factory method for creating password entry fields for forms.
-*
-* Includes markup for interactively updated password hints.
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.View.prototype.createPasswordField = function (str_width, str_passwordId, str_hintsPrefix, Account_account) {
-
-	var account = Account_account, outerDiv, innerDiv, labelElement, pElement;
-
-	outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',			
+			
+			classList: ['row', 'form-submit']
+		});
 		
-		classList: ['row']
-	});
-				
-	
-	innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
 		
-		classList: ['input-field', 'col', str_width]
-	});
-	
-	outerDiv.appendChild(innerDiv);
+		outerDiv.appendChild(this.createElement({ // cancel button
+			
+			element: 'a',
+			
+			attributes: {id: str_buttonIdPrefix + '-cancel'},
+			
+			classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+
+			innerHTML: 'Cancel'
+		}));
+		
+		
+		var buttonElement =  this.createElement({ // submit button
+			
+			element: 'a',
+			
+			attributes: {id: str_buttonIdPrefix + '-submit'},
+			
+			classList: ['waves-effect', 'waves-light', 'btn'],
+
+			innerHTML: 'Done'
+		});
+		
+		
+		buttonElement.appendChild(this.createElement({ // 'send' icon
+			
+			element: 'i',
+			
+			classList: ['material-icons', 'right'],
+			
+			innerHTML: 'send'
+		}));
+		
+		
+		outerDiv.appendChild(buttonElement);
 
 
-	innerDiv.appendChild(this.createElement( // input
-	{
-		element: 'input',			
+		return outerDiv
+	}
+
+
+	/** Factory method for creating switch (checkbox) fields for forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createSwitchField = function (str_width, str_switchId, str_label, bool_checked, str_on, str_off) {
+
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
+
+			classList: ['row']
+		});
+
 		
-		attributes:
+		var innerDiv =  this.createElement( // inner div for main switch label
+		{
+			element: 'div',			
+			
+			classList: ['col', str_width]
+		});
+
+		outerDiv.appendChild(innerDiv);
+
+
+		innerDiv.appendChild(this.createElement( // main switch label
+		{	
+			element: 'span',
+
+			classList: ['form-label', 'input-switch-label'],
+
+			innerHTML: str_label
+
+		}));
+
+		
+		innerDiv =  this.createElement( // inner div for switch widget
+		{
+			element: 'div',			
+			
+			classList: ['switch-container', 'col', 's' + (12 - parseInt(str_width.slice(1)))]
+		});
+
+		outerDiv.appendChild(innerDiv);
+		
+		
+		var switchElement = this.createElement( // switch div
+		{
+			element: 'div',
+			
+			classList: ['switch']
+		});
+
+		innerDiv.appendChild(switchElement);
+		
+		
+		var spanElement = this.createElement({ // div holding switch widget itself
+
+			element: 'span',
+
+			classList: ['input-switch-widget']
+		});
+
+		switchElement.appendChild(spanElement);
+
+
+		var labelElement = this.createElement( // label
+		{	
+			element: 'label',			
+			
+			attributes: {for: str_switchId},
+			
+			classList: ['form-label', 'active']
+		});
+		
+		
+		labelElement.appendChild(this.createElement( // 'not selected' minor label
+		{	
+			element: 'span',
+
+			classList: ['form-label', 'input-switch-off-label'],
+
+			innerHTML: str_off ? str_off : 'No'
+
+		}));
+
+		
+		labelElement.appendChild(this.createElement( // input
+		{	
+			element: 'input',			
+			
+			attributes: (function(){
+
+				var attr = {id: str_switchId, type: 'checkbox'};
+
+				if (bool_checked) {attr.checked = true;}
+
+				return attr;
+			})()
+		}));
+
+		
+		labelElement.appendChild(this.createElement( // span
+		{	
+			element: 'span',
+			
+			classList: ['lever']
+		}));
+
+		
+		labelElement.appendChild(this.createElement( // 'selected' minor label
+		{	
+			element: 'span',
+
+			classList: ['form-label', 'input-switch-on-label'],
+
+			innerHTML: str_on ? str_on : 'Yes'
+
+		}));
+
+		spanElement.appendChild(labelElement);
+
+		return outerDiv;
+	};
+
+
+	/** Factory method for creating text input fields for forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*
+	* @todo Add ability to also handle elements with datalists (e.g. event location)
+	*/
+
+	app.View.prototype.createTextField = function (str_width, str_fieldId, str_label, bool_required, value) {
+
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
+			
+			classList: ['row']
+		});
+
+		
+
+		var innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['input-field', 'col', str_width]
+		});
+
+		outerDiv.appendChild(innerDiv);
+		
+
+		var attributes = 
 		{
 			type: 'text',
 			
-			id: str_passwordId,
+			id: str_fieldId,
 			
-			value: account && account.password() && account.password().password() ? account.password().password() : '',
+			value: value ? value : ''
+		}
 
-			required: 'true'
-		},
+		if (bool_required) {attributes.required = true;}
+
+		innerDiv.appendChild(this.createElement( // input
+		{
+			element: 'input',			
+			
+			attributes: attributes,
+			
+			classList: ['validate']
+		}));
 		
-		classList: ['validate']
-	}));
-	
-	
-	labelElement = this.createElement( // label
-	{	
-		element: 'label',			
 		
-		attributes: {for: str_passwordId},
+		var labelElement = this.createElement( // label
+		{	
+			element: 'label',			
+			
+			attributes: {for: str_fieldId},
+			
+			classList: value ? ['form-label', 'active'] : ['form-label'],
+			
+			dataset: {error: 'Please enter ' + str_label.toLowerCase()},
+			
+			innerHTML: str_label
+		});
+
 		
-		classList: account && account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
+		if (bool_required) {
+
+			labelElement.appendChild(this.createElement( // required field indicator
+			{
+				element: 'span',
+
+				classList: ['required-indicator'],
+
+				innerHTML: '*'
+			}));
+		}
+
+		innerDiv.appendChild(labelElement);
+
 		
-		dataset: {error: 'Please enter a valid password', success: 'Password is valid'},
+		return outerDiv;
+	}
+
+
+	/** Factory method for creating time picker fields for forms
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createTimeField = function (str_width, str_timeId, str_label, bool_required, Date_date) {
+
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
+			
+			classList: ['row']
+		});
+
+
+		var innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['input-field', 'col', str_width]
+		});
 		
-		innerHTML: 'Password'
-	});
-	
-	labelElement.appendChild(this.createElement( // required field indicator
-	{
-		element: 'span',
+		outerDiv.appendChild(innerDiv);
 
-		classList: ['required-indicator'],
-
-		innerHTML: '*'
-	}));
-
-	innerDiv.appendChild(labelElement);
-
-	
-	innerDiv =  this.createElement( // inner div (for validation hits)
-	{
-		element: 'div',
-
-		attributes: {id: str_hintsPrefix},
-		
-		classList: ['col', str_width]
-	});
-
-	outerDiv.appendChild(innerDiv);
-
-
-	pElement = this.createElement(
-	{
-		element: 'p',
-
-		attributes: {id: str_hintsPrefix + '-charcount'},
-
-		classList: ['password-validation-hint'],
-
-		innerHTML: 'Must be at least 8 characters long'
-	});
-
-	pElement.appendChild(this.createElement(
-	{
-		element: 'i',
-
-		classList: ['material-icons', 'left'],
-
-		innerHTML: 'error'
-	}));
-
-	innerDiv.appendChild(pElement);
-
-	
-	pElement = this.createElement(
-	{
-		element: 'p',
-
-		attributes: {id: str_hintsPrefix + '-uppercase'},
-
-		classList: ['password-validation-hint'],
-
-		innerHTML: 'Must contain Upper Case characters'
-	});
-
-	pElement.appendChild(this.createElement(
-	{
-		element: 'i',
-
-		classList: ['material-icons', 'left'],
-
-		innerHTML: 'error'
-	}));
-
-	innerDiv.appendChild(pElement);
-
-
-	pElement = this.createElement(
-	{
-		element: 'p',
-
-		attributes: {id: str_hintsPrefix + '-lowercase'},
-
-		classList: ['password-validation-hint'],
-
-		innerHTML: 'Must contain lower case characters'
-	});
-
-	pElement.appendChild(this.createElement(
-	{
-		element: 'i',
-
-		classList: ['material-icons', 'left'],
-
-		innerHTML: 'error'
-	}));
-
-	innerDiv.appendChild(pElement);
-	
-
-	pElement = this.createElement(
-	{
-		element: 'p',
-
-		attributes: {id: str_hintsPrefix + '-number'},
-
-		classList: ['password-validation-hint'],
-
-		innerHTML: 'Must contain numbers'
-	});
-
-	pElement.appendChild(this.createElement(
-	{
-		element: 'i',
-
-		classList: ['material-icons', 'left'],
-
-		innerHTML: 'error'
-	}));
-
-	innerDiv.appendChild(pElement);
-
-
-	pElement = this.createElement(
-	{
-		element: 'p',
-
-		attributes: {id: str_hintsPrefix + '-punctuation'},
-
-		classList: ['password-validation-hint'],
-
-		innerHTML: 'Must contain one or more of !@#$%^&'
-	});
-
-	pElement.appendChild(this.createElement(
-	{
-		element: 'i',
-
-		classList: ['material-icons', 'left'],
-
-		innerHTML: 'error'
-	}));
-
-	innerDiv.appendChild(pElement);
-
-
-	pElement = this.createElement(
-	{
-		element: 'p',
-
-		attributes: {id: str_hintsPrefix + '-illegal'},
-
-		classList: ['password-validation-hint'],
-
-		innerHTML: 'Must not contain illegal characters'
-	});
-
-	pElement.appendChild(this.createElement(
-	{
-		element: 'i',
-
-		classList: ['material-icons', 'left'],
-
-		innerHTML: 'error'
-	}));
-
-	innerDiv.appendChild(pElement);
-	
-	
-	return outerDiv;
-};
-
-
-/** Factory method for creating password confirmation fields for forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-
-app.View.prototype.createPasswordConfirmationField = function (str_width, str_confirmationId) {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
-
-		attributes: {id: str_confirmationId + '-parent'},
-		
-		classList: ['row']
-	});
-				
-	
-	var innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
-		
-		classList: ['input-field', 'col', str_width]
-	});
-
-	outerDiv.appendChild(innerDiv);
-	
-
-	innerDiv.appendChild(this.createElement( // input
-	{
-		element: 'input',			
-		
-		attributes:
+		var attributes = 
 		{
 			type: 'text',
 			
-			id: str_confirmationId,
+			id: str_timeId,
 			
-			value: '',
-
-			required: 'true'
-		},
-		
-		classList: ['validate']
-	}));
-	
-	
-	var labelElement = this.createElement( // label
-	{	
-		element: 'label',			
-		
-		attributes: {for: str_confirmationId},
-		
-		classList: ['form-label'],
-		
-		dataset: {error: 'Please confirm password', succes: 'Matches password'},
-		
-		innerHTML: 'Confirm Password'
-	});
-	
-	labelElement.appendChild(this.createElement( // required field indicator
-	{
-		element: 'span',
-
-		classList: ['required-indicator'],
-
-		innerHTML: '*'
-	}));
-
-	innerDiv.appendChild(labelElement);
-
-	
-	return outerDiv;
-};
-
-
-/** Factory method for creating required field explanations for forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.View.prototype.createRequiredFieldExplanation = function () {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',			
-		
-		classList: ['row']
-	});
-	
-	outerDiv.appendChild(this.createElement({
-	
-		element: 'p',
-		
-		classList: ['required-indicator'],
+			value: Date_date ? Date_date.toLocaleTimeString() : '',
 			
-		innerHTML: '* indicates a required field'
-	}));
-				
-	
-	return outerDiv;
-}
+			readonly: true
+		}
 
+		if (bool_required) {attributes.required = true;}
 
-/** Factory method for creating submit and cancel buttons for forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.View.prototype.createSubmitCancelButtons = function(str_buttonIdPrefix) {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',			
-		
-		classList: ['row', 'form-submit']
-	});
-	
-	
-	outerDiv.appendChild(this.createElement({ // cancel button
-		
-		element: 'a',
-		
-		attributes: {id: str_buttonIdPrefix + '-cancel'},
-		
-		classList: ['waves-effect', 'waves-teal', 'btn-flat'],
-
-		innerHTML: 'Cancel'
-	}));
-	
-	
-	var buttonElement =  this.createElement({ // submit button
-		
-		element: 'a',
-		
-		attributes: {id: str_buttonIdPrefix + '-submit'},
-		
-		classList: ['waves-effect', 'waves-light', 'btn'],
-
-		innerHTML: 'Done'
-	});
-	
-	
-	buttonElement.appendChild(this.createElement({ // 'send' icon
-		
-		element: 'i',
-		
-		classList: ['material-icons', 'right'],
-		
-		innerHTML: 'send'
-	}));
-	
-	
-	outerDiv.appendChild(buttonElement);
-
-
-	return outerDiv
-}
-
-
-/** Factory method for creating switch (checkbox) fields for forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.View.prototype.createSwitchField = function (str_width, str_switchId, str_label, bool_checked, str_on, str_off) {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
-
-		classList: ['row']
-	});
-
-	
-	var innerDiv =  this.createElement( // inner div for main switch label
-	{
-		element: 'div',			
-		
-		classList: ['col', str_width]
-	});
-
-	outerDiv.appendChild(innerDiv);
-
-
-	innerDiv.appendChild(this.createElement( // main switch label
-	{	
-		element: 'span',
-
-		classList: ['form-label', 'input-switch-label'],
-
-		innerHTML: str_label
-
-	}));
-
-	
-	innerDiv =  this.createElement( // inner div for switch widget
-	{
-		element: 'div',			
-		
-		classList: ['switch-container', 'col', 's' + (12 - parseInt(str_width.slice(1)))]
-	});
-
-	outerDiv.appendChild(innerDiv);
-	
-	
-	var switchElement = this.createElement( // switch div
-	{
-		element: 'div',
-		
-		classList: ['switch']
-	});
-
-	innerDiv.appendChild(switchElement);
-	
-	
-	var spanElement = this.createElement({ // div holding switch widget itself
-
-		element: 'span',
-
-		classList: ['input-switch-widget']
-	});
-
-	switchElement.appendChild(spanElement);
-
-
-	var labelElement = this.createElement( // label
-	{	
-		element: 'label',			
-		
-		attributes: {for: str_switchId},
-		
-		classList: ['form-label', 'active']
-	});
-	
-	
-	labelElement.appendChild(this.createElement( // 'not selected' minor label
-	{	
-		element: 'span',
-
-		classList: ['form-label', 'input-switch-off-label'],
-
-		innerHTML: str_off ? str_off : 'No'
-
-	}));
-
-	
-	labelElement.appendChild(this.createElement( // input
-	{	
-		element: 'input',			
-		
-		attributes: (function(){
-
-			var attr = {id: str_switchId, type: 'checkbox'};
-
-			if (bool_checked) {attr.checked = true;}
-
-			return attr;
-		})()
-	}));
-
-	
-	labelElement.appendChild(this.createElement( // span
-	{	
-		element: 'span',
-		
-		classList: ['lever']
-	}));
-
-	
-	labelElement.appendChild(this.createElement( // 'selected' minor label
-	{	
-		element: 'span',
-
-		classList: ['form-label', 'input-switch-on-label'],
-
-		innerHTML: str_on ? str_on : 'Yes'
-
-	}));
-
-	spanElement.appendChild(labelElement);
-
-	return outerDiv;
-};
-
-
-/** Factory method for creating text input fields for forms
-*
-* @return {HTMLDivElement} DIV element
-*
-* @todo Add ability to also handle elements with datalists (e.g. event location)
-*/
-
-app.View.prototype.createTextField = function (str_width, str_fieldId, str_label, bool_required, value) {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
-		
-		classList: ['row']
-	});
-
-	
-
-	var innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
-		
-		classList: ['input-field', 'col', str_width]
-	});
-
-	outerDiv.appendChild(innerDiv);
-	
-
-	var attributes = 
-	{
-		type: 'text',
-		
-		id: str_fieldId,
-		
-		value: value ? value : ''
-	}
-
-	if (bool_required) {attributes.required = true;}
-
-	innerDiv.appendChild(this.createElement( // input
-	{
-		element: 'input',			
-		
-		attributes: attributes,
-		
-		classList: ['validate']
-	}));
-	
-	
-	var labelElement = this.createElement( // label
-	{	
-		element: 'label',			
-		
-		attributes: {for: str_fieldId},
-		
-		classList: value ? ['form-label', 'active'] : ['form-label'],
-		
-		dataset: {error: 'Please enter ' + str_label.toLowerCase()},
-		
-		innerHTML: str_label
-	});
-
-	
-	if (bool_required) {
-
-		labelElement.appendChild(this.createElement( // required field indicator
+		innerDiv.appendChild(this.createElement( // input
 		{
-			element: 'span',
-
-			classList: ['required-indicator'],
-
-			innerHTML: '*'
+			element: 'input',			
+			
+			attributes: attributes,
+			
+			classList: ['timepicker', 'picker__input']
 		}));
-	}
-
-	innerDiv.appendChild(labelElement);
-
-	
-	return outerDiv;
-}
-
-
-/** Factory method for creating time picker fields for forms
-*
-* @return {HTMLDivElement} DIV element
-*/
-
-app.View.prototype.createTimeField = function (str_width, str_timeId, str_label, bool_required, Date_date) {
-
-	var outerDiv =  this.createElement( // outer div
-	{
-		element: 'div',
 		
-		classList: ['row']
-	});
+		
+		var labelElement = this.createElement( // label
+		{	
+			element: 'label',			
+			
+			attributes: {for: str_timeId},
+			
+			classList: Date_date ? ['form-label', 'active'] : ['form-label'],
+			
+			dataset: {error: 'Please enter time'},
+			
+			innerHTML: str_label
+		});
+		
 
+		if (bool_required) {
 
-	var innerDiv =  this.createElement( // inner div
-	{
-		element: 'div',			
-		
-		classList: ['input-field', 'col', str_width]
-	});
-	
-	outerDiv.appendChild(innerDiv);
+			labelElement.appendChild(this.createElement( // required field indicator
+			{
+				element: 'span',
 
-	var attributes = 
-	{
-		type: 'text',
-		
-		id: str_timeId,
-		
-		value: Date_date ? Date_date.toLocaleTimeString() : '',
-		
-		readonly: true
-	}
+				classList: ['required-indicator'],
 
-	if (bool_required) {attributes.required = true;}
+				innerHTML: '*'
+			}));
+		}
 
-	innerDiv.appendChild(this.createElement( // input
-	{
-		element: 'input',			
+		innerDiv.appendChild(labelElement);
 		
-		attributes: attributes,
-		
-		classList: ['timepicker', 'picker__input']
-	}));
-	
-	
-	var labelElement = this.createElement( // label
-	{	
-		element: 'label',			
-		
-		attributes: {for: str_timeId},
-		
-		classList: Date_date ? ['form-label', 'active'] : ['form-label'],
-		
-		dataset: {error: 'Please enter time'},
-		
-		innerHTML: str_label
-	});
-	
-
-	if (bool_required) {
-
-		labelElement.appendChild(this.createElement( // required field indicator
-		{
-			element: 'span',
-
-			classList: ['required-indicator'],
-
-			innerHTML: '*'
+		innerDiv.appendChild(this.createElement( // custom error div
+		{	
+			element: 'div',			
+			
+			attributes: {id: str_timeId + '-error'},
+			
+			classList: ['custom-validate']
 		}));
-	}
 
-	innerDiv.appendChild(labelElement);
-	
-	innerDiv.appendChild(this.createElement( // custom error div
-	{	
-		element: 'div',			
 		
-		attributes: {id: str_timeId + '-error'},
-		
-		classList: ['custom-validate']
-	}));
-
-	
-	return outerDiv;
-}
-
-
-/* Utility for displaying and hiding field error messages during interactive form validation
-*
-*/
-
-app.View.prototype.displayValidation = function(event, str_fieldId, str_errorMsg, bool_valid) {
-
-	var $field = $('#' + str_fieldId);
-
-	if (!bool_valid) { // not valid, display validation error
-
-		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-			event.target.labels[0].dataset.error = str_errorMsg;
-
-		}
-
-		else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-			$field.next('label').data('error', str_errorMsg);
-		}
-		
-		$field.addClass('invalid');
+		return outerDiv;
 	}
 
-	else { // valid
 
-		$field.removeClass('invalid');
-
-		if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-			event.target.labels[0].dataset.error = str_errorMsg; // can't get jQuery.data() to work
-		}
-
-		else { // Other browsers (updates value but not display, falls back on value in HTML)
-
-			$field.next('label').data('error', str_errorMsg);
-		}
-	}
-};
-
-
-/** Utility for hiding view in the UI on demand.
-*
-* Uses jQuery.hide().
-*
-* @param Same as jQuery.hide()
-*/
-
-app.View.prototype.hide = function(obj_options) {
-
-	this.$renderContext().hide(obj_options ? obj_options : 'fast');
-}
-
-
-/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference)
-*
-* (See IInterfaceable for further documentation.)
-*/
-
-app.View.prototype.isInstanceOf = function (func_interface) {
-	
-	return this.parentList().indexOf(func_interface) > -1;
-};
-
-
-/** Utility for showing view in the UI on demand.
-*
-* Uses jQuery.show().
-*
-* @param Same as jQuery.show()
-*/
-
-app.View.prototype.show = function(obj_options) {
-
-	this.$renderContext().show(obj_options ? obj_options : 'slow');
-}
-
-
-/** Event handler for interactive validation of event capacity field
-*
-* @return {Boolean} true if validation is succesful, otherwise false
-*/
-
-app.View.prototype.validateCapacity = function(event, str_capacityId) {
-	
-	// Using HTML5 constraint validation to please my Udacity reviewers
-
-	var validity = $('#' + str_capacityId)[0].validity;
-
-	
-	if (validity.valueMissing) { // empty
-
-		this.displayValidation(event, str_capacityId, 'Please enter capacity', false);
-	}
-
-	// no need to test for non-numbers, not programmatically available from DOM anyway
-	
-	else if (validity.rangeUnderflow) { // negative number
-
-		this.displayValidation(event, str_capacityId, 'Capacity cannot be negative', false);
-	}
-	
-	else { // valid
-
-		this.displayValidation(event, str_capacityId, 'Please enter capacity', true);
-
-		return true;
-	}
-
-	return false;
-};
-
-
-/** Event handler for interactive validation of email field
-*
-* @return {Boolean} true if validation is succesful, otherwise false
-*/
-
-app.View.prototype.validateEmail = function(event, str_emailId, bool_required) {
-
-	/* Tried the HTML5 email validity constraint but found it too lax
+	/* Utility for displaying and hiding field error messages during interactive form validation
 	*
-	* (it does not require a period or much else after the @), so rolling my own.
-	*
-	* See unit test for Email class using com_github_dominicsayers_isemail.tests for details.
 	*/
 
-	var $email = $('#' + str_emailId),
+	app.View.prototype.displayValidation = function(event, str_fieldId, str_errorMsg, bool_valid) {
 
-	email = $email.val(),
+		var $field = $('#' + str_fieldId);
 
-	testMail = new app.Email(email),
+		if (!bool_valid) { // not valid, display validation error
 
-	valid = testMail.isValid();
+			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
 
+				event.target.labels[0].dataset.error = str_errorMsg;
 
-	if (email !== '') { // always validate email if it exists
+			}
 
-		this.displayValidation(event, str_emailId, 'Must be same format as "address@server.domain"', valid);
-	}
+			else { // Other browsers (updated value may not display, falls back on value in HTML)
 
-	else if (bool_required) { // no entry, require if required(!)
+				$field.next('label').data('error', str_errorMsg);
+			}
+			
+			$field.addClass('invalid');
+		}
 
-		this.displayValidation(event, str_emailId, 'Please enter email', false);
+		else { // valid
 
-		return valid || !bool_required; // empty is OK if not required
-	}
-	
-	return valid;
-};
+			$field.removeClass('invalid');
 
+			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
 
-/** Event handler for interactive validation of person name field
-*
-* @return {Boolean} true if validation is succesful, otherwise false
-*/
+				event.target.labels[0].dataset.error = str_errorMsg; // can't get jQuery.data() to work
+			}
 
-app.View.prototype.validateName = function(event, str_nameId, str_errorMsg, bool_required) {
+			else { // Other browsers (updates value but not display, falls back on value in HTML)
 
-	// Using HTML5 constraint validation to please my Udacity reviewers
-
-	var valid = !$('#' + str_nameId)[0].validity.valueMissing;
-
-	this.displayValidation(event, str_nameId, str_errorMsg, valid);
-
-	return valid;
-}
+				$field.next('label').data('error', str_errorMsg);
+			}
+		}
+	};
 
 
-/** Event handler for interactive validation of password field.
-*
-* Includes support for dynamically updated password hints
-*
-* @return {Boolean} true if validation is succesful, otherwise false
-*/
-
-app.View.prototype.validatePassword = function(event, str_passwordId, str_hintsPrefix) {
-
-	/* Relying solely on HTML5 constraint validation here would require me to write a compound regex
+	/** Utility for hiding view in the UI on demand.
 	*
-	* meeting all the requirements of the individial static validation functions in the Password class.
+	* Uses jQuery.hide().
 	*
-	* This is too much of a headache both to create and maintain. So relying directly on Password instead.
+	* @param Same as jQuery.hide()
 	*/
 
-	var password = $('#' + str_passwordId).val(), ret = true, tmp;
+	app.View.prototype.hide = function(obj_options) {
 
-
-	// Validate password and manage display of password hints
-
-	var tests = 
-	{
-		charcount: app.Password.hasValidCharacterCount,
-
-		uppercase: app.Password.hasValidUpperCaseCount,
-
-		lowercase: app.Password.hasValidLowerCaseCount,
-
-		number: app.Password.hasValidNumberCount,
-
-		punctuation: app.Password.hasValidPunctuationCount,
-
-		illegal: app.Password.hasIllegalCharacters
+		this.$renderContext().hide(obj_options ? obj_options : 'fast');
 	}
 
-	for (var prop in tests) { // iterate through tests
 
-		tmp = tests[prop](password); // run test
+	/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference)
+	*
+	* (See IInterfaceable for further documentation.)
+	*/
 
-		if (prop === 'illegal') { // this reverses the logic, and has a non-Boolean return, so deal separately
+	app.View.prototype.isInstanceOf = function (func_interface) {
+		
+		return this.parentList().indexOf(func_interface) > -1;
+	};
 
-			ret = ret && tmp === null; // add up results
 
-			$('#' + str_hintsPrefix + '-' + prop).find('i').html(tmp ? 'error' : 'done'); // display icon
-		}
+	app.View.prototype.onLoad = function(nEvent) {
 
-		else { // the rest are all the same
-
-			ret = ret && tmp; // add up results
-
-			$('#' + str_hintsPrefix + '-' + prop).find('i').html(tmp ? 'done' : 'error'); // display icon
-		}
-	}
-
+		return; // dummy method to make sure it's always available
+	};
 	
-	// Display validation message (or not)
 
-	this.displayValidation(
+	app.View.prototype.onUnLoad = function(nEvent) {
 
-		event,
-
-		str_passwordId,
-
-		tmp !== null ? 'This character is not allowed: ' + tmp[0] : (password !== '' ? 'Invalid password' : 'Please enter password'),
-
-		ret
-	);
+		return; // dummy method to make sure it's always available
+	};
 
 
-	return ret;
-};
+	/** Utility for showing view in the UI on demand.
+	*
+	* Uses jQuery.show().
+	*
+	* @param Same as jQuery.show()
+	*/
+
+	app.View.prototype.show = function(obj_options) {
+
+		this.$renderContext().show(obj_options ? obj_options : 'slow');
+	}
 
 
-/** Event handler for interactive validation of password confirmation field
-*
-* @return {Boolean} true if validation is succesful, otherwise false
-*/
+	/** Updates views when notified of changes to the data model.
+	*
+	* Views accept update notifications providing a single Model parameter.
+	*
+	* Required by IObservable. Default implementation to be used and/or overridden as needed by subclasses.
+	*
+	* @param {Model} m Model holding the information to be presented. Model class must match View's modelClass property. Otherwise View will ignore notification.
+	*
+	* @throws {AbstractMethodError} If attempting to invoke directly on abstract class
+	*/
 
-app.View.prototype.validatePasswordConfirmation = function(event, str_passwordId, str_confirmationId) {
+	app.View.prototype.update = function(Model_m) {
+		
+		if (Model_m.isInstanceOf(app.Model) && Model_m.constructor === this.modelClass()) { // correct Model subtype
 
-	// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
+			if (arguments.length === 1) { // correct method signature
 
-	var valid = $('#' + str_confirmationId).val() === $('#' + str_passwordId).val() || !this.isPasswordDirty;
+				this.model(Model_m);
 
-	this.displayValidation(
+				this.render(Model_m);
+			}
+		}
+	};
 
-		event,
 
-		str_confirmationId,
+	/** Event handler for interactive validation of event capacity field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
 
-		'Must be the same as password',
+	app.View.prototype.validateCapacity = function(event, str_capacityId) {
+		
+		// Using HTML5 constraint validation to please my Udacity reviewers
 
-		valid
-	);
+		var validity = $('#' + str_capacityId)[0].validity;
 
-	return valid;
-};
+		
+		if (validity.valueMissing) { // empty
+
+			this.displayValidation(event, str_capacityId, 'Please enter capacity', false);
+		}
+
+		// no need to test for non-numbers, not programmatically available from DOM anyway
+		
+		else if (validity.rangeUnderflow) { // negative number
+
+			this.displayValidation(event, str_capacityId, 'Capacity cannot be negative', false);
+		}
+		
+		else { // valid
+
+			this.displayValidation(event, str_capacityId, 'Please enter capacity', true);
+
+			return true;
+		}
+
+		return false;
+	};
+
+
+	/** Event handler for interactive validation of email field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+
+	app.View.prototype.validateEmail = function(event, str_emailId, bool_required) {
+
+		/* Tried the HTML5 email validity constraint but found it too lax
+		*
+		* (it does not require a period or much else after the @), so rolling my own.
+		*
+		* See unit test for Email class using com_github_dominicsayers_isemail.tests for details.
+		*/
+
+		var $email = $('#' + str_emailId),
+
+		email = $email.val(),
+
+		testMail = new app.Email(email),
+
+		valid = testMail.isValid();
+
+
+		if (email !== '') { // always validate email if it exists
+
+			this.displayValidation(event, str_emailId, 'Must be same format as "address@server.domain"', valid);
+		}
+
+		else if (bool_required) { // no entry, require if required(!)
+
+			this.displayValidation(event, str_emailId, 'Please enter email', false);
+
+			return valid || !bool_required; // empty is OK if not required
+		}
+		
+		return valid;
+	};
+
+
+	/** Event handler for interactive validation of person name field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+
+	app.View.prototype.validateName = function(event, str_nameId, str_errorMsg, bool_required) {
+
+		// Using HTML5 constraint validation to please my Udacity reviewers
+
+		var valid = !$('#' + str_nameId)[0].validity.valueMissing;
+
+		this.displayValidation(event, str_nameId, str_errorMsg, valid);
+
+		return valid;
+	}
+
+
+	/** Event handler for interactive validation of password field.
+	*
+	* Includes support for dynamically updated password hints
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+
+	app.View.prototype.validatePassword = function(event, str_passwordId, str_hintsPrefix) {
+
+		/* Relying solely on HTML5 constraint validation here would require me to write a compound regex
+		*
+		* meeting all the requirements of the individial static validation functions in the Password class.
+		*
+		* This is too much of a headache both to create and maintain. So relying directly on Password instead.
+		*/
+
+		var password = $('#' + str_passwordId).val(), ret = true, tmp;
+
+
+		// Validate password and manage display of password hints
+
+		var tests = 
+		{
+			charcount: app.Password.hasValidCharacterCount,
+
+			uppercase: app.Password.hasValidUpperCaseCount,
+
+			lowercase: app.Password.hasValidLowerCaseCount,
+
+			number: app.Password.hasValidNumberCount,
+
+			punctuation: app.Password.hasValidPunctuationCount,
+
+			illegal: app.Password.hasIllegalCharacters
+		}
+
+		for (var prop in tests) { // iterate through tests
+
+			tmp = tests[prop](password); // run test
+
+			if (prop === 'illegal') { // this reverses the logic, and has a non-Boolean return, so deal separately
+
+				ret = ret && tmp === null; // add up results
+
+				$('#' + str_hintsPrefix + '-' + prop).find('i').html(tmp ? 'error' : 'done'); // display icon
+			}
+
+			else { // the rest are all the same
+
+				ret = ret && tmp; // add up results
+
+				$('#' + str_hintsPrefix + '-' + prop).find('i').html(tmp ? 'done' : 'error'); // display icon
+			}
+		}
+
+		
+		// Display validation message (or not)
+
+		this.displayValidation(
+
+			event,
+
+			str_passwordId,
+
+			tmp !== null ? 'This character is not allowed: ' + tmp[0] : (password !== '' ? 'Invalid password' : 'Please enter password'),
+
+			ret
+		);
+
+
+		return ret;
+	};
+
+
+	/** Event handler for interactive validation of password confirmation field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+
+	app.View.prototype.validatePasswordConfirmation = function(event, str_passwordId, str_confirmationId) {
+
+		// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
+
+		var valid = $('#' + str_confirmationId).val() === $('#' + str_passwordId).val() || !this.isPasswordDirty;
+
+		this.displayValidation(
+
+			event,
+
+			str_confirmationId,
+
+			'Must be the same as password',
+
+			valid
+		);
+
+		return valid;
+	};

@@ -38,13 +38,13 @@ app.Router = function() {
 * @param {PopStateEvent} event Native browser PopStateEvent
  */
 
-app.Router.prototype.onPopState = function(PopStateEvent_event) {
+app.Router.prototype.onPopState = function(PopStateEvent_e) {
 
-	if (PopStateEvent_event.state && PopStateEvent_event.state.className) { // we're still in the app
+	if (PopStateEvent_e.state && PopStateEvent_e.state.className) { // we're still in the app
 
-		var className = PopStateEvent_event.state.className,
+		var className = PopStateEvent_e.state.className,
 
-		id = PopStateEvent_event.state.id;
+		id = parseInt(PopStateEvent_e.state.id);
 
 		//console.log('popped: ' + className + ', ' + id);
 
@@ -64,25 +64,33 @@ app.Router.prototype.onPopState = function(PopStateEvent_event) {
 
 			case 'EventListView':
 
-				app.controller.onAccountSelected(id);
+				app.controller.update([new app.EventListView(), app.Account.registry.getObjectById(id), app.View.UIAction.NAVIGATE]);
+
+				//app.controller.onAccountSelected(app.Account.registry.getObjectById(id));
 
 				break;
 
 			case 'EventView':
 
-				app.controller.onEventSelected(id);
+				app.controller.update([new app.EventView(), app.Event.registry.getObjectById(id), app.View.UIAction.NAVIGATE]);
+
+				//app.controller.onEventSelected(app.Event.registry.getObjectById(id));
 
 				break;
 
 			case 'GuestListView':
 
-				app.controller.onGuestListSelected(id);
+				app.controller.update([new app.GuestListView(), app.Event.registry.getObjectById(id), app.View.UIAction.NAVIGATE]);
+
+				//app.controller.onGuestListSelected(app.controller.selectedEvent());
 
 				break;
 
 			case 'PersonView':
 
-				app.controller.onGuestSelected(id);
+				app.controller.update([new app.PersonView(), app.Person.registry.getObjectById(id), app.View.UIAction.NAVIGATE]);
+
+				//app.controller.onGuestSelected(app.Person.registry.getObjectById(id));
 
 				break;
 		}
@@ -98,11 +106,11 @@ app.Router.prototype.onPopState = function(PopStateEvent_event) {
 *
 */
 
-app.Router.prototype.onViewChange = function(View_view) {
+app.Router.prototype.onViewChange = function(View_v) {
 
 	if (history.pushState) {
 
-		var className = View_view.className(), id = View_view.model().id();
+		var className = View_v.className(), id = View_v.model().id();
 
 		try {// needs to be run off a server to work
 

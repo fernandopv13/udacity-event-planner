@@ -31,10 +31,11 @@ app.EventView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	// Set temporary literal for use by parent class constructor
+	// Set temporary literals for use by parent class constructor
 
 	this.className = 'EventView';
 
+	this.ssuper = app.FormView;
 	
 	/** Initialize instance members inherited from parent class*/
 	
@@ -62,40 +63,26 @@ app.EventView.prototype.constructor = app.EventView; // Reset constructor proper
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
 
+app.EventView.prototype.NavigateToGuestList = function(nEvent) {
 
-/** Cancels entries in, and navigation to, event form
-*/
-
-app.EventView.prototype.cancel = function() {
-
-	this.onUnLoad();
-
-	app.FormView.prototype.cancel.call( // true if model is one that we just created anew, and now want to discard
-
-		this, // make sure 'this' points in the right direction
-
-		this.model() // model is defined
-
-		&& !app.controller.selectedAccount().isInAccount(this.model)  // model is not know by account
-
-	);
-}
+	this.notifyObservers(new app.GuestListView(), this.model(), app.View.UIAction.NAVIGATE);
+};
 
 
 /** (Re)renders event to form in UI
 *
-* @param {Event} The event from which to present data in the form
+* @param {Event} e The event from which to present data in the form
 *
 * @return void
 *
 * @todo Get character counter to work on description field
  */
 
-app.EventView.prototype.render = function(Event_event) {
+app.EventView.prototype.render = function(Event_e) {
 
-	var event = Event_event, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
+	var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 	
-	if (event !== null) {
+	if (Event_e !== null) {
 		
 		// Setup up form and container div
 
@@ -131,7 +118,7 @@ app.EventView.prototype.render = function(Event_event) {
 
 				element: 'input',
 
-				attributes: {id: 'event-id', type: 'hidden', value: Event_event.id()}
+				attributes: {id: 'event-id', type: 'hidden', value: Event_e.id()}
 			}))
 
 		
@@ -147,7 +134,7 @@ app.EventView.prototype.render = function(Event_event) {
 
 				true,
 
-				event.name() ? event.name() : ''
+				Event_e.name() ? Event_e.name() : ''
 			));
 		
 		
@@ -171,7 +158,7 @@ app.EventView.prototype.render = function(Event_event) {
 					
 					id: 'event-location',
 					
-					value: event.location() ? event.location() : '',
+					value: Event_e.location() ? Event_e.location() : '',
 					
 					list: 'suggested-locations'
 				}
@@ -184,7 +171,7 @@ app.EventView.prototype.render = function(Event_event) {
 				
 				attributes: {for: 'event-location'},
 				
-				classList: event.location() ? ['form-label', 'active'] : ['form-label'],
+				classList: Event_e.location() ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter event location'},
 				
@@ -234,7 +221,7 @@ app.EventView.prototype.render = function(Event_event) {
 
 				true,
 
-				event.start()
+				Event_e.start()
 
 			).children[0]); 
 				
@@ -249,7 +236,7 @@ app.EventView.prototype.render = function(Event_event) {
 
 				true,
 
-				event.start()
+				Event_e.start()
 
 			).children[0]); // extract date itself from row wrapper
 
@@ -276,7 +263,7 @@ app.EventView.prototype.render = function(Event_event) {
 
 				true,
 
-				event.end()
+				Event_e.end()
 
 			).children[0]); // extract date itself from row wrapper
 				
@@ -291,7 +278,7 @@ app.EventView.prototype.render = function(Event_event) {
 
 				true,
 
-				event.end()
+				Event_e.end()
 
 			).children[0]);
 
@@ -315,7 +302,7 @@ app.EventView.prototype.render = function(Event_event) {
 					
 					id: 'event-type',
 					
-					value: event.type() ? event.type() : '',
+					value: Event_e.type() ? Event_e.type() : '',
 					
 					list: 'event-types'
 				}
@@ -328,7 +315,7 @@ app.EventView.prototype.render = function(Event_event) {
 				
 				attributes: {for: 'event-type'},
 				
-				classList: event.type() ? ['form-label', 'active'] : ['form-label'],
+				classList: Event_e.type() ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter event type'},
 				
@@ -369,7 +356,7 @@ app.EventView.prototype.render = function(Event_event) {
 
 				true,
 
-				event.capacity() ? event.capacity() : 0,
+				Event_e.capacity() ? Event_e.capacity() : 0,
 
 				0,
 
@@ -404,60 +391,6 @@ app.EventView.prototype.render = function(Event_event) {
 
 			outerDiv.appendChild(innerDiv);
 
-			/*
-			containerDiv.appendChild(this.createNumberField(
-
-				's12',
-
-				'event-capacity',
-
-				'Capacity',
-
-				true,
-
-				event.capacity() ? event.capacity() : 0,
-
-				0,
-
-				null,
-
-				1,
-
-				'Please enter capacity (0 or greater)'
-			));
-
-			*/
-
-
-		// Add guest list button
-
-			/*
-			containerDiv.appendChild(function() {
-
-				var outerDiv =  this.createElement( // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-
-
-				outerDiv.appendChild(this.createElement( // button
-				{
-					element: 'a',
-
-					attributes: {id: 'event-edit-guests-button'},
-					
-					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
-
-					innerHTML: 'Edit guests'
-				}));
-
-				return outerDiv;
-
-			}.bind(this)());
-			*/
-
 
 		// Add host field
 
@@ -471,7 +404,7 @@ app.EventView.prototype.render = function(Event_event) {
 
 				false,
 
-				event.host() && event.host().hostName() ? event.host().hostName() : ''
+				Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : ''
 			));
 			
 		
@@ -500,7 +433,7 @@ app.EventView.prototype.render = function(Event_event) {
 				
 				classList: ['materialize-textarea'],
 
-				innerHTML: event.description()
+				innerHTML: Event_e.description()
 			}));
 			
 			
@@ -510,7 +443,7 @@ app.EventView.prototype.render = function(Event_event) {
 				
 				attributes:	{for: 'event-description'},
 				
-				classList: event.description() ? ['form-label', 'active'] : ['form-label'],
+				classList: Event_e.description() ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter description'},
 				
@@ -598,42 +531,23 @@ app.EventView.prototype.render = function(Event_event) {
 			
 			$('#event-edit-guests-button').click(function(event) { // edit guest list button
 
-				this.onUnLoad();
-				
-				this.notifyObservers(this, event); // delegate event handling to controller
+				this.NavigateToGuestList(event);
 	
 			}.bind(this));
 
 			
 			$('#event-form-cancel').click(function(event) {
 
-				window.history.back(); // return to previous view
-
-				// for now, simply discard any entries made by user
+				this.cancel(event);
 
 			}.bind(this));
 
 
 			$('#event-form-submit').click(function(event) {
 
-				if (this.submit(event)) { // submit succesfull
-
-					window.history.back(); // return to previous view
-				}
-
-				else {
-
-					console.log('event form submission failed')
-				}
+				this.submit(event);
 
 			}.bind(this));
-
-			/*
-			$('#nav-delete-icon').click(function(event) {
-
-				console.log('delete event');
-			});
-			*/
 	}
 
 	else { // present default message
@@ -657,33 +571,37 @@ app.EventView.prototype.render = function(Event_event) {
 * @todo Fix host hack
 */
 
-app.EventView.prototype.submit = function(event) {
+app.EventView.prototype.submit = function(Event_e) {
 
 	// First display any and all validation errors at once
 
-	void this.validateName(event, 'event-name', 'Please enter name', true);
+	void this.validateName(Event_e, 'event-name', 'Please enter name', true);
 
 	void this.validateDateRange()
 
 	void this.validateTimeRange()
 
-	void this.validateCapacity(event, 'event-capacity')
+	void this.validateCapacity(Event_e, 'event-capacity')
 
 	// Then do it again to obtain validation status
 
 	// (Chain stops at first false, so no use for UI)
 	
-	if (this.validateName(event, 'event-name', 'Please enter name', true) // Submit results if all validations pass
+	if (this.validateName(Event_e, 'event-name', 'Please enter name', true) // Submit results if all validations pass
 
 		&& this.validateDateRange()
 
 		&& this.validateTimeRange()
 
-		&& this.validateCapacity(event, 'event-capacity')) { 
+		&& this.validateCapacity(Event_e, 'event-capacity')) { 
 
 		// Notify observers by passing them a new Event with the data from the form
 
-		this.notifyObservers(
+		//this.notifyObservers(
+
+		this.ssuper().prototype.submit.call(
+
+			this,
 			
 			new app.Event(
 
@@ -740,14 +658,10 @@ app.EventView.prototype.submit = function(event) {
 				new app.Organization($('#event-host').val()), //hack
 				
 				parseInt($('#event-capacity').val())
-			),
+			)//,
 
-			parseInt($('#event-id').val())
+			//parseInt($('#event-id').val())
 		);
-
-		
-		this.onUnload();
-
 
 		return true;
 	}
@@ -835,21 +749,6 @@ app.EventView.prototype.suggestLocations = function() {
 	
 	// else don't provide suggestions
 }
-
-
-/** Updates event presentation when notified by controller of change */
-
-app.EventView.prototype.update = function(Model) {
-	
-	if (this.doUpdate(Model)) {
-
-		this.model(Model);
-
-		this.render(Model);
-	}
-
-	// else do nothing
-};
 
 
 /** Event handler for interactive validation of start and end date fields

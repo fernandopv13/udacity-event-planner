@@ -66,6 +66,7 @@ app.ListView.prototype.constructor = app.ListView; // Reset constructor property
 * Realization required by abstract View class. See this for further documentation.
  */
 
+/*
 app.ListView.prototype.doUpdate = function(Model) {
 
 	if (Model === null) { // i.e. reset
@@ -80,3 +81,35 @@ app.ListView.prototype.doUpdate = function(Model) {
 
 	return false;
 }
+*/
+
+
+app.ListView.prototype.onClick = function(nEvent_e, Model_m) {
+
+	this.notifyObservers(this, Model_m, app.View.UIAction.SELECT);
+};
+
+
+/** Updates list when notified by controller of change to model.
+*
+* Realization required by abstract View class. See this for further documentation.
+*
+* @param {Model} m Instance of Model. Must match the list's modelClass property
+*
+* @return {void}
+*/
+
+/*
+app.ListView.prototype.update = function(Model_m) {
+
+	if (Model_m.isInstanceOf(app.Model) && Model_m.constructor === this.modelClass()) { // correct Model subtype
+
+		if (arguments.length === 1) { // correct method signature
+
+			this.model(Model_m);
+
+			this.render(Model_m);
+		}
+	}	
+}
+*/

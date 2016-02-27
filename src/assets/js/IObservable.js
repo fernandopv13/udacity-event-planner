@@ -46,21 +46,25 @@ app.IObservable = function() {
 * Default methods (must be defined outside main function/class body)
 *---------------------------------------------------------------------------------------*/
 
-/** Notifies observers that object state has been changed
+/** Notifies observers of some change to Observable
 *
-* @param {int} Id The Id of the object that triggered the notification
-*
-* @param {Object} Object an object carrying information about the event triggering the notification
+* @param Method is agnostic about invoking signature: It simply passes on whichever parameters it receives.
 *
 * @return void
 */
 
-app.IObservable.prototype.default_notifyObservers = function(Object_obj, int_objId) {
+app.IObservable.prototype.default_notifyObservers = function() {
 
-	var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
+	var args = arguments;
 
-	observers.forEach(function(observer) {
+	//var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
 
+	this.observers().forEach(function(observer) {
+
+		observer.update(args);
+
+		
+		/*
 		Object_obj = Object_obj ? Object_obj : this;
 
 		if (arguments.length > 1) { // id present
@@ -72,10 +76,11 @@ app.IObservable.prototype.default_notifyObservers = function(Object_obj, int_obj
 
 			observer.update(Object_obj);
 		}
+		*/
 
 		
 		
-	}.bind(this));
+	});//.bind(this));
 };
 
 
@@ -90,13 +95,13 @@ app.IObservable.prototype.default_notifyObservers = function(Object_obj, int_obj
 
 app.IObservable.prototype.default_registerObserver = function(IObserver_observer) {
 
-	var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
+	//var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
 
 	if (IObserver_observer.isInstanceOf && IObserver_observer.isInstanceOf(app.IObserver)) {
 
-		if (observers.indexOf(IObserver_observer) < 0) { // skip duplicates
+		if (this.observers().indexOf(IObserver_observer) < 0) { // skip duplicates
 
-			observers.push(IObserver_observer);
+			this.observers().push(IObserver_observer);
 		}
 
 		else {
@@ -127,18 +132,18 @@ app.IObservable.prototype.default_registerObserver = function(IObserver_observer
 
 app.IObservable.prototype.default_removeObserver = function(IObserver_observer) {
 
-	var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
+	//var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
 
 	if (IObserver_observer.isInstanceOf && IObserver_observer.isInstanceOf(app.IObserver)) {
 
-		var ix = observers.indexOf(IObserver_observer);
+		var ix = this.observers().indexOf(IObserver_observer);
 
 		if (ix === -1) { // not found, return null
 
 			return null;
 		}
-
-		observers = observers.length > 1 ? observers.splice(ix, 1) : [];
+		
+		if (this.observers().length > 1) {this.observers().splice(ix, 1);} else {this.observers.pop()};
 
 		/*
 		while (ix > -1 && this.observers.length > 1) { // remove duplicates, avoiding infinite loop

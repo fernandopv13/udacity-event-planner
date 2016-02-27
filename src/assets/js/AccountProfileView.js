@@ -25,14 +25,16 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	// Set temporary literal for use by parent class constructor
+	// Set temporary literals for use by parent class constructor
 
 	this.className = 'AccountProfileView';
+
+	this.ssuper = app.FormView;
 
 	
 	/** Initialize instance members inherited from parent class*/
 	
-	app.FormView.call(this, app.Account, str_elementId, str_heading);
+	app.FormView.call(this, app.Person, str_elementId, str_heading);
 	
 
 	/*----------------------------------------------------------------------------------------
@@ -59,12 +61,14 @@ app.AccountProfileView.prototype.constructor = app.AccountProfileView; //Reset c
 *
 */
 
+/*
 app.AccountProfileView.prototype.cancel = function() {
 
 	window.history.back(); // return to previous view
 
 	// for now, simply discard any entries made by user
 }
+*/
 
 
 /** (Re)renders person to form in UI
@@ -74,13 +78,13 @@ app.AccountProfileView.prototype.cancel = function() {
 * @return void
  */
 
-app.AccountProfileView.prototype.render = function(Model_account) {
+app.AccountProfileView.prototype.render = function(Person_p) {
 
 	var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
-	if (Model_account !== null && Model_account.accountHolder()) { // account holder exists
+	if (Person_p) { // account holder exists
 		
-		var person = Model_account.accountHolder();
+		var person = Person_p;
 
 		// Setup up form and container div
 
@@ -115,7 +119,7 @@ app.AccountProfileView.prototype.render = function(Model_account) {
 
 				element: 'input',
 
-				attributes: {id: 'account-holder-id', type: 'hidden', value: person.id()}
+				attributes: {id: 'account-holder-id', type: 'hidden', value: Person_p.id()}
 			}));
 
 		
@@ -131,7 +135,7 @@ app.AccountProfileView.prototype.render = function(Model_account) {
 
 				true,
 
-				person.name() ? person.name() : ''
+				Person_p.name() ? Person_p.name() : ''
 			));
 			
 		
@@ -147,7 +151,7 @@ app.AccountProfileView.prototype.render = function(Model_account) {
 
 				false,
 
-				person.email()
+				Person_p.email()
 			);
 
 
@@ -171,7 +175,7 @@ app.AccountProfileView.prototype.render = function(Model_account) {
 
 				false,
 
-				person.jobTitle()
+				Person_p.jobTitle()
 			));
 
 						
@@ -195,7 +199,7 @@ app.AccountProfileView.prototype.render = function(Model_account) {
 					
 					id: 'account-holder-employer',
 					
-					value: person.employer() && person.employer().name() ? person.employer().name() : '',
+					value: Person_p.employer() && Person_p.employer().name() ? Person_p.employer().name() : '',
 					
 					list: 'suggested-employers'
 				}
@@ -208,7 +212,7 @@ app.AccountProfileView.prototype.render = function(Model_account) {
 				
 				attributes: {for: 'account-holder-employer'},
 				
-				classList: person.employer() && person.employer().name() ? ['form-label', 'active'] : ['form-label'],
+				classList: Person_p.employer() && Person_p.employer().name() ? ['form-label', 'active'] : ['form-label'],
 				
 				dataset: {error: 'Please enter your employer'},
 				
@@ -248,7 +252,7 @@ app.AccountProfileView.prototype.render = function(Model_account) {
 
 				false,
 
-				person.birthday()
+				Person_p.birthday()
 			));
 
 		
@@ -304,22 +308,14 @@ app.AccountProfileView.prototype.render = function(Model_account) {
 			
 			$('#account-holder-form-cancel').click(function(event) {
 
-				this.cancel();
+				this.cancel(event);
 
 			}.bind(this));
 
 
 			$('#account-holder-form-submit').click(function(event) {
 
-				if (this.submit(event)) { // submit succesfull
-
-					window.history.back(); // return to previous view
-				}
-
-				else {
-
-					console.log('account settings form submission failed')
-				}
+				this.submit(event);
 
 			}.bind(this));
 	}
@@ -373,7 +369,13 @@ app.AccountProfileView.prototype.submit = function(event) {
 
 		person.birthday($('#account-holder-birthday').val() !== '' ? new Date($('#account-holder-birthday').val()) : null);
 		
-		this.notifyObservers(person, parseInt($('#account-holder-id').val()));
+		//this.notifyObservers(person, parseInt($('#account-holder-id').val()));
+
+		this.ssuper().prototype.submit.call(
+
+			this,
+			
+			person);
 		
 		return true;
 	}
@@ -387,6 +389,7 @@ app.AccountProfileView.prototype.submit = function(event) {
 * See IViewable for further details.
  */
 
+/*
 app.AccountProfileView.prototype.update = function(Model) {
 	
 	if (this.doUpdate(Model)) {
@@ -398,3 +401,4 @@ app.AccountProfileView.prototype.update = function(Model) {
 
 	// else do nothing
 };
+*/

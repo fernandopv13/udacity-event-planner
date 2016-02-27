@@ -318,7 +318,7 @@ describe('class Account', function(){
 		});
 
 		
-		it('can get and set its default location', function() {
+		xit('can get and set its default location', function() {
 
 			expect(testAccount.defaultLocation('Las Vegas')).toBe('Las Vegas');
 

@@ -67,16 +67,22 @@ app.data.events[0].host(app.data.organizations[0]);
 app.data.events[1].host(app.data.organizations[1]);
 app.data.events[2].host(app.data.organizations[2]);
 
+app.data.events[0].start(new Date(1400000000000));
+app.data.events[0].end(new   Date(1400005000000));
 app.data.events[0].capacity(100);
 app.data.events[0].addGuest(app.data.people[0]);
 app.data.events[0].addGuest(app.data.people[1]);
 app.data.events[0].addGuest(app.data.people[2]);
 
+app.data.events[1].start(new Date(1400000000000));
+app.data.events[1].end(new   Date(1400005000000));
 app.data.events[1].capacity(100);
 app.data.events[1].addGuest(app.data.people[0]);
 app.data.events[1].addGuest(app.data.people[1]);
 app.data.events[1].addGuest(app.data.people[2]);
 
+app.data.events[2].start(new Date(1400000000000));
+app.data.events[2].end(new   Date(1400005000000));
 app.data.events[2].capacity(100);
 app.data.events[2].addGuest(app.data.people[0]);
 app.data.events[2].addGuest(app.data.people[1]);

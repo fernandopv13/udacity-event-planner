@@ -23,647 +23,701 @@ app.Controller = function() {
 	* Private instance fields (encapsulated data members)
 	*---------------------------------------------------------------------------------------*/
 	
-	var _implements = [app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
+		var _implements = [app.IObservable, app.IObserver], // list of interfaces implemented by this class (by function reference)
 
-	_currentView, // the view currently being displayed in the UI
+		_currentView, // the view currently being displayed in the UI
 
-	_selectedAccount = null, // the currently selected account, or null if none selected
+		_newModel = null, // a newly created model object, held in edit mode for the first time
 
-	_selectedEvent = null, // the currently selected event, or null if none selected
+		_selectedAccount = null, // the currently selected account, or null if none selected
 
-	_selectedGuest = null, // the currently selected guest, or null if none selected
+		_selectedEvent = null, // the currently selected event, or null if none selected
 
-	_views, // collection of views we need to keep track of
+		_selectedGuest = null, // the currently selected guest, or null if none selected
 
-	_router, // router managing browser history
+		_views, // collection of views we need to keep track of
 
-	_observers = []; // Array of IObservers. Expected by IObservable.
+		_router, // router managing browser history
+
+		_observers = []; // Array of IObservers. Expected by IObservable.
 
 	
 	/*----------------------------------------------------------------------------------------
 	* Accessors for private instance fields
 	*---------------------------------------------------------------------------------------*/
 
-	/** Gets or sets the view currently being displayed in the UI.
-	*
-	* When setting, hides the existing view and shows the new one.
-	*
-	* @param {View} currentView The current view, or null
-	*
-	* @return {View} The current view, or null
-	*
-	* @throws {IllegalArgumentError} If attempting to set a view that is not a View, or null
-	*/
-	
-	this.currentView = function (View, Model) {
-	
-		if (arguments.length > 0) { // setting
+		/** Gets or sets the view currently being displayed in the UI.
+		*
+		* When setting, hides the existing view and shows the new one.
+		*
+		* @param {View} v currentView The current view, or null
+		*
+		* @return {View} The current view, or null
+		*
+		* @throws {IllegalArgumentError} If attempting to set a view that is not a View, or null
+		*/
+		
+		this.currentView = function (View_v, Model_m) {
+		
+			if (arguments.length > 0) { // setting
 
-			if (View === null || View.isInstanceOf(app.View)) {
-			
+				if (View_v === null || View_v.isInstanceOf(app.View)) {
 				
-				this.notifyObservers(Model); // first notify observers: forms won't update if they are the current view
+					this.notifyObservers(Model_m); // first notify observers: forms won't update if they are the current view
 
+					
+					for (var view in _views) {
 
-				for (var view in _views) {_views[view].hide('fast');} // hide all views
+						_views[view].hide('fast');  // hide all views
 
-				_currentView = View; // set current view
+						_views[view].onUnLoad(); // have hidden views clean up after themselves						
 
-				_currentView.show('slow'); // show current view
+					}
 
-				
-				if (View.isInstanceOf(app.FormView)) { // if form, show form specific nav/icons
+					_currentView = View_v; // set current view
 
-					app.FormView.prototype.onLoad.call(View);
+					_currentView.show('slow'); // show current view
+
+					_currentView.onLoad(); // have current view init itself
+
+					
+					_router.onViewChange(View_v); // update browser history
 				}
 
-				else { // else, hide form specific nav/icons
+				else {
+				
+					throw new IllegalArgumentError('View must be instance of View')
+				}
+			}
+			
+			return _currentView;
+		};
 
-					app.FormView.prototype.onUnLoad.call(View);
+
+		/** Gets the collection of IObservers of the controller */
+
+		this.observers = function() {
+
+			if (arguments.length > 0) {
+
+				throw new IllegalArgumentError('Property is read-only');
+			}
+
+			return _observers;
+		}
+
+
+		/** Gets or sets the currently selected (active) account
+		*
+		* @param {Account} selectedAccount The selected account, or null
+		*
+		* @return {Account} The selected account, or null
+		*
+		* @throws {IllegalArgumentError} If attempting to set account that is not an Account, or null
+		*/
+		
+		this.selectedAccount = function (Account_account) {
+		
+			if (arguments.length > 0) {
+
+				if (Account_account === null || Account_account.constructor === app.Account) {
+				
+					_selectedAccount = Account_account;
 				}
 
+				else {
 				
-				_router.onViewChange(View); // update browser history
+					throw new IllegalArgumentError('Account must be instance of Account')
+				}
 			}
-
-			else {
 			
-				throw new IllegalArgumentError('View must be instance of View')
-			}
-		}
+			return _selectedAccount;
+		};
+
+
+		/** Gets or sets the currently selected Event
+		*
+		* @param {Event} selectedAccount The selected event, or null
+		*
+		* @return {Event} The selected event, or null
+		*
+		* @throws {IllegalArgumentError} If attempting to set event that is not an Event, or null
+		*/
 		
-		return _currentView;
-	};
-
-
-	/** Gets the collection of IObservers of the controller */
-
-	this.observers = function() {
-
-		if (arguments.length > 0) {
-
-			throw new IllegalArgumentError('Property is read-only');
-		}
-
-		return _observers;
-	}
-
-
-	/** Gets or sets the currently selected (active) account
-	*
-	* @param {Account} selectedAccount The selected account, or null
-	*
-	* @return {Account} The selected account, or null
-	*
-	* @throws {IllegalArgumentError} If attempting to set account that is not an Account, or null
-	*/
-	
-	this.selectedAccount = function (Account_account) {
-	
-		if (arguments.length > 0) {
-
-			if (Account_account === null || Account_account.constructor === app.Account) {
-			
-				_selectedAccount = Account_account;
-			}
-
-			else {
-			
-				throw new IllegalArgumentError('Account must be instance of Account')
-			}
-		}
+		this.selectedEvent = function (Event_event) {
 		
-		return _selectedAccount;
-	};
+			if (arguments.length > 0) {
 
+				if (Event_event === null || Event_event.constructor === app.Event) {
+				
+					_selectedEvent = Event_event;
+				}
 
-	/** Gets or sets the currently selected Event
-	*
-	* @param {Event} selectedAccount The selected event, or null
-	*
-	* @return {Event} The selected event, or null
-	*
-	* @throws {IllegalArgumentError} If attempting to set event that is not an Event, or null
-	*/
-	
-	this.selectedEvent = function (Event_event) {
-	
-		if (arguments.length > 0) {
-
-			if (Event_event === null || Event_event.constructor === app.Event) {
-			
-				_selectedEvent = Event_event;
+				else {
+				
+					throw new IllegalArgumentError('Event must be instance of Event')
+				}
 			}
-
-			else {
 			
-				throw new IllegalArgumentError('Event must be instance of Event')
-			}
-		}
+			return _selectedEvent;
+		};
+
+
+		/** Gets or sets the currently selected guest
+		*
+		* @param {Person} selectedGuest The selected guest, or null
+		*
+		* @return {Person} The selected guest, or null
+		*
+		* @throws {IllegalArgumentError} If attempting to set guest that is not a Person, or null
+		*/
 		
-		return _selectedEvent;
-	};
-
-
-	/** Gets or sets the currently selected guest
-	*
-	* @param {Person} selectedGuest The selected guest, or null
-	*
-	* @return {Person} The selected guest, or null
-	*
-	* @throws {IllegalArgumentError} If attempting to set guest that is not a Person, or null
-	*/
-	
-	this.selectedGuest = function (Person_guest) {
-	
-		if (arguments.length > 0) {
-
-			if (Person_guest === null || Person_guest.constructor === app.Person) {
-			
-				_selectedGuest = Person_guest;
-			}
-
-			else {
-			
-				throw new IllegalArgumentError('Guest must be instance of Person')
-			}
-		}
+		this.selectedGuest = function (Person_guest) {
 		
-		return _selectedGuest;
-	};
+			if (arguments.length > 0) {
 
-	
+				if (Person_guest === null || Person_guest.constructor === app.Person) {
+				
+					_selectedGuest = Person_guest;
+				}
+
+				else {
+				
+					throw new IllegalArgumentError('Guest must be instance of Person')
+				}
+			}
+			
+			return _selectedGuest;
+		};
+
+
 	/*----------------------------------------------------------------------------------------
-	* Private instance methods (may depend on accessors, so declare after them)
+	* Private instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Handles click events in list views.
-	*
-	* Called by public update() method, which also does error handling.
-	*
-	* @param {View} view Reference to a View (assumed to be a list view).
-	*
-	* @param {int} id Id of Model tapped/clicked on. Model type is inferred from type of View.
-	*
-	* @return {void}
-	*/
+		function _onAccountSelected(Account_a) {
 
-	function _update(View, int_id) { // Click received in list of Model s displayed by View
+			this.selectedEvent(null);
 
-			/* Using the more generic update(View, Event) form might void the need for this.
-			* But that would make retrieving the id of the clicked object more tightly coupled
-			* to the implementation of the view. So keeping this for now.
-			*/
+			this.selectedGuest(null);
 
-			switch (View.constructor)	{
+			this.selectedAccount(Account_a); //app.Account.registry.getObjectById(int_accountId));
 
-				case app.EventListView: // Event list
+			this.currentView(_views.eventListView, this.selectedAccount());
 
-					this.onEventSelected(int_id);
+			//this.notifyObservers(this.selectedAccount()); // notify observers
 
-					break;
-				
-				case app.GuestListView: // Guest list
+			//this.currentView(_views.eventListView); // set view so observers can know which is current
 
-					this.onGuestSelected(int_id);
-
-					break;
-			}
-	}
-
-
-	/** Handles native browser events in UI that require more elaborate Controller involvement than simple clicks, submits or cancels.
-	*
-	* Called by public update() method, which also does error handling.
-	*
-	* @param {View} view Reference to the View generating the event.
-	*
-	* @param {nEvent} event Native browser event.
-	*
-	* @return {void}
-	*/
-
-	function __update(View, nEvent) { // Native UI event in View requires Controller supervision
-
-		switch (View.constructor)	{ // Branch on View implementer type
-
-			case app.EventView: // Event form
-
-				// Not crazy about the controller knowing the id of the div, but will do for now
-
-				if (nEvent.target.id === 'event-edit-guests-button') { // click on 'edit guests' button
-
-					this.onGuestListSelected(); // show guest list
-				}
-
-				break;
+			//_router.onViewChange(_views.eventListView); // update browser history
 		}
-	}
 
 
-	/** Handles form submit events.
-	*
-	* Called by public update() method, which also does error handling.
-	*
-	* @param {Model} model Reference to a temporary Model holding the data to be used for the update. Is of the same class as the Model to be updated.
-	*
-	* @param {int} id Id of the Model to be updated. Disregarded when creating a new object.
-	*
-	* @return {void}
-	*/
-	
-	function ___update(Model, int_id) { // Submission received from form representing Model of same class and id as parameters
+		/** Handles click on floating 'plus' action button in list views
+		*
+		* Creates a new object of the requested type and opens it in its detail (form) view for editing.
+		*
+		* If submitted succesfully, it will be added in its place in the account's object model.
+		*
+		* If cancelled, the object is removed and all references to it deleted or reset.
+		*
+		* @param {Model} tmp Temporary Model instance indicating the type of new Model object to be created
+		*
+		* @return {void}
+		*/
 
-		var sourceObj = Model.constructor.registry.getObjectById(int_id); // update data model
+		function _onCreateModel(Model_m) {
 
-		sourceObj.update(Model, int_id);
-	}
+			switch(Model_m.constructor) {
 
+				case app.Event:
 
-	/** Handles update notifications from the data model.
-	*
-	* Called by public update() method, which also does error handling.
-	*
-	* @param {Model} model The Model that has changed state and therefore invoked the update.
-	*
-	* @return {void}
-	*/
+					_newModel = Model_m; // store new model for future reference
 
-	function ____update(Model) { // Update received from data model. Object represents itself.
+					_onEventSelected.call(this, _newModel); // open it in its FormView
 
-		// If a new event or guest was added, first register it with its account or event...
+					break;
 
-		switch (Model.constructor) {
+				case app.Person:
 
-			case app.Event: // event
+					var evt = this.selectedEvent();
 
-				if (!this.selectedAccount().isInAccount(Model)) { // account does not know event
+					if (evt.guests().length < evt.capacity()) { // check if there is capacity before trying to add a new guest
 
-					this.selectedAccount().addEvent(Model); // so add it
-				}
+						_newModel = Model_m; // store new model for future reference
 
-				break;
-			
-			case app.Person: // guest
-
-				//Bit of a hack to exclude account holder from guest list, but acceptable for now
-
-				if (Model.id() !== this.selectedAccount().accountHolder().id()) { // account holder cannot be guest
-
-					if (this.selectedEvent()) { // an event has been selected
-
-						if (!this.selectedEvent().isGuest(Model)) { // event doesn't know person
-
-							this.selectedEvent().addGuest(Model); // so add as guest
-						}
+						_onGuestSelected.call(this, _newModel); // open it in its FormView
 					}
-				}
+					
+					else { // inform user of capacity constraint
 
-				break;
+						 Materialize.toast('The event is full to capacity. Increase capacity or remove guests before adding more.', 4000)
+					}
+
+					break;
+
+				default:
+
+					//console.log('not supported')
+			}
+
+			this.registerObserver(Model_m);
+
+			Model_m.registerObserver(this);
 		}
 
 
-		// ...then notify observers (i.e. views)
+		function _onEventSelected(Event_e) {
 
-		this.notifyObservers(Model);
-	}
+			this.selectedGuest(null);
+
+			this.selectedEvent(Event_e);
+
+			this.currentView(_views.eventView, this.selectedEvent());
+		}
+
+		
+		function _onGuestSelected(Person_g) {
+
+			this.selectedGuest(Person_g);
+
+			this.currentView(_views.guestView, this.selectedGuest());
+		}
 
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
-	/** Sets up the MVC collaborators to observe/be observed by each other as required.
-	*
-	*/
+		/** Sets up the MVC collaborators to observe/be observed by each other as required.
+		*
+		*/
 
-	this.init = function() {
+		this.init = function() {
 
-		// Create views
+			// Create views
 
-			_views =
-			{
-				accountSettingsView: new app.AccountSettingsView('account-settings-view', 'Account Settings'), // account settings form (email, password and prefs)
+				_views =
+				{
+					accountSettingsView: new app.AccountSettingsView('account-settings-view', 'Account Settings'), // account settings form (email, password and prefs)
 
-				accountProfileView: new app.AccountProfileView('account-profile-view', 'Account Profile'), // account holder profile
+					accountProfileView: new app.AccountProfileView('account-profile-view', 'Account Profile'), // account holder profile
 
-				eventListView: new app.EventListView('event-list-view', 'My Events'), // event list
+					eventListView: new app.EventListView('event-list-view', 'My Events'), // event list
 
-				eventView: new app.EventView('event-view', 'Edit Event'), // event form
+					eventView: new app.EventView('event-view', 'Edit Event'), // event form
 
-				guestListView: new app.GuestListView('guest-list-view', 'Guest List'), // guest list
+					guestListView: new app.GuestListView('guest-list-view', 'Guest List'), // guest list
 
-				guestView: new app.PersonView('guest-view', 'Edit Guest') // guest form
-			}
-
-			
-			// Register views and controller as mutual observers
-
-			for (var prop in _views) {
-
-				this.registerObserver(_views[prop]);
-
-				_views[prop].registerObserver(app.controller);
-			}
-
-
-		// Register controller as observer of every Model in the data model
-
-			[app.Account, app.Event, app.Organization, app.Person].forEach(function(klass){
-
-				var objList = klass.registry.getObjectList();
-
-				for (var prop in objList) {
-
-					objList[prop].registerObserver(this);
+					guestView: new app.PersonView('guest-view', 'Edit Guest') // guest form
 				}
 
-			}.bind(this)); // make sure 'this' references controller correctly within loop
-
-
-		// Set up a router to manage the browser's history
-
-			_router = new app.Router();
-
-			window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
-
-		
-		// Set some defaults to use until account creation/selection is developed
-
-			
-			this.selectedAccount(app.Account.registry.getObjectById(0)); //debug
-			
-			this.selectedAccount().defaultLocation('Copenhagen'); // debug
-
-			this.selectedAccount().geoLocationAllowed(true); // debug
-
-			this.selectedAccount().localStorageAllowed(true); // debug
-
-			this.selectedAccount().accountHolder(new app.Person('Superuser')); // debug
-
-			this.selectedAccount().accountHolder().email(new app.Email('superuser@acme.corp')); // debug
-
-			this.selectedAccount().accountHolder().jobTitle('Master Octopus'); // debug
-
-			this.onAccountSelected(0); // debug
-	};
-
-	
-	/** Returns true if class implements the interface passed in (by function reference)
-	*
-	* (Method realization required by ISerializable.)
-	*
-	* @param {Function} interface The interface we wish to determine if this class implements
-	*
-	* @return {Boolean} instanceof True if class implements interface, otherwise false
-	*	
-	*/
-	
-	this.isInstanceOf = function (func_interface) {
-		
-		return _implements.indexOf(func_interface) > -1;
-	};
-
-
-	/** Notifies observes (views) of change to the data model
-	*
-	* @param {Model} Reference to the data model object that caused the update
-	*/
-
-	this.notifyObservers = function(Model) {
-
-		_observers.forEach(function(observer) {
-
-			observer.update(Model);
-		});
-	}
-
-
-	/** Handles click on "Add" button in event list */
-
-	this.onAddEvent = function(event) {
-
-		this.onEventSelected(new app.Event().id());
-	};
-
-	
-	/** Handles click on "Add" button in guest list */
-
-	this.onAddGuest = function(event) {
-
-		// Check if there is capacity before trying to add a new guest
-
-		var evt = this.selectedEvent();
-
-		if (evt.guests().length < evt.capacity()) {
-
-			// add guest immediately; remember to back out if users cancels creation
-
-			this.onGuestSelected(new app.Person().id());
-		}
-		
-		else {
-
-			 Materialize.toast('The event is full to capacity. Increase capacity or remove guests to make room.', 4000)
-		}
-	};
-
-
-	this.onAccountSelected = function(int_accountId) {
-
-		this.selectedAccount(app.Account.registry.getObjectById(int_accountId));
-
-		this.selectedEvent(null);
-
-		this.selectedGuest(null);
-
-		this.currentView(_views.eventListView, this.selectedAccount());
-
-		//this.notifyObservers(this.selectedAccount()); // notify observers
-
-		//this.currentView(_views.eventListView); // set view so observers can know which is current
-
-		//_router.onViewChange(_views.eventListView); // update browser history
-	};
-
-
-	this.onDeleteSelected = function(Model) {
-
-		switch(Model.constructor) {
-
-			case app.Event: // remove event completely from app
-
-				app.Account.registry.removeObject(Model);
-
-				this.selectedAccount().removeEvent(Model);
-
-				this.currentView().model = undefined;
-
-				Model = undefined;
-
-				Materialize.toast('Event was deleted', 4000);
-
-				break;
-
-			case app.Person: // remove person (guest) from this event
-
-				this.selectedEvent().removeGuest(Model);
-
-				Materialize.toast(Model.name() + ' was taken off the guest list', 4000);
-
-				break;
-		}
-
-		Materialize.toast('Item was deleted', 4000);
-	}
-
-	this.onEventSelected = function(int_eventId) {
-
-		this.selectedEvent(app.Event.registry.getObjectById(int_eventId));
-
-		this.selectedGuest(null);
-
-		this.currentView(_views.eventView, this.selectedEvent());
-
-		//this.notifyObservers(this.selectedEvent()); // notify observers
-
-		//this.currentView(_views.eventView); // set view so observers can know which is current
-
-		//_router.onViewChange(_views.eventView); // update browser history
-	};
-
-
-	this.onGuestListSelected = function(int_eventId) {
-
-		this.selectedGuest(null);
-		
-		this.currentView(_views.guestListView, this.selectedEvent());
-
-		//this.notifyObservers(this.selectedEvent()); // notify observers
-
-		//this.currentView(_views.guestListView); // set view so observers can know which is current
-
-		//_router.onViewChange(_views.guestListView); // update browser history
-	};
-
-
-	this.onGuestSelected = function(int_guestId) {
-
-		this.selectedGuest(app.Person.registry.getObjectById(int_guestId));
-
-		this.currentView(_views.guestView, this.selectedGuest());
-
-		//this.notifyObservers(this.selectedGuest()); // notify observers
-
-		//this.currentView(_views.guestView); // set view so observers can know which is current
-
-		//_router.onViewChange(_views.guestView); // update browser history
-	};
-
-
-	/** Handles click events in navbar/dropdown */
-
-	this.onNavSelection = function(event) {
-
-		switch (event.target.href.split('!')[1]) { // parse the URL partial after #!
-
-			case 'Search':
-
-				break;
-
-			case 'Settings':
-
-				this.currentView(_views.accountSettingsView, this.selectedAccount());
-
-				break;
-
-			case 'Profile':
-
-				this.currentView(_views.accountProfileView, this.selectedAccount());
 				
-				break;
+				// Register views and controller as mutual observers
 
-			case 'About':
+				for (var prop in _views) {
 
-				break;
+					this.registerObserver(_views[prop]);
 
-			case 'Sign Out':
-
-				break;
-		}
-	}
-
-
-	/** Passes history onpopstate events on to router */
-
-	this.onPopState = function(event) {
-
-		_router.onPopState(event);
-	};
-	
-	
-	/** Receives and processes update notifications from either view (UI) or data model.
-	*
-	* Uses JS style 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked.
-	*
-	* Delegates response to private '_update(...)' functions. See these for supported method signatures.
-	*
-	* @return {void}
-	*
-	* @throws {IllegalArgumentError} If first parameter provided is neither an Model nor a View.
-	*
-	* @throws {IllegalArgumentError} If second parameter provided (when present) is neither an integer nor a native browser event.
-	*
-	* @todo Maybe delegate error handling to individual private functions
-	*/
-
-	this.update = function(Object_obj, intOrEvent) {
-
-		// Parse parameters to invoke appropriate polymorphic response
-
-		if (arguments.length > 1 && typeof arguments[1] !== 'undefined') { // second param provided
-
-			if (intOrEvent === parseInt(intOrEvent)) { // second param is an integer
-
-				var int_id = parseInt(intOrEvent);
-
-				if (Object_obj.isInstanceOf(app.Model)) { // form submitted
-
-					___update.call(this, Object_obj, int_id);
+					_views[prop].registerObserver(app.controller);
 				}
 
-				else if (Object_obj.isInstanceOf(app.View)) { // list item clicked
 
-					_update.call(this, Object_obj, int_id);
+			// Set up a router to manage the browser's history
+
+				_router = new app.Router();
+
+				window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
+
+			
+			// Set some defaults to use until account creation/selection is developed
+
+				
+				this.selectedAccount(app.Account.registry.getObjectById(0)); //debug
+				
+				this.selectedAccount().defaultLocation('Copenhagen'); // debug
+
+				this.selectedAccount().geoLocationAllowed(true); // debug
+
+				this.selectedAccount().localStorageAllowed(true); // debug
+
+				this.selectedAccount().accountHolder(new app.Person('Superuser')); // debug
+
+				this.selectedAccount().accountHolder().email(new app.Email('superuser@acme.corp')); // debug
+
+				this.selectedAccount().accountHolder().jobTitle('Master Octopus'); // debug
+				
+				_onAccountSelected.call(this, this.selectedAccount()); // debug
+
+
+			// Register models and controller as mutual observers
+
+				[app.Account, app.Event, app.Organization, app.Person].forEach(function(klass){
+
+					var objList = klass.registry.getObjectList();
+
+					for (var prop in objList) {
+
+						this.registerObserver(objList[prop]);
+
+						objList[prop].registerObserver(this);
+					}
+
+				}.bind(this)); // make sure 'this' references controller correctly within loop
+		};
+
+		
+		/** Returns true if class implements the interface passed in (by function reference)
+		*
+		* (Method realization required by ISerializable.)
+		*
+		* @param {Function} interface The interface we wish to determine if this class implements
+		*
+		* @return {Boolean} instanceof True if class implements interface, otherwise false
+		*	
+		*/
+		
+		this.isInstanceOf = function (func_interface) {
+			
+			return _implements.indexOf(func_interface) > -1;
+		};
+
+
+		/** Notifies observes (views) of change to the data model
+		*
+		* @param {Model} Reference to the data model object that caused the update
+		*/
+
+		this.notifyObservers = function(Model_m, int_id) {
+			
+			if (int_id !== undefined) {
+
+				_observers.forEach(function(observer) { // expected by Model
+
+					observer.update(Model_m, int_id);
+				});
+			}
+
+			else {
+
+				_observers.forEach(function(observer) { // expected by View
+
+					observer.update(Model_m);
+				});
+			}
+		}
+
+		
+		/*
+		this.onDeleteSelected = function(Model_m) {
+
+			switch(Model_m.constructor) {
+
+				case app.Event: // remove event completely from app
+
+					app.Account.registry.removeObject(Model_m);
+
+					this.selectedAccount().removeEvent(Model_m);
+
+					this.currentView().model = undefined;
+
+					Model_m = undefined;
+
+					Materialize.toast('Event was deleted', 4000);
+
+					break;
+
+				case app.Person: // remove person (guest) from this event
+
+					this.selectedEvent().removeGuest(Model_m);
+
+					Materialize.toast(Model_m.name() + ' was taken off the guest list', 4000);
+
+					break;
+			}
+
+			Materialize.toast('Item was deleted', 4000);
+		}
+		*/
+
+		
+		/** Handles click events in navbar/dropdown */
+
+		this.onNavSelection = function(event) {
+
+			switch (event.target.href.split('!')[1]) { // parse the URL partial after #!
+
+				case 'Search':
+
+					break;
+
+				case 'Settings':
+
+					this.currentView(_views.accountSettingsView, this.selectedAccount());
+
+					break;
+
+				case 'Profile':
+
+					this.currentView(_views.accountProfileView, this.selectedAccount().accountHolder());
+					
+					break;
+
+				case 'About':
+
+					break;
+
+				case 'Sign Out':
+
+					break;
+			}
+		}
+
+
+		/** Passes history onpopstate events on to router */
+
+		this.onPopState = function(event) {
+
+			_router.onPopState(event);
+		};
+		
+		
+		/** Receives and processes update notifications from either view (UI) or data model.
+		*
+		* Uses JS style 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked.
+		*
+		* Delegates response to private '_update(...)' functions. See these for supported method signatures.
+		*
+		* @param {Arguments} An array like object containing whatever params the caller has passed on
+		*
+		* @return {void}
+		*
+		* @throws {IllegalArgumentError} If first parameter provided is neither an Model nor a View.
+		*
+		* @throws {IllegalArgumentError} If second parameter provided (when present) is neither an integer nor a native browser event.
+		*
+		* @todo Maybe delegate error handling to individual private functions
+		*/
+
+		this.update = function() {
+
+			// 'Polymorphic' helper functions handling the different supported method signatures
+
+
+			/** Handles update notifications from the data model.
+			*
+			* Called by public update() method, which also does error handling.
+			*
+			* @param {Model} model The Model that has changed state and therefore invoked the update.
+			*
+			* @return {void}
+			*/
+
+			function _update(Model_m) {
+
+				this.notifyObservers(Model_m);
+			}
+
+
+			/** Handles user action in a View
+			*
+			* Called by public update() method, which also does error handling.
+			*
+			* @param {View} v Reference to the calling View, or to the type of View we wish to navigate to
+			*
+			* @param {Model} m Reference to the Model related to the user action (e.g. the Model presented by the form, the selected list item, or the source of data for the next view)
+			*
+			* @param {int} UIAction The type of action invoked by the user in the UI. Supported action types are defined in app.View.UIAction.
+			*
+			* @return {void}
+			*/
+
+			function __update(View_v, Model_m, int_uiaction) {
+
+				switch (int_uiaction) {
+
+					case app.View.UIAction.CANCEL:
+
+						if (_newModel) { // creating of new model cancelled
+
+							_newModel.constructor.registry.removeObject(_newModel); // remove from registry
+
+							_newModel = null; // reset reference
+						}
+
+						break;
+
+					case app.View.UIAction.CREATE:
+
+						_onCreateModel.call(this, Model_m);
+
+						break;
+
+					case app.View.UIAction.DELETE:
+
+						this.removeObserver(Model_m);
+
+						switch(Model_m.constructor) {
+
+							case app.Event: // remove event completely from app
+
+								var evtName = Model_m.name();
+
+								app.Account.registry.removeObject(Model_m);
+
+								this.selectedAccount().removeEvent(Model_m);
+
+								this.currentView().model(undefined);
+
+								Model_m = undefined;
+
+								Materialize.toast(evtName + ' was deleted', 4000);
+
+								break;
+
+							case app.Person: // remove person (guest) from this event, but keep in account
+
+								this.selectedEvent().removeGuest(Model_m);
+
+								Materialize.toast(Model_m.name() + ' was taken off the guest list', 4000);
+
+								break;
+						}
+
+						window.history.back();
+
+						break;
+
+					case app.View.UIAction.NAVIGATE: // navigation to (sub)view requested
+
+						var view;
+
+						for (var prop in _views) { // get (existing) view matching the request
+
+							if (_views[prop].constructor === View_v.constructor) {
+
+								view = _views[prop];
+							}
+						}
+
+						if (view) {
+
+							this.currentView(view, Model_m);
+						}
+
+						View_v = undefined; // try to speed up garbage collection of temporary helper object
+
+						break;
+					
+					case app.View.UIAction.SELECT:
+
+						switch (View_v.constructor) {
+
+								case app.EventListView: // selection made in event list
+
+									_onEventSelected.call(this, Model_m);
+
+									break;
+
+								case app.GuestListView: // selection made in guest list
+
+									_onGuestSelected.call(this, Model_m);
+
+									break;
+							}
+
+						break;
+
+					case app.View.UIAction.SUBMIT: // update to Model submitted by form
+
+						if (_newModel) { // new Model succesfully added to the account, insert into ecosystem
+
+							switch(Model_m.constructor) {
+
+								case app.Event:
+
+									this.selectedAccount().addEvent(_newModel); // add to event list
+
+									break;
+
+								case app.Person:
+
+									this.selectedEvent().addGuest(_newModel); // add to guest list
+
+									break;
+							}
+
+							_newModel = null; // reset and dereference temporary model
+						}
+
+						this.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits
+
+						window.history.back(); // go one step back in browser history
+
+						break;
+
+					default:
+
+						console.log('UI action ' + int_uiaction + ' not supported');
 				}
-
-				else { // Wrong type
-
-					throw new IllegalArgumentError('Expected Model or View');
-				}
 			}
+			
+			
+			// Parse parameters to invoke appropriate 'polymorphic' response
 
-			else if (intOrEvent.originalEvent && Object_obj.isInstanceOf(app.View)) { // second param is a native event from a View
+			var args = arguments[0];
 
-				__update.call(this, Object_obj, intOrEvent);
-			}
+			switch (args.length) {
 
-			else { // id neither an integer nor a native browser Event
+				case 1: // state change notification from Model
 
-				throw new IllegalArgumentError('Param must be an integer or a native browser Event');
+					if (args[0].isInstanceOf(app.Model)) { // first param is instance of Model
+
+							_update.call(this, args[0]);
+					}
+
+					else {
+
+						throw new IllegalArgumentError('Expected instance of Model');
+					}
+
+					break;
+
+				case 3: // user action notification from View
+
+					if (args[0].isInstanceOf(app.View)) { // first param is instance of View
+
+						if (args[1].isInstanceOf(app.Model)) { // second param is instance of Model
+
+							if (args[2] === parseInt(args[2])) { // third param is integer
+
+								__update.call(this, args[0], args[1], args[2]);
+							}
+
+							else {
+
+								throw new IllegalArgumentError('Expected integer');
+							}
+						}
+
+						else {
+
+							throw new IllegalArgumentError('Expected instance of Model');
+						}
+					}
+
+					else {
+
+						throw new IllegalArgumentError('Expected instance of View');
+					}
+
+					break;
+
+				default:
+
+					//throw new IllegalArgumentError('Method signature not supported');
 			}
 		}
-
-		else if (Object_obj.isInstanceOf(app.Model)) { // Model and no second param => data model updated
-
-			____update.call(this, Object_obj); // Model
-		}
-
-		else { // wrong type
-
-			throw new IllegalArgumentError('Expected Model');
-		}
-	}
 	
 	/*----------------------------------------------------------------------------------------
 	* Other initialization (parameter parsing/constructor 'polymorphism')
@@ -672,13 +726,6 @@ app.Controller = function() {
 	// none so far
 	
 };
-
-
-/*----------------------------------------------------------------------------------------
-* Public class (static) members
-*---------------------------------------------------------------------------------------*/
-
-// none so far
 
 
 /*----------------------------------------------------------------------------------------

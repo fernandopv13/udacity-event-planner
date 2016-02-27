@@ -25,9 +25,11 @@ app.GuestListView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	// Set temporary literal for use by parent class constructor
+	// Set temporary literals for use by parent class constructor
 
 	this.className = 'GuestListView';
+
+	this.ssuper = app.ListView;
 
 	
 	/** Initialize instance members inherited from parent class*/
@@ -62,24 +64,26 @@ app.GuestListView.prototype.constructor = app.GuestListView; //Reset constructor
 
 app.GuestListView.prototype.render = function(Event_event) {
 	
-	function renderListItem(Person_guest, self) {
+	function renderListItem(Person_g, self) {
 		
 		var listElmnt = self.createElement({
 
 			element: 'li',
 
-			attributes: {id: 'guest-list-id-' + Person_guest.id()},
+			attributes: {id: 'guest-list-id-' + Person_g.id()},
 
 			classList: ['collection-item', 'avatar'],
 
 			listeners:
 			{
-				click: function(e) {self.notifyObservers(self, Person_guest.id());}
+				click: function(e) {self.onClick(e, Person_g);}
+
+				//click: function(e) {self.notifyObservers(self, Person_g.id());}
 			}
 		});
 
 					
-		if (Person_guest.imgUrl()) { // use existing image
+		if (Person_g.imgUrl()) { // use existing image
 
 			listElmnt.appendChild(self.createElement({
 
@@ -87,9 +91,9 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 				attributes:
 				{
-					src: Person_guest.imgUrl(),
+					src: Person_g.imgUrl(),
 
-					alt: Person_guest.name()
+					alt: Person_g.name()
 				},
 
 				classList: ['circle']
@@ -113,7 +117,7 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 			element: 'span',
 
-			innerHTML: Person_guest.name() ? Person_guest.name() : ''
+			innerHTML: Person_g.name() ? Person_g.name() : ''
 		}));
 
 					
@@ -121,7 +125,7 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 			element: 'p',
 
-			innerHTML: Person_guest.email() && Person_guest.email().address() ? Person_guest.email().address() : ''
+			innerHTML: Person_g.email() && Person_g.email().address() ? Person_g.email().address() : ''
 		}));
 
 		
@@ -203,29 +207,8 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 	$('#guest-list-add').click(function(event) {
 
-		app.controller.onAddGuest(event);
-	});
-};
+		this.notifyObservers(this, new app.Person('New Guest'), app.View.UIAction.CREATE);
 
-
-/** Update event presentation when model has changed */
-
-app.GuestListView.prototype.update = function(Model) {
-	
-	if (this.doUpdate(Model)) {
-
-		this.model(Model);
-
-		this.render(Model);
-
-	}
-
-	else if (Model.constructor === app.Person) { // possible change to guest, so update list
-
-		this.render(app.controller.selectedEvent());
-
-		this.modelId = app.controller.selectedEvent() ? app.controller.selectedEvent().id() : null;
-	}
-
-	// else do nothing
+		//app.controller.onAddGuest(event);
+	}.bind(this));
 };

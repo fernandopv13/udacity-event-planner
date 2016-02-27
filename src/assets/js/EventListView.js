@@ -27,9 +27,11 @@ app.EventListView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	// Set temporary literal for use by parent class constructor
+	// Set temporary literals for use by parent class constructor
 
 	this.className = 'EventListView';
+
+	this.ssuper = app.ListView;
 
 	
 	/** Initialize instance members inherited from parent class*/
@@ -64,13 +66,13 @@ app.EventListView.prototype.constructor = app.EventListView; //Reset constructor
 
 app.EventListView.prototype.render = function(Account_account) {
 	
-	function renderListItem(Event_event, self) {
+	function renderListItem(Event_e, self) {
 
 		var listElmnt = self.createElement({ // li
 
 			element: 'li',
 
-			attributes: {id: 'event-list-id-' + Event_event.id()},
+			attributes: {id: 'event-list-id-' + Event_e.id()},
 
 			classList: ['collection-item']
 		});
@@ -80,13 +82,15 @@ app.EventListView.prototype.render = function(Account_account) {
 
 			element: 'div',
 
-			innerHTML: (Event_event.name() ? Event_event.name() : 'Unnamed event') + ' (' + Event_event.guests().length + ')',
+			innerHTML: (Event_e.name() ? Event_e.name() : 'Unnamed event') + ' (' + Event_e.guests().length + ')',
 
 			listeners:
 			{
-				//click: function(e) {self.notifyObservers(Event_event.id());}
+				click: function(e) {self.onClick(e, Event_e);}
 
-				click: function(e) {self.notifyObservers(self, Event_event.id());}
+				//click: function(e) {self.notifyObservers(self, Event_e.id());}
+
+				//click: function(e) {self.notifyObservers(self, Event_e, app.View.CLICKEVENT);}
 			}
 		});
 
@@ -171,21 +175,9 @@ app.EventListView.prototype.render = function(Account_account) {
 
 	$('#event-list-add').click(function(event) {
 
-		app.controller.onAddEvent(event);
-	});
-};
+		this.notifyObservers(this, new app.Event('New Event'), app.View.UIAction.CREATE);
 
+		//app.controller.onAddEvent(event);
 
-/** Updates event list presentation when notified by controller of change */
-
-app.EventListView.prototype.update = function(Model) {
-	
-	if (this.doUpdate(Model)) {
-
-		this.model(Model);
-
-		this.render(Model);
-	}
-
-	// else do nothing
+	}.bind(this));
 };

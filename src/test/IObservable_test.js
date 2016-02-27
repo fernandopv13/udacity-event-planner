@@ -11,6 +11,14 @@ describe('Interface IObservable', function(){
 	
 	// set up some mocks
 
+	function TestObservable() {
+
+		var _observers = [];
+
+		this.observers = function() {return _observers;}
+	}
+
+
 	function TestObserver(id) {
 
 		this.id = id;
@@ -29,7 +37,7 @@ describe('Interface IObservable', function(){
 
 		//testObservable = new (function() {this.observers = []})();
 
-		testObservable = {observers: []};
+		testObservable = new TestObservable();
 
 		testObserver = new TestObserver();
 	});
@@ -93,7 +101,7 @@ describe('Interface IObservable', function(){
 
 		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver);
 
-		expect(testObservable.observers.length).toBe(1);
+		expect(testObservable.observers().length).toBe(1);
 	});
 
 
@@ -116,7 +124,7 @@ describe('Interface IObservable', function(){
 
 		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver);
 
-		expect(testObservable.observers.length).toBe(1);
+		expect(testObservable.observers().length).toBe(1);
 
 		expect(app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver)).toBe(null);
 	});
@@ -139,10 +147,18 @@ describe('Interface IObservable', function(){
 
 		app.IObservable.prototype.default_registerObserver.call(testObservable, testObserver2);
 
-		expect(testObservable.observers.length).toBe(2);
+		expect(testObservable.observers().length).toBe(2);
 
 		app.IObservable.prototype.default_removeObserver.call(testObservable, testObserver);
 
-		expect(testObservable.observers.length).toBe(1);
+		expect(testObservable.observers().length).toBe(1);
+	});
+
+	
+	afterEach(function() {
+
+		testObservable = undefined;
+
+		testObserver = undefined;
 	});
 });

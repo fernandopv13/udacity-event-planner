@@ -26,11 +26,13 @@ app.FormView = function(Function_modelClass, str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	// Set temporary literal for use by parent class constructor (unless already defined in calling class)
+	// Set temporary literals for use by parent class constructor (unless already defined in calling class)
 
-	if (!this.className) {this.className = 'FormView';}
+	this.className =  this.className ? this.className : 'FormView';
 
-	
+	this.ssuper = this.ssuper ? this.ssuper : app.View;
+
+
 	/** Initializes instance members inherited from parent class*/
 	
 	app.View.call(this, Function_modelClass, str_elementId, str_heading);
@@ -57,90 +59,75 @@ app.FormView.prototype.constructor = app.FormView; // Reset constructor property
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
 
-/** Handles common tasks for forms when cancelled by user */
+app.FormView.prototype.delete = function(nEvent) {
 
-app.FormView.prototype.cancel = function(bool_deleteModel) {
+	//console.log(this.model());
 
-	if (bool_deleteModel) { // model was new object that is no longer needed
+	this.onUnLoad();
 
-		var obj = this.modelClass().registry.getObjectById(this.modelId); // get reference to model
-
-		this.modelClass().registry.removeObject(obj); // remove from class' registry
-
-		obj = undefined; // dereference object to expose it to garbage collection
-	}
-
-	//this.clear(); // mark view as inactive
-
-	window.history.back(); // return to previous view
-
-	// for now, simply discard any entries made by user to an existing guest
-}
+	this.notifyObservers(this, this.model(), app.View.UIAction.DELETE);
+};
 
 
-/** Determines whether view should respond to update notification.
-*
-* FormViews ignore and override changes to their underlying model while they are in focus.
-*
-* Realization required by abstract View class. See this for further documentation.
- */
+app.FormView.prototype.onLoad = function(nEvent) {
 
-app.FormView.prototype.doUpdate = function(Model) {
-
-	// no current view (boot), or form is not in focus (i.e. being displayed)
-
-	if (!app.controller.currentView() || this.constructor !== app.controller.currentView().constructor) {
-
-		if (Model === null) { // i.e. reset
-
-			return true;
-		}
-
-		else if (Model.constructor === this.modelClass()) { // classes match
-
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-app.FormView.prototype.onLoad = function() {
-
-	$('#nav-delete-icon').show('slow');
+	$('#nav-delete-icon').show('slow'); // show delete icon in navbar
 
 	
 	// Set up modal for delete confirmation
 
-		$('#confirm-delete-modal-cancel').click(function() {
+		$('#confirm-delete-modal-cancel').click(function(nEvent) {
 
 			$('#confirm-delete-modal').closeModal();
 
 		}.bind(this));
 
 
-		$('#confirm-delete-modal-ok').click(function() {
+		$('#confirm-delete-modal-ok').click(function(nEvent) {
 
 			$('#confirm-delete-modal').closeModal();
 
-			this.cancel(false);
-
-			app.controller.onDeleteSelected(this.model());
+			this.delete();
 
 		}.bind(this));
 
 
-		$('#nav-delete-icon').click(function(event) {
+		$('#nav-delete-icon').click(function(nEvent) {
 
 			$('#confirm-delete-modal').openModal();
 		});
 };
 
 
-app.FormView.prototype.onUnLoad = function() {
+app.FormView.prototype.onUnLoad = function(nEvent) {
 
-	$('#nav-delete-icon').hide('fast');
+	$('#nav-delete-icon').hide('fast'); // hide delete icon in navbar
 
-	$('#nav-delete-icon').off(); // remove all event handlers from delete icon
+	$('#nav-delete-icon, #confirm-delete-modal-cancel, #confirm-delete-modal-ok').off(); // remove all event handlers from delete widgets
 };
+
+
+app.FormView.prototype.submit = function(Model_m) {
+
+	//this.onUnLoad();
+
+	this.notifyObservers(this, Model_m, app.View.UIAction.SUBMIT);
+}
+
+
+/** Updates form when notified by controller of change to model.
+*
+* FormViews ignore and override changes to their underlying model while they are in focus.
+*
+* Realization required by abstract View class. See this for further documentation.
+*
+* @return {void}
+*/
+
+app.FormView.prototype.update = function(Model_m) {
+
+	if (!app.controller.currentView() || this.constructor !== app.controller.currentView().constructor) { // view is not in focus
+
+		app.View.prototype.update.call(this, Model_m); // ssuper() does not work recursively, so call directly
+	}
+}

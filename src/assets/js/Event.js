@@ -351,13 +351,13 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 	* @return {Person} The person just added. Otherwise throws error.
 	 */
 
-	this.addGuest = function (obj_guest) {
+	this.addGuest = function (Person_guest) {
 		
-		if (obj_guest.constructor === app.Person) { // only a Person can be a guest
+		if (Person_guest.constructor === app.Person) { // only a Person can be a guest
 			
 			if(_guests.length < _capacity - 1) { // we cannot add guests beyond capacity
 			
-				_guests.push(obj_guest);
+				_guests.push(Person_guest);
 			}
 			
 			else {
@@ -371,7 +371,7 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 			throw new TypeError('Guest must be Person');
 		}
 		
-		return obj_guest;
+		return Person_guest;
 	};
 
 
@@ -515,65 +515,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		};
 	};
 
-
-	/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Event} event Object holding the data to update with
-	*
-	* @return {Boolean} true if copy was successful, else error or false
-	*
-	* @throws {IllegalArgumentError} If object provided is not an instance of Event
-	*
-	* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
-	*/
-
-	/*
-	this.update = function(Event_event, int_objId) {
-
-		if (Event_event.constructor !== app.Event) { // wrong class
-
-			throw new IllegalArgumentError('Object must be instance of Event');
-		}
-
-		else if (this.id() !== int_objId) { // id mismatch
-
-			throw new IllegalArgumentError('Objects IDs don\'t match');
-		}
-
-		else {
-
-			// Update using accessors (for validation)
-
-			this.name(Event_event.name());
-
-			this.type(Event_event.type());
-
-			this.start(Event_event.start() ? Event_event.start() : null);
-
-			this.end(Event_event.end() ? Event_event.end() : null);
-
-			if (Event_event.location()) {this.location(Event_event.location());}
-
-			this.description(Event_event.description());
-
-			this.capacity(Event_event.capacity());
-
-			this.host(Event_event.host());
-
-			
-			// Do some housekeeping (calls method in parent class)
-
-			this.ssuper().prototype.update.call(this, Event_event);
-
-			
-			return true;
-		}
-
-		return false; // this should never happen, keeping just in case
-	}
-	*/
 		
 	/*----------------------------------------------------------------------------------------
 	* Other initialization
@@ -650,8 +591,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		// Read in JSON from local storage
 		
 		Event_.call(this, arguments[0]);
-
-		//void this.readObject();
 	}
 	
 	
@@ -662,24 +601,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 		// Call accessors for any supplied params (accessors provide simple validation and error handling)
 		
 		Event__.call(this, str_name, str_type, date_start, date_end, str_location, str_description, ihost_host, int_capacity)
-
-		/*
-		if (str_name) {this.name(str_name)}
-		
-		if (str_type) {this.type(str_type)}
-		
-		if (date_start) {this.start(date_start)}
-		
-		if (date_end) {this.end(date_end)}
-		
-		if (int_capacity >= 0) {this.capacity(int_capacity)}
-
-		if (str_location) {this.location(str_location)}
-
-		if (str_description) {this.description(str_description)}
-
-		if (ihost_host) {this.host(ihost_host)}
-		*/
 	}
 
 	this.constructor.registry.add(this); // Will only happend if param passing passes w/o error
@@ -698,55 +619,49 @@ app.Event.prototype.constructor = app.Event; // Reset constructor property
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
 
-/** Updates IObserver when notified of change by observable (controller). Autosaves to local storage if available.
+/** Updates Event instance when notified of change by observable (controller). Autosaves to local storage if available.
 *
 * (See IObserver for further documentation.)
 *
-* @param {Event} event Object holding the data to update with
+* @param {Event} event Object holding the data to update from
 *
-* @return {Boolean} true if copy was successful, else error or false
+* @param {int} id Id of the event intended to receive the update
+*
+* @return {Boolean} true if copy was successful, otherwise error or false
 *
 * @throws {IllegalArgumentError} If object provided is not an instance of Event
 *
 * @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+*
+* @throws {IllegalArgumentError} If any of the data provided by the source does not fit the validation criteria of the target, as managed by accessors.
 */
 
-app.Event.prototype.update = function(Event_event, int_objId) {
+app.Event.prototype.update = function(Event_e, int_id) {
 
-	if (Event_event.constructor !== app.Event) { // wrong class
-
-		throw new IllegalArgumentError('Object must be instance of Event');
-	}
-
-	else if (this.id() !== int_objId) { // id mismatch
-
-		throw new IllegalArgumentError('Objects IDs don\'t match');
-	}
-
-	else {
+	if (this.ssuper().prototype.update.call(this, arguments)) { // check whether to respond to this notification
 
 		// Update using accessors (for validation)
 
-		this.name(Event_event.name());
+		this.name(Event_e.name());
 
-		this.type(Event_event.type());
+		this.type(Event_e.type());
 
-		this.start(Event_event.start() ? Event_event.start() : null);
+		this.start(Event_e.start() ? Event_e.start() : null);
 
-		this.end(Event_event.end() ? Event_event.end() : null);
+		this.end(Event_e.end() ? Event_e.end() : null);
 
-		if (Event_event.location()) {this.location(Event_event.location());}
+		if (Event_e.location()) {this.location(Event_e.location());}
 
-		this.description(Event_event.description());
+		this.description(Event_e.description());
 
-		this.capacity(Event_event.capacity());
+		this.capacity(Event_e.capacity());
 
-		this.host(Event_event.host());
+		this.host(Event_e.host());
 
 		
-		// Do some housekeeping (calls method in parent class)
+		// Do some housekeeping common to all Model updates
 
-		this.ssuper().prototype.update.call(this, Event_event);
+		this.ssuper().prototype.onUpdate.call(this, Event_e);
 
 		
 		return true;

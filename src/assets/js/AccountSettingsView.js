@@ -25,9 +25,11 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	// Set temporary literal for use by parent class constructor
+	// Set temporary literals for use by parent class constructor
 
 	this.className = 'AccountSettingsView';
+
+	this.ssuper = app.FormView;
 
 	
 	/** Initialize instance members inherited from parent class*/
@@ -59,12 +61,14 @@ app.AccountSettingsView.prototype.constructor = app.AccountSettingsView; //Reset
 /** Cancels entries in, and navigation to, account settings form
 */
 
+/*
 app.AccountSettingsView.prototype.cancel = function() {
 
 	window.history.back(); // return to previous view
 
 	// for now, simply discard any entries made by user
 }
+*/
 
 
 /** Renders account to form in UI
@@ -79,7 +83,6 @@ app.AccountSettingsView.prototype.cancel = function() {
 app.AccountSettingsView.prototype.render = function(Account_account) {
 
 	var account = Account_account, accountHolder, formElement, containerDiv, innerDiv, outerDiv, labelElement, pElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
-
 		
 	if (account) {
 		
@@ -347,22 +350,14 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 
 			$('#account-settings-cancel').click(function(event) {
 
-				this.cancel();
+				this.cancel(event);
 				
 			}.bind(this));
 
 
 			$('#account-settings-submit').click(function(event) {
 
-				if (this.submit(event)) { // submit succesfull
-
-					window.history.back(); // return to previous view
-				}
-
-				else {
-
-					console.log('account settings form submission failed')
-				}
+				this.submit(event);
 
 			}.bind(this));
 	}
@@ -436,10 +431,14 @@ app.AccountSettingsView.prototype.submit = function(event) {
 		account.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
 
 		
-		// Notify observers by passing them a reference to the temporary account,
-		// and the id of the account to be updated
+		//this.notifyObservers(account, parseInt($('#account-settings-id').val()));
 
-		this.notifyObservers(account, parseInt($('#account-settings-id').val()));
+		this.ssuper().prototype.submit.call(
+
+			this,
+			
+			account
+		);
 		
 		return true;
 	}
@@ -450,6 +449,7 @@ app.AccountSettingsView.prototype.submit = function(event) {
 
 /** Updates account presentation when notified by controller of change */
 
+/*
 app.AccountSettingsView.prototype.update = function(Model) {
 	
 	if (this.doUpdate(Model)) {
@@ -463,3 +463,4 @@ app.AccountSettingsView.prototype.update = function(Model) {
 
 	// else do nothing
 };
+*/

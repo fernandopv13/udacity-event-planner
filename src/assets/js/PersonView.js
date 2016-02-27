@@ -25,9 +25,11 @@ app.PersonView = function(str_elementId, str_heading) {
 	* Call (chain) parent class constructor
 	*---------------------------------------------------------------------------------------*/
 	
-	// Set temporary literal for use by parent class constructor
+	// Set temporary literals for use by parent class constructor
 
 	this.className = 'PersonView';
+
+	this.ssuper = app.FormView;
 
 	
 	/** Initialize instance members inherited from parent class*/
@@ -58,6 +60,7 @@ app.PersonView.prototype.constructor = app.PersonView; //Reset constructor prope
 /** Cancels entries in, and navigation to, person form
 */
 
+/*
 app.PersonView.prototype.cancel = function() {
 
 	this.onUnLoad();
@@ -71,6 +74,7 @@ app.PersonView.prototype.cancel = function() {
 		&& !app.controller.selectedEvent().isGuest(this.model)  // model is not know by event
 	);
 }
+*/
 
 
 /** (Re)renders person to form in UI
@@ -303,22 +307,14 @@ app.PersonView.prototype.render = function(Person_person) {
 
 			$('#guest-form-cancel').click(function(event) {
 
-				this.cancel();
+				this.cancel(event);
 
 			}.bind(this));
 
 
 			$('#guest-form-submit').click(function(event) {
 
-				if (this.submit(event)) { // submit succesfull
-
-					window.history.back(); // return to previous view
-				}
-
-				else {
-
-					console.log('guest form submission failed')
-				}
+				this.submit(event);
 
 			}.bind(this));
 
@@ -371,7 +367,11 @@ app.PersonView.prototype.submit = function(event) {
 
 		// Nofity observers by passing them a new Person with the data from the form
 
-		this.notifyObservers(
+		//this.notifyObservers(
+
+		this.ssuper().prototype.submit.call(
+
+			this,
 			
 			new app.Person(
 
@@ -384,13 +384,13 @@ app.PersonView.prototype.submit = function(event) {
 				new app.Email($('#guest-email').val()),
 
 				$('#guest-birthday').val() ? new Date($('#guest-birthday').val()) : null
-			),
+			)//,
 
-			parseInt($('#guest-id').val())
+			//parseInt($('#guest-id').val())
 		);
 		
 		
-		this.onUnLoad();
+		//this.onUnLoad();
 
 
 		return true;
@@ -402,6 +402,7 @@ app.PersonView.prototype.submit = function(event) {
 
 /** Updates guest presentation when notified by controller of change */
 
+/*
 app.PersonView.prototype.update = function(Model) {
 	
 	if (Model === null || Model.constructor === app.Person) {
@@ -413,6 +414,7 @@ app.PersonView.prototype.update = function(Model) {
 
 	// else do nothing
 };
+*/
 
 
 /* Event handler for interactive validation of person name field

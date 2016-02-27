@@ -424,45 +424,37 @@ app.Person.prototype.constructor = app.Person; // Reset constructor property
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/	
 
-/** Updates person when notified of change by observable (controller). Autosaves to local storage if available.
+/** Updates Person instance when notified of change by observable (controller). Autosaves to local storage if available.
 *
 * (See IObserver for further documentation.)
 *
-* @param {Person} person Object holding the data to update this person with
+* @param {Person} p Object holding the data to update from
+*
+* @param {int} id Id of the person intended to receive the update
 *
 * @return {Boolean} true if copy was successful, else error or false
 */
 
-app.Person.prototype.update = function(Person_person, int_objId) {
+app.Person.prototype.update = function(Person_p, int_id) {
 
-	if (Person_person.constructor !== app.Person) { // wrong class
-
-		throw new IllegalArgumentError('Object must be instance of Person');
-	}
-
-	else if (this.id() !== int_objId) { // id mismatch
-
-		throw new IllegalArgumentError('Objects IDs don\'t match');
-	}
-
-	else {
+	if (this.ssuper().prototype.update.call(this, arguments)) { // check whether to respond to this notification
 
 		// Update using accessors for validation
 
-		this.name(Person_person.name());
+		this.name(Person_p.name());
 
-		this.employer(Person_person.employer() ? Person_person.employer() : null);
+		this.employer(Person_p.employer() ? Person_p.employer() : null);
 
-		this.jobTitle(Person_person.jobTitle());
+		this.jobTitle(Person_p.jobTitle());
 
-		this.email(Person_person.email() ? Person_person.email() : null);
+		this.email(Person_p.email() ? Person_p.email() : null);
 
-		this.birthday(Person_person.birthday() ? Person_person.birthday() : null);
+		this.birthday(Person_p.birthday() ? Person_p.birthday() : null);
 
 		
 		// Do some housekeeping (calls method in parent class)
 
-		this.ssuper().prototype.update.call(this, Person_person);
+		this.ssuper().prototype.update.call(this, Person_p);
 		
 
 		return true;

@@ -36,32 +36,6 @@ describe('class View', function(){
 	});
 
 
-	it('defines a doUpdate() abstract method signature', function() {
-			
-		// verify that method signature exists
-		
-		expect(app.View.prototype.doUpdate).toBeDefined();
-		
-		expect(typeof app.View.prototype.doUpdate).toBe('function');
-	});
-		
-	
-	it('throws an error if doUpdate() is invoked', function() {
-			
-		// verify that method invokation throws error
-		
-		try {
-		
-			app.View.prototype.doUpdate();
-		}
-		
-		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
-		
-			expect(e.name).toBe('AbstractMethodError');
-		}
-	});
-
-	
 	describe('View instance', function() {
 
 		it('can get its class name', function() {

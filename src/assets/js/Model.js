@@ -114,7 +114,7 @@ app.Model.prototype.isInstanceOf = function (func_interface) {
 * @return {void}
 */
 
-app.Model.prototype.update = function(Model_obj) {
+app.Model.prototype.onUpdate = function(Model_obj) {
 
 	// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
 
@@ -143,4 +143,40 @@ app.Model.prototype.update = function(Model_obj) {
 	// Notify observers (i.e. controller)
 
 	this.notifyObservers(this);
+}
+
+
+/** Reports whether this object should respond to an update notification broadcast (from controller)
+*
+* @param {Model} m Temporary Model instance holding the data to update from. Its class must match the class of the target object.
+*
+* @param {int} id Id of the Model instance intended to receive the update. Must match the id of the target object.
+*
+* @return {Boolean} true if both class and id of provided params match this instance, otherwise or false
+*
+*/
+
+app.Model.prototype.update = function() {
+
+	var args = arguments[0];
+
+	if (args.length === 2) {
+
+		if (args[0].isInstanceOf(app.Model) && args[1] === parseInt(args[1])) { //correct method signature
+
+			if (args[0].constructor === this.constructor) { // correct Model subtype
+
+				if (parseInt(args[1]) === this.id()) { // correct id
+
+					return true;
+				}
+
+				// else: ignore silently, the call may not be for this object
+			}
+
+			// else : ignore silently, the call may not be for this object
+		}
+	}
+
+	return false;
 }
