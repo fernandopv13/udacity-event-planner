@@ -22,7 +22,10 @@ app.FourSquare = app.FourSquare || {};
 * @author Ulrik H. Gade, December 2015
 */
 
-app.FourSquareSearch = function() {};
+app.FourSquareSearch = function(int_count) {
+
+	this.count = int_count ? int_count : 50; // the number of venues to fetch
+};
 
 
 // Store API keys for later use
@@ -67,7 +70,7 @@ app.FourSquareSearch.prototype.execute = function(callback, obj_location) {
 				+ locStr //'&ll=' + app.defaultLocation.lat() + ',' + app.defaultLocation.lng()
 				+ '&radius=1000'
 				+ '&categoryId=4d4b7105d754a06374d81259,4bf58dd8d48988d1f8931735' //restaurants and hotels
-				+ '&limit=' + 10 //max 50, but long list doesn't work well on physically large (PC) screens
+				+ '&limit=' + this.count //max 50
 				;
 	
 	

@@ -388,7 +388,7 @@ app.EventView.prototype.render = function(Event_e) {
 				
 				classList: ['waves-effect', 'waves-teal', 'btn-flat'],
 
-				innerHTML: 'Edit guest list'
+				innerHTML: 'Edit guests'
 			}));
 
 			outerDiv.appendChild(innerDiv);
@@ -731,7 +731,7 @@ app.EventView.prototype.suggestLocations = function() {
 
 	if (position) {// position is defined
 
-		new app.FourSquareSearch().execute(function(venues) { // get venues
+		new app.FourSquareSearch($(window).width() > 1024 || $(window).height() > 1024 ? 20 : 50).execute(function(venues) { // get venues (max on mobile, fewer in desktop)
 
 			if (venues !== null) { // search succeeded
 
