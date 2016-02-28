@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class Controller Implements IObserver IObservable
+* public class Controller Implements IInterfaceable, IObservable, IObserver
 ******************************************************************************/
 
 var app = app || {};
@@ -9,6 +9,12 @@ var app = app || {};
 /** @classdesc The 'C' part of our MVC framework.
 *
 * The 'octopus' controlling the workflow, and mediating messages between data and UI, in the app.
+*
+* @implements IInterfaceable
+*
+* @implements IObservable
+*
+* @implements IObserver
 *
 * @constructor
 *
@@ -94,7 +100,12 @@ app.Controller = function() {
 		};
 
 
-		/** Gets the collection of IObservers of the controller */
+		/** Gets the collection of IObservers of the controller
+		*
+		* @return {Array} An array of IObservers
+		*
+		* @throws {IllegalArgumentError} If passing in any parameters: property is read-only
+		*/
 
 		this.observers = function() {
 
@@ -195,33 +206,36 @@ app.Controller = function() {
 	* Private instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 	
+		/** Does the work required when an account has been selected,
+		*
+		* including storing a reference to it as the selected account,
+		*
+		* and displaying the Account to the user.
+		*
+		* @param {Account} a The selected Account
+		*/
+
 		function _onAccountSelected(Account_a) {
 
 			this.selectedEvent(null);
 
 			this.selectedGuest(null);
 
-			this.selectedAccount(Account_a); //app.Account.registry.getObjectById(int_accountId));
+			this.selectedAccount(Account_a);
 
 			this.currentView(_views.eventListView, this.selectedAccount());
-
-			//this.notifyObservers(this.selectedAccount()); // notify observers
-
-			//this.currentView(_views.eventListView); // set view so observers can know which is current
-
-			//_router.onViewChange(_views.eventListView); // update browser history
 		}
 
 
 		/** Handles click on floating 'plus' action button in list views
 		*
-		* Creates a new object of the requested type and opens it in its detail (form) view for editing.
+		* Takes a new Model of the requested type and opens it in its detail (form) view for editing.
 		*
 		* If submitted succesfully, it will be added in its place in the account's object model.
 		*
-		* If cancelled, the object is removed and all references to it deleted or reset.
+		* If cancelled, the Model is removed and all references to it deleted or reset.
 		*
-		* @param {Model} tmp Temporary Model instance indicating the type of new Model object to be created
+		* @param {Model} tmp The new Model object being created
 		*
 		* @return {void}
 		*/
@@ -267,6 +281,15 @@ app.Controller = function() {
 		}
 
 
+		/** Does the work required when an event has been selected,
+		*
+		* including storing a reference to it as the selected event,
+		*
+		* and displaying the event to the user.
+		*
+		* @param {Event} a The selected Event
+		*/
+
 		function _onEventSelected(Event_e) {
 
 			this.selectedGuest(null);
@@ -277,6 +300,15 @@ app.Controller = function() {
 		}
 
 		
+		/** Does the work required when a guest has been selected,
+		*
+		* including storing a reference to it as the selected guest,
+		*
+		* and displaying the Guest to the user.
+		*
+		* @param {Person} a The selected guest
+		*/
+
 		function _onGuestSelected(Person_g) {
 
 			this.selectedGuest(Person_g);
@@ -291,6 +323,9 @@ app.Controller = function() {
 	
 		/** Sets up the MVC collaborators to observe/be observed by each other as required.
 		*
+		* Creates the views required by the app, and presents the initial view.
+		*
+		* @return {void}
 		*/
 
 		this.init = function() {
@@ -367,9 +402,9 @@ app.Controller = function() {
 		};
 
 		
-		/** Returns true if class implements the interface passed in (by function reference)
+		/** Returns true if class implements the interface passed in (by function reference).
 		*
-		* (Method realization required by ISerializable.)
+		* Method realization required by IInterfaceable.
 		*
 		* @param {Function} interface The interface we wish to determine if this class implements
 		*
@@ -383,9 +418,13 @@ app.Controller = function() {
 		};
 
 
-		/** Notifies observes (views) of change to the data model
+		/** Notifies observes of change to the data model.
 		*
-		* @param {Model} Reference to the data model object that caused the update
+		* Method realization required by IInterfaceable.
+		*
+		* @param {Model} n Reference to the Model object that caused the update
+		*
+		* @param {int} id Id of the Model object the update is intended for. Optional: only needed when passing on update from Model.
 		*/
 
 		this.notifyObservers = function(Model_m, int_id) {
@@ -406,39 +445,6 @@ app.Controller = function() {
 				});
 			}
 		}
-
-		
-		/*
-		this.onDeleteSelected = function(Model_m) {
-
-			switch(Model_m.constructor) {
-
-				case app.Event: // remove event completely from app
-
-					app.Account.registry.removeObject(Model_m);
-
-					this.selectedAccount().removeEvent(Model_m);
-
-					this.currentView().model = undefined;
-
-					Model_m = undefined;
-
-					Materialize.toast('Event was deleted', 4000);
-
-					break;
-
-				case app.Person: // remove person (guest) from this event
-
-					this.selectedEvent().removeGuest(Model_m);
-
-					Materialize.toast(Model_m.name() + ' was taken off the guest list', 4000);
-
-					break;
-			}
-
-			Materialize.toast('Item was deleted', 4000);
-		}
-		*/
 
 		
 		/** Handles click events in navbar/dropdown */
@@ -482,187 +488,185 @@ app.Controller = function() {
 		};
 		
 		
+		// 'Polymorphic' helpers for main update() method. Place here to make jsDoc see them.
+
+
+		/** Handles update notifications from the data model.
+		*
+		* Called by public update() method, which also does error handling.
+		*
+		* @param {Model} model The Model that has changed state and therefore invoked the update.
+		*
+		* @return {void}
+		*/
+
+		function _update(Model_m) {
+
+			this.notifyObservers(Model_m);
+		}
+
+
+		/** Handles user action in a View.
+		*
+		* Called by public update() method, which also does error handling.
+		*
+		* @param {View} v Reference to the calling View, or to the type of View we wish to navigate to
+		*
+		* @param {Model} m Reference to the Model related to the user action (e.g. the Model presented by a form, the selected item in a list, or the source of data for the next view)
+		*
+		* @param {int} UIAction The type of action invoked by the user in the UI. Supported action types are defined in app.View.UIAction.
+		*
+		* @return {void}
+		*/
+
+		function __update(View_v, Model_m, int_uiaction) {
+
+			switch (int_uiaction) {
+
+				case app.View.UIAction.CANCEL:
+
+					if (_newModel) { // creating of new model cancelled
+
+						_newModel.constructor.registry.removeObject(_newModel); // remove from registry
+
+						_newModel = null; // reset reference
+					}
+
+					break;
+
+				case app.View.UIAction.CREATE:
+
+					_onCreateModel.call(this, Model_m);
+
+					break;
+
+				case app.View.UIAction.DELETE:
+
+					this.removeObserver(Model_m);
+
+					switch(Model_m.constructor) {
+
+						case app.Event: // remove event completely from app
+
+							var evtName = Model_m.name();
+
+							app.Account.registry.removeObject(Model_m);
+
+							this.selectedAccount().removeEvent(Model_m);
+
+							this.currentView().model(undefined);
+
+							Model_m = undefined;
+
+							Materialize.toast(evtName + ' was deleted', 4000);
+
+							break;
+
+						case app.Person: // remove person (guest) from this event, but keep in account
+
+							this.selectedEvent().removeGuest(Model_m);
+
+							Materialize.toast(Model_m.name() + ' was taken off the guest list', 4000);
+
+							break;
+					}
+
+					window.history.back();
+
+					break;
+
+				case app.View.UIAction.NAVIGATE: // navigation to (sub)view requested
+
+					var view;
+
+					for (var prop in _views) { // get (existing) view matching the request
+
+						if (_views[prop].constructor === View_v.constructor) {
+
+							view = _views[prop];
+						}
+					}
+
+					if (view) {
+
+						this.currentView(view, Model_m);
+					}
+
+					View_v = undefined; // try to speed up garbage collection of temporary helper object
+
+					break;
+				
+				case app.View.UIAction.SELECT:
+
+					switch (View_v.constructor) {
+
+							case app.EventListView: // selection made in event list
+
+								_onEventSelected.call(this, Model_m);
+
+								break;
+
+							case app.GuestListView: // selection made in guest list
+
+								_onGuestSelected.call(this, Model_m);
+
+								break;
+						}
+
+					break;
+
+				case app.View.UIAction.SUBMIT: // update to Model submitted by form
+
+					if (_newModel) { // new Model succesfully added to the account, insert into ecosystem
+
+						switch(Model_m.constructor) {
+
+							case app.Event:
+
+								this.selectedAccount().addEvent(_newModel); // add to event list
+
+								break;
+
+							case app.Person:
+
+								this.selectedEvent().addGuest(_newModel); // add to guest list
+
+								break;
+						}
+
+						_newModel = null; // reset and dereference temporary model
+					}
+
+					this.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits
+
+					window.history.back(); // go one step back in browser history
+
+					break;
+
+				default:
+
+					console.log('UI action ' + int_uiaction + ' not supported');
+			}
+		}
+		
+
 		/** Receives and processes update notifications from either view (UI) or data model.
 		*
 		* Uses JS style 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked.
 		*
 		* Delegates response to private '_update(...)' functions. See these for supported method signatures.
 		*
-		* @param {Arguments} An array like object containing whatever params the caller has passed on
+		* @param {Arguments} args An array like object containing whatever params the caller has passed on
 		*
 		* @return {void}
 		*
 		* @throws {IllegalArgumentError} If first parameter provided is neither an Model nor a View.
 		*
 		* @throws {IllegalArgumentError} If second parameter provided (when present) is neither an integer nor a native browser event.
-		*
-		* @todo Maybe delegate error handling to individual private functions
 		*/
 
 		this.update = function() {
 
-			// 'Polymorphic' helper functions handling the different supported method signatures
-
-
-			/** Handles update notifications from the data model.
-			*
-			* Called by public update() method, which also does error handling.
-			*
-			* @param {Model} model The Model that has changed state and therefore invoked the update.
-			*
-			* @return {void}
-			*/
-
-			function _update(Model_m) {
-
-				this.notifyObservers(Model_m);
-			}
-
-
-			/** Handles user action in a View
-			*
-			* Called by public update() method, which also does error handling.
-			*
-			* @param {View} v Reference to the calling View, or to the type of View we wish to navigate to
-			*
-			* @param {Model} m Reference to the Model related to the user action (e.g. the Model presented by the form, the selected list item, or the source of data for the next view)
-			*
-			* @param {int} UIAction The type of action invoked by the user in the UI. Supported action types are defined in app.View.UIAction.
-			*
-			* @return {void}
-			*/
-
-			function __update(View_v, Model_m, int_uiaction) {
-
-				switch (int_uiaction) {
-
-					case app.View.UIAction.CANCEL:
-
-						if (_newModel) { // creating of new model cancelled
-
-							_newModel.constructor.registry.removeObject(_newModel); // remove from registry
-
-							_newModel = null; // reset reference
-						}
-
-						break;
-
-					case app.View.UIAction.CREATE:
-
-						_onCreateModel.call(this, Model_m);
-
-						break;
-
-					case app.View.UIAction.DELETE:
-
-						this.removeObserver(Model_m);
-
-						switch(Model_m.constructor) {
-
-							case app.Event: // remove event completely from app
-
-								var evtName = Model_m.name();
-
-								app.Account.registry.removeObject(Model_m);
-
-								this.selectedAccount().removeEvent(Model_m);
-
-								this.currentView().model(undefined);
-
-								Model_m = undefined;
-
-								Materialize.toast(evtName + ' was deleted', 4000);
-
-								break;
-
-							case app.Person: // remove person (guest) from this event, but keep in account
-
-								this.selectedEvent().removeGuest(Model_m);
-
-								Materialize.toast(Model_m.name() + ' was taken off the guest list', 4000);
-
-								break;
-						}
-
-						window.history.back();
-
-						break;
-
-					case app.View.UIAction.NAVIGATE: // navigation to (sub)view requested
-
-						var view;
-
-						for (var prop in _views) { // get (existing) view matching the request
-
-							if (_views[prop].constructor === View_v.constructor) {
-
-								view = _views[prop];
-							}
-						}
-
-						if (view) {
-
-							this.currentView(view, Model_m);
-						}
-
-						View_v = undefined; // try to speed up garbage collection of temporary helper object
-
-						break;
-					
-					case app.View.UIAction.SELECT:
-
-						switch (View_v.constructor) {
-
-								case app.EventListView: // selection made in event list
-
-									_onEventSelected.call(this, Model_m);
-
-									break;
-
-								case app.GuestListView: // selection made in guest list
-
-									_onGuestSelected.call(this, Model_m);
-
-									break;
-							}
-
-						break;
-
-					case app.View.UIAction.SUBMIT: // update to Model submitted by form
-
-						if (_newModel) { // new Model succesfully added to the account, insert into ecosystem
-
-							switch(Model_m.constructor) {
-
-								case app.Event:
-
-									this.selectedAccount().addEvent(_newModel); // add to event list
-
-									break;
-
-								case app.Person:
-
-									this.selectedEvent().addGuest(_newModel); // add to guest list
-
-									break;
-							}
-
-							_newModel = null; // reset and dereference temporary model
-						}
-
-						this.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits
-
-						window.history.back(); // go one step back in browser history
-
-						break;
-
-					default:
-
-						console.log('UI action ' + int_uiaction + ' not supported');
-				}
-			}
-			
-			
 			// Parse parameters to invoke appropriate 'polymorphic' response
 
 			var args = arguments[0];
@@ -732,7 +736,7 @@ app.Controller = function() {
 Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 *---------------------------------------------------------------------------------------*/
 
-//void app.IInterfaceable.mixInto(app.IInterfaceable, app.Controller);
+void app.IInterfaceable.mixInto(app.IInterfaceable, app.Controller);
 
 void app.IInterfaceable.mixInto(app.IObservable, app.Controller);
 

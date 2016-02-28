@@ -143,7 +143,7 @@ app.IObservable.prototype.default_removeObserver = function(IObserver_observer) 
 			return null;
 		}
 		
-		if (this.observers().length > 1) {this.observers().splice(ix, 1);} else {this.observers.pop()};
+		if (this.observers().length > 1) {this.observers().splice(ix, 1);} else {this.observers.pop();}
 
 		/*
 		while (ix > -1 && this.observers.length > 1) { // remove duplicates, avoiding infinite loop

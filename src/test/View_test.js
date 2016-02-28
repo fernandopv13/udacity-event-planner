@@ -15,7 +15,7 @@ describe('class View', function(){
 
 	//app.IInterfaceable.mixInto(app.View, TestView);
 
-	var testView = new app.View(app.Event, 'event-view', 'Test Heading');
+	var testView = new app.View(app.Model, 'event-view', 'Test Heading');
 	
 	
 	it('implements the IInterfaceable interface', function() {
@@ -40,38 +40,99 @@ describe('class View', function(){
 
 		it('can get its class name', function() {
 
-			expect(testView.className()).toBeDefined();
+			expect(testView.className()).toBe('View');
 		});
 		
 		
-		xit('rejects attempt to set its class name', function() {
+		it('rejects attempt to set its class name', function() {
 
-			//;
+			try {
+
+				testView.className('read-only');
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+			expect(true).toBe(true);
 		});
 
 
-		it('can get its heading', function() {
+		it('can get and set its heading', function() {
 
-			expect(testView.heading()).toBeDefined();
+			expect(testView.heading('My heading')).toBe('My heading');
 		});
 
 
-		it('can get the data model it is currently presenting', function() {
+		it('can get and set the data model it is currently presenting', function() {
 
-			expect(typeof testView.model).toBe('function');
+			expect(testView.model(new app.Model()).constructor).toBe(app.Model);
+		});
+
+
+		it('rejects attempt to set a model that is not an instance of Model', function() {
+
+			try {
+
+				testView.model({});
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('TypeError');
+			}
+
+			expect(true).toBe(true);
 		});
 
 
 		it('can get the data model class it requires', function() {
 
 			expect(typeof testView.modelClass).toBe('function');
+
+			expect(testView.modelClass()).toBe(app.Model);
 		});
+
+
+		it('rejects attempt to set its model class', function() {
+
+			try {
+
+				testView.modelClass(Object);
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+			expect(true).toBe(true);
+		});
+
 
 		it('can get an array of its observers', function() {
 
 			expect(typeof testView.observers).toBe('function');
 
 			expect(testView.observers().constructor).toBe(Array);
+		});
+
+
+		it('rejects attempt to set its observers', function() {
+
+			try {
+
+				testView.observers(['read', 'only']);
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+			expect(true).toBe(true);
 		});
 
 
@@ -83,15 +144,27 @@ describe('class View', function(){
 		});
 
 		
-		xit('rejects attempt to set its parent classes and interfaces', function() {
+		it('rejects attempt to set array of parent classes and interfaces', function() {
 
-			//;
+			try {
+
+				testView.parentList(['read', 'only']);
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+			expect(true).toBe(true);
 		});
 		
 
-		it('has a public $renderContext attribute', function() {
+		it('can get its $renderContext', function() {
 
 			expect(typeof testView.$renderContext).toBe('function');
+
+			expect(testView.$renderContext()).toBeDefined();
 		});
 		
 		
@@ -101,10 +174,20 @@ describe('class View', function(){
 		});
 		
 		
-		xit('rejects attempt to set its parent class', function() {
+		it('rejects attempt to set its parent class', function() {
 
-			//;
-		})
+			try {
+
+				testView.ssuper(Object);
+			}
+
+			catch(e) {
+
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+
+			expect(true).toBe(true);
+		});
 
 
 		it('can create a new DOM element', function(){
@@ -138,6 +221,12 @@ describe('class View', function(){
 			expect(testElement.dataset.error).toBe('better luck next time');
 
 			expect(testElement.innerHTML).toBe('my div');
+		});
+
+
+		xit('can create a floating action button', function() {
+
+
 		});
 
 
@@ -352,7 +441,7 @@ describe('class View', function(){
 		});
 
 
-		it('can create a new standard password field', function(){
+		it('can create a new password field', function(){
 
 			var el = app.View.prototype.createPasswordField.call(
 			
@@ -401,7 +490,7 @@ describe('class View', function(){
 		});
 
 
-		it('can create a new standard password field', function(){
+		it('can create a new password confirmation field', function(){
 
 			var el = app.View.prototype.createPasswordConfirmationField.call(
 			
@@ -444,7 +533,7 @@ describe('class View', function(){
 		});
 
 
-		it('can create a new required field description', function(){
+		it('can create a new required field explanation', function(){
 
 			var el = app.View.prototype.createRequiredFieldExplanation.call(
 			
@@ -461,7 +550,7 @@ describe('class View', function(){
 		});
 
 
-		it('can create a new required field description', function(){
+		it('can create form cancel and submit buttons', function(){
 
 			var el = app.View.prototype.createSubmitCancelButtons.call(
 			
@@ -703,6 +792,11 @@ describe('class View', function(){
 		});
 		
 
+		xit('can hide itself', function() {
+
+		});
+
+
 		it('can tell if it is an instance of a given class or interface (by function reference)', function() {
 
 			expect(testView.isInstanceOf(app.View)).toBe(true);
@@ -710,6 +804,21 @@ describe('class View', function(){
 			expect(testView.isInstanceOf(Array)).toBe(false);
 		});
 
+
+		xit('can initialize itself when it loads (i.e. unhides)', function() {
+
+		});
+
+
+		xit('can clean up after itself when it unloads (i.e. hides)', function() {
+
+		});
+
+
+		xit('can show (i.e. unhide) itself', function() {
+
+		});
+		
 
 		xit('can display validation messages for a form field', function(){
 
@@ -751,5 +860,18 @@ describe('class View', function(){
 
 			
 		});
+
+
+		// IInterfaceable testing
+
+
+
+		// IObservable testing
+
+
+		//
+
+
+		//IObserver testing
 	});
 });

@@ -9,6 +9,12 @@
 
 describe('class Controller', function(){
 	
+	it('implements the IInterfaceable interface', function() {
+		
+			expect(app.IInterfaceable.isImplementationOf(app.Controller, app.IInterfaceable)).toBe(true);
+	});
+
+
 	it('implements the IObservable interface', function() {
 		
 			expect(app.IInterfaceable.isImplementationOf(app.Controller, app.IObservable)).toBe(true);
@@ -27,7 +33,7 @@ describe('class Controller', function(){
 	});
 
 
-	describe('Controller instance', function() {
+	describe('instance', function() {
 
 		var testController;
 
@@ -37,13 +43,13 @@ describe('class Controller', function(){
 		});
 
 		
-		xit('can initialize', function() {
+		it('can initialize', function() {
 
 			app.init();
 
 			testController.init();
 
-			expect(app.controller.observers.length).toBeGreaterThan(0); // IViewables registered with controller
+			expect(app.controller.observers().length).toBeGreaterThan(0); // IViewables registered with controller
 
 			expect(app.Event.registry.getObjectById(0).removeObserver(testController)).toBe(testController); // controller registered with IModelables
 		});
@@ -51,13 +57,13 @@ describe('class Controller', function(){
 
 		xit('can get and set the current (visible) view', function() {
 
-			var testEvent = new app.Event();
+			var testView = new app.EventView();
 
-			expect(testController.selectedEvent(testEvent)).toBe(testEvent);
+			expect(testController.selectedEvent(testView)).toBe(testView);
 		});
 
 
-		xit('rejects attempt to set view that is not an IViewable', function() {
+		xit('rejects attempt to set view that is not a View instance', function() {
 
 			try {
 
