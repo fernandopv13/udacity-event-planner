@@ -346,6 +346,8 @@ app.EventView.prototype.render = function(Event_e) {
 
 		// Add capacity field and edit guest list button
 
+			console.log(Event_e.capacity());
+
 			outerDiv = this.createNumberField(
 			
 				's6',
@@ -492,6 +494,8 @@ app.EventView.prototype.render = function(Event_e) {
 				
 				closeOnClear: true,
 				
+				format: 'mm/dd/yyyy',
+
 				onSet: this.validateDateRange,
 				
 				selectMonths: true, // Creates a dropdown to control month
@@ -506,7 +510,7 @@ app.EventView.prototype.render = function(Event_e) {
 				
 				closeOnClear: true,
 				
-				format: 'H:i',
+				format: 'h:i A',
 				
 				onSet: this.validateTimeRange
 			});
@@ -621,7 +625,7 @@ app.EventView.prototype.submit = function(Event_e) {
 
 						if (start_time !== '') {
 
-							start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
+							start_date.setHours(start_time.split(':')[0], parseInt(start_time.split(':')[1]));
 						}
 
 						return start_date;
@@ -642,7 +646,7 @@ app.EventView.prototype.submit = function(Event_e) {
 
 						if (end_time !== '') {
 
-							end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
+							end_date.setHours(end_time.split(':')[0], parseInt(end_time.split(':')[1]));
 						}
 
 						return end_date;
@@ -709,6 +713,7 @@ app.EventView.prototype.suggestLocations = function() {
 
 			// mock geolocation result for the time being
 
+			/*
 			position = {
 
 				coords:
@@ -720,7 +725,7 @@ app.EventView.prototype.suggestLocations = function() {
 				},
 
 				timestamp: new Date().valueOf()
-			}
+			}*/
 		}
 	}
 
@@ -948,9 +953,11 @@ app.EventView.prototype.validateTimeRange = function() {
 				
 				// Set hours and minutes on start and end dates before comparison
 
-				end_date.setHours(end_time.split(':')[0], end_time.split(':')[1]);
+				// Assumes time string of format 'hh:mm', with optional seconds and/or am/pm indicator
 
-				start_date.setHours(start_time.split(':')[0], start_time.split(':')[1]);
+				end_date.setHours(end_time.split(':')[0], parseInt(end_time.split(':')[1])); // parseInt gets rid of any am/pm
+
+				start_date.setHours(start_time.split(':')[0], parseInt(start_time.split(':')[1]));
 
 				if (end_date < start_date) { // end (time) is before start (time)
 

@@ -67,7 +67,7 @@ app.FourSquareSearch.prototype.execute = function(callback, obj_location) {
 				+ locStr //'&ll=' + app.defaultLocation.lat() + ',' + app.defaultLocation.lng()
 				+ '&radius=1000'
 				+ '&categoryId=4d4b7105d754a06374d81259,4bf58dd8d48988d1f8931735' //restaurants and hotels
-				+ '&limit=' + 50 //max 50
+				+ '&limit=' + 10 //max 50, but long list doesn't work well on physically large (PC) screens
 				;
 	
 	

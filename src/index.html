@@ -9,7 +9,7 @@
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		
 		<!--Import pickatime.css-->
-		<!--link type="text/css" rel="stylesheet" href="lib/pickadate.js_v3.5.6/themes/default.time.css" media="screen,projection"/-->
+		<!--link type="text/css" rel="stylesheet" href="lib/pickadate.js_v3.5.6/themes/classic.time.css" media="screen"-->
 		
 		<!--Import materialize.css-->
 		<link type="text/css" rel="stylesheet" href="assets/css/materialize.css" media="screen"/>
@@ -156,6 +156,21 @@
 
 			.switch-container {
 				text-align: right;
+			}
+
+			
+			/* Limit time picker height on devices with large physical screens (e.g. laptops and PCs) */
+			
+			@media (min-width:1025px) {
+				.picker__list {
+					max-height: 500px;
+					overflow: auto;
+				}
+
+				datalist {
+					max-height: 500px;
+					overflow: auto;
+				}
 			}
 
 		</style>

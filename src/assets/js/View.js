@@ -204,7 +204,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			id: str_dateId,
 			
-			value: Date_date ? Date_date.toLocaleDateString() : '',
+			value: Date_date ? Date_date.toLocaleDateString('en-US') : '',
 			
 			readonly: true
 		}
@@ -569,7 +569,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			attributes: {for: str_fieldId},
 			
-			classList: int_value ? ['form-label', 'active'] : ['form-label'],
+			classList: int_value >= 0 ? ['form-label', 'active'] : ['form-label'],
 			
 			dataset: {error: str_errorMsg},
 			
@@ -1221,7 +1221,19 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			id: str_timeId,
 			
-			value: Date_date ? Date_date.toLocaleTimeString() : '',
+			value: Date_date ?
+
+				Date_date.toLocaleTimeString().split(' ')[0].split(':')[0] // hours
+
+				+ ':'
+
+				+ Date_date.toLocaleTimeString().split(' ')[0].split(':')[1] // minutes
+
+				+ ' '
+
+				+ Date_date.toLocaleTimeString().split(' ')[1] // am/pm
+
+				: '',
 			
 			readonly: true
 		}
