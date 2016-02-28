@@ -346,8 +346,6 @@ app.EventView.prototype.render = function(Event_e) {
 
 		// Add capacity field and edit guest list button
 
-			console.log(Event_e.capacity());
-
 			outerDiv = this.createNumberField(
 			
 				's6',

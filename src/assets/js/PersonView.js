@@ -57,26 +57,6 @@ app.PersonView.prototype.constructor = app.PersonView; //Reset constructor prope
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
 
-/** Cancels entries in, and navigation to, person form
-*/
-
-/*
-app.PersonView.prototype.cancel = function() {
-
-	this.onUnLoad();
-
-	app.FormView.prototype.cancel.call( // true if model is one that we just created anew, and now want to discard
-
-		this, // make sure 'this' points in the right direction
-
-		this.model() // model is defined
-
-		&& !app.controller.selectedEvent().isGuest(this.model)  // model is not know by event
-	);
-}
-*/
-
-
 /** (Re)renders person to form in UI
 *
 * @param {Person} The person from which to present data in the form
@@ -98,7 +78,7 @@ app.PersonView.prototype.render = function(Person_person) {
 			{
 				element: 'form',			
 				
-				attributes: {novalidate: true},
+				attributes: {autocomplete: 'off', novalidate: true},
 				
 				classList: ['col', 's12']
 			});
@@ -305,6 +285,9 @@ app.PersonView.prototype.render = function(Person_person) {
 			}.bind(this));
 
 
+			$('#guest-employer').focus(this.suggestEmployers);
+
+
 			$('#guest-form-cancel').click(function(event) {
 
 				this.cancel(event);
@@ -317,14 +300,6 @@ app.PersonView.prototype.render = function(Person_person) {
 				this.submit(event);
 
 			}.bind(this));
-
-
-			/*
-			$('#nav-delete-icon').click(function(event) {
-
-				console.log('delete person');
-			});
-			*/
 	}
 
 	else { // present default message
@@ -365,9 +340,7 @@ app.PersonView.prototype.submit = function(event) {
 
 	&& this.validateEmail(event, 'guest-email', 'Please enter email', true)){ // Submit results if all validations pass
 
-		// Nofity observers by passing them a new Person with the data from the form
-
-		//this.notifyObservers(
+		// Notify observers by passing them a new Person with the data from the form
 
 		this.ssuper().prototype.submit.call(
 
@@ -377,44 +350,97 @@ app.PersonView.prototype.submit = function(event) {
 
 				$('#guest-name').val(),
 
-				new app.Organization($('#guest-employer').val()), //hack
+				(function() { // employer parameter
+
+					// use existing Organization if there is a match, else create a new one
+
+					// may accumulate some unintentional duplicates over time, with no way of removing them, but ok for now
+
+					var employer = $('#guest-employer').val();
+
+					if (employer && employer !== '') { // employer name entered
+
+						var tmp = app.Organization.registry.getObjectByAttribute('name', employer);
+
+						if (tmp) { // name matches existing Organization, so use that
+
+							return tmp;
+						}
+
+						else { // no match, so create new Organization
+
+							return new app.Organization(employer);
+						}
+					}
+
+					// otherwise returns 'undefined'
+				})(),
+
+				//new app.Organization($('#guest-employer').val()), //hack
 
 				$('#guest-jobtitle').val(),
 
 				new app.Email($('#guest-email').val()),
 
 				$('#guest-birthday').val() ? new Date($('#guest-birthday').val()) : null
-			)//,
-
-			//parseInt($('#guest-id').val())
+			)
 		);
 		
-		
-		//this.onUnLoad();
-
-
 		return true;
 	}
 
 	return false;
-}
+};
 
 
-/** Updates guest presentation when notified by controller of change */
+/** Suggest employer names based on employers of guests participating in the account's events */
 
-/*
-app.PersonView.prototype.update = function(Model) {
-	
-	if (Model === null || Model.constructor === app.Person) {
+app.PersonView.prototype.suggestEmployers = function(event) {
 
-		this.model(Model);
+	// Get list of employers in account
 
-		this.render(Model);
+	var employers = [], events = app.controller.selectedAccount().events();
+
+	var $listElmnt = $('#suggested-locations'), optionElmnt;
+
+	for (var ev in events) { // for every event in account
+
+		events[ev].guests().forEach(function(guest) { // for every guest (person) in event
+
+			if (guest.employer()) { // employer is defined
+
+				if (employers.indexOf(guest.employer()) === -1) { // employer is not already in list
+
+					employers.push(guest.employer());
+				}
+			}
+		});
 	}
 
-	// else do nothing
+	// Generate suggestion datalist for employer field
+
+	employers.sort(function(a,b) { // sort alfabetically
+
+		return a.name() === b.name() ? 0 : (a.name() < b.name() ? -1 : 1);
+	});
+
+	
+	var $listElmnt = $('#suggested-employers'), optionElmnt;
+
+	$listElmnt.empty();
+
+	employers.forEach(function(employer) {
+
+		optionElmnt = document.createElement('option');
+
+		optionElmnt.value = employer.name();
+
+		console.log(employer.name());
+
+		$listElmnt.append(optionElmnt);
+
+	}.bind(this));
 };
-*/
 
 
 /* Event handler for interactive validation of person name field
@@ -449,4 +475,4 @@ app.PersonView.prototype.validateName = function(person) {
 	}
 
 	return true;
-}
+};

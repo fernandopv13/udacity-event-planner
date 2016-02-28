@@ -193,10 +193,41 @@ app.GuestListView.prototype.render = function(Event_event) {
 		}));
 	}
 
+
+	var navElement =  this.createElement( // 'back' arrow above list
+	{
+		element: 'div',
+
+		attributes: {id: 'secondary-nav'},
+		
+		classList: ['secondary-nav']
+	});
+
+	navElement.appendChild(this.createElement(
+	{
+		element: 'i',
+
+		classList: ['material-icons', 'left'],
+
+		innerHTML: 'arrow_back'
+
+	}));
+
+
+	navElement.appendChild(this.createElement(
+	{
+		element: 'span',
+
+		innerHTML: this.model().name()
+
+	}));
+
 	
 	// Update DOM
 	
 	this.$renderContext().empty();
+
+	this.$renderContext().append(navElement);
 
 	this.$renderContext().append(UlElement);
 
@@ -205,10 +236,18 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 	// Attach event handlers (other than for list item click)
 
+	$('#secondary-nav').click(function(event) {
+
+		window.history.back();
+
+		$('#secondary-nav').off();
+
+	}.bind(this));
+
+
 	$('#guest-list-add').click(function(event) {
 
 		this.notifyObservers(this, new app.Person('New Guest'), app.View.UIAction.CREATE);
 
-		//app.controller.onAddGuest(event);
 	}.bind(this));
 };
