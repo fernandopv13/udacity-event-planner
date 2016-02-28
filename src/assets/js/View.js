@@ -1467,7 +1467,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (email !== '') { // always validate email if it exists
 
-			this.displayValidation(event, str_emailId, 'Must be same format as "address@server.domain"', valid);
+			this.displayValidation(event, str_emailId, 'Format must be "address@server.domain"', valid);
 		}
 
 		else if (bool_required) { // no entry, require if required(!)

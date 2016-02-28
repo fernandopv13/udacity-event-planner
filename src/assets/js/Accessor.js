@@ -130,9 +130,11 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 
 				return function(obj_val) {
 
+					//console.log(obj_val);
+
 					if (obj_val !== undefined) {
 
-						if (obj_val.constructor === acc_type || obj_val.isInstanceOf(acc_type)) {
+						if (obj_val.constructor === acc_type || (obj_val.isInstanceOf && obj_val.isInstanceOf(acc_type))) {
 
 							obj_prop = obj_val;
 						}

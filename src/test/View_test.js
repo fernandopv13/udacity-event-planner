@@ -81,7 +81,7 @@ describe('class View', function(){
 
 			catch(e) {
 
-				expect(e.name).toBe('TypeError');
+				expect(e.name).toBe('IllegalArgumentError');
 			}
 
 			expect(true).toBe(true);

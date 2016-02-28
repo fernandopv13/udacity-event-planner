@@ -435,7 +435,7 @@ app.PersonView.prototype.suggestEmployers = function(event) {
 
 		optionElmnt.value = employer.name();
 
-		console.log(employer.name());
+		//console.log(employer.name());
 
 		$listElmnt.append(optionElmnt);
 
