@@ -425,7 +425,7 @@ app.PersonView.prototype.suggestEmployers = function(event) {
 	});
 
 	
-	var $listElmnt = $('#suggested-employers'), optionElmnt;
+	$listElmnt = $('#suggested-employers');
 
 	$listElmnt.empty();
 

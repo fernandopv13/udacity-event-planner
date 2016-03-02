@@ -5,188 +5,24 @@
 		
 		<meta charset="utf-8">
 		
-		<!--Import Google Icon Font () used by Materialize-->
+		
+		<!--Import Google Icon Font used by Materialize-->
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="http://fonts.googleapis.com/icon?family=Roboto" rel="stylesheet">
 		
-		<!--Import pickatime.css-->
-		<!--link type="text/css" rel="stylesheet" href="lib/pickadate.js_v3.5.6/themes/classic.time.css" media="screen"-->
-		
-		<!--Import materialize.css-->
+		<!--Import styles -->
+		<!-- @gulp-app-style-tags-begin -->
 		<link type="text/css" rel="stylesheet" href="assets/css/materialize.css" media="screen"/>
-
+		<link type="text/css" rel="stylesheet" href="assets/css/app.css" media="screen"/>
+		<!-- @gulp-app-style-tags-end -->
 		
-
-		<!--Let browser know website is optimized for mobile-->
+		<!--Let browser know app is optimized for mobile-->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		
-		<style>
 
-			/*{border: 1px solid blue;}*/
-
-			.custom-validate {
-				color: #F44336;
-				opacity: 1;
-				font-size: 0.8rem;
-				top: 0.8rem;
-				left: 0.75rem;
-				transition: .2s ease-out;
-				line-height: 1.5;
-				font-family: "Roboto", sans-serif;
-			    font-weight: normal;
-			    width: 100%;
-			    display: none;
-			}
-
-			.character-counter {
-				float: right;
-				font-size: 12px;
-				height: 1px;
-			}
-
-			.required-indicator {
-				padding-left: 0.25em;
-				color: red;
-				font-style: italic;
-			}
-			
-			
-			.form-label {
-				width: 100%;
-			}
-
-
-			.form-submit {
-				text-align: right;
-				padding-right: 15px;
-			}
-			
-			
-			/* Fix some Materialize CSS bugs that may cause error messages to overlap active labels on fields below.
-			*
-			* Known remaining bug: Problem persists when capacity field goes negative. This is rare enough to ignore for now;
-			*/
-
-			input:not([type]) + label::after,
-			input[type=text] + label::after,
-			input[type=password] + label::after,
-			input[type=email] + label::after,
-			input[type=url] + label::after,
-			input[type=time] + label::after,
-			input[type=date] + label::after,
-			input[type=datetime-local] + label::after,
-			input[type=tel] + label::after,
-			input[type=number] + label::after,
-			input[type=search] + label::after,
-			textarea.materialize-textarea + label::after {
-				font-size: 0.8rem;
-			}
-
-			
-			input:not([type]).invalid + label::after,
-			input[type=text].invalid + label::after,
-			input[type=password].invalid + label::after,
-			input[type=email].invalid + label::after,
-			input[type=url].invalid+ label::after,
-			input[type=time].invalid + label::after,
-			input[type=date].invalid + label::after,
-			input[type=datetime-local].invalid + label::after,
-			input[type=tel].invalid + label::after,
-			input[type=number].invalid + label::after,
-			input[type=search].invalid + label::after,
-			textarea.materialize-textarea.invalid + label::after {
-				top: 45px;
-			}
-			
-
-			input:not([type]):focus.invalid + label::after,
-			input[type=text]:focus.invalid + label::after,
-			input[type=password]:focus.invalid + label::after,
-			input[type=email]:focus.invalid + label::after,
-			input[type=url]:focus.invalid+ label::after,
-			input[type=time]:focus.invalid + label::after,
-			input[type=date]:focus.invalid + label::after,
-			input[type=datetime-local].invalid + label::after,
-			input[type=tel]:focus.invalid + label::after,
-			input[type=number]:focus.invalid + label::after,
-			input[type=search]:focus.invalid + label::after,
-			textarea.materialize-textarea:focus.invalid + label::after {
-				top: 67px;
-			}
-
-			
-			.input-field-description {
-				font-style: italic;
-			}
-			
-			
-			/* Materialize-style divider after field description */
-			
-			.input-field-description::after {
-				content:' ';
-				display: block;
-				width: 100%;
-				height: 1px;
-				margin-top: 10px;
-				/*overflow: hidden;*/
-				background-color: #e0e0e0; /*#9e9e9e;*/
-			}
-
-			
-			/** Hide all views and some view details by default */
-
-			.view, #account-settings-password-hints, #account-settings-password-confirmation-parent, #nav-delete-icon {
-				display: none;
-			}
-
-			
-			/** Floating button for main action on view (e.g. "Add Event") */
-
-			.fixed-action-btn {
-				bottom: 45px;
-				right: 24px;
-			}
-
-
-			/** 'Edit gust list' button in event form */
-
-			#event-edit-guests-button {
-				color: blue;
-				margin-top: 25px;
-			}
-
-			.switch-container {
-				text-align: right;
-			}
-
-			
-			/* Limit time picker height on devices with large physical screens (e.g. laptops and PCs) */
-			
-			@media (min-width:1025px) {
-				.picker__list {
-					max-height: 500px;
-					overflow: auto;
-				}
-
-				datalist {
-					max-height: 500px;
-					overflow: auto;
-				}
-			}
-
-			.secondary-nav {
-				margin-top: 30px;
-				margin-bottom: 30px;
-			}
-
-		</style>
-		
-		
 	</head>
 
 	<body>
-
 		
-
 		<!-- Navbar -->
 		
 		<div class="navbar-fixed">
@@ -208,6 +44,8 @@
 
 				<div class="nav-wrapper">
 
+					<!-- Top nav -->
+
 					<a href="#!" class="brand-logo">Meetup Planner</a>
 
 					<a href="#" data-activates="nav-side" class="button-collapse"><i class="material-icons">menu</i></a>
@@ -227,6 +65,8 @@
 					</ul>
 
 					
+					<!-- Side nav ('drawer') -->
+
 					<ul id="nav-side" class="side-nav">
 
 						<!--<li><a href="#!Search"><i class="material-icons left">search</i>Search</a></li>-->
@@ -247,12 +87,13 @@
 		</div>
 
 		
-		<!-- Shared modal dialog -->
+		<!-- Shared deletion confirmation modal dialog -->
 
 			<!-- Modal Trigger -->
+			
 			<!--a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a-->
 
-			<!-- Modal Structure -->
+			<!-- Modal -->
 
 			<div id="confirm-delete-modal" class="modal">
 
@@ -274,13 +115,12 @@
 
 			</div>
 
+		
 		<!-- Page content -->
 
 			<div class="container"> 
 				
-				<!-- Test sandbox-->
-				
-				<!-- Preload spinner -->
+				<!-- Preload spinner (hided on load) -->
 
 				<div id="preloader" class="valign-wrapper" style="height:160px;">
 					
@@ -294,13 +134,15 @@
 
 				</div>
 
-				<!-- Placeholders for dynamically generated main content views -->
+				<!-- Containers for dynamically populated main content views -->
 
-				<div id="signup-view" class="row view"></div>
+				<div id="front-page-view" class="row view"></div>
 
-				<div id="signup-permissions-view" class="row view"></div>
+				<div id="sign-in-view" class="row view"></div>
 
-				<div id="login-view" class="row view"></div>
+				<div id="sign-up-view" class="row view"></div>
+
+				<div id="sign-up-permissions-view" class="row view"></div>
 
 				<div id="account-settings-view" class="row view"></div>
 
@@ -317,11 +159,12 @@
 			</div>
 
 		<!-- Library source files -->
-			<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
-			<script type="text/javascript" src="lib/materialize_v0.97.5/materialize.min.js"></script>
-			<script type="text/javascript" src="lib/pickadate.js_v3.5.6/picker.time.js"></script>
+			<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
+			<script type="text/javascript" src="lib/materialize.min.js"></script>
+			<script type="text/javascript" src="lib/picker.time.js"></script>
 		
 		<!-- App source files -->
+			<!-- @gulp-app-script-tags-begin -->
 			<script src="assets/js/Object.js"></script>
 			<script src="assets/js/Error.js"></script>
 			<script src="assets/js/IHost.js"></script>
@@ -333,6 +176,8 @@
 			<script src="assets/js/Accessor.js"></script>
 			<script src="assets/js/Model.js"></script>
 			<script src="assets/js/View.js"></script>
+			<script src="assets/js/FrontPageView.js"></script>
+			<script src="assets/js/SignInView.js"></script>
 			<script src="assets/js/FormView.js"></script>
 			<script src="assets/js/ListView.js"></script>
 			<script src="assets/js/ObjectRegistry.js"></script>
@@ -353,31 +198,7 @@
 			<script src="assets/js/Router.js"></script>
 			<script src="assets/js/app.js"></script>
 			<script src="test/util/data.js"></script>
-
-		<script type="text/javascript">
-			
-			$(document).ready(function() {
-
-				$('#preloader').hide('fast');
-
-				$('.button-collapse').sideNav();
-
-				
-				$('#nav-dropdown, #nav-side').click(function(event) {
-
-					$('.button-collapse').sideNav('hide');
-
-					app.controller.onNavSelection(event);					
-				});
-				
-				//$('.modal-trigger').leanModal();
-			});
-
-
-			window.onload = function() { // $(document).ready()) may fire too early, som going old school
-				
-				app.init();
-			};
+			<!-- @gulp-app-script-tags-end -->
 
 		</script>
 

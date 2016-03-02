@@ -342,9 +342,13 @@ app.Controller = function() {
 
 					eventView: new app.EventView('event-view', 'Edit Event'), // event form
 
+					frontPageView: new app.FrontPageView('front-page-view', 'Welcome to Meetup Planner'), // front page view
+
 					guestListView: new app.GuestListView('guest-list-view', 'Guest List'), // guest list
 
-					guestView: new app.PersonView('guest-view', 'Edit Guest') // guest form
+					guestView: new app.PersonView('guest-view', 'Edit Guest'), // guest form
+
+					signInView: new app.SignInView('sign-in-view', 'Sign In') // front page view
 				}
 
 				
@@ -367,7 +371,14 @@ app.Controller = function() {
 			
 			// Set some defaults to use until account creation/selection is developed
 
-				
+				_views.frontPageView.render();
+
+				_views.frontPageView.show();
+
+				//_views.signInView.render();
+
+				//_views.signInView.show();
+
 				this.selectedAccount(app.Account.registry.getObjectById(0)); //debug
 				
 				this.selectedAccount().defaultLocation('Copenhagen'); // debug
@@ -382,7 +393,7 @@ app.Controller = function() {
 
 				this.selectedAccount().accountHolder().jobTitle('Master Octopus'); // debug
 				
-				_onAccountSelected.call(this, this.selectedAccount()); // debug
+				//_onAccountSelected.call(this, this.selectedAccount()); // debug
 
 
 			// Register models and controller as mutual observers

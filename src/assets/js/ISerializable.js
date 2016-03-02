@@ -96,45 +96,6 @@ app.ISerializable = function() {
 * Default methods (must be defined outside main function/class body)
 *---------------------------------------------------------------------------------------*/
 
-/** Writes object to local storage
-*
-* @return {Boolean} true if successful, otherwise throws error
-*
-* @throws {ReferenceError} If local storage is not available on this device (and the polyfill has also failed)
-*
-* @throws {IllegalAccessError} If user has not given the app permission to use local storage
-*
-* @throws {TypeError} If caller does not provide a valid class name, or if object contains a circular reference.
-*
-* @throws {RangeError} If object contains circular reference to itself.
-*/
-
-app.ISerializable.prototype.default_writeObject = function() {
-
-	if (!window.localStorage) {throw new ReferenceError('localStorage not available');}
-	
-	if (!app.prefs.isLocalStorageAllowed()) {throw new IllegalAccessError('Use of local storage not allowed by user');}
-	
-	if (![this.className()] || typeof app[this.className()] !== 'function') {throw new TypeError('Invalid class: ' + this.className());}
-	
-	if (typeof this.id() === 'undefined' || this.id() !== parseInt(this.id()) || this.id() < 0) {throw new RangeError('Invalid ID: ' + this.id());}
-	
-	
-	try { // several things may fail here...
-		
-		localStorage.setItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id(), JSON.stringify(this));
-
-	}
-	
-	catch(e) { // ...so, for now, just bubble up the native error
-		
-		throw e;
-	}
-	
-	return true;
-}
-
-
 /** Desirializes object from JSON in local storage. Expected to be called from within constructor of class implementing ISerializable when invoked with a single, integer parameter. Does most of the work of re-instantiation, loosely in the style of the similarly named Java Serialize API method.
 *
 * Automatically parses primitive private attributes in JSON that have unified standard accessors. Re-referencing of more complex objects has to wait until this process has completed for all serializable classes in the app, making the objects available in memory.
@@ -296,4 +257,43 @@ app.ISerializable.prototype.default_removeObject = function() {
 	}
 	
 	return true
+}
+
+
+/** Writes object to local storage
+*
+* @return {Boolean} true if successful, otherwise throws error
+*
+* @throws {ReferenceError} If local storage is not available on this device (and the polyfill has also failed)
+*
+* @throws {IllegalAccessError} If user has not given the app permission to use local storage
+*
+* @throws {TypeError} If caller does not provide a valid class name, or if object contains a circular reference.
+*
+* @throws {RangeError} If object contains circular reference to itself.
+*/
+
+app.ISerializable.prototype.default_writeObject = function() {
+
+	if (!window.localStorage) {throw new ReferenceError('localStorage not available');}
+	
+	if (!app.prefs.isLocalStorageAllowed()) {throw new IllegalAccessError('Use of local storage not allowed by user');}
+	
+	if (![this.className()] || typeof app[this.className()] !== 'function') {throw new TypeError('Invalid class: ' + this.className());}
+	
+	if (typeof this.id() === 'undefined' || this.id() !== parseInt(this.id()) || this.id() < 0) {throw new RangeError('Invalid ID: ' + this.id());}
+	
+	
+	try { // several things may fail here...
+		
+		localStorage.setItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id(), JSON.stringify(this));
+
+	}
+	
+	catch(e) { // ...so, for now, just bubble up the native error
+		
+		throw e;
+	}
+	
+	return true;
 }

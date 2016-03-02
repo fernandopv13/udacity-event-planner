@@ -10,7 +10,7 @@
 *
 * @return {Object} Top-level singleton (module) providing a simple, encapsulated namespace, as well as module-level functionality, for the app.
 *
-* @author Ulrik H. Gade, January 2016
+* @author Ulrik H. Gade, March 2016
 *
 */
 
@@ -199,3 +199,22 @@ var app = (function(self) {
 	return self;
 	
 })(app || {});
+
+
+window.onload = function() { // $(document).ready()) may fire too early, som going old school
+				
+	$('#preloader').hide('fast');
+
+	$('.button-collapse').sideNav();
+
+	$('#nav-dropdown, #nav-side').click(function(event) {
+
+		$('.button-collapse').sideNav('hide');
+
+		app.controller.onNavSelection(event);					
+	});
+	
+	//$('.modal-trigger').leanModal();
+
+	app.init();
+};

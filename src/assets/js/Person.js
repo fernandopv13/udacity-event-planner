@@ -4,7 +4,7 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class Perosn extends Model
+* public class Person extends Model
 **********************************************************************************************/
 
 /** @classdesc Describes a person who may host and/or participate in an event.

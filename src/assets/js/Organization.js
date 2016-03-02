@@ -4,7 +4,7 @@ var app = app || {}; // create a simple namespace for the app
 
 
 /**********************************************************************************************
-* public class IHost implements IHost, extends Model
+* public class Organization implements IHost, extends Model
 **********************************************************************************************/
 
 /** @classdesc Describes an organization that may host an event.

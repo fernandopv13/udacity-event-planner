@@ -173,9 +173,9 @@ app.GuestListView.prototype.render = function(Event_event) {
 	}));
 
 			
-	if (Event_event !== null) {
+	if (Event_event !== null && Event_event.guests().lenght > 0) {
 
-		var guests = Event_event.guests()
+		var guests = Event_event.guests();
 
 		for (var prop in guests) { // generate list items
 
@@ -185,11 +185,46 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 	else {
 
-		UlElement.appendChild(this.createElement({
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
 
-			element: 'p',
+			classList: ['collection-item', 'row']
+		});
+		
+		UlElement.appendChild(outerDiv);
 
-			innerHTML: 'No event selected. Please select or create an event in order to see guests.'
+		
+		var innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['col', 's8'],
+
+			innerHTML: 'No guests have been added to this event yet.'
+		});
+
+		outerDiv.appendChild(innerDiv);
+
+		
+		innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['col', 's4']
+		});
+
+		outerDiv.appendChild(innerDiv);
+
+		innerDiv.appendChild(this.createElement({ // add guest button
+			
+			element: 'a',
+			
+			attributes: {id: 'guest-list-add-guest'},
+			
+			classList: ['waves-effect', 'waves-light', 'btn', 'right'],
+
+			innerHTML: 'Add guest'
 		}));
 	}
 
@@ -245,7 +280,7 @@ app.GuestListView.prototype.render = function(Event_event) {
 	}.bind(this));
 
 
-	$('#guest-list-add').click(function(event) {
+	$('#guest-list-add, #guest-list-add-guest').click(function(event) {
 
 		this.notifyObservers(this, new app.Person('New Guest'), app.View.UIAction.CREATE);
 

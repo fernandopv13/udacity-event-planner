@@ -154,11 +154,46 @@ app.EventListView.prototype.render = function(Account_account) {
 
 	else {
 
-		UlElement.appendChild(this.createElement({
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
 
-			element: 'p',
+			classList: ['collection-item', 'row']
+		});
+		
+		UlElement.appendChild(outerDiv);
 
-			innerHTML: 'No account selected. Please select or create an account in order to see events.'
+		
+		var innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['col', 's8'],
+
+			innerHTML: 'No events have been added to this account yet.'
+		});
+
+		outerDiv.appendChild(innerDiv);
+
+		
+		innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['col', 's4']
+		});
+
+		outerDiv.appendChild(innerDiv);
+
+		innerDiv.appendChild(this.createElement({ // add guest button
+			
+			element: 'a',
+			
+			attributes: {id: 'event-list-add-event'},
+			
+			classList: ['waves-effect', 'waves-light', 'btn', 'right'],
+
+			innerHTML: 'Add event'
 		}));
 	}
 	
@@ -173,7 +208,7 @@ app.EventListView.prototype.render = function(Account_account) {
 
 	// Attach event handlers (other than for list item click)
 
-	$('#event-list-add').click(function(event) {
+	$('#event-list-add, #event-list-add-event').click(function(event) {
 
 		this.notifyObservers(this, new app.Event('New Event'), app.View.UIAction.CREATE);
 
