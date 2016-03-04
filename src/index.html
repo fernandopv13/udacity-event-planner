@@ -25,9 +25,8 @@
 		
 		<!-- Navbar -->
 		
-		<div class="navbar-fixed">
+		<!--div class="navbar-fixed">
 			
-			<!-- 'More' dropdown -->
 			<ul id="nav-dropdown" class="dropdown-content">
 
 				<li><a href="#!Settings">Settings</a></li>
@@ -44,15 +43,11 @@
 
 				<div class="nav-wrapper">
 
-					<!-- Top nav -->
-
 					<a href="#!" class="brand-logo">Meetup Planner</a>
 
 					<a href="#" data-activates="nav-side" class="button-collapse"><i class="material-icons">menu</i></a>
 					
 					<ul class="right hide-on-med-and-down">
-
-						<!--<li><a href="!#"><i class="material-icons left">search</i>Search</a></li>-->
 
 						<li><a class="dropdown-button" href="#!" data-activates="nav-dropdown"><i class="material-icons left">more_vert</i></a></li>
 
@@ -65,11 +60,7 @@
 					</ul>
 
 					
-					<!-- Side nav ('drawer') -->
-
 					<ul id="nav-side" class="side-nav">
-
-						<!--<li><a href="#!Search"><i class="material-icons left">search</i>Search</a></li>-->
 
 						<li><a href="#!Settings"><i class="material-icons left">settings</i>Account Settings</a></li>
 
@@ -84,7 +75,7 @@
 				</div>
 
 			</nav>
-		</div>
+		</div-->
 
 		
 		<!-- Shared deletion confirmation modal dialog -->
@@ -135,6 +126,8 @@
 				</div>
 
 				<!-- Containers for dynamically populated main content views -->
+
+				<div id="nav-container"></div>
 
 				<div id="front-page-view" class="row view"></div>
 
@@ -201,6 +194,15 @@
 			<!-- @gulp-app-script-tags-end -->
 
 		</script>
+
+		<script>
+			window.onload = function() { // $(document).ready()) may fire too early, so going old school
+				
+				app.init();
+			
+			};
+		</script>
+
 
 	</body>
 

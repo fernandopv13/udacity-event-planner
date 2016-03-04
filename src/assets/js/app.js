@@ -177,6 +177,13 @@ var app = (function(self) {
 	
 	self.init = function() {
 		
+		// Hide progress indicator
+
+		$('#preloader').hide('fast');
+
+		
+		// Set up registries to track created objects
+
 		self.registry.add(self.Account.registry);
 	
 		self.registry.add(self.Email.registry);
@@ -199,22 +206,3 @@ var app = (function(self) {
 	return self;
 	
 })(app || {});
-
-
-window.onload = function() { // $(document).ready()) may fire too early, som going old school
-				
-	$('#preloader').hide('fast');
-
-	$('.button-collapse').sideNav();
-
-	$('#nav-dropdown, #nav-side').click(function(event) {
-
-		$('.button-collapse').sideNav('hide');
-
-		app.controller.onNavSelection(event);					
-	});
-	
-	//$('.modal-trigger').leanModal();
-
-	app.init();
-};

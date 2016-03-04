@@ -371,6 +371,8 @@ app.Controller = function() {
 			
 			// Set some defaults to use until account creation/selection is developed
 
+				void (new app.View()).renderNavigation('Meetup Planner');
+
 				_views.frontPageView.render();
 
 				_views.frontPageView.show();
