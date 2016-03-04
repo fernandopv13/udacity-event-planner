@@ -99,6 +99,14 @@ app.FormView.prototype.onLoad = function(nEvent) {
 };
 
 
+app.FormView.prototype.onRender = function(Model_m) {
+
+	this.hide();
+
+	app.View.prototype.update.call(this); // ssuper() does not work recursively, so call directly
+}
+
+
 app.FormView.prototype.onUnLoad = function(nEvent) {
 
 	$('#nav-delete-icon').hide('fast'); // hide delete icon in navbar
@@ -107,11 +115,9 @@ app.FormView.prototype.onUnLoad = function(nEvent) {
 };
 
 
-app.FormView.prototype.submit = function(Model_m) {
+app.FormView.prototype.submit = function(Model_m, int_UIaction) {
 
-	//this.onUnLoad();
-
-	this.notifyObservers(this, Model_m, app.View.UIAction.SUBMIT);
+	this.notifyObservers(this, Model_m, typeof int_UIaction === 'number' ? int_UIaction : app.View.UIAction.SUBMIT);
 }
 
 

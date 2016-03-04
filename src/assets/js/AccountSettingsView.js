@@ -294,7 +294,7 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 			this.$renderContext().append(formElement);
 
 
-		// (Re)assign account handlers to form elements
+		// (Re)assign event handlers to form elements
 
 			$('#account-settings-email').keyup(function(event) { // validate email
 
@@ -355,7 +355,7 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 			}.bind(this));
 
 
-			$('#account-settings-submit').click(function(event) {
+			$('#account-settings-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
 
 				this.submit(event);
 

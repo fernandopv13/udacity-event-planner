@@ -295,7 +295,7 @@ app.PersonView.prototype.render = function(Person_person) {
 			}.bind(this));
 
 
-			$('#guest-form-submit').click(function(event) {
+			$('#guest-form-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
 
 				this.submit(event);
 

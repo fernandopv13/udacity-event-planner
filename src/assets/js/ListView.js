@@ -90,26 +90,7 @@ app.ListView.prototype.onClick = function(nEvent_e, Model_m) {
 };
 
 
-/** Updates list when notified by controller of change to model.
-*
-* Realization required by abstract View class. See this for further documentation.
-*
-* @param {Model} m Instance of Model. Must match the list's modelClass property
-*
-* @return {void}
-*/
+app.ListView.prototype.onRender = function(Model_m) {
 
-/*
-app.ListView.prototype.update = function(Model_m) {
-
-	if (Model_m.isInstanceOf(app.Model) && Model_m.constructor === this.modelClass()) { // correct Model subtype
-
-		if (arguments.length === 1) { // correct method signature
-
-			this.model(Model_m);
-
-			this.render(Model_m);
-		}
-	}	
+	return; // listviews should respond dynamically to model updates, so dummy method for now
 }
-*/

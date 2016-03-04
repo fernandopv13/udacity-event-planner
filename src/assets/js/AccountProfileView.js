@@ -313,7 +313,7 @@ app.AccountProfileView.prototype.render = function(Person_p) {
 			}.bind(this));
 
 
-			$('#account-holder-form-submit').click(function(event) {
+			$('#account-holder-form-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
 
 				this.submit(event);
 

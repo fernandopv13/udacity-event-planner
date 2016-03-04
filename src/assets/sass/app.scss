@@ -180,11 +180,10 @@ textarea.materialize-textarea:focus.invalid + label::after {
 }
 
 
-// Hide all views, and some view details, by default
+// Hides elements with the class in a way compatiable with jQuery's show() function
+// Used to hide views and other items by default that are to only be progressively displayed when conditions are right.
 
-.view, #account-settings-password-hints,
-#account-settings-password-confirmation-parent,
-#nav-delete-icon {
+.hidden {
 	display: none;
 }
 

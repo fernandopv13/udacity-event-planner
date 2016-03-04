@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /**********************************************************************************************
-* public class SignInView extends View
+* public class SignInView extends FormView
 **********************************************************************************************/
 
 var app = app || {};
@@ -25,12 +25,12 @@ app.SignInView = function(str_elementId, str_heading) {
 
 	this.className = 'SignInView';
 
-	this.ssuper = app.View;
+	this.ssuper = app.FormView;
 
 	
 	/** Initialize instance members inherited from parent class*/
 	
-	app.View.call(this, null, str_elementId, str_heading);
+	app.FormView.call(this, null, str_elementId, str_heading);
 	
 
 	/*----------------------------------------------------------------------------------------
@@ -41,10 +41,10 @@ app.SignInView = function(str_elementId, str_heading) {
 };
 
 /*----------------------------------------------------------------------------------------
-* Inherit from View
+* Inherit from FormView
 *---------------------------------------------------------------------------------------*/	
 
-app.SignInView.prototype = Object.create(app.View.prototype); // Set up inheritance
+app.SignInView.prototype = Object.create(app.FormView.prototype); // Set up inheritance
 
 app.SignInView.prototype.constructor = app.SignInView; //Reset constructor property
 
@@ -54,9 +54,26 @@ app.SignInView.prototype.constructor = app.SignInView; //Reset constructor prope
 * Public instance methods (beyond accessors)
 *---------------------------------------------------------------------------------------*/
 
-/** Renders front page.
-*
-* Front page is pure navigation. It is not bound to any model, nor to the controller
+/** Clears input fields on sign-in page */
+
+app.SignInView.prototype.clear = function() {
+
+	$('#sign-in-email, #sign-in-password').val('');
+
+	$('#sign-in-password-hints').hide('fast');
+}
+
+
+/** Makes sure password hints are hidden by default */
+
+app.SignInView.prototype.onLoad = function() {
+
+	$('#sign-in-password-hints').hide('fast');
+}
+
+
+
+/** Renders sign in page.
 *
 * @return void
 */
@@ -138,16 +155,86 @@ app.SignInView.prototype.render = function() {
 
 			innerHTML: 'Sign In'
 		}));
-	
+
 	
 	// (Re)assign evnet handlers to form elements
 
-		$('#sign-in-submit').click(function(event) { // go to sign-up view
+		$('#sign-in-email').keyup(function(event) { // validate email
 
-			//
+			this.validateEmail(event, 'sign-in-email', true);
 
 		}.bind(this));
+		
+		
+		$('#sign-in-password').focus(function(event) { // update and show password hints
+
+			this.validatePassword(event, 'sign-in-password', 'sign-in-password-hints');
+
+			$('#sign-in-password-hints').show('slow');
+
+		}.bind(this));
+
+
+		$('#sign-in-password').keyup(function(event) { // validate password
+
+			this.validatePassword(event, 'sign-in-password', 'sign-in-password-hints');
+
+		}.bind(this));
+
+		
+		$('#sign-in-password').blur(function(event) { // hide password hints
+
+				$('#sign-in-password-hints').hide('slow');
+		});
+
+
+		$('#sign-in-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
+
+			this.submit();
+
+		}.bind(this));
+
+
+	// call parent to perform common post-render task(s)
+
+		this.ssuper().prototype.update.call(this);
 };
+
+
+app.SignInView.prototype.submit = function() {
+
+	// First display any and all validation errors at once
+
+	void this.validateEmail(event, 'sign-in-email', true);
+
+	void this.validatePassword(event, 'sign-in-password', 'sign-in-password-hints');
+
+	// Then do it again to obtain validation status
+
+	// (Chain stops at first false, so no use for UI)
+
+	if (this.validateEmail(event, 'sign-in-email', true)
+
+		&& this.validatePassword(event, 'sign-in-password', 'sign-in-password-hints')) { // Submit results if all validations pass
+
+		// Create a temporary, new account with the data from the form
+
+		var account = new app.Account();
+
+		account.email(new app.Email($('#sign-in-email').val()));
+
+		account.password(new app.Password($('#sign-in-password').val()));
+		
+		// Dispatch submission using function in parent class
+
+		this.ssuper().prototype.submit.call(this, account, app.View.UIAction.SIGNIN);
+
+		return true;
+	}
+
+	return false;
+}
+
 
 app.SignInView.prototype.update = function() {
 

@@ -74,7 +74,7 @@ app.FrontPageView.prototype.render = function() {
 		{
 			element: 'div',			
 			
-			classList: ['row']
+			classList: ['row', 'center-align']
 		});
 
 		this.$renderContext().append(containerDiv);
@@ -121,7 +121,7 @@ app.FrontPageView.prototype.render = function() {
 		{
 			element: 'div',			
 			
-			classList: ['row', 'right-align']
+			classList: ['row', 'center-align']
 		});
 
 		this.$renderContext().append(containerDiv);
@@ -166,14 +166,23 @@ app.FrontPageView.prototype.render = function() {
 			
 			attributes: {id: 'front-page-sign-in'},
 			
-			innerHTML: 'Sign in'
+			innerHTML: 'Sign In'
 		}));
 	
-	// (Re)assign account handlers to form elements
+	// (Re)assign event handlers to form elements
 
 		$('#front-page-sign-up').click(function(event) { // go to sign-up view
 
-			//
+			//this.notifyObservers(new app.SignUpView(), null, app.View.UIAction.NAVIGATE);
+
+			Materialize.toast('Sign up is not implemented in this demo. Sorry.', 4000)
+
+		}.bind(this));
+
+
+		$('#front-page-sign-in').click(function(event) { // go to sign-up view
+
+			this.notifyObservers(new app.SignInView(), null, app.View.UIAction.NAVIGATE);
 
 		}.bind(this));
 };

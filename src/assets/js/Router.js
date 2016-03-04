@@ -15,7 +15,7 @@ var app = app || {};
 
 * More comprehensive solution awaits port of the app to Angular.js or similar framework.
 *
-* For now, does not support deep linking.
+* For now, does not support deep linking, and is a bit flaky.
 *
 * @constructor
 *
@@ -46,21 +46,9 @@ app.Router.prototype.onPopState = function(PopStateEvent_e) {
 
 		id = parseInt(PopStateEvent_e.state.id);
 
-		//console.log('popped: ' + className + ', ' + id);
+		console.log('popped: ' + className + ', ' + id);
 
 		switch (className) {
-
-			case 'AccountProfileView':
-
-				window.history.back();
-
-				break;
-
-			case 'AccountSettingsView':
-
-				window.history.back();
-
-				break;
 
 			case 'EventListView':
 
@@ -93,6 +81,12 @@ app.Router.prototype.onPopState = function(PopStateEvent_e) {
 				//app.controller.onGuestSelected(app.Person.registry.getObjectById(id));
 
 				break;
+
+			default: // includes AccountProfileView and AccountSettingsView
+
+				app.controller.update([new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, app.View.UIAction.NAVIGATE]);
+
+				//window.history.back();
 		}
 	}
 
@@ -110,13 +104,13 @@ app.Router.prototype.onViewChange = function(View_v) {
 
 	if (history.pushState) {
 
-		var className = View_v.className(), id = View_v.model().id();
+		var className = View_v.className(), id = View_v.model() ? View_v.model().id() : null;
 
 		try {// needs to be run off a server to work
 
 			if (!history.state || history.state.className !== className) { // don't set state if navigating back
 
-				//console.log('pushing: ' + className + ', ' + id);
+				console.log('pushing: ' + className + ', ' + id);
 
 				history.pushState(
 				{

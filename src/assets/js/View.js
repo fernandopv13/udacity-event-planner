@@ -99,17 +99,19 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 	app.View.UIAction = {
 
-		CANCEL: 0,
+		SIGNIN: 0,
 
-		CREATE: 1,
+		CANCEL: 1,
 
-		DELETE: 2,
+		CREATE: 2,
 
-		NAVIGATE: 3,
+		DELETE: 3,
 
-		SELECT: 4,
+		NAVIGATE: 4,
 
-		SUBMIT: 5
+		SELECT: 5,
+
+		SUBMIT: 6
 	}
 
 
@@ -418,7 +420,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			classList: email && email.address() ? ['form-label', 'active'] : ['form-label'],
 			
-			dataset: {error: 'Must be like "address@server.domain"'},
+			dataset: {error: 'Please use format "address@server.domain"'},
 			
 			innerHTML: str_label
 		});
@@ -517,303 +519,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		return outerDiv;
 	}
 
-
-
-	/** Factory method for rendering main navigation directly to the DOM
-	*
-	* @return {HTMLDivElement} DIV element
-	*/
-
-	app.View.prototype.renderNavigation = function(str_logotype) {
-
-		var menuItems = 
-		[
-			{
-				text: 'Account Settings',
-
-				href: '#!Settings',
-
-				icon: 'settings'
-			},
-
-			{
-				text: 'Account Profile',
-
-				href: '#!Profile',
-
-				icon: 'account_circle'
-			},
-
-			{
-				text: 'About',
-
-				href: '#!About',
-
-				icon: 'info'
-			},
-
-			{
-				text: 'Sign Out',
-
-				href: '#!Sign Out',
-
-				icon: 'power_settings_new'
-			}
-		]
-
-		// Main container
-
-			var containerDiv = this.createElement(
-			{
-				element: 'div',
-
-				classList: ['navbar-fixed']
-			});
-
-		
-		// 'More' dropdown
-
-			var ULElement = this.createElement(
-			{
-				element: 'ul',
-
-				attributes: {id: 'nav-dropdown'},
-
-				classList: ['dropdown-content']
-			});
-
-			containerDiv.appendChild(ULElement);
-
-			var listElement, anchorElement;
-
-			menuItems.forEach(function(item) { //dropdown menu items
-
-				anchorElement = this.createElement(
-				{
-					element: 'a',
-
-					attributes: {href: item.href, title: item.text},
-
-					innerHTML: item.text
-				});
-
-				listElement = this.createElement({element: 'li'});
-
-				listElement.appendChild(anchorElement);
-
-				ULElement.appendChild(listElement);
-
-			}, this);
-
-
-		// Main nav
-
-			var navContainer =  this.createElement({element: 'nav'}); 
-
-			containerDiv.appendChild(navContainer);
-
-			var divElement = this.createElement( // top nav
-			{
-				element: 'div',
-
-				classList: ['nav-wrapper']
-			});
-
-			navContainer.appendChild(divElement);
-
-			divElement.appendChild(this.createElement(
-			{
-
-				element: 'a',
-
-				attributes: {href: '#!'},
-
-				classList: ['brand-logo'],
-
-				innerHTML: str_logotype
-			}));
-
-			var iconElement = this.createElement( // 'hamburger' menu
-			{
-				element: 'i',
-
-				classList: ['material-icons'],
-
-				innerHTML: 'menu'
-			});
-
-			anchorElement = this.createElement(
-			{
-				element: 'a',
-
-				attributes: {href: '#'},
-
-				classList: ['button-collapse'],
-
-				dataset: {activates: 'nav-side'}
-			});
-
-			anchorElement.appendChild(iconElement);
-
-			divElement.appendChild(anchorElement);
-
-
-			ULElement = this.createElement( // 'more' menu (desktop)
-			{
-				element: 'ul',
-
-				classList: ['right', 'hide-on-med-and-down']
-			});
-
-			listElement = this.createElement({element: 'li'});
-
-			iconElement = this.createElement(
-			{
-				element: 'i',
-
-				classList: ['material-icons', 'left'],
-
-				innerHTML: 'more_vert'
-			});
-
-			anchorElement = this.createElement(
-			{
-				element: 'a',
-
-				attributes: {href: '#!', id: 'nav-dropdown-button'},
-
-				classList: ['dropdown-button'],
-
-				dataset: {activates: 'nav-dropdown'}
-			});
-
-			anchorElement.appendChild(iconElement);
-
-			listElement.appendChild(anchorElement);
-
-			ULElement.appendChild(listElement);
-
-			divElement.appendChild(ULElement);
-
-
-			ULElement = this.createElement( // delete icon
-			{
-				element: 'ul',
-
-				classList: ['right']
-			});
-
-			iconElement = this.createElement(
-			{
-				element: 'i',
-
-				classList: ['material-icons', 'left', 'modal-trigger'],
-
-				innerHTML: 'delete'
-			});
-
-			listElement = this.createElement(
-			{
-				element: 'li',
-
-				attributes: {id: 'nav-delete-icon'}
-			});
-
-			listElement.appendChild(iconElement);
-
-			ULElement.appendChild(listElement);
-
-			divElement.appendChild(ULElement);
-
- 		
- 		// Side nav ('drawer')
-			
-			ULElement = this.createElement(
-			{
-				element: 'ul',
-
-				attributes: {id: 'nav-side'},
-
-				classList: ['side-nav']
-			});
-
-			menuItems.forEach(function(item) {
-
-				listElement = this.createElement({element: 'li'});
-
-				anchorElement = this.createElement(
-				{
-					element: 'a',
-
-					attributes: {href: item.href},
-
-					innerHTML: item.text
-				});
-
-				if (item.icon) {
-
-					anchorElement.appendChild(this.createElement(
-					{
-						element: 'i',
-
-						classList: ['material-icons', 'left'],
-
-						innerHTML: item.icon
-					}));
-				}
-
-				listElement.appendChild(anchorElement);
-
-				ULElement.appendChild(listElement);
-
-			}, this);
-
-			divElement.appendChild(ULElement);
-
-
-		// Render to DOM
-
-			$('body').prepend(containerDiv);
-
-		
-		// Initialize
-
-			$('.dropdown-button').dropdown( // Materialize dropdown needs this call when created dynamically
-			{
-				inDuration: 300,
-				
-				outDuration: 225,
-				
-				constrain_width: false, // Does not change width of dropdown to that of the activator
-				
-				hover: true, // Activate on hover
-				
-				gutter: 0, // Spacing from edge
-				
-				belowOrigin: false, // Displays dropdown below the button
-				
-				alignment: 'left' // Displays dropdown with edge aligned to the left of button
-			});
-
-
-			$('#nav-delete-icon').hide();
-
-		
-		// Add event handlers
-
-			$('.button-collapse').sideNav(); // 'hamburger' menu
-
-			
-			$('#nav-dropdown, #nav-side').click(function(event) { // navigation selection
-
-				$('.button-collapse').sideNav('hide');
-
-				app.controller.onNavSelection(event);					
-			});
-
-		
-		return containerDiv;
-	}
 
 
 	/** Factory method for creating number fields for forms
@@ -973,7 +678,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			attributes: {id: str_hintsPrefix},
 			
-			classList: ['col', str_width]
+			classList: ['col', str_width, 'hidden']
 		});
 
 		outerDiv.appendChild(innerDiv);
@@ -1135,7 +840,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			attributes: {id: str_confirmationId + '-parent'},
 			
-			classList: ['row']
+			classList: ['row', 'hidden']
 		});
 					
 		
@@ -1641,6 +1346,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	app.View.prototype.hide = function(obj_options) {
 
 		this.$renderContext().hide(obj_options ? obj_options : 'fast');
+
+		this.$renderContext().addClass('hidden');
 	}
 
 
@@ -1660,11 +1367,320 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		return; // dummy method to make sure it's always available
 	};
 	
+	
+	/** Executes default shared behaviour for when a View has rendered itself */
+
+	app.View.prototype.onRender = function() {
+
+		return; // so far, better handled by subclasses, so no action
+	}
+	
 
 	app.View.prototype.onUnLoad = function(nEvent) {
 
 		return; // dummy method to make sure it's always available
 	};
+
+
+
+	/** Utility for dynamically rendering main navigation directly to the DOM
+	*
+	* (so we can hide it until we need it).
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.renderNavigation = function(str_logotype) {
+
+		var menuItems = 
+		[
+			{
+				text: 'Account Settings',
+
+				href: '#!Settings',
+
+				icon: 'settings'
+			},
+
+			{
+				text: 'Account Profile',
+
+				href: '#!Profile',
+
+				icon: 'account_circle'
+			},
+
+			{
+				text: 'About',
+
+				href: '#!About',
+
+				icon: 'info'
+			},
+
+			{
+				text: 'Sign Out',
+
+				href: '#!Sign Out',
+
+				icon: 'power_settings_new'
+			}
+		]
+
+		// Main container
+
+			var containerDiv = this.createElement(
+			{
+				element: 'div',
+
+				classList: ['navbar-fixed']
+			});
+
+		
+		// 'More' dropdown
+
+			var ULElement = this.createElement(
+			{
+				element: 'ul',
+
+				attributes: {id: 'nav-dropdown'},
+
+				classList: ['dropdown-content']
+			});
+
+			containerDiv.appendChild(ULElement);
+
+			var listElement, anchorElement;
+
+			menuItems.forEach(function(item) { //dropdown menu items
+
+				anchorElement = this.createElement(
+				{
+					element: 'a',
+
+					attributes: {href: item.href, title: item.text},
+
+					innerHTML: item.text
+				});
+
+				listElement = this.createElement({element: 'li'});
+
+				listElement.appendChild(anchorElement);
+
+				ULElement.appendChild(listElement);
+
+			}, this);
+
+
+		// Main nav
+
+			var navContainer =  this.createElement({element: 'nav'}); 
+
+			containerDiv.appendChild(navContainer);
+
+			var divElement = this.createElement( // top nav
+			{
+				element: 'div',
+
+				classList: ['nav-wrapper']
+			});
+
+			navContainer.appendChild(divElement);
+
+			divElement.appendChild(this.createElement(
+			{
+
+				element: 'a',
+
+				attributes: {href: '#!'},
+
+				classList: ['brand-logo'],
+
+				innerHTML: str_logotype
+			}));
+
+			var iconElement = this.createElement( // 'hamburger' menu
+			{
+				element: 'i',
+
+				classList: ['material-icons'],
+
+				innerHTML: 'menu'
+			});
+
+			anchorElement = this.createElement(
+			{
+				element: 'a',
+
+				attributes: {href: '#'},
+
+				classList: ['button-collapse'],
+
+				dataset: {activates: 'nav-side'}
+			});
+
+			anchorElement.appendChild(iconElement);
+
+			divElement.appendChild(anchorElement);
+
+
+			ULElement = this.createElement( // 'more' menu (desktop)
+			{
+				element: 'ul',
+
+				classList: ['right', 'hide-on-med-and-down']
+			});
+
+			listElement = this.createElement({element: 'li'});
+
+			iconElement = this.createElement(
+			{
+				element: 'i',
+
+				classList: ['material-icons', 'left'],
+
+				innerHTML: 'more_vert'
+			});
+
+			anchorElement = this.createElement(
+			{
+				element: 'a',
+
+				attributes: {href: '#!', id: 'nav-dropdown-button'},
+
+				classList: ['dropdown-button'],
+
+				dataset: {activates: 'nav-dropdown'}
+			});
+
+			anchorElement.appendChild(iconElement);
+
+			listElement.appendChild(anchorElement);
+
+			ULElement.appendChild(listElement);
+
+			divElement.appendChild(ULElement);
+
+
+			ULElement = this.createElement( // delete icon
+			{
+				element: 'ul',
+
+				classList: ['right', 'hidden']
+			});
+
+			iconElement = this.createElement(
+			{
+				element: 'i',
+
+				classList: ['material-icons', 'left', 'modal-trigger'],
+
+				innerHTML: 'delete'
+			});
+
+			listElement = this.createElement(
+			{
+				element: 'li',
+
+				attributes: {id: 'nav-delete-icon'}
+			});
+
+			listElement.appendChild(iconElement);
+
+			ULElement.appendChild(listElement);
+
+			divElement.appendChild(ULElement);
+
+ 		
+ 		// Side nav ('drawer')
+			
+			ULElement = this.createElement(
+			{
+				element: 'ul',
+
+				attributes: {id: 'nav-side'},
+
+				classList: ['side-nav']
+			});
+
+			menuItems.forEach(function(item) {
+
+				listElement = this.createElement({element: 'li'});
+
+				anchorElement = this.createElement(
+				{
+					element: 'a',
+
+					attributes: {href: item.href},
+
+					innerHTML: item.text
+				});
+
+				if (item.icon) {
+
+					anchorElement.appendChild(this.createElement(
+					{
+						element: 'i',
+
+						classList: ['material-icons', 'left'],
+
+						innerHTML: item.icon
+					}));
+				}
+
+				listElement.appendChild(anchorElement);
+
+				ULElement.appendChild(listElement);
+
+			}, this);
+
+			divElement.appendChild(ULElement);
+
+
+		// Render to DOM
+
+			$('body').prepend(containerDiv);
+
+		
+		// Initialize
+
+			$('.dropdown-button').dropdown( // Materialize dropdown needs this call when created dynamically
+			{
+				inDuration: 300,
+				
+				outDuration: 225,
+				
+				constrain_width: false, // Does not change width of dropdown to that of the activator
+				
+				hover: true, // Activate on hover
+				
+				gutter: 0, // Spacing from edge
+				
+				belowOrigin: false, // Displays dropdown below the button
+				
+				alignment: 'left' // Displays dropdown with edge aligned to the left of button
+			});
+
+
+			$('#nav-delete-icon').hide();
+
+		
+		// Add event handlers
+
+			$('.button-collapse').sideNav(); // 'hamburger' menu
+
+			
+			$('#nav-dropdown, #nav-side').click(function(event) { // navigation selection
+
+				$('.button-collapse').sideNav('hide');
+
+				app.controller.onNavSelection(event);					
+			});
+
+		
+		return containerDiv;
+	}
+
 
 
 	/** Utility for showing view in the UI on demand.
@@ -1677,6 +1693,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	app.View.prototype.show = function(obj_options) {
 
 		this.$renderContext().show(obj_options ? obj_options : 'slow');
+
+		this.$renderContext().removeClass('hidden');
 	}
 
 
@@ -1693,7 +1711,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 	app.View.prototype.update = function(Model_m) {
 		
-		if (Model_m.isInstanceOf(app.Model) && Model_m.constructor === this.modelClass()) { // correct Model subtype
+		if (Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(app.Model) && Model_m.constructor === this.modelClass()) { // correct Model subtype
 
 			if (arguments.length === 1) { // correct method signature
 
@@ -1765,7 +1783,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (email !== '') { // always validate email if it exists
 
-			this.displayValidation(event, str_emailId, 'Format must be "address@server.domain"', valid);
+			this.displayValidation(event, str_emailId, 'Please enter in format "address@server.domain"', valid);
 		}
 
 		else if (bool_required) { // no entry, require if required(!)

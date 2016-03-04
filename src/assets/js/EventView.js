@@ -545,7 +545,7 @@ app.EventView.prototype.render = function(Event_e) {
 			}.bind(this));
 
 
-			$('#event-form-submit').click(function(event) {
+			$('#event-form-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
 
 				this.submit(event);
 

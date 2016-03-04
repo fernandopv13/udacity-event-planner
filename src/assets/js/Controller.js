@@ -70,7 +70,7 @@ app.Controller = function() {
 				if (View_v === null || View_v.isInstanceOf(app.View)) {
 				
 					this.notifyObservers(Model_m); // first notify observers: forms won't update if they are the current view
-
+					
 					
 					for (var view in _views) {
 
@@ -371,7 +371,7 @@ app.Controller = function() {
 			
 			// Set some defaults to use until account creation/selection is developed
 
-				void (new app.View()).renderNavigation('Meetup Planner');
+				//void (new app.View()).renderNavigation('Meetup Planner');
 
 				_views.frontPageView.render();
 
@@ -525,7 +525,7 @@ app.Controller = function() {
 		*
 		* @param {View} v Reference to the calling View, or to the type of View we wish to navigate to
 		*
-		* @param {Model} m Reference to the Model related to the user action (e.g. the Model presented by a form, the selected item in a list, or the source of data for the next view)
+		* @param {Model} m Reference to the Model related to the user action (e.g. the Model presented by a form, the selected item in a list, or the source of data for the next view), or null
 		*
 		* @param {int} UIAction The type of action invoked by the user in the UI. Supported action types are defined in app.View.UIAction.
 		*
@@ -535,6 +535,46 @@ app.Controller = function() {
 		function __update(View_v, Model_m, int_uiaction) {
 
 			switch (int_uiaction) {
+
+				case app.View.UIAction.SIGNIN: // submission from sign in form
+
+					var accounts = app.Account.registry.getObjectList(), ret = false;
+
+					for (var ix in accounts) {
+
+						if (accounts[ix].id() !== Model_m.id()) { // skip the temporary account passed from the sign in view
+
+							if (accounts[ix].email() && accounts[ix].email().address() === Model_m.email().address()) { // emails match
+
+								if (accounts[ix].password() && accounts[ix].password().password() === Model_m.password().password()) { // pw match
+
+									ret = true;
+
+									break; // .. exit for loop
+								}
+							}
+						}
+					}
+
+					if (ret) { // provided email and password match an account
+
+						_onAccountSelected.call(this, accounts[ix]);
+
+						void (new app.View()).renderNavigation('Meetup Planner'); // show navigation
+
+						Materialize.toast('Login successfull. Welcome back!', 4000);
+					}
+
+					else { // sign in failed
+
+						View_v.clear();
+
+						this.currentView(View_v, null);
+
+						Materialize.toast('No account matches this email and password. Please try again.', 5000);
+					}
+
+					break;
 
 				case app.View.UIAction.CANCEL:
 
@@ -660,6 +700,15 @@ app.Controller = function() {
 
 					console.log('UI action ' + int_uiaction + ' not supported');
 			}
+
+			// remove temporary Model passed in from View (to prepare for garbage collection)
+
+			if (Model_m && Model_m.constructor && Model_m.constructor.registry) {
+
+				Model_m.constructor.registry.removeObject(Model_m);
+			}
+
+			Model_m = undefined;
 		}
 		
 
@@ -704,7 +753,7 @@ app.Controller = function() {
 
 					if (args[0].isInstanceOf(app.View)) { // first param is instance of View
 
-						if (args[1].isInstanceOf(app.Model)) { // second param is instance of Model
+						if (args[1] === null || args[1].isInstanceOf(app.Model)) { // second param is instance of Model, or null
 
 							if (args[2] === parseInt(args[2])) { // third param is integer
 
