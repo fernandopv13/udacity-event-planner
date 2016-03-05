@@ -6,7 +6,7 @@
 
 var app = app || {};
 
-/** @classdesc ViewObject for individual accounts. Renders account in UI, and captures UI events on account.
+/** @classdesc View class for account settings. Renders account in UI, and captures UI events on account.
 *
 * @constructor
 *
@@ -16,7 +16,7 @@ var app = app || {};
 *
 * @param (String) heading Content for the list heading
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 */
 
 app.AccountSettingsView = function(str_elementId, str_heading) {
@@ -32,7 +32,7 @@ app.AccountSettingsView = function(str_elementId, str_heading) {
 	this.ssuper = app.FormView;
 
 	
-	/** Initialize instance members inherited from parent class*/
+	// Initialize instance members inherited from parent class
 	
 	app.FormView.call(this, app.Account, str_elementId, str_heading);
 	
@@ -55,29 +55,14 @@ app.AccountSettingsView.prototype.constructor = app.AccountSettingsView; //Reset
 
 
 /*----------------------------------------------------------------------------------------
-* Public instance methods (beyond accessors)
+* Public instance methods
 *---------------------------------------------------------------------------------------*/
-
-/** Cancels entries in, and navigation to, account settings form
-*/
-
-/*
-app.AccountSettingsView.prototype.cancel = function() {
-
-	window.history.back(); // return to previous view
-
-	// for now, simply discard any entries made by user
-}
-*/
-
 
 /** Renders account to form in UI
 *
 * @param {Account} The account from which to present data in the form
 *
 * @return void
-*
-* @todo Get character counter to work on description field
  */
 
 app.AccountSettingsView.prototype.render = function(Account_account) {
@@ -444,23 +429,4 @@ app.AccountSettingsView.prototype.submit = function(event) {
 	}
 
 	return false;
-}
-
-
-/** Updates account presentation when notified by controller of change */
-
-/*
-app.AccountSettingsView.prototype.update = function(Model) {
-	
-	if (this.doUpdate(Model)) {
-
-		this.model(Model) ;
-
-		//this.modelId = Model ? Model.id() : null;
-
-		this.render(Model);
-	}
-
-	// else do nothing
 };
-*/

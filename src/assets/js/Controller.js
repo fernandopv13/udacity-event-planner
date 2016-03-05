@@ -18,9 +18,9 @@ var app = app || {};
 *
 * @constructor
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 *
-* @todo Refactor as many accessors and event handlers as possible from public to private members
+* @todo Revisit if more currently public members need to be public, or could just as well be private
 */
 
 app.Controller = function() {
@@ -54,9 +54,11 @@ app.Controller = function() {
 
 		/** Gets or sets the view currently being displayed in the UI.
 		*
-		* When setting, hides the existing view and shows the new one.
+		* When setting, hides the currently presented view and shows the new one.
 		*
 		* @param {View} v currentView The current view, or null
+		*
+		* @param {Model} m the Model we want displayed in the new current view, or null
 		*
 		* @return {View} The current view, or null
 		*
@@ -422,7 +424,8 @@ app.Controller = function() {
 		* @param {Function} interface The interface we wish to determine if this class implements
 		*
 		* @return {Boolean} instanceof True if class implements interface, otherwise false
-		*	
+		*
+		* @todo This seems redundant try to find a way to delegate to default method in IInterfaceable
 		*/
 		
 		this.isInstanceOf = function (func_interface) {
@@ -462,7 +465,7 @@ app.Controller = function() {
 		
 		/** Handles click events in navbar/dropdown */
 
-		this.onNavSelection = function(event) {
+		this.onNavSelection = function(nEvent) {
 
 			switch (event.target.href.split('!')[1]) { // parse the URL partial after #!
 
@@ -495,9 +498,9 @@ app.Controller = function() {
 
 		/** Passes history onpopstate events on to router */
 
-		this.onPopState = function(event) {
+		this.onPopState = function(nEvent) {
 
-			_router.onPopState(event);
+			_router.onPopState(nEvent);
 		};
 		
 		
@@ -530,6 +533,8 @@ app.Controller = function() {
 		* @param {int} UIAction The type of action invoked by the user in the UI. Supported action types are defined in app.View.UIAction.
 		*
 		* @return {void}
+		*
+		* @todo Investigate if there is a classic OO pattern (e.g. Command or Strategy) that would help reduce the complexity of this algorithm.
 		*/
 
 		function __update(View_v, Model_m, int_uiaction) {

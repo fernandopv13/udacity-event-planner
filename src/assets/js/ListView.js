@@ -17,7 +17,7 @@ var app = app || {};
 *
 * @return {ListView} Not supposed to be instantiated, except when extended by subclasses.
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 *
 */
 
@@ -32,7 +32,7 @@ app.ListView = function(Function_modelClass, str_elementId, str_heading) {
 	if (!this.className) {this.className = 'ListView';}
 
 	
-	/** Initializes instance members inherited from parent class*/
+	// Initializes instance members inherited from parent class
 	
 	app.View.call(this, Function_modelClass, str_elementId, str_heading);
 
@@ -58,31 +58,6 @@ app.ListView.prototype.constructor = app.ListView; // Reset constructor property
 /*----------------------------------------------------------------------------------------
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
-
-/** Determines whether view should respond to update notification.
-*
-* ListViews respond in real time, as long as the object type and id match.
-*
-* Realization required by abstract View class. See this for further documentation.
- */
-
-/*
-app.ListView.prototype.doUpdate = function(Model) {
-
-	if (Model === null) { // i.e. reset
-
-			return true;
-		}
-
-	else if (Model.constructor === this.modelClass()) { // classes match
-
-		return true;
-	}
-
-	return false;
-}
-*/
-
 
 app.ListView.prototype.onClick = function(nEvent_e, Model_m) {
 

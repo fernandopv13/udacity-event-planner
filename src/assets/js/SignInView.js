@@ -7,8 +7,9 @@
 var app = app || {};
 
 
-
-/** @classdesc View for displaying app's sign in page.
+/** @classdesc View for displaying app's sign-in page.
+*
+* Deviates slightly from the main mold of the MVC framework, as it isn't to tightly bound to a Model.
 *
 * @constructor
 *
@@ -30,7 +31,7 @@ app.SignInView = function(str_elementId, str_heading) {
 	this.ssuper = app.FormView;
 
 	
-	/** Initialize instance members inherited from parent class*/
+	// Initialize instance members inherited from parent class
 	
 	app.FormView.call(this, null, str_elementId, str_heading);
 	

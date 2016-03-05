@@ -15,11 +15,11 @@ var app = app || {};
 
 * More comprehensive solution awaits port of the app to Angular.js or similar framework.
 *
-* For now, does not support deep linking, and is a bit flaky.
+* Does not support deep linking, and is a bit flaky. But will have to do for now.
 *
 * @constructor
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 */
 
 app.Router = function() {

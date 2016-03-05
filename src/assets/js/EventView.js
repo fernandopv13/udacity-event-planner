@@ -6,7 +6,7 @@
 
 var app = app || {};
 
-/** @classdesc ViewObject for individual events. Renders event in UI, and captures UI events on event.
+/** @classdesc View class for individual events. Renders event in UI, and captures UI events on event.
 *
 * @constructor
 *
@@ -16,13 +16,17 @@ var app = app || {};
 *
 * @param (String) heading Content for the list heading
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 *
 * @todo Set end date to start date when initially selecting start date, supressing end datepicker
 *
+* @todo Hide most of the non-required details behind a 'Details' widget (i.e. use 'progressive disclosure')
+*
+* @todo Do not require entry of end date and time unless the user wants to
+*
 * @todo Add unit testing of rendering in browser
 *
-* @todo Verify geolocation and remove mock
+* @todo Verify the geolocation works as expected when available in a mobile device with GPS
 */
 
 app.EventView = function(str_elementId, str_heading) {
@@ -37,7 +41,7 @@ app.EventView = function(str_elementId, str_heading) {
 
 	this.ssuper = app.FormView;
 	
-	/** Initialize instance members inherited from parent class*/
+	// Initialize instance members inherited from parent class
 	
 	app.FormView.call(this, app.Event, str_elementId, str_heading);
 	
@@ -63,7 +67,9 @@ app.EventView.prototype.constructor = app.EventView; // Reset constructor proper
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
 
-app.EventView.prototype.NavigateToGuestList = function(nEvent) {
+/** Enables navigation to the event's guest list from the event form */
+
+app.EventView.prototype.navigateToGuestList = function(nEvent) {
 
 	this.notifyObservers(new app.GuestListView(), this.model(), app.View.UIAction.NAVIGATE);
 };
@@ -678,7 +684,7 @@ app.EventView.prototype.render = function(Event_e) {
 			
 			$('#event-edit-guests-button').click(function(event) { // edit guest list button
 
-				this.NavigateToGuestList(event);
+				this.navigateToGuestList(event);
 	
 			}.bind(this));
 

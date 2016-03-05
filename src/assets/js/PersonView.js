@@ -6,7 +6,7 @@
 
 var app = app || {};
 
-/** @classdesc ViewObject for individual persons. Renders person in UI, and captures UI events on person.
+/** @classdesc View class for individual Persons. Renders person in UI, and captures UI events on person.
 *
 * @constructor
 *
@@ -16,7 +16,7 @@ var app = app || {};
 *
 * @param (String) heading Content for the list heading
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 */
 
 app.PersonView = function(str_elementId, str_heading) {
@@ -32,7 +32,7 @@ app.PersonView = function(str_elementId, str_heading) {
 	this.ssuper = app.FormView;
 
 	
-	/** Initialize instance members inherited from parent class*/
+	// Initialize instance members inherited from parent class
 	
 	app.FormView.call(this, app.Person, str_elementId, str_heading);
 	
@@ -62,13 +62,11 @@ app.PersonView.prototype.constructor = app.PersonView; //Reset constructor prope
 * @param {Person} The person from which to present data in the form
 *
 * @return void
-*
-* @todo Get character counter to work on description field
  */
 
-app.PersonView.prototype.render = function(Person_person) {
+app.PersonView.prototype.render = function(Person_p) {
 
-	var person = Person_person, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
+	var person = Person_p, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
 	if (person !== null) {
 		
@@ -106,7 +104,7 @@ app.PersonView.prototype.render = function(Person_person) {
 
 				element: 'input',
 
-				attributes: {id: 'guest-id', type: 'hidden', value: Person_person.id()}
+				attributes: {id: 'guest-id', type: 'hidden', value: Person_p.id()}
 			}));
 
 		
@@ -325,8 +323,6 @@ app.PersonView.prototype.render = function(Person_person) {
 /** Submits person form to controller if it passes all validations
 *
 * @return {Boolean} true if validation and is succesful, otherwise false
-*
-* @todo Fix host hack
 */
 
 app.PersonView.prototype.submit = function(event) {

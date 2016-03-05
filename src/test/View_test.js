@@ -437,7 +437,7 @@ describe('class View', function(){
 
 			expect(el.htmlFor).toBe('test-number');
 
-			expect(el.dataset['error']).toBe('Test error message');
+			expect(el.dataset.error).toBe('Test error message');
 		});
 
 

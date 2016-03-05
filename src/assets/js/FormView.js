@@ -17,7 +17,7 @@ var app = app || {};
 *
 * @return {FormView} Not supposed to be instantiated, except when extended by subclasses.
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 */
 
 app.FormView = function(Function_modelClass, str_elementId, str_heading) {
@@ -33,7 +33,7 @@ app.FormView = function(Function_modelClass, str_elementId, str_heading) {
 	this.ssuper = this.ssuper ? this.ssuper : app.View;
 
 
-	/** Initializes instance members inherited from parent class*/
+	// Initializes instance members inherited from parent class
 	
 	app.View.call(this, Function_modelClass, str_elementId, str_heading);
 	
@@ -59,6 +59,8 @@ app.FormView.prototype.constructor = app.FormView; // Reset constructor property
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
 
+/** Handles delete event in UI */
+
 app.FormView.prototype.delete = function(nEvent) {
 
 	//console.log(this.model());
@@ -68,6 +70,8 @@ app.FormView.prototype.delete = function(nEvent) {
 	this.notifyObservers(this, this.model(), app.View.UIAction.DELETE);
 };
 
+
+/** Initializes event handlers and other functionality after the View has rendered to the DOM */
 
 app.FormView.prototype.onLoad = function(nEvent) {
 
@@ -99,6 +103,11 @@ app.FormView.prototype.onLoad = function(nEvent) {
 };
 
 
+/** Does varies housekeeping after the View has rendered to the DOM
+*
+* @todo Consolidate with onLoad(): they serve the same purpose
+*/
+
 app.FormView.prototype.onRender = function(Model_m) {
 
 	this.hide();
@@ -106,6 +115,8 @@ app.FormView.prototype.onRender = function(Model_m) {
 	app.View.prototype.update.call(this); // ssuper() does not work recursively, so call directly
 }
 
+
+/** Does varies housekeeping after the View has lost focus in the app */
 
 app.FormView.prototype.onUnLoad = function(nEvent) {
 
@@ -115,9 +126,13 @@ app.FormView.prototype.onUnLoad = function(nEvent) {
 };
 
 
+/** Submits entries made by the user into the form to the controller, with the purpose of updating of the Model */
+
 app.FormView.prototype.submit = function(Model_m, int_UIaction) {
 
 	this.notifyObservers(this, Model_m, typeof int_UIaction === 'number' ? int_UIaction : app.View.UIAction.SUBMIT);
+
+	return true;
 }
 
 

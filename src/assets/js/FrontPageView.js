@@ -28,7 +28,7 @@ app.FrontPageView = function(str_elementId, str_heading) {
 	this.ssuper = app.View;
 
 	
-	/** Initialize instance members inherited from parent class*/
+	// Initialize instance members inherited from parent class
 	
 	app.View.call(this, null, str_elementId, str_heading);
 	

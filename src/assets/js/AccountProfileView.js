@@ -16,7 +16,7 @@ var app = app || {};
 *
 * @param (String) heading Content for the list heading
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 */
 
 app.AccountProfileView = function(str_elementId, str_heading) {
@@ -32,7 +32,7 @@ app.AccountProfileView = function(str_elementId, str_heading) {
 	this.ssuper = app.FormView;
 
 	
-	/** Initialize instance members inherited from parent class*/
+	// Initialize instance members inherited from parent class
 	
 	app.FormView.call(this, app.Person, str_elementId, str_heading);
 	
@@ -56,20 +56,6 @@ app.AccountProfileView.prototype.constructor = app.AccountProfileView; //Reset c
 /*----------------------------------------------------------------------------------------
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
-
-/** Cancels entries in, and navigation to, person form
-*
-*/
-
-/*
-app.AccountProfileView.prototype.cancel = function() {
-
-	window.history.back(); // return to previous view
-
-	// for now, simply discard any entries made by user
-}
-*/
-
 
 /** (Re)renders person to form in UI
 *
@@ -338,10 +324,10 @@ app.AccountProfileView.prototype.render = function(Person_p) {
 *
 * @return {Boolean} true if validation and is succesful, otherwise false
 *
-* @todo Fix host hack
+* @todo Fix employer hack same is in EventView
 */
 
-app.AccountProfileView.prototype.submit = function(event) {
+app.AccountProfileView.prototype.submit = function(nEvent) {
 
 	// First display any and all validation errors at once
 
@@ -381,24 +367,4 @@ app.AccountProfileView.prototype.submit = function(event) {
 	}
 
 	return false;
-}
-
-
-/** Updates account holder presentation when notified by controller of change
-* 
-* See IViewable for further details.
- */
-
-/*
-app.AccountProfileView.prototype.update = function(Model) {
-	
-	if (this.doUpdate(Model)) {
-
-		this.model(Model);
-
-		this.render(Model);
-	}
-
-	// else do nothing
 };
-*/

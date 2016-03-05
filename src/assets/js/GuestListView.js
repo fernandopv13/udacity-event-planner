@@ -16,7 +16,7 @@ var app = app || {};
 *
 * @constructor
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 */
 
 app.GuestListView = function(str_elementId, str_heading) {

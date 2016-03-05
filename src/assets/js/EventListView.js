@@ -16,7 +16,7 @@ var app = app || {};
 *
 * @constructor
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
 *
 * @todo Add unit testing (of rendering in browser)
 */
@@ -34,7 +34,7 @@ app.EventListView = function(str_elementId, str_heading) {
 	this.ssuper = app.ListView;
 
 	
-	/** Initialize instance members inherited from parent class*/
+	// Initialize instance members inherited from parent class
 	
 	app.ListView.call(this, app.Account, str_elementId, str_heading);
 
@@ -64,7 +64,7 @@ app.EventListView.prototype.constructor = app.EventListView; //Reset constructor
 * @param {Account} Account The currently selected Account
 */
 
-app.EventListView.prototype.render = function(Account_account) {
+app.EventListView.prototype.render = function(Account_a) {
 	
 	function renderListItem(Event_e, self) {
 
@@ -142,9 +142,9 @@ app.EventListView.prototype.render = function(Account_account) {
 	}));
 
 			
-	if (Account_account !== null) { // we have an account
+	if (Account_a !== null) { // we have an account
 
-		var events = Account_account.events() // generate list items
+		var events = Account_a.events() // generate list items
 		
 		for (var prop in events) {
 
