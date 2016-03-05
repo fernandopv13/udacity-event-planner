@@ -166,7 +166,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{
 			element: 'i',
 
-			attributes: {'aria-labelledby': str_buttonId, role: 'button'},
+			//attributes: {}//role: 'button'}, //'aria-labelledby': str_buttonId},
 
 			classList: ['large', 'material-icons'],
 
@@ -212,12 +212,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			readonly: true,
 
-			'aria-labelledby': str_dateId + '-label',
+			//'aria-labelledby': str_dateId + '-label',
 
-			role: 'text'
+			//role: 'text'
 		}
 
-		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
+		if (bool_required) {attributes.required = true;}// attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -405,12 +405,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			value: email && email.address() ? email.address() : '',
 
-			'aria-labelledby': str_EmailId + '-label',
+			//'aria-labelledby': str_EmailId + '-label',
 
-			role: 'text'
+			//role: 'text'
 		}
 
-		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
+		if (bool_required) {attributes.required = true;}// attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -564,9 +564,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			value: int_value,
 
-			'aria-labelledby': str_fieldId + '-label',
+			//'aria-labelledby': str_fieldId + '-label',
 
-			role: 'text'
+			//role: 'text'
 		}
 
 		if (!isNaN(parseInt(int_min))) {attributes.min = int_min;}
@@ -575,7 +575,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (!isNaN(parseInt(int_step))) {attributes.step = int_step;}
 
-		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
+		if (bool_required) {attributes.required = true;}// attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -663,11 +663,11 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				required: 'true',
 
-				'aria-required': true,
+				//'aria-required': true,
 
-				'aria-labelledby': str_passwordId + '-label',
+				//'aria-labelledby': str_passwordId + '-label',
 
-				role: 'text'
+				//role: 'text'
 			},
 			
 			classList: ['validate']
@@ -703,7 +703,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{
 			element: 'div',
 
-			attributes: {id: str_hintsPrefix, 'aria-hidden': true},
+			attributes: {id: str_hintsPrefix},//, 'aria-hidden': true},
 			
 			classList: ['col', str_width, 'hidden']
 		});
@@ -895,11 +895,11 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				required: 'true',
 
-				'aria-required': true,
+				//'aria-required': true,
 
-				'aria-labelledby': str_confirmationId + '-label',
+				//'aria-labelledby': str_confirmationId + '-label',
 
-				role: 'text'
+				//role: 'text'
 			},
 			
 			classList: ['validate']
@@ -982,7 +982,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			element: 'a',
 			
-			attributes: {id: str_buttonIdPrefix + '-cancel', role: 'button', tabindex: 0},
+			attributes: {id: str_buttonIdPrefix + '-cancel'},//, role: 'button', tabindex: 0},
 			
 			classList: ['waves-effect', 'waves-teal', 'btn-flat'],
 
@@ -994,7 +994,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			element: 'a',
 			
-			attributes: {id: str_buttonIdPrefix + '-submit', role: 'button', tabindex: 0},
+			attributes: {id: str_buttonIdPrefix + '-submit'},//, role: 'button', tabindex: 0},
 			
 			classList: ['waves-effect', 'waves-light', 'btn'],
 
@@ -1120,9 +1120,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 					type: 'checkbox',
 
-					'aria-labelledby': str_switchId + '-label',
+					//'aria-labelledby': str_switchId + '-label',
 
-					role: 'checkbox'
+					//role: 'checkbox'
 				};
 
 				if (bool_checked) {attr.checked = true;}
@@ -1192,12 +1192,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			value: value ? value : '',
 
-			'aria-labelledby': str_fieldId + '-label',
+			//'aria-labelledby': str_fieldId + '-label',
 
-			role: 'text'
+			//role: 'text'
 		}
 
-		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
+		if (bool_required) {attributes.required = true;}// attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -1288,12 +1288,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			readonly: true,
 
-			'aria-labelledby': str_timeId + '-label',
+			//'aria-labelledby': str_timeId + '-label',
 
-			role: 'text'
+			//role: 'text'
 		}
 
-		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
+		if (bool_required) {attributes.required = true;}// attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -1370,14 +1370,14 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			$field.addClass('invalid');
 
-			$field.attr('aria-invalid', true);
+			//$field.attr('aria-invalid', true);
 		}
 
 		else { // valid
 
 			$field.removeClass('invalid');
 
-			$field.attr('aria-invalid', false);
+			//$field.attr('aria-invalid', false);
 
 			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
 
@@ -1409,7 +1409,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		this.$renderContext().addClass('hidden');
 
-		this.$renderContext().attr('aria-hidden', true);
+		//this.$renderContext().attr('aria-hidden', true);
 	}
 
 
@@ -1512,7 +1512,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			{
 				element: 'ul',
 
-				attributes: {id: 'nav-dropdown', role: 'menu'},
+				attributes: {id: 'nav-dropdown'},//, role: 'menu'},
 
 				classList: ['dropdown-content']
 			});
@@ -1532,7 +1532,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 					innerHTML: item.text
 				});
 
-				listElement = this.createElement({element: 'li', attributes: {role: 'menuitem'}});
+				listElement = this.createElement({element: 'li'});//, attributes: {role: 'menuitem'}});
 
 				listElement.appendChild(anchorElement);
 
@@ -1547,7 +1547,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			{
 				element: 'nav',
 
-				attributes: {role:'navigation'}
+				attributes: {}//role:'navigation'}
 			}); 
 
 			containerDiv.appendChild(navContainer);
@@ -1671,7 +1671,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			{
 				element: 'ul',
 
-				attributes: {id: 'nav-side', role: 'menu'},
+				attributes: {id: 'nav-side'},//, role: 'menu'},
 
 				classList: ['side-nav']
 			});
@@ -1684,7 +1684,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				{
 					element: 'a',
 
-					attributes: {href: item.href, role:'menuitem'},
+					attributes: {href: item.href},//, role:'menuitem'},
 
 					innerHTML: item.text
 				});
@@ -1773,7 +1773,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		this.$renderContext().removeClass('hidden');
 
-		this.$renderContext().attr('aria-hidden', false); // later, investigate if this could do more of the work of showing
+		//this.$renderContext().attr('aria-hidden', false); // later, investigate if this could do more of the work of showing
 	}
 
 
