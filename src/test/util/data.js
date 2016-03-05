@@ -46,7 +46,7 @@ app.data = {
 	
 	accounts:
 	[
-		new app.Account(new app.Email('tina@server.domain'), new app.Password('Abcd!1234')),
+		new app.Account(new app.Email('demo@demo.demo'), new app.Password('DEMO5%demo')),
 		
 		new app.Account(new app.Email('lisa@server.domain'), new app.Password('aBc!12345')),
 		
@@ -94,3 +94,6 @@ app.data.accounts[0].addEvent(app.data.events[2]);
 app.data.accounts[0].addEvent(app.data.events[3]);
 app.data.accounts[0].addEvent(app.data.events[4]);
 app.data.accounts[0].addEvent(app.data.events[5]);
+
+void app.data.accounts[0].geoLocationAllowed(true);
+void app.data.accounts[0].localStorageAllowed(true);

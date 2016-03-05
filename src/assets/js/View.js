@@ -166,6 +166,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{
 			element: 'i',
 
+			attributes: {'aria-labelledby': str_buttonId, role: 'button'},
+
 			classList: ['large', 'material-icons'],
 
 			innerHTML: str_icon
@@ -208,10 +210,14 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			value: Date_date ? Date_date.toLocaleDateString('en-US') : '',
 			
-			readonly: true
+			readonly: true,
+
+			'aria-labelledby': str_dateId + '-label',
+
+			role: 'text'
 		}
 
-		if (bool_required) {attributes.required = true;}
+		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -227,7 +233,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{	
 			element: 'label',			
 			
-			attributes: {for: str_dateId},
+			attributes: {for: str_dateId, id: str_dateId + '-label'},
 			
 			classList: Date_date ? ['form-label', 'active'] : ['form-label'],
 			
@@ -397,10 +403,14 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			id: str_EmailId,
 			
-			value: email && email.address() ? email.address() : ''
+			value: email && email.address() ? email.address() : '',
+
+			'aria-labelledby': str_EmailId + '-label',
+
+			role: 'text'
 		}
 
-		if (bool_required) {attributes.required = true;}
+		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -416,7 +426,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{	
 			element: 'label',			
 			
-			attributes: {for: str_EmailId},
+			attributes: {for: str_EmailId, id: str_EmailId + '-label'},
 			
 			classList: email && email.address() ? ['form-label', 'active'] : ['form-label'],
 			
@@ -546,7 +556,18 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		outerDiv.appendChild(innerDiv);
 
 
-		var attributes = {type: 'number', id: str_fieldId, value: int_value}
+		var attributes =
+		{
+			id: str_fieldId,
+
+			type: 'number',
+
+			value: int_value,
+
+			'aria-labelledby': str_fieldId + '-label',
+
+			role: 'text'
+		}
 
 		if (!isNaN(parseInt(int_min))) {attributes.min = int_min;}
 
@@ -554,7 +575,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (!isNaN(parseInt(int_step))) {attributes.step = int_step;}
 
-		if (bool_required) {attributes.required = true;}
+		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -570,7 +591,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{	
 			element: 'label',			
 			
-			attributes: {for: str_fieldId},
+			attributes: {for: str_fieldId, id: str_fieldId + '-label'},
 			
 			classList: int_value >= 0 ? ['form-label', 'active'] : ['form-label'],
 			
@@ -640,7 +661,13 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				
 				value: account && account.password() && account.password().password() ? account.password().password() : '',
 
-				required: 'true'
+				required: 'true',
+
+				'aria-required': true,
+
+				'aria-labelledby': str_passwordId + '-label',
+
+				role: 'text'
 			},
 			
 			classList: ['validate']
@@ -651,7 +678,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{	
 			element: 'label',			
 			
-			attributes: {for: str_passwordId},
+			attributes: {for: str_passwordId, id: str_passwordId + '-label'},
 			
 			classList: account && account.password() && account.password().password() ? ['form-label', 'active'] : ['form-label'],
 			
@@ -676,7 +703,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{
 			element: 'div',
 
-			attributes: {id: str_hintsPrefix},
+			attributes: {id: str_hintsPrefix, 'aria-hidden': true},
 			
 			classList: ['col', str_width, 'hidden']
 		});
@@ -866,7 +893,13 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				
 				value: '',
 
-				required: 'true'
+				required: 'true',
+
+				'aria-required': true,
+
+				'aria-labelledby': str_confirmationId + '-label',
+
+				role: 'text'
 			},
 			
 			classList: ['validate']
@@ -877,7 +910,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{	
 			element: 'label',			
 			
-			attributes: {for: str_confirmationId},
+			attributes: {for: str_confirmationId, id: str_confirmationId + '-label'},
 			
 			classList: ['form-label'],
 			
@@ -949,7 +982,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			element: 'a',
 			
-			attributes: {id: str_buttonIdPrefix + '-cancel'},
+			attributes: {id: str_buttonIdPrefix + '-cancel', role: 'button', tabindex: 0},
 			
 			classList: ['waves-effect', 'waves-teal', 'btn-flat'],
 
@@ -961,7 +994,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			element: 'a',
 			
-			attributes: {id: str_buttonIdPrefix + '-submit'},
+			attributes: {id: str_buttonIdPrefix + '-submit', role: 'button', tabindex: 0},
 			
 			classList: ['waves-effect', 'waves-light', 'btn'],
 
@@ -1014,6 +1047,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		innerDiv.appendChild(this.createElement( // main switch label
 		{	
 			element: 'span',
+
+			attributes: {id: str_switchId + '-label'},
 
 			classList: ['form-label', 'input-switch-label'],
 
@@ -1079,7 +1114,16 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			attributes: (function(){
 
-				var attr = {id: str_switchId, type: 'checkbox'};
+				var attr =
+				{
+					id: str_switchId,
+
+					type: 'checkbox',
+
+					'aria-labelledby': str_switchId + '-label',
+
+					role: 'checkbox'
+				};
 
 				if (bool_checked) {attr.checked = true;}
 
@@ -1146,10 +1190,14 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			id: str_fieldId,
 			
-			value: value ? value : ''
+			value: value ? value : '',
+
+			'aria-labelledby': str_fieldId + '-label',
+
+			role: 'text'
 		}
 
-		if (bool_required) {attributes.required = true;}
+		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -1165,7 +1213,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{	
 			element: 'label',			
 			
-			attributes: {for: str_fieldId},
+			attributes: {for: str_fieldId, id: str_fieldId + '-label'},
 			
 			classList: value ? ['form-label', 'active'] : ['form-label'],
 			
@@ -1238,10 +1286,14 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				: '',
 			
-			readonly: true
+			readonly: true,
+
+			'aria-labelledby': str_timeId + '-label',
+
+			role: 'text'
 		}
 
-		if (bool_required) {attributes.required = true;}
+		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{
@@ -1257,7 +1309,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{	
 			element: 'label',			
 			
-			attributes: {for: str_timeId},
+			attributes: {for: str_timeId, id: str_timeId + '-label'},
 			
 			classList: Date_date ? ['form-label', 'active'] : ['form-label'],
 			
@@ -1317,11 +1369,15 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			}
 			
 			$field.addClass('invalid');
+
+			$field.attr('aria-invalid', true);
 		}
 
 		else { // valid
 
 			$field.removeClass('invalid');
+
+			$field.attr('aria-invalid', false);
 
 			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
 
@@ -1341,6 +1397,10 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* Uses jQuery.hide().
 	*
 	* @param Same as jQuery.hide()
+	*
+	* @return {void}
+	*
+	* @todo investigate if changing 'aria-hidden' could do more of the work of hiding. (Checked jQuery source: hide() does not seem to change aria-hidden attribute.)
 	*/
 
 	app.View.prototype.hide = function(obj_options) {
@@ -1348,6 +1408,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		this.$renderContext().hide(obj_options ? obj_options : 'fast');
 
 		this.$renderContext().addClass('hidden');
+
+		this.$renderContext().attr('aria-hidden', true);
 	}
 
 
@@ -1388,6 +1450,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* (so we can hide it until we need it).
 	*
 	* @return {HTMLDivElement} DIV element
+	*
+	* @todo Make navigation (more) accessible e.g. to screen readers
 	*/
 
 	app.View.prototype.renderNavigation = function(str_logotype) {
@@ -1429,6 +1493,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		// Main container
 
+			// Using 
+
 			var containerDiv = this.createElement(
 			{
 				element: 'div',
@@ -1439,11 +1505,14 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		
 		// 'More' dropdown
 
+			// Trying to follow the example here for acccesibility of the dropdown:
+			// https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms/How_to_build_custom_form_widgets#The_role_attribute
+
 			var ULElement = this.createElement(
 			{
 				element: 'ul',
 
-				attributes: {id: 'nav-dropdown'},
+				attributes: {id: 'nav-dropdown', role: 'menu'},
 
 				classList: ['dropdown-content']
 			});
@@ -1463,7 +1532,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 					innerHTML: item.text
 				});
 
-				listElement = this.createElement({element: 'li'});
+				listElement = this.createElement({element: 'li', attributes: {role: 'menuitem'}});
 
 				listElement.appendChild(anchorElement);
 
@@ -1474,7 +1543,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		// Main nav
 
-			var navContainer =  this.createElement({element: 'nav'}); 
+			var navContainer =  this.createElement(
+			{
+				element: 'nav',
+
+				attributes: {role:'navigation'}
+			}); 
 
 			containerDiv.appendChild(navContainer);
 
@@ -1489,7 +1563,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			divElement.appendChild(this.createElement(
 			{
-
 				element: 'a',
 
 				attributes: {href: '#!'},
@@ -1499,7 +1572,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				innerHTML: str_logotype
 			}));
 
-			var iconElement = this.createElement( // 'hamburger' menu
+			var iconElement = this.createElement( // 'hamburger' menu (icon)
 			{
 				element: 'i',
 
@@ -1598,7 +1671,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			{
 				element: 'ul',
 
-				attributes: {id: 'nav-side'},
+				attributes: {id: 'nav-side', role: 'menu'},
 
 				classList: ['side-nav']
 			});
@@ -1611,7 +1684,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				{
 					element: 'a',
 
-					attributes: {href: item.href},
+					attributes: {href: item.href, role:'menuitem'},
 
 					innerHTML: item.text
 				});
@@ -1688,6 +1761,10 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* Uses jQuery.show().
 	*
 	* @param Same as jQuery.show()
+	*
+	* @return {void}
+	*
+	* @todo investigate if changing 'aria-hidden' could do more of the work of showing. (Checked jQuery source: show() does not seem to change aria-hidden attribute.)
 	*/
 
 	app.View.prototype.show = function(obj_options) {
@@ -1695,6 +1772,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		this.$renderContext().show(obj_options ? obj_options : 'slow');
 
 		this.$renderContext().removeClass('hidden');
+
+		this.$renderContext().attr('aria-hidden', false); // later, investigate if this could do more of the work of showing
 	}
 
 

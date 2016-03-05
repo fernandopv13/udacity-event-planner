@@ -180,7 +180,11 @@ app.PersonView.prototype.render = function(Person_person) {
 					
 					value: person.employer() && person.employer().name() ? person.employer().name() : '',
 					
-					list: 'suggested-employers'
+					list: 'suggested-employers',
+
+					'aria-labelledby': 'guest-employer-label',
+
+					role: 'text'
 				}
 			}));
 			
@@ -189,7 +193,7 @@ app.PersonView.prototype.render = function(Person_person) {
 			{	
 				element: 'label',			
 				
-				attributes: {for: 'guest-employer'},
+				attributes: {for: 'guest-employer', id: 'guest-employer-label'},
 				
 				classList: person.employer() && person.employer().name() ? ['form-label', 'active'] : ['form-label'],
 				

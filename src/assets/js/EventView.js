@@ -160,7 +160,11 @@ app.EventView.prototype.render = function(Event_e) {
 					
 					value: Event_e.location() ? Event_e.location() : '',
 					
-					list: 'suggested-locations'
+					list: 'suggested-locations',
+
+					'aria-labelledby': 'event-location-label',
+
+					role: 'text'
 				}
 			}));
 			
@@ -169,7 +173,7 @@ app.EventView.prototype.render = function(Event_e) {
 			{	
 				element: 'label',			
 				
-				attributes: {for: 'event-location'},
+				attributes: {for: 'event-location', id: 'event-location-label'},
 				
 				classList: Event_e.location() ? ['form-label', 'active'] : ['form-label'],
 				
@@ -304,7 +308,11 @@ app.EventView.prototype.render = function(Event_e) {
 					
 					value: Event_e.type() ? Event_e.type() : '',
 					
-					list: 'event-types'
+					list: 'event-types',
+
+					'aria-labelledby': 'event-type-label',
+
+					role: 'text'
 				}
 			}));
 			
@@ -313,7 +321,7 @@ app.EventView.prototype.render = function(Event_e) {
 			{	
 				element: 'label',			
 				
-				attributes: {for: 'event-type'},
+				attributes: {for: 'event-type', id: 'event-type-label'},
 				
 				classList: Event_e.type() ? ['form-label', 'active'] : ['form-label'],
 				
@@ -382,7 +390,7 @@ app.EventView.prototype.render = function(Event_e) {
 			{
 				element: 'a',
 
-				attributes: {id: 'event-edit-guests-button'},
+				attributes: {id: 'event-edit-guests-button', role: 'button', tabindex: 0},
 				
 				classList: ['waves-effect', 'waves-teal', 'btn-flat'],
 
@@ -428,7 +436,13 @@ app.EventView.prototype.render = function(Event_e) {
 					
 					length: 120,
 					
-					maxlength: 120
+					maxlength: 120,
+
+					'aria-labelledby': 'event-description-label',
+
+					role: 'text',
+
+					'aria-multiline': true
 				},
 				
 				classList: ['materialize-textarea'],
@@ -441,7 +455,7 @@ app.EventView.prototype.render = function(Event_e) {
 			{	
 				element: 'label',			
 				
-				attributes:	{for: 'event-description'},
+				attributes:	{for: 'event-description', id: 'event-description-label'},
 				
 				classList: Event_e.description() ? ['form-label', 'active'] : ['form-label'],
 				

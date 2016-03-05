@@ -369,7 +369,7 @@ app.Controller = function() {
 				window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
 
 			
-			// Set some defaults to use until account creation/selection is developed
+			// Bootstrap UI by loading the front page
 
 				//void (new app.View()).renderNavigation('Meetup Planner');
 
@@ -381,6 +381,7 @@ app.Controller = function() {
 
 				//_views.signInView.show();
 
+				/*
 				this.selectedAccount(app.Account.registry.getObjectById(0)); //debug
 				
 				this.selectedAccount().defaultLocation('Copenhagen'); // debug
@@ -394,6 +395,7 @@ app.Controller = function() {
 				this.selectedAccount().accountHolder().email(new app.Email('superuser@acme.corp')); // debug
 
 				this.selectedAccount().accountHolder().jobTitle('Master Octopus'); // debug
+				*/
 				
 				//_onAccountSelected.call(this, this.selectedAccount()); // debug
 

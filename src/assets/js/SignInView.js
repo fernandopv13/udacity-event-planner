@@ -6,6 +6,8 @@
 
 var app = app || {};
 
+
+
 /** @classdesc View for displaying app's sign in page.
 *
 * @constructor
@@ -84,13 +86,62 @@ app.SignInView.prototype.render = function() {
 		
 	this.$renderContext().empty();
 
+	// Add logo
+
+		containerDiv =  this.createElement( // div
+		{
+			element: 'div',			
+			
+			classList: ['row', 'center-align']
+		});
+
+		this.$renderContext().append(containerDiv);
+
+		containerDiv.appendChild(this.createElement(
+		{
+			element: 'img',
+
+			attributes:
+			{
+				src: 'assets/img/logo.png',
+
+				width: '117px',
+
+				height: '100px',
+
+				alt: 'Logo',
+
+				style: 'margin-top:20px;'
+			}
+		}));
+
+
+	// Add heading
+		
+		containerDiv =  this.createElement( // div
+		{
+			element: 'div',			
+			
+			classList: ['row', 'center-align']
+		});
+
+		this.$renderContext().append(containerDiv);
+
+		containerDiv.appendChild(this.createElement({
+
+			element: 'h4',
+
+			innerHTML: this.heading()
+		}));
+
+	
 	// Setup up form and container div
 
 		formElement =  this.createElement( // form
 		{
 			element: 'form',			
 			
-			attributes: {id: 'sign-in-form', novalidate: false},
+			attributes: {autocomplete: 'off', id: 'sign-in-form', novalidate: false},
 			
 			classList: ['col', 's12']
 		});
@@ -107,11 +158,6 @@ app.SignInView.prototype.render = function() {
 		
 		formElement.appendChild(containerDiv);
 	
-
-	// Add heading
-		
-		containerDiv.appendChild(this.createHeading('s12', this.heading()));
-
 
 	// Add email field
 
@@ -142,21 +188,65 @@ app.SignInView.prototype.render = function() {
 			''
 		));
 
-	
+
 	// Add sign-in button
 
+		containerDiv =  this.createElement( // div
+		{
+			element: 'div',			
+			
+			classList: ['row', 'center-align']
+		});
+
+		//this.$renderContext().append(containerDiv);
+
+		formElement.appendChild(containerDiv);
+
+		
 		containerDiv.appendChild(this.createElement({ // button
 			
 			element: 'a',
 			
-			attributes: {id: 'sign-in-submit'},
+			attributes: {id: 'sign-in-submit', role: 'button', tabindex: 0},
 			
-			classList: ['waves-effect', 'waves-light', 'btn', 'right'],
+			classList: ['waves-effect', 'waves-light', 'btn'],
 
 			innerHTML: 'Sign In'
 		}));
 
 	
+	// Add demo sign-in link
+
+		containerDiv =  this.createElement( // div
+		{
+			element: 'div',			
+			
+			classList: ['row', 'center-align']
+		});
+
+		//this.$renderContext().append(containerDiv);
+		formElement.appendChild(containerDiv);
+
+		containerDiv.appendChild(this.createElement(
+		{
+			element: 'p',
+
+			innerHTML: 'or'
+			
+		}));
+
+		
+		containerDiv.appendChild(this.createElement({ // link
+			
+			element: 'a',
+			
+			attributes: {id: 'sign-in-demo-submit', role: 'button', tabindex:0},
+			
+			innerHTML: 'See our cool demo'
+		}));
+	
+	
+
 	// (Re)assign evnet handlers to form elements
 
 		$('#sign-in-email').keyup(function(event) { // validate email
@@ -172,6 +262,10 @@ app.SignInView.prototype.render = function() {
 
 			$('#sign-in-password-hints').show('slow');
 
+			$('#sign-in-password-hints').removeClass('hidden');
+
+			$('#sign-in-password-hints').attr('aria-hidden', false);
+
 		}.bind(this));
 
 
@@ -184,13 +278,26 @@ app.SignInView.prototype.render = function() {
 		
 		$('#sign-in-password').blur(function(event) { // hide password hints
 
-				$('#sign-in-password-hints').hide('slow');
+			$('#sign-in-password-hints').hide('slow');
+
+			$('#sign-in-password-hints').attr('aria-hidden', true);
 		});
 
 
-		$('#sign-in-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
+		$('#sign-in-demo-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
+
+			$('#sign-in-email').val('demo@demo.demo');
+
+			$('#sign-in-password').val('DEMO5%demo');
 
 			this.submit();
+
+		}.bind(this));
+
+
+		$('#sign-in-submit').click(function(event) {
+
+			this.submit(event);
 
 		}.bind(this));
 
@@ -201,7 +308,7 @@ app.SignInView.prototype.render = function() {
 };
 
 
-app.SignInView.prototype.submit = function() {
+app.SignInView.prototype.submit = function(event) {
 
 	// First display any and all validation errors at once
 

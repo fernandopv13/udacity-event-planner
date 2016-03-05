@@ -131,7 +131,7 @@ app.FrontPageView.prototype.render = function() {
 			
 			element: 'a',
 			
-			attributes: {id: 'front-page-sign-up'},
+			attributes: {id: 'front-page-sign-up', role: 'button'},
 			
 			classList: ['waves-effect', 'waves-light', 'btn', 'right-align'],
 
@@ -164,7 +164,7 @@ app.FrontPageView.prototype.render = function() {
 			
 			element: 'a',
 			
-			attributes: {id: 'front-page-sign-in'},
+			attributes: {id: 'front-page-sign-in', role: 'button'},
 			
 			innerHTML: 'Sign In'
 		}));

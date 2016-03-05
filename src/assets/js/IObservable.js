@@ -93,15 +93,15 @@ app.IObservable.prototype.default_notifyObservers = function() {
 * @throws {IllegalArgumentError} If observer is not an instance of IObserver
 */
 
-app.IObservable.prototype.default_registerObserver = function(IObserver_observer) {
+app.IObservable.prototype.default_registerObserver = function(IObserver_o) {
 
 	//var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
 
-	if (IObserver_observer.isInstanceOf && IObserver_observer.isInstanceOf(app.IObserver)) {
+	if (IObserver_o.isInstanceOf && IObserver_o.isInstanceOf(app.IObserver)) {
 
-		if (this.observers().indexOf(IObserver_observer) < 0) { // skip duplicates
+		if (this.observers().indexOf(IObserver_o) < 0) { // skip duplicates
 
-			this.observers().push(IObserver_observer);
+			this.observers().push(IObserver_o);
 		}
 
 		else {
@@ -115,7 +115,7 @@ app.IObservable.prototype.default_registerObserver = function(IObserver_observer
 		throw new IllegalArgumentError('Observer must implement IObserver');
 	}
 
-	return IObserver_observer; // add succesful
+	return IObserver_o; // add succesful
 };
 
 
@@ -130,13 +130,13 @@ app.IObservable.prototype.default_registerObserver = function(IObserver_observer
 * @todo: Recursively remove duplicates, avoiding infinite loop
 */
 
-app.IObservable.prototype.default_removeObserver = function(IObserver_observer) {
+app.IObservable.prototype.default_removeObserver = function(IObserver_o) {
 
 	//var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
 
-	if (IObserver_observer.isInstanceOf && IObserver_observer.isInstanceOf(app.IObserver)) {
+	if (IObserver_o.isInstanceOf && IObserver_o.isInstanceOf(app.IObserver)) {
 
-		var ix = this.observers().indexOf(IObserver_observer);
+		var ix = this.observers().indexOf(IObserver_o);
 
 		if (ix === -1) { // not found, return null
 
@@ -150,7 +150,7 @@ app.IObservable.prototype.default_removeObserver = function(IObserver_observer) 
 
 			this.observers = this.observers.splice(ix, 1);
 
-			ix = this.observers.indexOf(IObserver_observer);
+			ix = this.observers.indexOf(IObserver_o);
 		}
 		*/
 	}
@@ -160,5 +160,5 @@ app.IObservable.prototype.default_removeObserver = function(IObserver_observer) 
 		throw new IllegalArgumentError('Observer must implement IObserver');
 	}
 
-	return IObserver_observer; // remove succesfull
+	return IObserver_o; // remove succesfull
 };

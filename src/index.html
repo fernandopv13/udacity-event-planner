@@ -54,11 +54,11 @@
 		
 		<!-- Page content -->
 
-			<div class="container"> 
+			<div class="container" role="main"> 
 				
 				<!-- Preload spinner (hided on load) -->
 
-				<div id="preloader" class="valign-wrapper" style="height:160px;">
+				<div id="preloader" class="valign-wrapper" role="progressbar" style="height:160px;">
 					
 					<div class="valign" style="width:90%;text-align:center;">
 
@@ -72,30 +72,30 @@
 
 				<!-- Containers for dynamically populated main content views -->
 
-				<div id="front-page-view" class="row hidden"></div>
+				<div id="front-page-view" class="row hidden" aria-hidden="true"></div>
 
-				<div id="sign-in-view" class="row hidden"></div>
+				<div id="sign-in-view" class="row hidden" aria-hidden="true"></div>
 
-				<div id="sign-up-view" class="row hidden"></div>
+				<div id="sign-up-view" class="row hidden" aria-hidden="true"></div>
 
-				<div id="sign-up-permissions-view" class="row hidden"></div>
+				<div id="sign-up-permissions-view" class="row hidden" aria-hidden="true"></div>
 
-				<div id="account-settings-view" class="row hidden"></div>
+				<div id="account-settings-view" class="row hidden" aria-hidden="true"></div>
 
-				<div id="account-profile-view" class="row hidden"></div>
+				<div id="account-profile-view" class="row hidden" aria-hidden="true"></div>
 
-				<div id="event-list-view" class="row hidden"></div>
+				<div id="event-list-view" class="row hidden" aria-hidden="true"></div>
 
-				<div id="event-view" class="row hidden"></div>
+				<div id="event-view" class="row hidden" aria-hidden="true"></div>
 
-				<div id="guest-list-view" class="row hidden"></div>
+				<div id="guest-list-view" class="row hidden" aria-hidden="true"></div>
 
-				<div id="guest-view" class="row hidden"></div>
+				<div id="guest-view" class="row hidden" aria-hidden="true"></div>
 			
 			</div>
 
 		<!-- Library source files -->
-			<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js-->
+			<script type="text/javascript" src="lib/jquery-2.2.1.min.js"></script> <!--Import jQuery before materialize.js-->
 			<script type="text/javascript" src="lib/materialize.min.js"></script>
 			<script type="text/javascript" src="lib/picker.time.js"></script>
 		
@@ -114,8 +114,8 @@
 			<script src="assets/js/View.js"></script>
 			<script src="assets/js/FrontPageView.js"></script>
 			<script src="assets/js/FormView.js"></script>
-			<script src="assets/js/SignInView.js"></script>
 			<script src="assets/js/ListView.js"></script>
+			<script src="assets/js/SignInView.js"></script>
 			<script src="assets/js/ObjectRegistry.js"></script>
 			<script src="assets/js/Email.js"></script>
 			<script src="assets/js/Password.js"></script>
