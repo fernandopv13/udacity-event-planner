@@ -168,7 +168,7 @@ app.EventListView.prototype.render = function(Account_account) {
 		{
 			element: 'div',			
 			
-			classList: ['col', 's8'],
+			classList: ['col', 's12'],
 
 			innerHTML: 'No events have been added to this account yet.'
 		});
@@ -176,6 +176,7 @@ app.EventListView.prototype.render = function(Account_account) {
 		outerDiv.appendChild(innerDiv);
 
 		
+		/*
 		innerDiv =  this.createElement( // inner div
 		{
 			element: 'div',			
@@ -195,6 +196,7 @@ app.EventListView.prototype.render = function(Account_account) {
 
 			innerHTML: 'Add event'
 		}));
+		*/
 	}
 	
 	// Update DOM

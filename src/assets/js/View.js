@@ -9,13 +9,15 @@ var app = app || {}; // create a simple namespace for the module
 
 /** @classdesc Abstract base class for the 'V' part of our MVC framework.
 *
-* Presents information from the data model in the UI. Handles all UI related work.
+* Presents information from the data model in the UI. Handles all work directly related to the UI.
 *
-* Provides a number of default HTML (form) element factory, and form validation, methods.
+* Provides a number of default HTML (form) element factory, and validation, methods.
 *
-* NOTE: Views must only notify observers as a direct result of user actions in the UI. Otherwise the MVC objects will likely enter an infinite update loop.
+* NOTE: Views must only notify observers as a direct result of user actions in the UI.
 *
-* (Interfaces implemented as mixins, using static method in IInterface.)
+* Otherwise the MVC objects will likely enter an infinite update loop.
+*
+* (Interfaces are implemented as mixins, using static method in IInterface.)
 *
 * @implements IInterface
 *
@@ -25,9 +27,15 @@ var app = app || {}; // create a simple namespace for the module
 *
 * @constructor
 *
-* @return {View} Not supposed to be instantiated, except when extended by subclasses.
+* @param {Function} modelClass The class (by function refeence) of the type of Model the View is designed to work with, or null
 *
-* @author Ulrik H. Gade, February 2016
+* @param {String} elementId Id of the HTML element this View will render itself into.
+*
+* @param {String} heading The content (text) of the View's heading
+*
+* @return {View} Not supposed to be instantiated, except when extended by subclasses. But subclasses need to be able to call constructor when setting up inheritance.
+*
+* @author Ulrik H. Gade, March 2016
 */
 
 
@@ -58,20 +66,92 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 	* Accessors for private instance fields (dependency injection enables access for subclasses)
 	*---------------------------------------------------------------------------------------*/
 
+		/** Gets name of the View's class (read-only).
+		*
+		* @return {String} className The name of the View's class
+		*
+		* @throws {IllegalArgumentError} If trying to set the className.
+		*/
+
 		this.className = new app.Accessor(_className, true); // replace temporary literal with read-only accessor
 
+		
+		/** Gets or sets the View's heading
+		*
+		* @param {String} heading The content (text) of the heading
+		*
+		* @return {String} heading The content (text) of the heading
+		*
+		* @throws {IllegalArgumentError} If trying to set a heading that is not a string
+		*/
+		
 		this.heading = new app.Accessor(_heading, false, 'string');
+
+		
+		/** Gets or sets the Model currently associated with (being displayed in) the View
+		*
+		* @param {Model} model The Model
+		*
+		* @return {Model} model The Model
+		*
+		* @throws {IllegalArgumentError} If trying to set a model that is not an instance of Model
+		*/
 
 		this.model = new app.Accessor(_model, false, app.Model, 'Model');
 
+		
+		/** Gets the class (by function reference) of the type of Model the View is designed to work with, or null
+		*
+		* @return {String} modelClass The type (class) of Model required
+		*
+		* @throws {IllegalArgumentError} If trying to set the modelClass
+		*/
+
 		this.modelClass = new app.Accessor(_modelClass, true);
+
+		
+		/** Gets the collection of IObservers currently registered with the View
+		*
+		* @return {Array} observers An array of IObservers
+		*
+		* @throws {IllegalArgumentError} If trying to set the observers array
+		*/
 
 		this.observers = new app.Accessor(_observers, true);
 
+		
+		/** Gets a collection of classes or 'interfaces' (by function reference) the View extends or implements. Includes the class of the View itself.
+		*
+		* @return {Array} parentList An array of functions
+		*
+		* @throws {IllegalArgumentError} If trying to set the parentList array
+		*/
+
 		this.parentList = new app.Accessor(_parentList, true);
 
+		
+		/** Gets or sets the render context (i.e. the HTML element the View will render itself into)
+		*
+		* @param {String} elementId Id of the HTML element this View will render itself into.
+		*
+		* @return {String} elementId The id of the render context
+		*
+		* @throws {IllegalArgumentError} If trying to set a render context that is not a string
+		*/
+		
 		this.$renderContext = new app.Accessor(_$renderContext, false);
 		
+		
+		/** Gets a reference to the View's parent (by function reference) in the class inheritence hierarchy (the topmost class is Object)
+		*
+		* @return {Function} ssuper The parent class
+		*
+		* @throws {IllegalArgumentError} If trying to set the ssuper attribute
+		*
+		* @todo Not fully functional; only works one level up from the lowest level in the tree
+		*/
+
+
 		this.ssuper = new app.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
 
 	/*----------------------------------------------------------------------------------------
@@ -144,8 +224,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{
 			element: 'div',
 
-			//attributes: {style: 'bottom: 45px; right: 24px;'},
-			
 			classList: ['fixed-action-btn']
 		});
 		
@@ -1163,7 +1241,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @todo Add ability to also handle elements with datalists (e.g. event location)
 	*/
 
-	app.View.prototype.createTextField = function (str_width, str_fieldId, str_label, bool_required, value) {
+	app.View.prototype.createTextField = function (str_width, str_fieldId, str_label, bool_required, value, str_datalistId) {
 
 		var outerDiv =  this.createElement( // outer div
 		{
@@ -1198,6 +1276,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		}
 
 		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
+
+		if (str_datalistId) {attributes.list = str_datalistId;}
 
 		innerDiv.appendChild(this.createElement( // input
 		{

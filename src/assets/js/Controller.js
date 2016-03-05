@@ -127,13 +127,13 @@ app.Controller = function() {
 		* @throws {IllegalArgumentError} If attempting to set account that is not an Account, or null
 		*/
 		
-		this.selectedAccount = function (Account_account) {
+		this.selectedAccount = function (Account_a) {
 		
 			if (arguments.length > 0) {
 
-				if (Account_account === null || Account_account.constructor === app.Account) {
+				if (Account_a === null || Account_a.constructor === app.Account) {
 				
-					_selectedAccount = Account_account;
+					_selectedAccount = Account_a;
 				}
 
 				else {
@@ -155,13 +155,13 @@ app.Controller = function() {
 		* @throws {IllegalArgumentError} If attempting to set event that is not an Event, or null
 		*/
 		
-		this.selectedEvent = function (Event_event) {
+		this.selectedEvent = function (Event_e) {
 		
 			if (arguments.length > 0) {
 
-				if (Event_event === null || Event_event.constructor === app.Event) {
+				if (Event_e === null || Event_e.constructor === app.Event) {
 				
-					_selectedEvent = Event_event;
+					_selectedEvent = Event_e;
 				}
 
 				else {
@@ -183,13 +183,13 @@ app.Controller = function() {
 		* @throws {IllegalArgumentError} If attempting to set guest that is not a Person, or null
 		*/
 		
-		this.selectedGuest = function (Person_guest) {
+		this.selectedGuest = function (Person_g) {
 		
 			if (arguments.length > 0) {
 
-				if (Person_guest === null || Person_guest.constructor === app.Person) {
+				if (Person_g === null || Person_g.constructor === app.Person) {
 				
-					_selectedGuest = Person_guest;
+					_selectedGuest = Person_g;
 				}
 
 				else {
@@ -294,9 +294,7 @@ app.Controller = function() {
 
 			this.selectedGuest(null);
 
-			this.selectedEvent(Event_e);
-
-			this.currentView(_views.eventView, this.selectedEvent());
+			this.currentView(_views.eventView, this.selectedEvent(Event_e));
 		}
 
 		
@@ -360,6 +358,22 @@ app.Controller = function() {
 
 					_views[prop].registerObserver(app.controller);
 				}
+				
+
+				// Register models and controller as mutual observers
+
+				[app.Account, app.Event, app.Organization, app.Person].forEach(function(klass){
+
+					var objList = klass.registry.getObjectList();
+
+					for (var prop in objList) {
+
+						this.registerObserver(objList[prop]);
+
+						objList[prop].registerObserver(this);
+					}
+
+				}.bind(this)); // make sure 'this' references controller correctly within loop
 
 
 			// Set up a router to manage the browser's history
@@ -398,22 +412,6 @@ app.Controller = function() {
 				
 				_onAccountSelected.call(this, this.selectedAccount()); // debug
 				*/
-
-
-			// Register models and controller as mutual observers
-
-				[app.Account, app.Event, app.Organization, app.Person].forEach(function(klass){
-
-					var objList = klass.registry.getObjectList();
-
-					for (var prop in objList) {
-
-						this.registerObserver(objList[prop]);
-
-						objList[prop].registerObserver(this);
-					}
-
-				}.bind(this)); // make sure 'this' references controller correctly within loop
 		};
 
 		
@@ -542,7 +540,7 @@ app.Controller = function() {
 
 					var accounts = app.Account.registry.getObjectList(), ret = false;
 
-					for (var ix in accounts) {
+					for (var ix in accounts) { // try to find a matching account
 
 						if (accounts[ix].id() !== Model_m.id()) { // skip the temporary account passed from the sign in view
 
@@ -552,7 +550,7 @@ app.Controller = function() {
 
 									ret = true;
 
-									break; // .. exit for loop
+									break; // .. match found, so exit for loop
 								}
 							}
 						}

@@ -92,7 +92,7 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 			{
 				element: 'form',			
 				
-				attributes: {id: 'account-settings-form', novalidate: false},
+				attributes: {autocomplete: 'off', id: 'account-settings-form', novalidate: false},
 				
 				classList: ['col', 's12']
 			});

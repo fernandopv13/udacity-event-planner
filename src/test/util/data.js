@@ -53,7 +53,9 @@ app.data = {
 		new app.Account(new app.Email('john@server.domain'), new app.Password('abCd1234!'))
 	]
 };
-app.data.people[2].imgUrl('assets/img/test-avatar.jpg');
+
+app.data.people[1].imgUrl('assets/img/male-avatar-2.jpg');
+app.data.people[2].imgUrl('assets/img/female-avatar-1.jpg');
 
 app.data.people[0].employer(app.data.organizations[0]);
 app.data.people[1].employer(app.data.organizations[1]);

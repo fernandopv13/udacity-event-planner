@@ -190,9 +190,18 @@ textarea.materialize-textarea:focus.invalid + label::after {
 
 // Floating main action button on listviews (e.g. "Add Event", "Add Guest")
 
-.fixed-action-btn {
+.fixed-action-btn { // mobile (default)
 	bottom: 45px;
 	right: 24px;
+}
+
+@media (min-width:1025px) { // desktop
+	.fixed-action-btn { // mobile (default)
+		position: static;
+		display: block;
+		text-align: right;
+		margin-top: -20px;
+	}
 }
 
 
@@ -234,4 +243,41 @@ textarea.materialize-textarea:focus.invalid + label::after {
 .secondary-nav {
 	margin-top: 30px;
 	margin-bottom: 30px;
+}
+
+
+// Remove default browser stylesheet ugliness from host type radio button group in EventView
+
+fieldset {
+	border: none;
+	padding: 0px;
+	padding-bottom: 15px;
+	margin: 0px;
+	margin-left: -10px;
+}
+
+.radioset-container {
+	padding: -10px;
+	margin: -10px;
+}
+
+fieldset {
+	input[type=radio]:checked+label,
+	input[type=radio]:not(:checked)+label {
+		padding-left: 25px;
+		padding-right: 20px;
+	}
+	legend {
+		color: #9e9e9e;
+		font-size: 0.8rem;
+		top: 0.8rem;
+		left: 0.75rem;
+		line-height: 1.5;
+		font-family: "Roboto", sans-serif;
+		font-weight: normal;
+		width: 100%;
+	}
+	label {
+		color: #000;
+	}
 }

@@ -231,6 +231,8 @@ app.SignInView.prototype.render = function() {
 		{
 			element: 'p',
 
+			classList: ['center-align'],
+
 			innerHTML: 'or'
 			
 		}));
@@ -250,7 +252,7 @@ app.SignInView.prototype.render = function() {
 	// Initialize and (re)assign evnet handlers to form elements
 
 		$('#sign-in-email').attr('autofocus', true);
-		
+
 
 		$('#sign-in-email').keyup(function(event) { // validate email
 
@@ -267,7 +269,7 @@ app.SignInView.prototype.render = function() {
 
 			$('#sign-in-password-hints').removeClass('hidden');
 
-			$('#sign-in-password-hints').attr('aria-hidden', false);
+			$('#sign-in-password-hints').attr('aria-hidden', false); // doesn't seem to have any effect on screen reader
 
 		}.bind(this));
 

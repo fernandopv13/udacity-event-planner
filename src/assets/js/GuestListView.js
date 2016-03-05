@@ -62,7 +62,7 @@ app.GuestListView.prototype.constructor = app.GuestListView; //Reset constructor
 * @param {Event} The event whose guest list we want to render
  */
 
-app.GuestListView.prototype.render = function(Event_event) {
+app.GuestListView.prototype.render = function(Event_e) {
 	
 	function renderListItem(Person_g, self) {
 		
@@ -173,14 +173,13 @@ app.GuestListView.prototype.render = function(Event_event) {
 	}));
 
 			
-	if (Event_event !== null && Event_event.guests().lenght > 0) {
+	if (Event_e !== null && Event_e.guests().length > 0) {
 
-		var guests = Event_event.guests();
+		Event_e.guests().forEach(function(guest) { // generate list items
 
-		for (var prop in guests) { // generate list items
+			UlElement.appendChild(renderListItem(guest, this));
 
-			UlElement.appendChild(renderListItem(guests[prop], this));
-		}
+		}, this);
 	}
 
 	else {
@@ -199,7 +198,7 @@ app.GuestListView.prototype.render = function(Event_event) {
 		{
 			element: 'div',			
 			
-			classList: ['col', 's8'],
+			classList: ['col', 's12'],
 
 			innerHTML: 'No guests have been added to this event yet.'
 		});
@@ -207,6 +206,7 @@ app.GuestListView.prototype.render = function(Event_event) {
 		outerDiv.appendChild(innerDiv);
 
 		
+		/*
 		innerDiv =  this.createElement( // inner div
 		{
 			element: 'div',			
@@ -226,6 +226,7 @@ app.GuestListView.prototype.render = function(Event_event) {
 
 			innerHTML: 'Add guest'
 		}));
+		*/
 	}
 
 

@@ -90,7 +90,7 @@ app.EventView.prototype.render = function(Event_e) {
 			{
 				element: 'form',			
 				
-				attributes: {novalidate: true},
+				attributes: {autocomplete: 'off', novalidate: true},
 				
 				classList: ['col', 's12']
 			});
@@ -402,7 +402,7 @@ app.EventView.prototype.render = function(Event_e) {
 
 		// Add host field
 
-			containerDiv.appendChild(this.createTextField(
+			containerDiv.appendChild(this.createTextField( // main input
 
 				's12',
 
@@ -412,9 +412,129 @@ app.EventView.prototype.render = function(Event_e) {
 
 				false,
 
-				Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : ''
+				Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : '',
+
+				'suggested-hosts'
 			));
+
+
+			innerDiv.appendChild(this.createElement( // data list
+			{	
+				element: 'datalist',			
+				
+				attributes: {id: 'suggested-hosts'}
+			}));
 			
+
+			innerDiv =  this.createElement( // IHost type selector
+			{
+				element: 'div',
+
+				//attributes: {style: 'padding-left:0px;padding-right:0px;margin:0px;'},		
+				
+				classList: ['radioset-container','input-field', 'col', 's12']
+			});
+			
+			containerDiv.appendChild(innerDiv);
+
+			
+			var fieldsetElement = this.createElement( // fieldset
+			{
+				element: 'fieldset',
+				
+				attributes:
+				{
+					id: 'event-host-type'
+				},
+				
+				classList: ['materialize-textarea'],
+
+				innerHTML: Event_e.description()
+			});
+
+			innerDiv.appendChild(fieldsetElement);
+
+			fieldsetElement.appendChild(this.createElement( // legend
+			{
+				element: 'legend',
+
+				innerHTML: 'Host type'
+			}));
+
+
+			var attributes = 
+			{
+				id: 'event-host-type-organization',
+
+				name: 'event-host-type',
+
+				type: 'radio',
+
+				value: 'organization',
+
+				'aria-labelledby': 'event-host-type-organization-label'
+			}
+
+			if ((!Event_e.host() || !Event_e.host().isInstanceOf(app.Person))) {attributes.checked = true;} // default to org
+
+			fieldsetElement.appendChild(this.createElement( // org radio
+			{
+				element: 'input',
+
+				attributes: attributes
+			}));
+
+			fieldsetElement.appendChild(this.createElement( // org label
+			{
+				element: 'label',
+
+				attributes:
+				{
+					id: 'event-host-type-organization-label',
+
+					for: 'event-host-type-organization'
+				},
+
+				innerHTML: 'Organization'
+			}));
+
+			
+			attributes = 
+			{
+				id: 'event-host-type-person',
+
+				name: 'event-host-type',
+
+				type: 'radio',
+
+				value: 'person',
+
+				'aria-labelledby': 'event-host-type-person-label'
+			}
+
+			if ((Event_e.host() && Event_e.host().isInstanceOf(app.Person))) {attributes.checked = true;}
+
+			fieldsetElement.appendChild(this.createElement( // person radio
+			{
+				element: 'input',
+
+				attributes: attributes
+			}));
+
+			fieldsetElement.appendChild(this.createElement( // person label
+			{
+				element: 'label',
+
+				attributes:
+				{
+					id: 'event-host-type-person-label',
+
+					for: 'event-host-type-person'
+				},
+
+				innerHTML: 'Person'
+			}));
+
 		
 		// Add description field
 
@@ -497,10 +617,17 @@ app.EventView.prototype.render = function(Event_e) {
 
 		// Initalize and (re)assign event handlers to form elements
 
-			$('#event-name').attr('autofocus', true);
+			$('#event-name').attr('autofocus', true); // set initial focus on name
+			
+			
+			$('#event-name').keyup(function(event) { // validate name
+
+				this.validateName(event, 'event-name', 'Please enter name', true);
+	
+			}.bind(this));
 
 
-			$('textarea#description').characterCounter();
+			$('#event-location').focus(this.suggestLocations); // suggest locations
 
 			
 			$('#event-start-date.datepicker, #event-end-date.datepicker').pickadate({
@@ -511,11 +638,22 @@ app.EventView.prototype.render = function(Event_e) {
 				
 				format: 'mm/dd/yyyy',
 
-				onSet: this.validateDateRange,
+				onSet: function(event) {
+
+					if (typeof event.select === 'number') { // date selected
+
+						this.close(); // 'this' refers to the picker widget here...
+
+						app.EventView.prototype.validateDateRange(); // so call validation without reference to it
+					}
+
+					//else: month or year selected, stay open
+
+				}, // binding to the EventView here would make it impossible to close the widget from within the handler (I tried, and failed)
 				
 				selectMonths: true, // Creates a dropdown to control month
 				
-				selectYears: 15 // Creates a dropdown of 15 years to control year
+				selectYears: 15 // Creates a dropdown of 15 years to control year // init date pickers
 			});
 
 			
@@ -527,21 +665,11 @@ app.EventView.prototype.render = function(Event_e) {
 				
 				format: 'h:i A',
 				
-				onSet: this.validateTimeRange
+				onSet: this.validateTimeRange // init timepickers
 			});
 
-			
-			$('#event-location').focus(this.suggestLocations);
-
-			
-			$('#event-name').keyup(function(event) { // capacity
-
-				this.validateName(event, 'event-name', 'Please enter name', true);
-	
-			}.bind(this));
-
-			
-			$('#event-capacity').keyup(function(event) { // capacity
+						
+			$('#event-capacity').keyup(function(event) { // validate capacity
 
 				this.validateCapacity(event, 'event-capacity');
 	
@@ -554,8 +682,20 @@ app.EventView.prototype.render = function(Event_e) {
 	
 			}.bind(this));
 
+
+			$('#event-host').focus(this.suggestHosts); // suggest hosts
+
 			
-			$('#event-form-cancel').click(function(event) {
+			$('#event-host-type-organization, #event-host-type-person').click(function(event) { // reset host if host type changed
+
+				$('#event-host').val('');
+			});
+
+			
+			$('textarea#description').characterCounter(); // count characters in description
+
+			
+			$('#event-form-cancel').click(function(event) { // cancel edits
 
 				this.cancel(event);
 
@@ -674,7 +814,27 @@ app.EventView.prototype.submit = function(Event_e) {
 
 				$('#event-description').val(),
 
-				new app.Organization($('#event-host').val()), //hack
+				(function() { // host
+
+					// get type (by function reference) of host
+
+					var Type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? app.Person : app.Organization;
+
+					// look user entry up on type's registry (simple name matching will suffice for now)
+
+					var host = Type.registry.getObjectByAttribute('hostName', $('#event-host').val());
+
+					if (host === null) { // no existing match, so create new IHost
+
+						host = new Type(); // jsHint insists on cap in first letter of constructor names, hence the aberration
+
+						host.hostName($('#event-host').val());
+					}
+
+					return host;
+				})(),
+
+				//new app.Organization($('#event-host').val()), //hack
 				
 				parseInt($('#event-capacity').val())
 			)//,
@@ -687,6 +847,37 @@ app.EventView.prototype.submit = function(Event_e) {
 
 	return false;
 }
+
+
+/** Suggest hosts based on hosts of previous events in the account.
+* 
+* Suggest either Organizations or Persons, depending on the users choice of host type
+*
+* (default is Organization).
+*/
+
+app.EventView.prototype.suggestHosts = function() {
+
+	var $listElement = $('#suggested-hosts'), optionElement;
+
+	$listElement.empty();
+
+	var type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? app.Person : app.Organization;
+	
+	var hosts = type.registry.getObjectList();
+
+	for (var ix in hosts) {
+
+		optionElement = document.createElement('option');
+
+		optionElement.value = hosts[ix].hostName();
+
+		optionElement.innerHTML = hosts[ix].hostName();
+
+		$listElement.append(optionElement);
+	}
+};
+
 
 
 /** Suggests venues for event based on device's location (if available)
@@ -778,7 +969,7 @@ app.EventView.prototype.suggestLocations = function() {
 
 app.EventView.prototype.validateDateRange = function() {
 
-	if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
+	//if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
 
 	var ret;
 	
