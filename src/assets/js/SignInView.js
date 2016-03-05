@@ -247,7 +247,10 @@ app.SignInView.prototype.render = function() {
 	
 	
 
-	// (Re)assign evnet handlers to form elements
+	// Initialize and (re)assign evnet handlers to form elements
+
+		$('#sign-in-email').attr('autofocus', true);
+		
 
 		$('#sign-in-email').keyup(function(event) { // validate email
 

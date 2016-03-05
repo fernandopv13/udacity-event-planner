@@ -256,7 +256,9 @@ app.PersonView.prototype.render = function(Person_person) {
 			this.$renderContext().append(formElement);
 
 
-		// (Re)assign event handlers to form elements
+		// Initialize and (re)assign event handlers to form elements
+
+			$('#guest-name').attr('autofocus', true)
 
 			$('#guest-birthday.datepicker').pickadate({
 				

@@ -495,7 +495,10 @@ app.EventView.prototype.render = function(Event_e) {
 			this.$renderContext().append(formElement);
 
 
-		// (Re)assign event handlers to form elements
+		// Initalize and (re)assign event handlers to form elements
+
+			$('#event-name').attr('autofocus', true);
+
 
 			$('textarea#description').characterCounter();
 

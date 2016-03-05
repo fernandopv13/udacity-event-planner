@@ -395,9 +395,9 @@ app.Controller = function() {
 				this.selectedAccount().accountHolder().email(new app.Email('superuser@acme.corp')); // debug
 
 				this.selectedAccount().accountHolder().jobTitle('Master Octopus'); // debug
-				*/
 				
-				//_onAccountSelected.call(this, this.selectedAccount()); // debug
+				_onAccountSelected.call(this, this.selectedAccount()); // debug
+				*/
 
 
 			// Register models and controller as mutual observers
