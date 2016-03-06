@@ -634,7 +634,7 @@ app.EventView.prototype.render = function(Event_e) {
 			$('#event-location').focus(this.suggestLocations); // suggest locations
 
 			
-			$('#event-start-date.datepicker, #event-end-date.datepicker').pickadate({
+			$('#event-start-date.datepicker').pickadate({ // Initalize start date picker
 				
 				//closeOnSelect: true, // bug: ineffective
 				
@@ -642,9 +642,11 @@ app.EventView.prototype.render = function(Event_e) {
 				
 				format: 'mm/dd/yyyy',
 
-				onSet: function(event) {
+				onSet: function(nEvent) {
 
-					if (typeof event.select === 'number') { // date selected
+					if (typeof nEvent.select === 'number') { // date selected
+
+						$('#event-start-date-hidden').val(nEvent.select); // set unformatted number representation of date to hidden field
 
 						this.close(); // 'this' refers to the picker widget here...
 
@@ -660,8 +662,37 @@ app.EventView.prototype.render = function(Event_e) {
 				selectYears: 15 // Creates a dropdown of 15 years to control year // init date pickers
 			});
 
-			
-			$('.timepicker').pickatime({
+
+			$('#event-end-date.datepicker').pickadate({ // Initalize end date picker
+				
+				//closeOnSelect: true, // bug: ineffective
+				
+				closeOnClear: true,
+				
+				format: 'mm/dd/yyyy',
+
+				onSet: function(nEvent) {
+
+					if (typeof nEvent.select === 'number') { // date selected
+
+						$('#event-end-date-hidden').val(nEvent.select); // set unformatted number representation of date to hidden field
+
+						this.close(); // 'this' refers to the picker widget here...
+
+						app.EventView.prototype.validateDateRange(); // so call validation without reference to it
+					}
+
+					//else: month or year selected, stay open
+
+				}, // binding to the EventView here would make it impossible to close the widget from within the handler (I tried, and failed)
+				
+				selectMonths: true, // Creates a dropdown to control month
+				
+				selectYears: 15 // Creates a dropdown of 15 years to control year // init date pickers
+			});
+
+
+			$('#event-start-time.timepicker').pickatime({ // init start time picker
 				
 				//closeOnSelect: true, // bug: ineffective
 				
@@ -669,7 +700,49 @@ app.EventView.prototype.render = function(Event_e) {
 				
 				format: 'h:i A',
 				
-				onSet: this.validateTimeRange // init timepickers
+				//onSet: this.validateTimeRange
+
+				onSet: function(nEvent) {
+
+					if (typeof nEvent.select === 'number') { // date selected
+
+						$('#event-start-time-hidden').val(nEvent.select); // set minutes since midnight to hidden start time field
+
+						this.close(); // 'this' refers to the picker widget here...
+
+						app.EventView.prototype.validateTimeRange(); // so call validation without reference to it
+					}
+
+					//else: month or year selected, stay open
+
+				}
+			});
+
+
+			$('#event-end-time.timepicker').pickatime({ // init end time picker
+				
+				//closeOnSelect: true, // bug: ineffective
+				
+				closeOnClear: true,
+				
+				format: 'h:i A',
+				
+				//onSet: this.validateTimeRange
+
+				onSet: function(nEvent) {
+
+					if (typeof nEvent.select === 'number') { // date selected
+
+						$('#event-end-time-hidden').val(nEvent.select); // set minutes since midnight to hidden end time field
+
+						this.close(); // 'this' refers to the picker widget here...
+
+						app.EventView.prototype.validateTimeRange(); // so call validation without reference to it
+					}
+
+					//else: month or year selected, stay open
+
+				}
 			});
 
 						
@@ -758,10 +831,6 @@ app.EventView.prototype.submit = function(Event_e) {
 
 		&& this.validateCapacity(Event_e, 'event-capacity')) { 
 
-		// Notify observers by passing them a new Event with the data from the form
-
-		//this.notifyObservers(
-
 		this.ssuper().prototype.submit.call(
 
 			this,
@@ -774,18 +843,15 @@ app.EventView.prototype.submit = function(Event_e) {
 
 				(function() { // start date
 
-					var start_date = $('#event-start-date').val();
+					var start_date = parseInt($('#event-start-date-hidden').val());
 
-					var start_time = $('#event-start-time').val();
+					var start_time = parseInt($('#event-start-time-hidden').val());
 
-					if (start_date !== '') {
+					if (!isNaN(start_date)) {
 
-						start_date = new Date(start_date);
+						start_time = !isNaN(start_time) ? 1000 * 60 * start_time : 0;
 
-						if (start_time !== '') {
-
-							start_date.setHours(start_time.split(':')[0], parseInt(start_time.split(':')[1]));
-						}
+						start_date = new Date(start_date + start_time);
 
 						return start_date;
 					}
@@ -795,18 +861,15 @@ app.EventView.prototype.submit = function(Event_e) {
 
 				(function() { // end date
 
-					var end_date = $('#event-end-date').val();
+					var end_date = parseInt($('#event-end-date-hidden').val());
 
-					var end_time = $('#event-end-time').val();
+					var end_time = parseInt($('#event-end-time-hidden').val());
 
-					if (end_date !== '') {
+					if (!isNaN(end_date)) {
 
-						end_date = new Date(end_date);
+						end_time = !isNaN(end_time) ? 1000 * 60 * end_time : 0;
 
-						if (end_time !== '') {
-
-							end_date.setHours(end_time.split(':')[0], parseInt(end_time.split(':')[1]));
-						}
+						end_date = new Date(end_date + end_time);
 
 						return end_date;
 					}
@@ -841,9 +904,7 @@ app.EventView.prototype.submit = function(Event_e) {
 				//new app.Organization($('#event-host').val()), //hack
 				
 				parseInt($('#event-capacity').val())
-			)//,
-
-			//parseInt($('#event-id').val())
+			)
 		);
 
 		return true;
@@ -979,15 +1040,15 @@ app.EventView.prototype.validateDateRange = function() {
 	
 	// Set up references to DOM
 
-		var $start = $('#event-start-date'),
+		var $start = $('#event-start-date-hidden'),
 
-		start_date = new Date($start.val()),
+		start_date = new Date(parseInt($start.val())),
 
 		$start_err = $('#event-start-date-error'),
 
-		$end = $('#event-end-date'),
+		$end = $('#event-end-date-hidden'),
 
-		end_date = new Date($end.val()),
+		end_date = new Date(parseInt($end.val())),
 
 		$end_err = $('#event-end-date-error');
 
@@ -1134,40 +1195,43 @@ app.EventView.prototype.validateTimeRange = function() {
 
 	if (this.close) {this.close()} // close picker (if called from dialog); setting closeOnClear true does not work (bug)
 	
-	var self = app.controller.currentView(); // reset this reference from picker to view
+	var self = app.controller.currentView(); // reset 'this' reference from picker to view
 
+	var start_date = parseInt($('#event-start-date-hidden').val()), //new Date($('#event-start-date').val()),
 
-	var start_date = new Date($('#event-start-date').val()),
+	end_date = parseInt($('#event-end-date-hidden').val()), // new Date($('#event-end-date').val()),
 
-	end_date = new Date($('#event-end-date').val()),
+	$start_time = $('#event-start-time-hidden'), // $('#event-start-time-'),
 
-	$start_time = $('#event-start-time'),
-
-	start_time = $start_time.val(),
+	start_time = 1000 * 60 * parseInt($start_time.val()), // $start_time.val(),
 
 	$start_time_err = $('#event-start-time-error'),
 
-	$end_time = $('#event-end-time'),
+	$end_time = $('#event-end-time-hidden'), // $('#event-end-time'),
 
-	end_time = $end_time.val(),
+	end_time = 1000 * 60 * parseInt($end_time.val()),
 
 	$end_time_err = $('#event-end-time-error');
-
-	
 
 	if (self.validateStartTime()) { // start time entered
 
 		if (self.validateEndTime()) { // end date and time entered
 
-			if (end_date.valueOf() === start_date.valueOf()) { // start and end dates match
-				
+			//if (end_date.valueOf() === start_date.valueOf()) { // start and end dates match
+			
+			if (end_date === start_date) { // start and end dates match
+
+				start_date = new Date(start_date + start_time);
+
+				end_date = new Date(end_date + end_time);
+
 				// Set hours and minutes on start and end dates before comparison
 
 				// Assumes time string of format 'hh:mm', with optional seconds and/or am/pm indicator
 
-				end_date.setHours(end_time.split(':')[0], parseInt(end_time.split(':')[1])); // parseInt gets rid of any am/pm
+				//end_date.setHours(end_time.split(':')[0], parseInt(end_time.split(':')[1])); // parseInt gets rid of any am/pm
 
-				start_date.setHours(start_time.split(':')[0], parseInt(start_time.split(':')[1]));
+				//start_date.setHours(start_time.split(':')[0], parseInt(start_time.split(':')[1]));
 
 				if (end_date < start_date) { // end (time) is before start (time)
 

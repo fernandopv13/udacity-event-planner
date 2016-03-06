@@ -279,13 +279,31 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		outerDiv.appendChild(innerDiv);
 
 
+		innerDiv.appendChild(this.createElement( // hidden input
+		{
+			element: 'input',			
+			
+			attributes:
+
+			{
+				id: str_dateId + '-hidden',
+
+				'aria-hidden': true,
+
+				hidden: true,
+
+				value: Date_date ? Date_date.getTime() - 1000 * (3600 * Date_date.getHours() + 60 * Date_date.getMinutes() + Date_date.getSeconds()) : '' // ms since epoch at midnight on start of date
+			}
+		}));
+
+
 		var attributes = 
 		{
 			type: 'text',
 			
 			id: str_dateId,
 			
-			value: Date_date ? Date_date.toLocaleDateString('en-US') : '',
+			value: Date_date ? Date_date.toLocaleDateString() : '',
 			
 			readonly: true,
 
@@ -296,7 +314,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
 
-		innerDiv.appendChild(this.createElement( // input
+		innerDiv.appendChild(this.createElement( // visible input
 		{
 			element: 'input',			
 			
@@ -1345,6 +1363,24 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		
 		outerDiv.appendChild(innerDiv);
 
+		
+		innerDiv.appendChild(this.createElement( // hidden input
+		{
+			element: 'input',			
+			
+			attributes:
+			{
+				id: str_timeId + '-hidden',
+
+				'aria-hidden': true,
+
+				hidden: true,
+
+				value: Date_date ? 60 * Date_date.getHours() + Date_date.getMinutes() : '' // timepicker.js works with number of minutes
+			}
+		}));
+
+
 		var attributes = 
 		{
 			type: 'text',
@@ -1353,15 +1389,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			value: Date_date ?
 
-				Date_date.toLocaleTimeString().split(' ')[0].split(':')[0] // hours
-
-				+ ':'
-
-				+ Date_date.toLocaleTimeString().split(' ')[0].split(':')[1] // minutes
-
-				+ ' '
-
-				+ Date_date.toLocaleTimeString().split(' ')[1] // am/pm
+				Date_date.toLocaleTimeString()
 
 				: '',
 			
@@ -1374,7 +1402,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
 
-		innerDiv.appendChild(this.createElement( // input
+		innerDiv.appendChild(this.createElement( // visible input
 		{
 			element: 'input',			
 			

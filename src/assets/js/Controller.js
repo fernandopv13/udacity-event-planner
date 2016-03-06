@@ -492,6 +492,10 @@ app.Controller = function() {
 				case 'Sign Out':
 
 					break;
+
+				default:
+
+					console.log('Navigation selection not supported');
 			}
 		}
 
@@ -534,7 +538,7 @@ app.Controller = function() {
 		*
 		* @return {void}
 		*
-		* @todo Investigate if there is a classic OO pattern (e.g. Command or Strategy) that would help reduce the complexity of this algorithm.
+		* @todo Simplify this by taking inspiration from e.g. the Strategy or Command pattern and farm out the work to a zoo of e.g. UIActionHandlers. By doing this as a (re-)broadcast using the Observer pattern this method could potentially be reduced to a single line!
 		*/
 
 		function __update(View_v, Model_m, int_uiaction) {

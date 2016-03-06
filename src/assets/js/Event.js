@@ -310,6 +310,10 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 
 				else {
 
+					console.log(date_start)
+
+					console.log(_end);
+
 					throw new IllegalArgumentError('Start must be before end');
 				}
 			}
@@ -646,6 +650,8 @@ app.Event.prototype.update = function(Event_e, int_id) {
 
 		this.type(Event_e.type());
 
+		if (Event_e.start() && Event_e.end()) {this.start(null);this.end(null);} // don't compare to existing data if supplied valid replacements
+
 		this.start(Event_e.start() ? Event_e.start() : null);
 
 		this.end(Event_e.end() ? Event_e.end() : null);
@@ -657,7 +663,6 @@ app.Event.prototype.update = function(Event_e, int_id) {
 		this.capacity(Event_e.capacity());
 
 		this.host(Event_e.host());
-
 		
 		// Do some housekeeping common to all Model updates
 
