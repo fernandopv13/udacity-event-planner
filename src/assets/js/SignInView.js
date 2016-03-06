@@ -7,7 +7,7 @@
 var app = app || {};
 
 
-/** @classdesc View for displaying app's sign-in page.
+/** @classdesc View class for displaying app's sign-in page.
 *
 * Deviates slightly from the main mold of the MVC framework, as it isn't to tightly bound to a Model.
 *

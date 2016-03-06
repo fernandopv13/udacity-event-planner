@@ -59,11 +59,15 @@ app.ListView.prototype.constructor = app.ListView; // Reset constructor property
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
 
+/** Captures click in list and notifies observers */
+
 app.ListView.prototype.onClick = function(nEvent_e, Model_m) {
 
 	this.notifyObservers(this, Model_m, app.View.UIAction.SELECT);
 };
 
+
+/** Does misc housekeeping required when ListView has rendered to the DOM */
 
 app.ListView.prototype.onRender = function(Model_m) {
 

@@ -151,7 +151,6 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 		* @todo Not fully functional; only works one level up from the lowest level in the tree
 		*/
 
-
 		this.ssuper = new app.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
 
 	/*----------------------------------------------------------------------------------------

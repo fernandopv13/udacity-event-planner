@@ -263,7 +263,7 @@ describe('class View', function(){
 
 			expect(el.required).toBe(true);
 
-			expect(el.value).toBe('1/1/1970');
+			expect(Date.parse(el.value)).toBe(-3600000); //expect(el.value).toBe('1/1/1970');
 
 			//expect(el.readonly).toBe(true);
 

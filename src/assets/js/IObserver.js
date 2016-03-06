@@ -7,7 +7,7 @@ var app = app || {}; // create a simple namespace for the module
 * public Interface IObserver
 *********************************************************************************************/
 
-/** @classdesc Observers may register with observables, to be notified when observable changes state.
+/** @classdesc The Observer part of the 'Observer' pattern. Observers may register with observables, to be notified when observable changes state.
 *
 * @constructor
 *

@@ -18,15 +18,13 @@ var app = app || {};
 *
 * @author Ulrik H. Gade, March 2016
 *
-* @todo Set end date to start date when initially selecting start date, supressing end datepicker
+* @todo Simplify date entry: set end date to start date when initially selecting start date, supressing end datepicker, or do not require entry of end date and time unless the user wants to 
 *
 * @todo Hide most of the non-required details behind a 'Details' widget (i.e. use 'progressive disclosure')
 *
-* @todo Do not require entry of end date and time unless the user wants to
+* @todo Add unit testing of rendering and interaction in browser
 *
-* @todo Add unit testing of rendering in browser
-*
-* @todo Verify the geolocation works as expected when available in a mobile device with GPS
+* @todo Verify that geolocation works as expected when available in a mobile device with GPS
 */
 
 app.EventView = function(str_elementId, str_heading) {

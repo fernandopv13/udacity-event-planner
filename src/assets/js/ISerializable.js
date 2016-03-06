@@ -7,7 +7,7 @@ var app = app || {}; // create a simple namespace for the app
 * public Interface ISerializable
 ***********************************************************/
 
-/** @classdesc Represents an interface for classes that can be serialized for local or remote storage.
+/** @classdesc Represents an interface for classes that can be serialized for local or remote storage. Provides default methods that do most of the heavy lifting object of serialization and deserialization. Inspired by, but not a direct copy of, the similar Java API.
 *
 * @constructor
 *

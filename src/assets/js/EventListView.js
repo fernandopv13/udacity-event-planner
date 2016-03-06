@@ -6,7 +6,7 @@
 
 var app = app || {};
 
-/** @classdesc ViewObject for event list(s). Renders list in UI, and captures UI events in list.
+/** @classdesc View class for event list(s). Renders list in UI, and captures UI events in list.
 *
 * @extends ListView
 *

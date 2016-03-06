@@ -7,7 +7,7 @@ var app = app || {}; // create a simple namespace for the app
 * public class ObjectRegistry implements ISerializable
 ***********************************************************/
 
-/** @classdesc Keeps track of the objects created of a class, to help avoid duplication when serializing objects for local or remote storage. Can only hold objects of the same class.
+/** @classdesc Keeps track of the objects created of a class, to help avoid duplication when serializing objects for local or remote storage. Can only hold objects of a single class.
 *
 * @implements ISerializable
 *

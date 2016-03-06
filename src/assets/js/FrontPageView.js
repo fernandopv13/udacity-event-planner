@@ -6,7 +6,7 @@
 
 var app = app || {};
 
-/** @classdesc View for displaying app's front page.
+/** @classdesc View class for displaying app's front page.
 *
 * @constructor
 *
@@ -56,7 +56,7 @@ app.FrontPageView.prototype.constructor = app.FrontPageView; //Reset constructor
 
 /** Renders front page.
 *
-* Front page is pure navigation. It is not bound to any model, nor to the controller
+* Front page is pure navigation. It is not bound to any model, nor to the controller.
 *
 * @return void
 */

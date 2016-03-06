@@ -6,13 +6,13 @@
 
 var app = app || {};
 
-/** @classdesc ViewObject for event guest list. Renders list in UI, and captures UI events in list.
+/** @classdesc View class for event guest list. Renders list in UI, and captures UI events in list.
 *
 * @extends ListView
 *
-* @param (String) elementId Id of the HTML DOM element the view is bound to
+* @param {String} elementId Id of the HTML DOM element the view is bound to
 *
-* @param (String) heading Content for the list heading
+* @param {String} heading Content for the list heading
 *
 * @constructor
 *

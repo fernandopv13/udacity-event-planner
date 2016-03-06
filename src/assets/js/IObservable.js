@@ -7,7 +7,7 @@ var app = app || {}; // create a simple namespace for the module
 * public Interface IObservable
 *********************************************************************************************/
 
-/** @classdesc Observables may be observed by Observers. When Observables change state, they notify their Observers to update. Expects implementing classes to define public 'observers' array.
+/** @classdesc The Obserable part of the 'Observer' pattern. Observables may be observed by Observers. When Observables change state, they notify their Observers to update. Expects implementing classes to define public 'observers' accessor method.
 *
 * @constructor
 *

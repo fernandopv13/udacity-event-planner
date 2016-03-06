@@ -56,14 +56,55 @@ app.Model = function() {
 	* Accessors for private instance fields (dependency injection enables access for subclasses)
 	*---------------------------------------------------------------------------------------*/
 
+	/** Gets name of the Model's class (read-only).
+	*
+	* @return {String} className The name of the View's class
+	*
+	* @throws {IllegalArgumentError} If trying to set the className.
+	*/
+
 	this.className = new app.Accessor(_className, true); // replace temporary literal with read-only accessor
+
+	
+	/** Gets Model's unique id (read-only).
+	*
+	* @return {int} id The Model's unique id
+	*
+	* @throws {IllegalArgumentError} If trying to set the id.
+	*/
 
 	this.id = new app.Accessor(_id, true);
 
+	
+	/** Gets the collection of IObservers currently registered with the Model
+	*
+	* @return {Array} observers An array of IObservers
+	*
+	* @throws {IllegalArgumentError} If trying to set the observers array
+	*/
+
 	this.observers = new app.Accessor(_observers, true);
+
+	
+	/** Gets a collection of classes or 'interfaces' (by function reference) the Model extends or implements. Includes the class of the Model itself.
+	*
+	* @return {Array} parentList An array of functions
+	*
+	* @throws {IllegalArgumentError} If trying to set the parentList array
+	*/
 
 	this.parentList = new app.Accessor(_parentList, true);
 	
+	
+	/** Gets a reference to the Model's parent (by function reference) in the class inheritence hierarchy (the topmost class is Object)
+	*
+	* @return {Function} ssuper The parent class
+	*
+	* @throws {IllegalArgumentError} If trying to set the ssuper attribute
+	*
+	* @todo Not fully functional; only works one level up from the lowest level in the tree
+	*/
+
 	this.ssuper = new app.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
 	
 	/*----------------------------------------------------------------------------------------
@@ -92,9 +133,11 @@ void app.IInterfaceable.mixInto(app.ISerializable, app.Model);
 *---------------------------------------------------------------------------------------*/
 
 
-/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference)
+/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference).
 *
-* (See IInterfaceable for further documentation.)
+* See IInterfaceable for further documentation.
+*
+* @todo Now that the parent list is publicly available, this should be able to rely on the/a default method in IInterfaceable
 */
 
 app.Model.prototype.isInstanceOf = function (func_interface) {

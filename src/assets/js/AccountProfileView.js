@@ -6,7 +6,7 @@
 
 var app = app || {};
 
-/** @classdesc ViewObject for account profile. Renders profile in UI, and captures UI events on profile.
+/** @classdesc View class for account profile. Renders profile in UI, and captures UI events on profile.
 *
 * @constructor
 *
