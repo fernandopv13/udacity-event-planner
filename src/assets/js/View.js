@@ -120,7 +120,7 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 		this.observers = new app.Accessor(_observers, true);
 
 		
-		/** Gets a collection of classes or 'interfaces' (by function reference) the View extends or implements. Includes the class of the View itself.
+		/** Gets a collection of classes or 'interfaces' (by function reference) the object extends or implements. Includes the class of the object itself.
 		*
 		* @return {Array} parentList An array of functions
 		*
@@ -142,7 +142,7 @@ app.View = function(Function_modelClass, str_elementId, str_heading) {
 		this.$renderContext = new app.Accessor(_$renderContext, false);
 		
 		
-		/** Gets a reference to the View's parent (by function reference) in the class inheritence hierarchy (the topmost class is Object)
+		/** Gets a reference to the object's parent (by function reference) in the class inheritance hierarchy (the topmost class is Object)
 		*
 		* @return {Function} ssuper The parent class
 		*
@@ -206,7 +206,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		this.notifyObservers(this, this.model(), app.View.UIAction.CANCEL);
 
-		// for now, simply discard any entries made by user to an existing guest
+		// for now, simply discard any entries made by user to an existing view
 	}
 
 

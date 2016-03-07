@@ -16,7 +16,9 @@ var app = app || {}; // create a simple namespace for the app
 *
 * @throws {InstantiationError} If attempting to instantiate interface
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, March 2016
+*
+* @todo Add default isInstanceOf() method
 */
 
 app.IInterfaceable = function() {

@@ -310,10 +310,6 @@ app.Event = function(str_name, str_type, date_start, date_end, str_location, str
 
 				else {
 
-					console.log(date_start)
-
-					console.log(_end);
-
 					throw new IllegalArgumentError('Start must be before end');
 				}
 			}

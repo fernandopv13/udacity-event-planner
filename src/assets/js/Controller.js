@@ -20,7 +20,7 @@ var app = app || {};
 *
 * @author Ulrik H. Gade, March 2016
 *
-* @todo Revisit if more currently public members need to be public, or could just as well be private
+* @todo flesh out views() getter
 */
 
 app.Controller = function() {
@@ -99,6 +99,34 @@ app.Controller = function() {
 			}
 			
 			return _currentView;
+		};
+
+
+		/** Gets or sets reference to newly created Model that has not yet been submitted to the 'backend'.
+		*
+		* Helps keep track of what to do when users hits cancel or delete in a form after creating a new item.
+		*
+		* @return {Model} The newly created model, or null
+		*
+		* @throws {IllegalArgumentError} If trying to set a model that is neither an instance of app.Model, nor null
+		*/
+
+		this.newModel = function(Model_m) {
+
+			if (arguments.length > 0) {
+
+				if (Model_m === null || (Model_m.isInstanceOf && Model_m.isInstanceOf(app.Model))) {
+
+					_newModel = Model_m;
+				}
+
+				else {
+
+					throw new IllegalArgumentError('Expected instance of Model, or null');
+				}
+			}
+
+			return _newModel;
 		};
 
 
@@ -204,6 +232,11 @@ app.Controller = function() {
 		};
 
 
+		this.views = function() { // getter for _views, to flesh out
+
+			return _views;
+		}
+
 	/*----------------------------------------------------------------------------------------
 	* Private instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
@@ -227,6 +260,11 @@ app.Controller = function() {
 
 			this.currentView(_views.eventListView, this.selectedAccount());
 		}
+
+		this.onAccountSelected = function(Event_e) { // temporary adapter while transitioning to the Strategy pattern
+
+			return _onAccountSelected(Event_e);
+		};
 
 
 		/** Handles click on floating 'plus' action button in list views
@@ -299,6 +337,11 @@ app.Controller = function() {
 			this.currentView(_views.eventView, this.selectedEvent(Event_e));
 		}
 
+		this.onEventSelected = function(Event_e) { // temporary adapter while transitioning to the Strategy pattern
+
+			return _onEventSelected(Event_e);
+		};
+
 		
 		/** Does the work required when a guest has been selected,
 		*
@@ -315,6 +358,11 @@ app.Controller = function() {
 
 			this.currentView(_views.guestView, this.selectedGuest());
 		}
+
+		this.onGuestSelected = function(Person_g) { // temporary adapter while transitioning to the Strategy pattern
+
+			return _onGuestSelected(Person_g);
+		};
 
 
 	/*----------------------------------------------------------------------------------------
@@ -587,7 +635,7 @@ app.Controller = function() {
 
 				case app.View.UIAction.CANCEL:
 
-					if (_newModel) { // creating of new model cancelled
+					if (_newModel) { // creation of new model cancelled
 
 						_newModel.constructor.registry.removeObject(_newModel); // remove from registry
 

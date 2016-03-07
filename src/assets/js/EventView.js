@@ -916,9 +916,9 @@ app.EventView.prototype.submit = function(Event_e) {
 
 /** Suggest hosts based on hosts of previous events in the account.
 * 
-* Suggest either Organizations or Persons, depending on the users choice of host type
+* Suggest either Organizations or Persons, depending on the users choice of host type.
 *
-* (default is Organization).
+* Not supported by Safari at the time of this writing, but fails silently with no adverse effects.
 */
 
 app.EventView.prototype.suggestHosts = function() {
@@ -933,6 +933,8 @@ app.EventView.prototype.suggestHosts = function() {
 
 	for (var ix in hosts) {
 
+		console.log(hosts[ix].hostName());
+
 		optionElement = document.createElement('option');
 
 		optionElement.value = hosts[ix].hostName();
@@ -941,11 +943,14 @@ app.EventView.prototype.suggestHosts = function() {
 
 		$listElement.append(optionElement);
 	}
+	console.log($listElement);
 };
 
 
 
-/** Suggests venues for event based on device's location (if available)
+/** Suggests venues for event based on device's location (if available).
+*
+* Not supported by Safari at the time of this writing, but fails silently with no adverse effects.
 *
 * @return {void} Directly updates location datalist in the DOM
 *

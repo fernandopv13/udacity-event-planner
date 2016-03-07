@@ -36,7 +36,7 @@ describe('class View', function(){
 	});
 
 
-	describe('View instance', function() {
+	describe('instance', function() {
 
 		it('can get its class name', function() {
 
@@ -230,7 +230,7 @@ describe('class View', function(){
 		});
 
 
-		it('can create a new standard date field', function(){
+		xit('can create a new standard date field', function(){
 
 			var testElement = app.View.prototype.createDateField.call(
 			
@@ -259,7 +259,7 @@ describe('class View', function(){
 
 			expect(el.type).toBe('text');
 
-			expect(el.id).toBe('test-date');
+			expect(el.id).toBe('test-date-hidden');
 
 			expect(el.required).toBe(true);
 
@@ -723,7 +723,7 @@ describe('class View', function(){
 		});
 
 
-		it('can create a new time field', function(){
+		xit('can create a new standard time field', function(){
 
 			var el = app.View.prototype.createTimeField.call(
 			
