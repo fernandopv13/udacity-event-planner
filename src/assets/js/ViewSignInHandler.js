@@ -6,7 +6,7 @@
 
 var app = app || {};
 
-/** @classdesc Handles create action from View on behalf of Controller.
+/** @classdesc Handles 'sign in' action from View on behalf of Controller.
 *
 * Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
 *
@@ -56,7 +56,7 @@ app.ViewSignInHandler.prototype.constructor = app.ViewSignInHandler; //Reset con
 * Public instance methods (beyond accessors)
 *---------------------------------------------------------------------------------------*/
 
-/** Handles 'create' user action in a View on behalf of a Controller.
+/** Handles 'sign in' user action in a View on behalf of a Controller.
 *
 * Takes a new Model of the requested type and opens it in its detail (form) view for editing.
 *

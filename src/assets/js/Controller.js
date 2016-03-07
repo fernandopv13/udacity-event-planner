@@ -261,9 +261,9 @@ app.Controller = function() {
 			this.currentView(_views.eventListView, this.selectedAccount());
 		}
 
-		this.onAccountSelected = function(Event_e) { // temporary adapter while transitioning to the Strategy pattern
+		this.onAccountSelected = function(Account_a) { // temporary adapter while transitioning to the Strategy pattern
 
-			return _onAccountSelected(Event_e);
+			return _onAccountSelected.call(this, Account_a);
 		};
 
 
@@ -280,7 +280,7 @@ app.Controller = function() {
 		* @return {void}
 		*/
 
-		function _onCreateModel(Model_m) {
+		/*function _onCreateModel(Model_m) {
 
 			switch(Model_m.constructor) {
 
@@ -319,6 +319,8 @@ app.Controller = function() {
 
 			Model_m.registerObserver(this);
 		}
+		*/
+
 
 
 		/** Does the work required when an event has been selected,
@@ -339,7 +341,7 @@ app.Controller = function() {
 
 		this.onEventSelected = function(Event_e) { // temporary adapter while transitioning to the Strategy pattern
 
-			return _onEventSelected(Event_e);
+			return _onEventSelected.call(this, Event_e);
 		};
 
 		
@@ -361,7 +363,7 @@ app.Controller = function() {
 
 		this.onGuestSelected = function(Person_g) { // temporary adapter while transitioning to the Strategy pattern
 
-			return _onGuestSelected(Person_g);
+			return _onGuestSelected.call(this, Person_g);
 		};
 
 
@@ -400,7 +402,7 @@ app.Controller = function() {
 				}
 
 				
-				// Register views and controller as mutual observers
+			// Register views and controller as mutual observers
 
 				for (var prop in _views) {
 
@@ -410,7 +412,7 @@ app.Controller = function() {
 				}
 				
 
-				// Register models and controller as mutual observers
+			// Register models and controller as mutual observers
 
 				[app.Account, app.Event, app.Organization, app.Person].forEach(function(klass){
 
@@ -433,6 +435,30 @@ app.Controller = function() {
 				window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
 
 			
+			// Create ViewUpdateHandlers and register as observers of controller
+
+				[
+					new app.ViewCancelHandler(this),
+
+					new app.ViewCreateHandler(this),
+
+					new app.ViewDeleteHandler(this),
+
+					new app.ViewNavigateHandler(this),
+
+					new app.ViewSelectHandler(this),
+
+					new app.ViewSignInHandler(this),
+
+					new app.ViewSubmitHandler(this)
+				
+				].forEach(function(handler) {
+
+					this.registerObserver(handler);
+
+				}, this);
+
+
 			// Bootstrap UI by loading the front page
 
 				//void (new app.View()).renderNavigation('Meetup Planner');
@@ -489,11 +515,21 @@ app.Controller = function() {
 		* @param {Model} n Reference to the Model object that caused the update
 		*
 		* @param {int} id Id of the Model object the update is intended for. Optional: only needed when passing on update from Model.
+		*
+		* @todo Clean up signatures to make more sense from calling functions
 		*/
 
-		this.notifyObservers = function(Model_m, int_id) {
+		this.notifyObservers = function(Model_m, int_id, View_v) {
 			
-			if (int_id !== undefined) {
+			if (View_v !== undefined) { // expected by ViewUpdateHandlers
+
+				_observers.forEach(function(observer) { // expected by Model
+
+					observer.update(int_id, Model_m, View_v);
+				});
+			}
+
+			else if (int_id !== undefined) {
 
 				_observers.forEach(function(observer) { // expected by Model
 
@@ -586,14 +622,129 @@ app.Controller = function() {
 		*
 		* @return {void}
 		*
-		* @todo Simplify this by taking inspiration from e.g. the Strategy or Command pattern and farm out the work to a zoo of e.g. UIActionHandlers. By doing this as a (re-)broadcast using the Observer pattern this method could potentially be reduced to a single line!
+		* @todo Simplify this by taking inspiration from e.g. the Strategy pattern and farm out the work to a zoo of e.g. UIActionHandlers. By doing this as a (re-)broadcast using the Observer pattern this method could potentially be reduced to a single line!
+		* @todo Get sign in to work using Strategy pattern
 		*/
 
 		function __update(View_v, Model_m, int_uiaction) {
 
 			switch (int_uiaction) {
 
+				case app.View.UIAction.CANCEL:
+
+					this.notifyObservers(Model_m, int_uiaction, View_v);
+
+					/*
+					if (_newModel) { // creation of new model cancelled
+
+						_newModel.constructor.registry.removeObject(_newModel); // remove from registry
+
+						_newModel = null; // reset reference
+					}
+					*/
+
+					break;
+
+				case app.View.UIAction.CREATE:
+
+					this.notifyObservers(Model_m, int_uiaction, View_v);
+
+					//_onCreateModel.call(this, Model_m);
+
+					break;
+
+				case app.View.UIAction.DELETE:
+
+					this.notifyObservers(Model_m, int_uiaction, View_v);
+
+					/*
+					this.removeObserver(Model_m);
+
+					switch(Model_m.constructor) {
+
+						case app.Event: // remove event completely from app
+
+							var evtName = Model_m.name();
+
+							app.Account.registry.removeObject(Model_m);
+
+							this.selectedAccount().removeEvent(Model_m);
+
+							this.currentView().model(undefined);
+
+							Model_m = undefined;
+
+							Materialize.toast(evtName + ' was deleted', 4000);
+
+							break;
+
+						case app.Person: // remove person (guest) from this event, but keep in account
+
+							this.selectedEvent().removeGuest(Model_m);
+
+							Materialize.toast(Model_m.name() + ' was taken off the guest list', 4000);
+
+							break;
+					}
+
+					window.history.back();
+
+					*/
+
+					break;
+
+				case app.View.UIAction.NAVIGATE: // navigation to (sub)view requested
+
+					this.notifyObservers(Model_m, int_uiaction, View_v);
+
+					/*
+					var view;
+
+					for (var prop in _views) { // get (existing) view matching the request
+
+						if (_views[prop].constructor === View_v.constructor) {
+
+							view = _views[prop];
+						}
+					}
+
+					if (view) {
+
+						this.currentView(view, Model_m);
+					}
+
+					View_v = undefined; // try to speed up garbage collection of temporary helper object
+					*/
+
+					break;
+				
+				case app.View.UIAction.SELECT:
+
+					this.notifyObservers(Model_m, int_uiaction, View_v);
+
+					/*
+					switch (View_v.constructor) { // list item selected
+
+						case app.EventListView: // selection made in event list
+
+							_onEventSelected.call(this, Model_m);
+
+							break;
+
+						case app.GuestListView: // selection made in guest list
+
+							_onGuestSelected.call(this, Model_m);
+
+							break;
+					}
+					*/
+
+
+					break;
+				
 				case app.View.UIAction.SIGNIN: // submission from sign in form
+
+					//this.notifyObservers(Model_m, int_uiaction, View_v);
 
 					var accounts = app.Account.registry.getObjectList(), ret = false;
 
@@ -632,101 +783,12 @@ app.Controller = function() {
 					}
 
 					break;
-
-				case app.View.UIAction.CANCEL:
-
-					if (_newModel) { // creation of new model cancelled
-
-						_newModel.constructor.registry.removeObject(_newModel); // remove from registry
-
-						_newModel = null; // reset reference
-					}
-
-					break;
-
-				case app.View.UIAction.CREATE:
-
-					_onCreateModel.call(this, Model_m);
-
-					break;
-
-				case app.View.UIAction.DELETE:
-
-					this.removeObserver(Model_m);
-
-					switch(Model_m.constructor) {
-
-						case app.Event: // remove event completely from app
-
-							var evtName = Model_m.name();
-
-							app.Account.registry.removeObject(Model_m);
-
-							this.selectedAccount().removeEvent(Model_m);
-
-							this.currentView().model(undefined);
-
-							Model_m = undefined;
-
-							Materialize.toast(evtName + ' was deleted', 4000);
-
-							break;
-
-						case app.Person: // remove person (guest) from this event, but keep in account
-
-							this.selectedEvent().removeGuest(Model_m);
-
-							Materialize.toast(Model_m.name() + ' was taken off the guest list', 4000);
-
-							break;
-					}
-
-					window.history.back();
-
-					break;
-
-				case app.View.UIAction.NAVIGATE: // navigation to (sub)view requested
-
-					var view;
-
-					for (var prop in _views) { // get (existing) view matching the request
-
-						if (_views[prop].constructor === View_v.constructor) {
-
-							view = _views[prop];
-						}
-					}
-
-					if (view) {
-
-						this.currentView(view, Model_m);
-					}
-
-					View_v = undefined; // try to speed up garbage collection of temporary helper object
-
-					break;
 				
-				case app.View.UIAction.SELECT:
-
-					switch (View_v.constructor) {
-
-							case app.EventListView: // selection made in event list
-
-								_onEventSelected.call(this, Model_m);
-
-								break;
-
-							case app.GuestListView: // selection made in guest list
-
-								_onGuestSelected.call(this, Model_m);
-
-								break;
-						}
-
-					break;
-
 				case app.View.UIAction.SUBMIT: // update to Model submitted by form
 
+					this.notifyObservers(Model_m, int_uiaction, View_v);
+
+					/*
 					if (_newModel) { // new Model succesfully added to the account, insert into ecosystem
 
 						switch(Model_m.constructor) {
@@ -750,6 +812,7 @@ app.Controller = function() {
 					this.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits
 
 					window.history.back(); // go one step back in browser history
+					*/
 
 					break;
 

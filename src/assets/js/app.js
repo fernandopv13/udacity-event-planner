@@ -67,7 +67,7 @@ var app = (function(self) {
 				app.controller.selectedAccount().localStorageAllowed(bool_isAllowed);
 			}
 
-			return app.controller.selectedAccount().localStorageAllowed();
+			return  app.controller.selectedAccount() ? app.controller.selectedAccount().localStorageAllowed() : false;
 
 			/*if (typeof bool_isAllowed !== 'undefined') { // param present
 				

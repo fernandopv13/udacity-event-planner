@@ -6,7 +6,7 @@
 
 var app = app || {};
 
-/** @classdesc Handles create action from View on behalf of Controller.
+/** @classdesc Handles 'create' action from View on behalf of Controller.
 *
 * Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
 *

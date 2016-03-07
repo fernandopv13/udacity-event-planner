@@ -6,7 +6,7 @@
 
 var app = app || {};
 
-/** @classdesc Handles delete action from View on behalf of Controller.
+/** @classdesc Handles 'submit' action from View on behalf of Controller.
 *
 * Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
 *
@@ -75,7 +75,7 @@ app.ViewSubmitHandler.prototype.execute = function(int_UIAction, Model_m, View_v
 
 	if (ctrl.newModel()) { // new Model succesfully added to the account, insert into ecosystem
 
-		switch(Model_m.constructor) {
+		switch (Model_m.constructor) {
 
 			case app.Event:
 

@@ -205,11 +205,11 @@ app.Model.prototype.update = function() {
 
 	if (args.length === 2) {
 
-		if (args[0].isInstanceOf(app.Model) && args[1] === parseInt(args[1])) { //correct method signature
+		if (args[0].isInstanceOf && args[0].isInstanceOf(app.Model) && args[1] === parseInt(args[1])) { //correct method signature
 
 			if (args[0].constructor === this.constructor) { // correct Model subtype
 
-				if (parseInt(args[1]) === this.id()) { // correct id
+				if (typeof args[1] === 'number' && parseInt(args[1]) === this.id()) { // correct id
 
 					return true;
 				}
