@@ -176,8 +176,6 @@ app.ViewUpdateHandler.prototype.update = function(int_UIAction, Model_m, View_v)
 
 				if (View_v.isInstanceOf && View_v.isInstanceOf(app.View)) { // third param is instance of View
 
-					console.log('responding to matching notification');
-
 					this.execute(int_UIAction, Model_m, View_v); // UIAction and call signature are a match, so respond
 				}
 			}

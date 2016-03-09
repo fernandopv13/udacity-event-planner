@@ -256,9 +256,112 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 	/** Factory method for creating date picker fields for forms
 	*
+	* Uses a slightly customized version of Eonasdan's bootstrap-datetimepicker:
+	* https://github.com/Eonasdan/bootstrap-datetimepicker
+	* http://eonasdan.github.io/bootstrap-datetimepicker/
+	*
+	* Design goals:
+	* 1. Present a pleasant, coherent visual experience to sighted users using modern technology
+	* 2. Provide rich interaction for those who are physically and technically able, and want, to use it
+	* 3. On lap/desktops, allow people to type in using the keyboard if they prefer that efficiency
+	* 4. Support users relying on assistive technologies (e.g. screen readers)
+	* 5. Provide a graceful, functional fallback for all other cases
+	*
 	* @return {HTMLDivElement} DIV element
 	*/
 
+	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
+
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
+			
+			classList: ['row']
+		});
+
+
+		var innerDiv =  this.createElement( // inner div
+		{
+			element: 'div',			
+			
+			classList: ['input-field', 'col', str_width]
+		});
+		
+		outerDiv.appendChild(innerDiv);
+
+
+		var attributes = 
+		{
+			type: 'datetime-local',
+			
+			id: str_dateId,
+			
+			value: Date_date ? Date_date : '', //.toLocaleDateString() : '',
+			
+			readonly: true,
+
+			'aria-labelledby': str_dateId + '-label',
+
+			role: 'textbox'
+		}
+
+		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
+
+		innerDiv.appendChild(this.createElement( // input
+		{
+			element: 'input',			
+			
+			attributes: attributes,
+			
+			classList: ['validate']//, 'datepicker', 'picker__input']
+		}));
+		
+		
+		var labelElement = this.createElement( // label
+		{	
+			element: 'label',			
+			
+			attributes: {for: str_dateId, id: str_dateId + '-label'},
+			
+			classList: Date_date ? ['form-label', 'active'] : ['form-label'],
+			
+			dataset: {error: 'Please enter date'},
+			
+			innerHTML: str_label
+		});
+
+		
+		if (bool_required) {
+
+			labelElement.appendChild(this.createElement( // required field indicator
+			{
+				element: 'span',
+
+				classList: ['required-indicator'],
+
+				innerHTML: '*'
+			}));
+		}
+
+		innerDiv.appendChild(labelElement);
+
+		
+		/*
+		innerDiv.appendChild(this.createElement( // custom error div
+		{	
+			element: 'div',			
+			
+			attributes: {id: str_dateId + '-error'},
+			
+			classList: ['custom-validate']
+		}));
+		*/
+		
+		
+		return outerDiv;
+	}
+
+	/* old code using picker.js
 	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
 
 		var outerDiv =  this.createElement( // outer div
@@ -309,7 +412,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			'aria-labelledby': str_dateId + '-label',
 
-			role: 'text'
+			role: 'textbox'
 		}
 
 		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
@@ -364,7 +467,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		
 		
 		return outerDiv;
-	}
+	}*/
 
 
 	/** Factory method for creating HTML element based on specs provided in JSON object.
@@ -502,7 +605,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			'aria-labelledby': str_EmailId + '-label',
 
-			role: 'text'
+			role: 'textbox'
 		}
 
 		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
@@ -661,7 +764,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			'aria-labelledby': str_fieldId + '-label',
 
-			role: 'text'
+			role: 'textbox'
 		}
 
 		if (!isNaN(parseInt(int_min))) {attributes.min = int_min;}
@@ -762,7 +865,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				'aria-labelledby': str_passwordId + '-label',
 
-				role: 'text'
+				role: 'textbox'
 			},
 			
 			classList: ['validate']
@@ -994,7 +1097,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				'aria-labelledby': str_confirmationId + '-label',
 
-				role: 'text'
+				role: 'textbox'
 			},
 			
 			classList: ['validate']
@@ -1289,7 +1392,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			'aria-labelledby': str_fieldId + '-label',
 
-			role: 'text'
+			role: 'textbox'
 		}
 
 		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
@@ -1397,7 +1500,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			'aria-labelledby': str_timeId + '-label',
 
-			role: 'text'
+			role: 'textbox'
 		}
 
 		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}

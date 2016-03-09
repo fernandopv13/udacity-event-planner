@@ -622,8 +622,7 @@ app.Controller = function() {
 		*
 		* @return {void}
 		*
-		* @todo Simplify this by taking inspiration from e.g. the Strategy pattern and farm out the work to a zoo of e.g. UIActionHandlers. By doing this as a (re-)broadcast using the Observer pattern this method could potentially be reduced to a single line!
-		* @todo Get sign in to work using Strategy pattern
+		* @todo Get sign in to work using Strategy pattern, then clean out entire Switch statement with the old code
 		*/
 
 		function __update(View_v, Model_m, int_uiaction) {
@@ -743,6 +742,9 @@ app.Controller = function() {
 					break;
 				
 				case app.View.UIAction.SIGNIN: // submission from sign in form
+
+					// Requires debugging before the code can switch over to the notification model (Strategy pattern):
+					// not sure, but I think the problem could have something to do with what gets passed in the call to onAccountSelected()
 
 					//this.notifyObservers(Model_m, int_uiaction, View_v);
 
