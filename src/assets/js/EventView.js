@@ -209,7 +209,7 @@ app.EventView.prototype.render = function(Event_e) {
 			containerDiv.appendChild(outerDiv);			
 
 
-		// Add start date and time field
+		// Add start date and end date field s
 
 			outerDiv =  this.createElement( // outer div
 			{
@@ -221,13 +221,13 @@ app.EventView.prototype.render = function(Event_e) {
 			containerDiv.appendChild(outerDiv); // Add to container
 			
 		
-			outerDiv.appendChild(this.createDateField( // Date
+			outerDiv.appendChild(this.createDateField( // Start date
 
 				's6',
 
 				'event-start-date',
 
-				'Start Date',
+				'Starts',
 
 				true,
 
@@ -236,6 +236,22 @@ app.EventView.prototype.render = function(Event_e) {
 			).children[0]); 
 				
 			
+			outerDiv.appendChild(this.createDateField( // End date
+
+				's6',
+
+				'event-end-date',
+
+				'Ends',
+
+				false,
+
+				Event_e.end()
+
+			).children[0]);
+
+
+			/*
 			outerDiv.appendChild(this.createTimeField( // Time
 
 				's6',
@@ -249,10 +265,12 @@ app.EventView.prototype.render = function(Event_e) {
 				Event_e.start()
 
 			).children[0]); // extract date itself from row wrapper
+			*/
 
 
-		// Add end date and time field
+		// Add end date and time field (deprecated)
 
+			/*
 			outerDiv =  this.createElement( // outer div
 			{
 				element: 'div',
@@ -291,6 +309,7 @@ app.EventView.prototype.render = function(Event_e) {
 				Event_e.end()
 
 			).children[0]);
+			*/
 
 
 		// Add event type field

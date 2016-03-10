@@ -267,10 +267,16 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* 4. Support users relying on assistive technologies (e.g. screen readers)
 	* 5. Provide a graceful, functional fallback for all other cases
 	*
+	* Assumptions (after investigation):
+	* 1. The native datetime picker widgets on mobile (tested on Android and iOS), have excellent visual/interaction design, and acceptable accessibility; so only use custom widget when native support is unavailable
+	* 2. Even when supported, the datetime-local widgets on (Windows) lap/desktops are a bad design fit for the app's reliance on Materialize.css and/or have unsatisfying visual/interaction design; so always override with custom widget
+	* 3. Keyboard entry is a primary input method on lap/desktops, on mobile (touch) alternatives are preferable
+	* 4. It is acceptable to not provide a fully accessible version of the custom date picker widget, as long as people using assistive tech can enter directly into the input field unhindered and undisturbed by the widget
+	*
 	* @return {HTMLDivElement} DIV element
 	*/
 
-	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
+	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_d) {
 
 		var outerDiv =  this.createElement( // outer div
 		{
@@ -296,8 +302,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			id: str_dateId,
 			
-			value: Date_date ? Date_date : '', //.toLocaleDateString() : '',
-			
+			value: Date_d ? Date_d.toISOString() : '', // only works sometimes, so also set in data, and when initializing post-render
+
 			//readonly: true,
 
 			'aria-labelledby': str_dateId + '-label',
@@ -313,19 +319,21 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			attributes: attributes,
 			
-			classList: ['validate']//, 'datepicker', 'picker__input']
+			classList: ['datetimepicker-input', 'validate'], //, 'datepicker', 'picker__input']
+
+			dataset: {value:  (Date_d ? Date_d.toISOString() : '')}
 		}));
-		
-		
+
+
 		var labelElement = this.createElement( // label
 		{	
 			element: 'label',			
 			
 			attributes: {for: str_dateId, id: str_dateId + '-label'},
 			
-			classList: Date_date ? ['form-label', 'active'] : ['form-label'],
+			classList: Date_d ? ['form-label', 'active'] : ['form-label'],
 			
-			dataset: {error: 'Please enter date'},
+			dataset: {error: 'Please enter in format mm/dd/yyyy hh:mm'},
 			
 			innerHTML: str_label
 		});
@@ -362,7 +370,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	}
 
 	/* old code using picker.js
-	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_date) {
+	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_d) {
 
 		var outerDiv =  this.createElement( // outer div
 		{
@@ -395,7 +403,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				hidden: true,
 
-				value: Date_date ? Date_date.getTime() - 1000 * (3600 * Date_date.getHours() + 60 * Date_date.getMinutes() + Date_date.getSeconds()) : '' // ms since epoch at midnight on start of date
+				value: Date_d ? Date_d.getTime() - 1000 * (3600 * Date_d.getHours() + 60 * Date_d.getMinutes() + Date_d.getSeconds()) : '' // ms since epoch at midnight on start of date
 			}
 		}));
 
@@ -406,7 +414,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			id: str_dateId,
 			
-			value: Date_date ? Date_date.toLocaleDateString() : '',
+			value: Date_d ? Date_d.toLocaleDateString() : '',
 			
 			readonly: true,
 
@@ -433,7 +441,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			attributes: {for: str_dateId, id: str_dateId + '-label'},
 			
-			classList: Date_date ? ['form-label', 'active'] : ['form-label'],
+			classList: Date_d ? ['form-label', 'active'] : ['form-label'],
 			
 			dataset: {error: 'Please enter date'},
 			
@@ -1447,7 +1455,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {HTMLDivElement} DIV element
 	*/
 
-	app.View.prototype.createTimeField = function (str_width, str_timeId, str_label, bool_required, Date_date) {
+	app.View.prototype.createTimeField = function (str_width, str_timeId, str_label, bool_required, Date_d) {
 
 		var outerDiv =  this.createElement( // outer div
 		{
@@ -1479,7 +1487,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				hidden: true,
 
-				value: Date_date ? 60 * Date_date.getHours() + Date_date.getMinutes() : '' // timepicker.js works with number of minutes
+				value: Date_d ? 60 * Date_d.getHours() + Date_d.getMinutes() : '' // timepicker.js works with number of minutes
 			}
 		}));
 
@@ -1490,9 +1498,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			id: str_timeId,
 			
-			value: Date_date ?
+			value: Date_d ?
 
-				Date_date.toLocaleTimeString()
+				Date_d.toLocaleTimeString()
 
 				: '',
 			
@@ -1521,7 +1529,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			attributes: {for: str_timeId, id: str_timeId + '-label'},
 			
-			classList: Date_date ? ['form-label', 'active'] : ['form-label'],
+			classList: Date_d ? ['form-label', 'active'] : ['form-label'],
 			
 			dataset: {error: 'Please enter time'},
 			
@@ -1693,7 +1701,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			|| !app.device().isMobile()) { // always prefer custom picker on desktop) { // Use custom widget
 
 			
-			// Initialize datetimepicker widget
+			// Initialize bootstrap-datetimepicker widget
 
 			$('input[type="datetime-local"]').datetimepicker({
 
@@ -1733,22 +1741,77 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			// Suppress native datetimepicker (by changing input type to 'text')
 
-			$('input[type="datetime-local"]').addClass('datetimepicker-input'); // add a dummy class so we can find the collection easily
+			$('input[type="datetime-local"]').attr('type','text');
 
-			$('input[type="datetime-local"]').attr('type','text'); // change the type to text
+
+			// Make sure any existing value(s) is/are presented, and nicely formatted
+		
+			var val;
+
+			$('.datetimepicker-input').each(function(ix, item) { // iterate through any and all datetime-pickers
+
+				val = $(item).data().value;
+
+				if (val !== '') { // there is a date entry
+
+					if (typeof moment !== 'undefined') { // moment is available
+
+						if (moment(val).isValid()) { // entry is a valid date/moment
+
+							$(item).val(moment(val).format('MM/DD/YYYY h:mm A')); // insert reformatted date into UI
+						}
+					}
+
+					else { // no moment, so cobble 12h string together from individual date components
+
+						val = new Date(val);
+
+						$(item).val(
+
+							val.getMonth()
+							
+							+ '/' + val.getDate()
+
+							+ '/' + val.getFullYear()
+
+							+ ' ' + (val.getHours() < 12 ? val.getHours() : val.getHours() - 12)
+
+							+ ':' + val.getMinutes()
+
+							+ ' ' + (val.getHours() < 13 ? 'AM': 'PM')
+						);
+					}
+				}
+			});
 		}
 
 		else { // Use native widget
 
+			// Make sure any existing value(s) is/are presented, and nicely formatted
+
+			$('.datetimepicker-input').each(function(ix, item) { // iterate through any and all datetime-pickers
+
+				val = $(item).data().value;
+
+				if (val !== '') { // there is a date entry
+
+					// native datetime-locals require an ISO 8601 string with no trailing 'Z'
+					// we also want to trim the seconds, or else some browsers will diaplay them, some not
+
+					val = new Date(val)
+
+					$(item).val(val.toISOString().split('T')[0] + 'T' + val.getHours() + ':' + val.getMinutes());
+				}
+			});
+
 			// attach event handlers
 			// note: short of manual polling, there seems to be very little support for 'changey' input events on mobile
 			// but focus and blur seem to work, and be compatible with the native picker widgets, so working with them.
-
+			
 			$('input[type="datetime-local"]').blur(function(nEvent) { // placeholder until I get to the actual implementation
 
 				console.log(nEvent.currentTarget.id);//.getDateTimePickerValue('event-start-date'));
-
-			}.bind(this));
+			});
 		}
 	};
 
