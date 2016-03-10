@@ -12,10 +12,35 @@
 		
 		<!--Import styles -->
 		<!-- @gulp-app-style-tags-begin -->
+		<link rel="stylesheet" href="lib/bootstrap_v3.3.6/css/bootstrap.min.css"><!-- for bootstrap-datetimepicker -->
+		<link rel="stylesheet" href="lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.css">
 		<link type="text/css" rel="stylesheet" href="assets/css/materialize.css" media="screen"/>
 		<link type="text/css" rel="stylesheet" href="assets/css/app.css" media="screen"/>
 		<!-- @gulp-app-style-tags-end -->
 		
+		<style>
+			
+			/* Override som defaults to make bootstrap-datetimepicker match Materialize's colour scheme  */
+
+			a {
+				color: #26a69a;
+			}
+
+			td.active,
+			td.active:hover,
+			td.second:hover,
+			td.today {
+				background-color: #26a69a !important;
+			}
+
+			.bootstrap-datetimepicker-widget {
+				border: 1px solid #9e9e9e;
+				/*border-radius: 3px;*/
+				box-shadow: 3px 3px 5px #9e9e9e;
+			}
+		</style>
+
+
 		<!--Let browser know app is optimized for mobile-->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -95,9 +120,13 @@
 			</div>
 
 		<!-- Library source files -->
-			<script type="text/javascript" src="lib/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js; stic with 2.1.1 until materialize/picker.js catch up -->
-			<script type="text/javascript" src="lib/materialize_v0.97.5/js/bin/materialize.min.js"></script>
-			<script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script>
+			<script src="lib/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js; stic with 2.1.1 until materialize/picker.js catch up -->
+			<script src="lib/bootstrap_v3.3.6/js/bootstrap.min.js"></script><!-- for bootstrap-datetimepicker -->
+			<script src="lib/modernizr_v3.3.1-inputtypes.js"></script><!-- for bootstrap-datetimepicker -->
+			<script src="lib/moment.js_V2.12.0/min/moment-with-locales.min.js"></script><!-- for bootstrap-datetimepicker -->
+			<script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script>
+			<script src="lib/materialize_v0.97.5/js/bin/materialize.min.js"></script>
+			<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
 		
 		<!-- App source files -->
 			<!-- @gulp-app-script-tags-begin -->

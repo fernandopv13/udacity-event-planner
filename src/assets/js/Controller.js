@@ -70,9 +70,8 @@ app.Controller = function() {
 			if (arguments.length > 0) { // setting
 
 				if (View_v === null || View_v.isInstanceOf(app.View)) {
-				
+
 					this.notifyObservers(Model_m); // first notify observers: forms won't update if they are the current view
-					
 					
 					for (var view in _views) {
 

@@ -618,8 +618,7 @@ app.EventView.prototype.render = function(Event_e) {
 
 			this.$renderContext().append(formElement);
 
-
-		// Initalize and (re)assign event handlers to form elements
+		// Initialize
 
 			$('#event-name').attr('autofocus', true); // set initial focus on name
 			
@@ -634,6 +633,8 @@ app.EventView.prototype.render = function(Event_e) {
 			$('#event-location').focus(this.suggestLocations); // suggest locations
 
 			
+			
+			/* Old (Materialize) pickers
 			$('#event-start-date.datepicker').pickadate({ // Initalize start date picker
 				
 				//closeOnSelect: true, // bug: ineffective
@@ -744,8 +745,146 @@ app.EventView.prototype.render = function(Event_e) {
 
 				}
 			});
-
+			*/
 						
+			(function initPickers() {
+
+				function useCustomPicker() {
+
+					var isMobile = false, hasNativePicker = false;
+
+					['android', 'blackberry', 'bb10', 'iemobile', 'ipad', 'ipod', 'opera mini', 'mobile'].forEach(function(key) {
+
+						isMobile = isMobile || window.navigator.userAgent.toLowerCase().indexOf(key) > -1;
+					});
+
+					hasNativePicker = Modernizr.inputtypes['datetime-local'];
+
+					return isMobile && !hasNativePicker && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
+
+					|| !isMobile; // always prefer custom picker on desktop
+				}
+
+				
+				function getDateTimeValue() {
+
+					var data = $('#event-start-date').data(), date = null;
+
+					if (typeof data.DateTimePicker !== 'undefined') { // we can access the DateTimePicker js object
+
+						if (typeof moment !== 'undefined') { // moment is available
+
+							if (data.DateTimePicker.date() && data.DateTimePicker.date().isValid()) { // we have a valid moment instance
+
+								date = data.DateTimePicker.date() // get that moment
+							}
+						}
+					}
+
+					else { // parse the input's value manually
+
+						date = $('#event-start-date').val();
+
+						if (typeof moment !== 'undefined') { // use moment if available (probably won't work on mobile)
+
+							date = moment(
+
+								date,
+
+								[ // try a number of expected formats, in order of likelyhood for en-us locale
+
+									'YYYY-MM-DDTHH:mm', // ISO 8601
+
+									'MM/DD/YYYY HH:mm A', // 12h, numbers only, US/North American date/month order
+
+									'DD. MMM YYYY hh:mm A', // 12h/24h, month name, date/month order as used natively by iOS and x-OS Chrome
+
+									'MM/DD/YYYY hh:mm:ss' // 12h, numbers only, UK/European date/month order
+								],
+
+								true
+							);
+
+							date = date.isValid() ? date : null;
+						}
+					}
+
+					if (date === null) { // try to brute force parsing if moment - and all else - fails
+
+						date = Date.parse(date);
+
+						date = !isNaN(date) ? new Date(date): null;
+					}
+
+					return date;
+				}
+
+				if (useCustomPicker()) { // Use custom widget
+
+					// Initialize datetimepickers
+
+					$('input[type="datetime-local"]').datetimepicker({
+
+						//debug: true,
+
+						focusOnShow: true, // give textbox focus when showing picker
+
+						ignoreReadonly: true,
+
+						locale: moment.locale('en')
+					});
+
+					// Attach event handlers
+
+					$('input[type="datetime-local"]').on('dp.change', function(nEvent) {
+
+						console.log(getDateTimeValue());
+					});
+
+					// Enable direct editing in input box (todo: use iteration instead of manual brute force)
+
+					if ($('input[type="datetime-local"]').data().DateTimePicker) {
+
+						$('#event-start-date').data().DateTimePicker.enable();  // enable editing in input field
+
+						$('#event-start-date').data().DateTimePicker.options({keyBinds: null});  // remove all keyboard event handlers from picker
+
+						$('#event-end-date').data().DateTimePicker.enable();
+
+						$('#event-end-date').data().DateTimePicker.options({keyBinds: null});
+					}
+
+					/*
+					var data = $('#event-start-date').data();
+
+					if (typeof data.DateTimePicker !== 'undefined') {
+
+						data.DateTimePicker.enable(); // enable editing in input field
+
+						data.DateTimePicker.options({keyBinds: null}) // remove all keyboard event handlers from picker
+					}
+					*/
+					
+					// Suppress native datetimepicker (by changing input type to 'text')
+
+					$('input[type="datetime-local"]').addClass('datetimepicker-input'); // add a dummy class so we can find the collection easily
+
+					$('#event-start-date').attr('type','text'); // change the type to text
+				}
+
+				else { // Use native widget
+
+					// attach event handlers
+					// note: short of manual polling, there seems to be very little support for 'changey' input events on mobile
+					// but focus and blur seem to work, and be compatible with the native picker widgets, so working with them.
+
+					$('#event-start-date').blur(function() { // placeholder until I get to the actual implementation
+
+						console.log(getDateTimeValue());
+					});
+				}
+			})();
+
 			$('#event-capacity').keyup(function(event) { // validate capacity
 
 				this.validateCapacity(event, 'event-capacity');
@@ -768,8 +907,8 @@ app.EventView.prototype.render = function(Event_e) {
 				$('#event-host').val('');
 			});
 
-			
-			$('textarea#description').characterCounter(); // count characters in description
+			// This causes rendering to fail on Android and iOS, disabled for now:
+			//$('textarea#description').characterCounter(); // count characters in description
 
 			
 			$('#event-form-cancel').click(function(event) { // cancel edits

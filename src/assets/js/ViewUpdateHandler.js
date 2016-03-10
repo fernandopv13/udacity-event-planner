@@ -23,6 +23,8 @@ var app = app || {};
 * @author Ulrik H. Gade, March 2016
 *
 * @todo Add error handling if called with param that is not a Controller
+*
+* @todo Since these objects will only ever exists as singletons, they could be candidates for a refactoring into object literal, possible saving some object creation overhead
 */
 
 app.ViewUpdateHandler = function(Controller_c) {

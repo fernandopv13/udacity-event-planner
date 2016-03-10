@@ -298,7 +298,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			value: Date_date ? Date_date : '', //.toLocaleDateString() : '',
 			
-			readonly: true,
+			//readonly: true,
 
 			'aria-labelledby': str_dateId + '-label',
 
@@ -1640,11 +1640,16 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	};
 	
 	
-	/** Executes default shared behaviour for when a View has rendered itself */
+	/** Abstract method. Executes default shared behaviour for when a View has rendered itself.
+	*
+	* @return {void}
+	*
+	* @throws {AbstractMethodError} If trying to invoke (abstract method)
+	*/
 
 	app.View.prototype.onRender = function() {
 
-		return; // so far, better handled by subclasses, so no action
+		throw new AbstractMethodError('onRender() must be implem by subclasses');
 	}
 	
 
