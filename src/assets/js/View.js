@@ -1557,7 +1557,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	}
 
 
-	/* Utility for displaying and hiding field error messages during interactive form validation
+	/* Displays or hides field error messages during interactive form validation
 	*
 	*/
 
@@ -1602,6 +1602,67 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	};
 
 
+	/** Gets (parses) value of datetime picker using datetime-local input field
+	*
+	* @param {String} id Id of the input field
+	*
+	* @return {Date} date A valid Date object, or a moment if supported by the browser, or null
+	*/
+
+	app.View.prototype.getDateTimePickerValue = function(str_inputId) {
+
+		var data = $('#str_inputId').data(), date = null;
+
+		if (typeof data.DateTimePicker !== 'undefined') { // we can access the DateTimePicker js object
+
+			if (typeof moment !== 'undefined') { // moment is available
+
+				if (data.DateTimePicker.date() && data.DateTimePicker.date().isValid()) { // we have a valid moment instance
+
+					date = data.DateTimePicker.date() // get that moment
+				}
+			}
+		}
+
+		else { // parse the input's value manually
+
+			date = $('#str_inputId').val();
+
+			if (typeof moment !== 'undefined') { // use moment if available (probably won't work on mobile)
+
+				date = moment(
+
+					date,
+
+					[ // try a number of expected formats, in order of likelyhood for en-us locale
+
+						'YYYY-MM-DDTHH:mm', // ISO 8601
+
+						'MM/DD/YYYY HH:mm A', // 12h, numbers only, US/North American date/month order
+
+						'DD. MMM YYYY hh:mm A', // 12h/24h, month name, date/month order as used natively by iOS and x-OS Chrome
+
+						'MM/DD/YYYY hh:mm:ss' // 12h, numbers only, UK/European date/month order
+					],
+
+					true
+				);
+
+				date = date.isValid() ? date : null;
+			}
+		}
+
+		if (date === null) { // try to brute force parsing if moment - and all else - fails
+
+			date = Date.parse(date);
+
+			date = !isNaN(date) ? new Date(date): null;
+		}
+
+		return date;
+	}
+
+
 	/** Utility for hiding view in the UI on demand.
 	*
 	* Uses jQuery.hide().
@@ -1621,6 +1682,76 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		this.$renderContext().attr('aria-hidden', true);
 	}
+
+
+	/** Initializes any and all datetime pickers on the pages using datetime-local inputs */
+
+	app.View.prototype.initDateTimePicker = function() {
+
+		if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
+
+			|| !app.device().isMobile()) { // always prefer custom picker on desktop) { // Use custom widget
+
+			
+			// Initialize datetimepicker widget
+
+			$('input[type="datetime-local"]').datetimepicker({
+
+				//debug: true,
+
+				focusOnShow: true, // give textbox focus when showing picker
+
+				ignoreReadonly: true,
+
+				locale: moment.locale('en')
+			});
+
+			
+			// Attach event handlers
+
+			$('input[type="datetime-local"]').on('dp.change', function(nEvent) {
+
+				console.log(nEvent.currentTarget.id);//.getDateTimePickerValue('event-start-date'));
+
+			});
+
+			
+			// Enable direct editing in input box
+
+			$('input[type="datetime-local"]').each(function(ix, item) { // not sure if all of these need to be set on every instance
+
+				if ($(item).data().DateTimePicker) { // DateTimePicker is defined, so we can ...
+
+					$(item).data().DateTimePicker.enable();  // enable editing in input field
+
+					$(item).data().DateTimePicker.options({keyBinds: null});  // remove all keyboard event handlers from picker
+
+					// later, maybe revisit if it would be useful to retain a subset of key events on the picker itself
+				}
+			});
+
+			
+			// Suppress native datetimepicker (by changing input type to 'text')
+
+			$('input[type="datetime-local"]').addClass('datetimepicker-input'); // add a dummy class so we can find the collection easily
+
+			$('input[type="datetime-local"]').attr('type','text'); // change the type to text
+		}
+
+		else { // Use native widget
+
+			// attach event handlers
+			// note: short of manual polling, there seems to be very little support for 'changey' input events on mobile
+			// but focus and blur seem to work, and be compatible with the native picker widgets, so working with them.
+
+			$('input[type="datetime-local"]').blur(function(nEvent) { // placeholder until I get to the actual implementation
+
+				console.log(nEvent.currentTarget.id);//.getDateTimePickerValue('event-start-date'));
+
+			}.bind(this));
+		}
+	};
+
 
 
 	/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference)

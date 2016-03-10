@@ -15,10 +15,11 @@
 		<!--script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script-->
 		<!--script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script-->
 		<script src="lib/bootstrap_v3.3.6/js/bootstrap.min.js"></script>
-		<script src="lib/modernizr_v3.3.1-inputtypes.js"></script>
+		<script src="lib/modernizr_v3.3.1-matchmedia-inputtypes.js"></script>
 		<!--script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script-->
 		<script src="lib/moment.js_V2.12.0/min/moment-with-locales.min.js"></script>
 		<script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="assets/js/Device.js"></script>
 		
 		<script>
 
@@ -186,6 +187,12 @@
 
 		<div id="value">value</div>
 
+		<div id="device-height"></div>
+
+		<div id="device-width"></div>
+
+		<div id="mobile"></div>
+
 		<div>
 			
 			<script>document.write('datetimepicker supported: ' +  Modernizr.inputtypes['datetime-local']);</script>
@@ -204,6 +211,13 @@
 
 					console.log(getDateTimeValue());
 				});
+
+				//$('#device-height').text(window.matchMedia("(max-device-height: 1024px)").matches ? true : false); //'outerHeight: ' + window.outerHeight);
+
+				//$('#device-width').text(window.matchMedia("(max-device-width: 1024px)").matches ? true : false); //'outerWidth: ' + window.outerWidth);
+
+				$('#mobile').text('mobile: ' + (new app.Device()).isMobile());
+				
 			};
 
 		</script>

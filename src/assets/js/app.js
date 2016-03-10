@@ -1,8 +1,16 @@
 'use strict';
 
-/***********************************************************
+/*
+* The app object provides a basic namespace for the application
+* and app.init() gets things going when the page has fully loaded.
+* 
+*
+* Please see individual source files, and provided UML diagrams,
+* for further comments.
+
+/******************************************************************************
 * public module app
-***********************************************************/
+******************************************************************************/
 
 /** @description Creates a module for the app using the immediately invoked anonymous function pattern. In OO terms, basically a singleton of an anonymous class with no meaningful static members.
 *
@@ -16,6 +24,8 @@
 
 var app = (function(self) {
 	
+	var _device = new app.Device();
+
 	var _registry = []; // top level collection of collections of data model objects managed by the app
 	
 	var _prefs = { // list of prefs, private so we can control access
@@ -175,6 +185,8 @@ var app = (function(self) {
 		}
 	}
 	
+	self.device = function() {return _device;};
+
 	self.init = function() {
 		
 		// Hide progress indicator

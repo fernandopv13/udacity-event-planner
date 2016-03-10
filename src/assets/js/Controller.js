@@ -737,7 +737,6 @@ app.Controller = function() {
 					}
 					*/
 
-
 					break;
 				
 				case app.View.UIAction.SIGNIN: // submission from sign in form
