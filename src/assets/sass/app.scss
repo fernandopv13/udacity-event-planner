@@ -16,43 +16,43 @@
 @charset "UTF-8";
 
 // Mixins
-// @import "materialize_v0.97.5/components/prefixer";
-@import "materialize_v0.97.5/components/mixins";
-@import "materialize_v0.97.5/components/color";
+// @import "../../lib/materialize_v0.97.5/sass/components/prefixer";
+@import "../../lib/materialize_v0.97.5/sass/components/mixins";
+@import "../../lib/materialize_v0.97.5/sass/components/color";
 
 // Variables;
-@import "materialize_v0.97.5/components/variables";
+@import "../../lib/materialize_v0.97.5/sass/components/variables";
 
 // Reset
-@import "materialize_v0.97.5/components/normalize";
+@import "../../lib/materialize_v0.97.5/sass/components/normalize";
 
 // Components
-@import "materialize_v0.97.5/components/global";
-@import "materialize_v0.97.5/components/icons-material-design";
-@import "materialize_v0.97.5/components/grid";
-@import "materialize_v0.97.5/components/navbar";
-@import "materialize_v0.97.5/components/roboto";
-@import "materialize_v0.97.5/components/typography";
-//@import "materialize_v0.97.5/components/cards";
-@import "materialize_v0.97.5/components/toast";
-//@import "materialize_v0.97.5/components/tabs";
-//@import "materialize_v0.97.5/components/tooltip";
-@import "materialize_v0.97.5/components/buttons";
-@import "materialize_v0.97.5/components/dropdown";
-@import "materialize_v0.97.5/components/waves";
-@import "materialize_v0.97.5/components/modal";
-//@import "materialize_v0.97.5/components/collapsible";
-//@import "materialize_v0.97.5/components/chips";
-@import "materialize_v0.97.5/components/materialbox";
-@import "materialize_v0.97.5/components/form";
-//@import "materialize_v0.97.5/components/table_of_contents";
-@import "materialize_v0.97.5/components/sideNav";
-@import "materialize_v0.97.5/components/preloader";
-//@import "materialize_v0.97.5/components/slider";
-//@import "materialize_v0.97.5/components/carousel";
-@import "materialize_v0.97.5/components/date_picker/default.scss";
-@import "materialize_v0.97.5/components/date_picker/default.date.scss";
-@import "materialize_v0.97.5/components/date_picker/default.time.scss";
+@import "../../lib/materialize_v0.97.5/sass/components/global";
+@import "../../lib/materialize_v0.97.5/sass/components/icons-material-design";
+@import "../../lib/materialize_v0.97.5/sass/components/grid";
+@import "../../lib/materialize_v0.97.5/sass/components/navbar";
+@import "../../lib/materialize_v0.97.5/sass/components/roboto";
+@import "../../lib/materialize_v0.97.5/sass/components/typography";
+//@import "../../lib/materialize_v0.97.5/sass/components/cards";
+@import "../../lib/materialize_v0.97.5/sass/components/toast";
+//@import "../../lib/materialize_v0.97.5/sass/components/tabs";
+//@import "../../lib/materialize_v0.97.5/sass/components/tooltip";
+@import "../../lib/materialize_v0.97.5/sass/components/buttons";
+@import "../../lib/materialize_v0.97.5/sass/components/dropdown";
+@import "../../lib/materialize_v0.97.5/sass/components/waves";
+@import "../../lib/materialize_v0.97.5/sass/components/modal";
+//@import "../../lib/materialize_v0.97.5/sass/components/collapsible";
+//@import "../../lib/materialize_v0.97.5/sass/components/chips";
+@import "../../lib/materialize_v0.97.5/sass/components/materialbox";
+@import "../../lib/materialize_v0.97.5/sass/components/form";
+//@import "../../lib/materialize_v0.97.5/sass/components/table_of_contents";
+@import "../../lib/materialize_v0.97.5/sass/components/sideNav";
+@import "../../lib/materialize_v0.97.5/sass/components/preloader";
+//@import "../../lib/materialize_v0.97.5/sass/components/slider";
+//@import "../../lib/materialize_v0.97.5/sass/components/carousel";
+@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.scss";
+@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.date.scss";
+@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.time.scss";
 
 
 // Add app-specific customizations and bug fixes
@@ -63,6 +63,7 @@
 // Custom validation message for date- and timepickers:
 // stock message doesn't seem to work with the pickers
 
+/*DEPRECATED
 .custom-validate {
 	color: #F44336;
 	opacity: 1;
@@ -76,7 +77,7 @@
     width: 100%;
     display: none;
 }
-
+*/
 
 // Character counter for textareas
 
@@ -103,14 +104,14 @@
 }
 
 
-// Align form submit buttons in accordance with Material Design guidelines
+// Right-align form submit buttons in accordance with Material Design guidelines
 
 .form-submit {
 	text-align: right;
 	padding-right: 15px;
 }
 
-
+/* debug: trying to see if the 'fix' is only making it worse
 // Bugfix: prevent error messages from overlapping active labels on fields below.
 // Known remaining bug: problem persists when capacity field goes negative. This is rare enough to ignore for now.
 
@@ -160,7 +161,7 @@ input[type=search]:focus.invalid + label::after,
 textarea.materialize-textarea:focus.invalid + label::after {
 	top: 67px;
 }
-
+*/
 
 
 // Descriptions for input fields
@@ -205,7 +206,7 @@ textarea.materialize-textarea:focus.invalid + label::after {
 }
 
 
-// 'Edit guest list' button in event form (could generalize using css class b ut no need for now)
+// 'Edit guest list' button in event form (could generalize using css class but no need for now)
 
 #event-edit-guests-button {
 	color: blue;
@@ -223,6 +224,7 @@ textarea.materialize-textarea:focus.invalid + label::after {
 // Limit timepicker height on devices with large physical screens (i.e. laptops and PCs):
 // The very long default lists are unwieldy to operate on non-mobile, non-touch screens
 
+/*DEPRECATED
 @media (min-width:1025px) {
 	.picker__list {
 		max-height: 500px;
@@ -234,7 +236,7 @@ textarea.materialize-textarea:focus.invalid + label::after {
 		overflow: auto;
 	}
 }
-
+*/
 
 // Simple secondary navigation.
 // Would prefer to integrate this dynamically into main (top) nav.
@@ -280,4 +282,24 @@ fieldset {
 	label {
 		color: #000;
 	}
+}
+
+
+// Override som defaults to make bootstrap-datetimepicker match Materialize's colour scheme
+
+a {
+	color: #26a69a;
+}
+
+td.active,
+td.active:hover,
+td.second:hover,
+td.today {
+	background-color: #26a69a !important;
+}
+
+.bootstrap-datetimepicker-widget {
+	border: 1px solid #9e9e9e;
+	/*border-radius: 3px;*/
+	box-shadow: 3px 3px 5px #9e9e9e;
 }

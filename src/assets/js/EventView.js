@@ -96,7 +96,7 @@ app.EventView.prototype.render = function(Event_e) {
 			{
 				element: 'form',			
 				
-				attributes: {autocomplete: 'off', novalidate: true},
+				attributes: {autocomplete: 'off'},//, novalidate: true},
 				
 				classList: ['col', 's12']
 			});
@@ -140,7 +140,11 @@ app.EventView.prototype.render = function(Event_e) {
 
 				true,
 
-				Event_e.name() ? Event_e.name() : ''
+				Event_e.name() ? Event_e.name() : '',
+
+				'',
+
+				'app.View.prototype.validateName'
 			));
 		
 		
@@ -207,9 +211,9 @@ app.EventView.prototype.render = function(Event_e) {
 			outerDiv.appendChild(innerDiv);
 			
 			containerDiv.appendChild(outerDiv);			
+		
 
-
-		// Add start date and end date field s
+		// Add start date and end date fields
 
 			outerDiv =  this.createElement( // outer div
 			{
@@ -231,7 +235,9 @@ app.EventView.prototype.render = function(Event_e) {
 
 				true,
 
-				Event_e.start()
+				Event_e.start(),
+
+				'app.EventView.prototype.validateStartDate'
 
 			).children[0]); 
 				
@@ -244,14 +250,16 @@ app.EventView.prototype.render = function(Event_e) {
 
 				'Ends',
 
-				false,
+				false, // add 'validate' class manually
 
-				Event_e.end()
+				Event_e.end(),
+
+				'app.EventView.prototype.validateEndDate'
 
 			).children[0]);
+			
 
-
-			/*
+			/*DEPRECATED
 			outerDiv.appendChild(this.createTimeField( // Time
 
 				's6',
@@ -268,7 +276,7 @@ app.EventView.prototype.render = function(Event_e) {
 			*/
 
 
-		// Add end date and time field (deprecated)
+		// Add end date and time field (DEPRECATED)
 
 			/*
 			outerDiv =  this.createElement( // outer div
@@ -376,7 +384,7 @@ app.EventView.prototype.render = function(Event_e) {
 			
 			containerDiv.appendChild(outerDiv);
 
-
+		
 		// Add capacity field and edit guest list button
 
 			outerDiv = this.createNumberField(
@@ -423,7 +431,7 @@ app.EventView.prototype.render = function(Event_e) {
 			}));
 
 			outerDiv.appendChild(innerDiv);
-
+		
 
 		// Add host field
 
@@ -627,11 +635,10 @@ app.EventView.prototype.render = function(Event_e) {
 
 			containerDiv.appendChild(this.createRequiredFieldExplanation());
 
-		
+				
 		// Add submit and cancel buttons
 
 			containerDiv.appendChild(this.createSubmitCancelButtons('event-form'))
-			
 		
 		// Update DOM
 
@@ -644,306 +651,211 @@ app.EventView.prototype.render = function(Event_e) {
 			$('#event-name').attr('autofocus', true); // set initial focus on name
 			
 			
-			$('#event-name').keyup(function(event) { // validate name
+			/*DEPRECATED
+			$('#event-name').blur(function(event) { // validate name
+
+				// this gets called after Matrialize's global blur() handler on the document has finished managing the 'active' CSS class
 
 				this.validateName(event, 'event-name', 'Please enter name', true);
 	
 			}.bind(this));
+			*/
 
 
 			$('#event-location').focus(this.suggestLocations); // suggest locations
 
 			
-			
-			/* Old (Materialize) pickers
-			$('#event-start-date.datepicker').pickadate({ // Initalize start date picker
-				
-				//closeOnSelect: true, // bug: ineffective
-				
-				closeOnClear: true,
-				
-				format: 'mm/dd/yyyy',
 
-				onSet: function(nEvent) {
+			this.initDateTimePicker(); // generic initialization of bootstrap-datetime pickers
 
-					if (typeof nEvent.select === 'number') { // date selected
+			// Attach event handlers (dp.change doesn't 'take' if iterating, so going manual)
 
-						$('#event-start-date-hidden').val(nEvent.select); // set unformatted number representation of date to hidden field
+			// Note: short of manual polling, there seems to be very little support for 'changey' input events on mobile.
+			// But focus and blur seem to work, and to be compatible with the native picker widgets, so working with them.
 
-						this.close(); // 'this' refers to the picker widget here...
+			$('#event-start-date').on('dp.change', function(nEvent) { // change event from custom widget (if any)
 
-						app.EventView.prototype.validateDateRange(); // so call validation without reference to it
-					}
+				//console.log('dp.change on start date')
 
-					//else: month or year selected, stay open
+				//$('#event-start-date').blur(); // trigger response from global handler
 
-				}, // binding to the EventView here would make it impossible to close the widget from within the handler (I tried, and failed)
-				
-				selectMonths: true, // Creates a dropdown to control month
-				
-				selectYears: 15 // Creates a dropdown of 15 years to control year // init date pickers
-			});
+				//void this.validateStartDate(nEvent.currentTarget);
 
+				Materialize.updateTextFields(nEvent.currentTarget);
 
-			$('#event-end-date.datepicker').pickadate({ // Initalize end date picker
-				
-				//closeOnSelect: true, // bug: ineffective
-				
-				closeOnClear: true,
-				
-				format: 'mm/dd/yyyy',
+			}.bind(this));
 
-				onSet: function(nEvent) {
+			/*DEPRECATED
+			$('#event-start-date').blur(function(nEvent) { // blur event on input
 
-					if (typeof nEvent.select === 'number') { // date selected
+				if ($('#event-start-date').val() !== '') {
 
-						$('#event-end-date-hidden').val(nEvent.select); // set unformatted number representation of date to hidden field
-
-						this.close(); // 'this' refers to the picker widget here...
-
-						app.EventView.prototype.validateDateRange(); // so call validation without reference to it
-					}
-
-					//else: month or year selected, stay open
-
-				}, // binding to the EventView here would make it impossible to close the widget from within the handler (I tried, and failed)
-				
-				selectMonths: true, // Creates a dropdown to control month
-				
-				selectYears: 15 // Creates a dropdown of 15 years to control year // init date pickers
-			});
-
-
-			$('#event-start-time.timepicker').pickatime({ // init start time picker
-				
-				//closeOnSelect: true, // bug: ineffective
-				
-				closeOnClear: true,
-				
-				format: 'h:i A',
-				
-				//onSet: this.validateTimeRange
-
-				onSet: function(nEvent) {
-
-					if (typeof nEvent.select === 'number') { // date selected
-
-						$('#event-start-time-hidden').val(nEvent.select); // set minutes since midnight to hidden start time field
-
-						this.close(); // 'this' refers to the picker widget here...
-
-						app.EventView.prototype.validateTimeRange(); // so call validation without reference to it
-					}
-
-					//else: month or year selected, stay open
-
+					$('#event-start-date').addClass('active');
 				}
-			});
 
+				else {
 
-			$('#event-end-time.timepicker').pickatime({ // init end time picker
-				
-				//closeOnSelect: true, // bug: ineffective
-				
-				closeOnClear: true,
-				
-				format: 'h:i A',
-				
-				//onSet: this.validateTimeRange
-
-				onSet: function(nEvent) {
-
-					if (typeof nEvent.select === 'number') { // date selected
-
-						$('#event-end-time-hidden').val(nEvent.select); // set minutes since midnight to hidden end time field
-
-						this.close(); // 'this' refers to the picker widget here...
-
-						app.EventView.prototype.validateTimeRange(); // so call validation without reference to it
-					}
-
-					//else: month or year selected, stay open
-
+					$('#event-start-date').removeClass('active');
 				}
-			});
+
+				this.validateStartDate(nEvent);
+
+			}.bind(this));
+
 			*/
+
+
+			$('#event-end-date').on('dp.change', function(nEvent) { // change event from custom widget (if any)
+
+				//console.log('dp.change on end date')
+
+				//$('#event-end-date').blur(); // trigger response from global handler
+
+				//void this.validateEndDate(nEvent.currentTarget);
+
+				Materialize.updateTextFields(nEvent.currentTarget);
+
+			}.bind(this));
 						
-			//(function initPickers() {
+			
+			/*DEPRECATED
+			$('#event-end-date').blur(function(nEvent) { // blur event on input
 
-				//function useCustomPicker() {
+				if ($('#event-end-date').val() !== '') {
 
-					//return app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
+					$('#event-end-date').addClass('active');
+				}
 
-					//|| !app.device().isMobile(); // always prefer custom picker on desktop
+				else {
 
+					$('#event-start-date').removeClass('active');
+				}
 
-					/*
-					var isMobile = false, hasNativePicker = false;
+				this.validateEndDate(nEvent);
 
-					['android', 'blackberry', 'bb10', 'iemobile', 'ipad', 'ipod', 'opera mini', 'mobile'].forEach(function(key) {
+			}.bind(this));
+			*/
+			
+			
+			/* Old (Materialize) pickers (hanging on to the code until the project has passed the Udacity review) */
+			
+				/*
+				$('#event-start-date.datepicker').pickadate({ // Initalize start date picker
+					
+					//closeOnSelect: true, // bug: ineffective
+					
+					closeOnClear: true,
+					
+					format: 'mm/dd/yyyy',
 
-						isMobile = isMobile || window.navigator.userAgent.toLowerCase().indexOf(key) > -1;
-					});
+					onSet: function(nEvent) {
 
-					hasNativePicker = Modernizr.inputtypes['datetime-local'];
+						if (typeof nEvent.select === 'number') { // date selected
 
-					return isMobile && !hasNativePicker && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
+							$('#event-start-date-hidden').val(nEvent.select); // set unformatted number representation of date to hidden field
 
-					|| !isMobile; // always prefer custom picker on desktop
-					*/
-				//}
+							this.close(); // 'this' refers to the picker widget here...
+
+							app.EventView.prototype.validateDateRange(); // so call validation without reference to it
+						}
+
+						//else: month or year selected, stay open
+
+					}, // binding to the EventView here would make it impossible to close the widget from within the handler (I tried, and failed)
+					
+					selectMonths: true, // Creates a dropdown to control month
+					
+					selectYears: 15 // Creates a dropdown of 15 years to control year // init date pickers
+				});
+				*/
 
 				
 				/*
-				function getDateTimeValue(str_inputId) {
+				$('#event-end-date.datepicker').pickadate({ // Initalize end date picker
+					
+					//closeOnSelect: true, // bug: ineffective
+					
+					closeOnClear: true,
+					
+					format: 'mm/dd/yyyy',
 
-					var data = $('#event-start-date').data(), date = null;
+					onSet: function(nEvent) {
 
-					if (typeof data.DateTimePicker !== 'undefined') { // we can access the DateTimePicker js object
+						if (typeof nEvent.select === 'number') { // date selected
 
-						if (typeof moment !== 'undefined') { // moment is available
+							$('#event-end-date-hidden').val(nEvent.select); // set unformatted number representation of date to hidden field
 
-							if (data.DateTimePicker.date() && data.DateTimePicker.date().isValid()) { // we have a valid moment instance
+							this.close(); // 'this' refers to the picker widget here...
 
-								date = data.DateTimePicker.date() // get that moment
-							}
+							app.EventView.prototype.validateDateRange(); // so call validation without reference to it
 						}
-					}
 
-					else { // parse the input's value manually
+						//else: month or year selected, stay open
 
-						date = $('#event-start-date').val();
-
-						if (typeof moment !== 'undefined') { // use moment if available (probably won't work on mobile)
-
-							date = moment(
-
-								date,
-
-								[ // try a number of expected formats, in order of likelyhood for en-us locale
-
-									'YYYY-MM-DDTHH:mm', // ISO 8601
-
-									'MM/DD/YYYY HH:mm A', // 12h, numbers only, US/North American date/month order
-
-									'DD. MMM YYYY hh:mm A', // 12h/24h, month name, date/month order as used natively by iOS and x-OS Chrome
-
-									'MM/DD/YYYY hh:mm:ss' // 12h, numbers only, UK/European date/month order
-								],
-
-								true
-							);
-
-							date = date.isValid() ? date : null;
-						}
-					}
-
-					if (date === null) { // try to brute force parsing if moment - and all else - fails
-
-						date = Date.parse(date);
-
-						date = !isNaN(date) ? new Date(date): null;
-					}
-
-					return date;
-				}
-
+					}, // binding to the EventView here would make it impossible to close the widget from within the handler (I tried, and failed)
+					
+					selectMonths: true, // Creates a dropdown to control month
+					
+					selectYears: 15 // Creates a dropdown of 15 years to control year // init date pickers
+				});
 				*/
-
-				//if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
-
-					/*
-					|| !app.device().isMobile()) { // always prefer custom picker on desktop) { // Use custom widget
-
-					// Initialize datetimepickers
-
-					$('input[type="datetime-local"]').datetimepicker({
-
-						//debug: true,
-
-						focusOnShow: true, // give textbox focus when showing picker
-
-						ignoreReadonly: true,
-
-						locale: moment.locale('en')
-					});
-
-					
-					// Attach event handlers
-
-					$('input[type="datetime-local"]').on('dp.change', function(nEvent) {
-
-						
-						console.log(nEvent.currentTarget.id);//.getDateTimePickerValue('event-start-date'));
-
-					}.bind(this));
-
-					
-					// Enable direct editing in input box
-
-					$('input[type="datetime-local"]').each(function(ix, item) { // not sure if all of these need to be set on every instance
-
-						if ($(item).data().DateTimePicker) { // DateTimePicker is defined, so we can ...
-
-							$(item).data().DateTimePicker.enable();  // enable editing in input field
-
-							$(item).data().DateTimePicker.options({keyBinds: null});  // remove all keyboard event handlers from picker
-
-							// later, maybe revisit if it would be useful to retain a subset of key events on the picker itself
-						}
-					});
-					*/
-
-					
-					/*
-					if ($('input[type="datetime-local"]').data().DateTimePicker) {
-
-						$('#event-start-date').data().DateTimePicker.enable();  // enable editing in input field
-
-						$('#event-start-date').data().DateTimePicker.options({keyBinds: null});  // remove all keyboard event handlers from picker
-
-						$('#event-end-date').data().DateTimePicker.enable();
-
-						$('#event-end-date').data().DateTimePicker.options({keyBinds: null});
-					}
-					*/
-
-					/*
-					var data = $('#event-start-date').data();
-
-					if (typeof data.DateTimePicker !== 'undefined') {
-
-						data.DateTimePicker.enable(); // enable editing in input field
-
-						data.DateTimePicker.options({keyBinds: null}) // remove all keyboard event handlers from picker
-					}
-					*/
-					
-					// Suppress native datetimepicker (by changing input type to 'text')
 
 				/*
-					$('input[type="datetime-local"]').addClass('datetimepicker-input'); // add a dummy class so we can find the collection easily
+				$('#event-start-time.timepicker').pickatime({ // init start time picker
+					
+					//closeOnSelect: true, // bug: ineffective
+					
+					closeOnClear: true,
+					
+					format: 'h:i A',
+					
+					//onSet: this.validateTimeRange
 
-					$('input[type="datetime-local"]').attr('type','text'); // change the type to text
-				}
+					onSet: function(nEvent) {
 
-				else { // Use native widget
+						if (typeof nEvent.select === 'number') { // date selected
 
-					// attach event handlers
-					// note: short of manual polling, there seems to be very little support for 'changey' input events on mobile
-					// but focus and blur seem to work, and be compatible with the native picker widgets, so working with them.
+							$('#event-start-time-hidden').val(nEvent.select); // set minutes since midnight to hidden start time field
 
-					$('#event-start-date').blur(function(nEvent) { // placeholder until I get to the actual implementation
+							this.close(); // 'this' refers to the picker widget here...
 
-						console.log(this);//.getDateTimePickerValue('event-start-date'));
+							app.EventView.prototype.validateTimeRange(); // so call validation without reference to it
+						}
 
-					}.bind(this));
-				}
+						//else: month or year selected, stay open
+
+					}
+				});
 				*/
 
-			//}.bind(this))();
+				/*
+				$('#event-end-time.timepicker').pickatime({ // init end time picker
+					
+					//closeOnSelect: true, // bug: ineffective
+					
+					closeOnClear: true,
+					
+					format: 'h:i A',
+					
+					//onSet: this.validateTimeRange
 
-			this.initDateTimePicker();
+					onSet: function(nEvent) {
+
+						if (typeof nEvent.select === 'number') { // date selected
+
+							$('#event-end-time-hidden').val(nEvent.select); // set minutes since midnight to hidden end time field
+
+							this.close(); // 'this' refers to the picker widget here...
+
+							app.EventView.prototype.validateTimeRange(); // so call validation without reference to it
+						}
+
+						//else: month or year selected, stay open
+
+					}
+				});
+				*/
+			
 
 			$('#event-capacity').keyup(function(nEvent) { // validate capacity
 
@@ -967,7 +879,7 @@ app.EventView.prototype.render = function(Event_e) {
 				$('#event-host').val('');
 			});
 
-			// This causes rendering to fail on Android and iOS, disabled for now:
+			// This causes rendering to fail on Android and iOS, so disabled for now:
 			//$('textarea#description').characterCounter(); // count characters in description
 
 			
@@ -1132,8 +1044,7 @@ app.EventView.prototype.suggestHosts = function() {
 
 	for (var ix in hosts) {
 
-		console.log(hosts[ix].hostName());
-
+		
 		optionElement = document.createElement('option');
 
 		optionElement.value = hosts[ix].hostName();
@@ -1142,7 +1053,7 @@ app.EventView.prototype.suggestHosts = function() {
 
 		$listElement.append(optionElement);
 	}
-	console.log($listElement);
+	//console.log($listElement); //debug
 };
 
 
@@ -1231,11 +1142,110 @@ app.EventView.prototype.suggestLocations = function() {
 }
 
 
+/** Event handler for interactive validation of end date field
+*
+* @return {Boolean} true if validation is succesful, otherwise false
+*/
+
+app.EventView.prototype.validateEndDate = function(Element_e) {
+
+	var self = app.EventView.prototype, // context of call is window, so set 'this' reference to View hierarchy manually
+
+	endDate = self.getDateTimePickerValue(Element_e),
+
+	startDate = self.getDateTimePickerValue($('#event-start-date')[0]),
+
+	ret = false; // if all else fails, return false
+
+	if ($(Element_e).val() !== '') { // an entry has been made in end date
+
+		if (self.validateDate(Element_e)) { // end date is a valid date
+			
+			if (startDate !== null) { // a valid start date has been entered
+
+				ret =  (endDate.valueOf() >= startDate.valueOf()); // end date must be on or after start date
+			}
+
+			else { // an end date has been entered, but no start date (that's OK)
+
+				ret = true;
+			}
+		}
+
+		else { // invalid end date
+
+			ret =  false;
+		}
+	}
+
+	Element_e.setCustomValidity(ret ? '' : false); // set up for global handler, anything other than the empty string is taken as indicating an error
+
+	return ret;
+
+	/*
+	if ($('#event-end-date').val() !== '') { // entry has been made in end date
+
+		if (this.validateDate(nEvent, 'event-end-date')) { // end date is a valid date
+
+			if (this.isDateValid($('#event-start-date').val())) { // valid start date has been entered
+
+				if (this.getDateTimePickerValue('event-end-date').valueOf() >= this.getDateTimePickerValue('event-start-date').valueOf()) { // end date is after or on start date
+
+					return true;
+				}
+
+				else { // end is before start
+
+					this.displayValidation(nEvent, 'event-end-date', 'End must be after start', false);
+
+					return false;
+				}
+			}
+
+			else { // no start date, so end is good by default
+
+				return true;
+			}
+
+		}
+	}
+	
+	return false; // in all other cases, return false
+	*/
+
+}.bind(this);
+
+
 /** Event handler for interactive validation of start and end date fields
 *
 * @return {Boolean} true if validation is succesful, otherwise false
 */
 
+app.EventView.prototype.validateStartDate = function(Element_e) {
+
+	var self = app.EventView.prototype, // context of call is window, so set 'this' reference to View hierarchy manually
+
+	ret = false; // if all else fails, return false
+
+	if (self.validateDate(Element_e)) { // start date is a valid date
+
+		self.validateEndDate(Element_e); // re-check that end, if entered, is still after start
+
+		ret = true;
+	}
+
+	Element_e.setCustomValidity(ret ? '' : false); // set up for global handler, anything other than the empty string is taken as indicating an error
+
+	return ret;
+};
+
+
+//DEPRECATED
+/** Event handler for interactive validation of start and end date fields
+*
+* @return {Boolean} true if validation is succesful, otherwise false
+*/
+/*
 app.EventView.prototype.validateDateRange = function() {
 
 	//if (this.close) {this.close()} // close picker if called from dialog; setting closeOnClear true does not work (bug)
@@ -1270,16 +1280,16 @@ app.EventView.prototype.validateDateRange = function() {
 			ret = false;
 		}
 
-	/* focus causes end datepicker to open, no time to resolve, skip for now
-	else if (end === 'Invalid date') { // start selected, but not end
+	// focus causes end datepicker to open, no time to resolve, skip for now
+	//else if (end === 'Invalid date') { // start selected, but not end
 
-		$end.val(start); // set end date to start date
+	//	$end.val(start); // set end date to start date
 
-		$end.addClass('active');
+	//	$end.addClass('active');
 
-		$end.trigger('focus');
-	}
-	*/
+	//	$end.trigger('focus');
+	//}
+	
 	
 	else if (end_date < start_date) { // end date is before start
 
@@ -1319,13 +1329,14 @@ app.EventView.prototype.validateDateRange = function() {
 
 	return ret;
 }
+*/
 
-
+//DEPRECATED
 /** Validates end time field
 *
 * @return {Boolean} true if validation is succesful, otherwise false
 */
-
+/*
 app.EventView.prototype.validateEndTime = function() {
 
 	var $end_time = $('#event-end-time'),
@@ -1353,13 +1364,14 @@ app.EventView.prototype.validateEndTime = function() {
 
 	return false;
 };
+*/
 
-
+//DEPRECATED
 /** Validates start time field
 *
 * @return {Boolean} true if validation is succesful, otherwise false
  */
-
+/*
 app.EventView.prototype.validateStartTime = function() {
 
 	// Set up references to DOM
@@ -1388,12 +1400,14 @@ app.EventView.prototype.validateStartTime = function() {
 
 	return false;
 };
+*/
 
-
+//DEPRECATED
 /** Event handler for interactive validation of start and end time fields
 *
 * @return {Boolean} true if validation is succesful, otherwise false
  */
+ /*
 
 app.EventView.prototype.validateTimeRange = function() {
 
@@ -1485,3 +1499,4 @@ app.EventView.prototype.validateTimeRange = function() {
 
 	return true;
 }
+*/

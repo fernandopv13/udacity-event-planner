@@ -36,6 +36,8 @@ var app = app || {}; // create a simple namespace for the module
 * @return {View} Not supposed to be instantiated, except when extended by subclasses. But subclasses need to be able to call constructor when setting up inheritance.
 *
 * @author Ulrik H. Gade, March 2016
+*
+* @todo Break up into many more smaller chunks. Find a nice design pattern that supports this.
 */
 
 
@@ -210,50 +212,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	}
 
 
-	/** Factory method for creating floating main action button for views.
-	*
-	* Currently supports only buttons with a single action (Matrialize allows several actions per button).
-	*
-	* @return {HTMLDivElement} DIV element
-	*/
-
-	app.View.prototype.createFloatingActionButton = function (str_buttonId, str_icon, str_color, str_label) {
-
-		var outerDiv =  this.createElement( // outer div
-		{
-			element: 'div',
-
-			classList: ['fixed-action-btn']
-		});
-		
-
-		var anchorElement =  this.createElement( // inner div
-		{
-			element: 'a',
-
-			attributes: {id: str_buttonId, title: str_label},
-			
-			classList: ['btn-floating', 'btn-large', str_color]
-		});
-
-		outerDiv.appendChild(anchorElement);
-
-
-		anchorElement.appendChild(this.createElement(
-		{
-			element: 'i',
-
-			attributes: {'aria-labelledby': str_buttonId, role: 'button'},
-
-			classList: ['large', 'material-icons'],
-
-			innerHTML: str_icon
-		}));
-
-		return outerDiv;
-	}
-
-
 	/** Factory method for creating date picker fields for forms
 	*
 	* Uses a slightly customized version of Eonasdan's bootstrap-datetimepicker:
@@ -276,7 +234,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {HTMLDivElement} DIV element
 	*/
 
-	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_d) {
+	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_d, str_customValidator) {
 
 		var outerDiv =  this.createElement( // outer div
 		{
@@ -313,15 +271,24 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (bool_required) {attributes.required = true; attributes['aria-required'] = true;}
 
+		
+		var classList = ['datetimepicker-input'];
+
+		if(bool_required) {classList.push('validate');}
+
+		var dataset = {value: Date_d ? Date_d.toISOString().replace('Z', '') : ''};
+
+		if (str_customValidator) {dataset.customValidator = str_customValidator;}
+
 		innerDiv.appendChild(this.createElement( // input
 		{
 			element: 'input',			
 			
 			attributes: attributes,
 			
-			classList: ['datetimepicker-input', 'validate'], //, 'datepicker', 'picker__input']
+			classList: classList, //['datetimepicker-input'],//, 'validate'], //, 'datepicker', 'picker__input'] // the 'validate' class seems to cause strange behaviour, so dropping it
 
-			dataset: {value:  (Date_d ? Date_d.toISOString() : '')}
+			dataset: dataset
 		}));
 
 
@@ -333,7 +300,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			classList: Date_d ? ['form-label', 'active'] : ['form-label'],
 			
-			dataset: {error: 'Please enter in format mm/dd/yyyy hh:mm'},
+			dataset: {error: 'Please enter date in format mm/dd/yyyy hh:mm'},
 			
 			innerHTML: str_label
 		});
@@ -622,9 +589,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{
 			element: 'input',			
 			
-			attributes: attributes,
+			attributes: attributes
 			
-			classList: ['validate']
+			//classList: [validate''] // validate seems to causecauses error messages to only show when input has focus, not what I want
 		}));
 		
 		
@@ -699,6 +666,51 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		return innerDiv;
 	}
+
+	
+	/** Factory method for creating floating main action button for views.
+	*
+	* Currently supports only buttons with a single action (Matrialize allows several actions per button).
+	*
+	* @return {HTMLDivElement} DIV element
+	*/
+
+	app.View.prototype.createFloatingActionButton = function (str_buttonId, str_icon, str_color, str_label) {
+
+		var outerDiv =  this.createElement( // outer div
+		{
+			element: 'div',
+
+			classList: ['fixed-action-btn']
+		});
+		
+
+		var anchorElement =  this.createElement( // inner div
+		{
+			element: 'a',
+
+			attributes: {id: str_buttonId, title: str_label},
+			
+			classList: ['btn-floating', 'btn-large', str_color]
+		});
+
+		outerDiv.appendChild(anchorElement);
+
+
+		anchorElement.appendChild(this.createElement(
+		{
+			element: 'i',
+
+			attributes: {'aria-labelledby': str_buttonId, role: 'button'},
+
+			classList: ['large', 'material-icons'],
+
+			innerHTML: str_icon
+		}));
+
+		return outerDiv;
+	}
+
 
 
 	/** Factory method for creating the main heading in forms
@@ -787,9 +799,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{
 			element: 'input',			
 			
-			attributes: attributes,
+			attributes: attributes
 			
-			classList: ['validate']
+			//classList: ['validate'] // validate seems to causecauses error messages to only show when input has focus, not what I want
 		}));
 		
 		
@@ -874,9 +886,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				'aria-labelledby': str_passwordId + '-label',
 
 				role: 'textbox'
-			},
+			}
 			
-			classList: ['validate']
+			//classList: ['validate'] // validate seems to causecauses error messages to only show when input has focus, not what I want
 		}));
 		
 		
@@ -1106,9 +1118,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				'aria-labelledby': str_confirmationId + '-label',
 
 				role: 'textbox'
-			},
+			}
 			
-			classList: ['validate']
+			//classList: ['validate']// validate seems to causecauses error messages to only show when input has focus, not what I want
 		}));
 		
 		
@@ -1369,7 +1381,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @todo Add ability to also handle elements with datalists (e.g. event location)
 	*/
 
-	app.View.prototype.createTextField = function (str_width, str_fieldId, str_label, bool_required, value, str_datalistId) {
+	app.View.prototype.createTextField = function (str_width, str_fieldId, str_label, bool_required, value, str_datalistId, str_customValidator) {
 
 		var outerDiv =  this.createElement( // outer div
 		{
@@ -1407,13 +1419,19 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (str_datalistId) {attributes.list = str_datalistId;}
 
+		var classList = [];
+
+		if (bool_required) {classList.push('validate');}
+
 		innerDiv.appendChild(this.createElement( // input
 		{
 			element: 'input',			
 			
 			attributes: attributes,
 			
-			classList: ['validate']
+			classList: classList,
+
+			dataset: str_customValidator ? {customValidator: str_customValidator} : ''
 		}));
 		
 		
@@ -1555,9 +1573,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{	
 			element: 'div',			
 			
-			attributes: {id: str_timeId + '-error'},
+			attributes: {id: str_timeId + '-error'}
 			
-			classList: ['custom-validate']
+			//classList: ['custom-validate'] // validate seems to causecauses error messages to only show when input has focus, not what I want
 		}));
 
 		
@@ -1568,45 +1586,78 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	/* Displays or hides field error messages during interactive form validation
 	*
 	*/
+	//DEPRECATED
+	app.View.prototype.displayValidation = function(nEvent, str_fieldId, str_errorMsg, bool_valid) {
 
-	app.View.prototype.displayValidation = function(event, str_fieldId, str_errorMsg, bool_valid) {
+		var $field = $('#' + str_fieldId), $label = $('#' + str_fieldId + '-label');
 
-		var $field = $('#' + str_fieldId);
-
+		/*
 		if (!bool_valid) { // not valid, display validation error
 
-			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+			try { // tried feature detection using Modernizr.formvalidation, but it produces a false negative on iOS, so just catching any errors generated
 
-				event.target.labels[0].dataset.error = str_errorMsg;
+				// Leftovers from previous (unsuccesfull) attempts:
 
+				//$field[0].setCustomValidity(str_errorMsg); // set input's validity state to 'error/invalid'
+
+				//nEvent.target.labels[0].dataset.error = str_errorMsg; // try a different way for Chrome
+
+				// $field.next('label').data('error', str_errorMsg); // other browsers
+
+				
+				//$field[0].setCustomValidity(str_errorMsg); // anything other than the empty string indicates a validation error
+
+				//$label.data('error', str_errorMsg); // try to set a custom error message (fallback is default provided at field creation)
+
+				//$field.attr('aria-invalid', true); // mkae sure to expose the new validity state to assistive technologies
+
+				//window.validate_field($field); // leverage Materialize's built-in method for displaying/hiding field validation messages
+
+				
+				//$field.removeClass('valid'); // simulate Materialize's validate_field method
+
+				//$field.addClass('invalid');
+
+				//$label.addClass('active');
 			}
 
-			else { // Other browsers (updated value may not display, falls back on value in HTML)
+			catch(e) {
 
-				$field.next('label').data('error', str_errorMsg);
+				console.log(e.name);
 			}
-			
-			$field.addClass('invalid');
-
-			$field.attr('aria-invalid', true);
 		}
-
 		else { // valid
 
-			$field.removeClass('invalid');
+			try {
 
-			$field.attr('aria-invalid', false);
+				//$field[0].setCustomValidity(str_errorMsg); // set input's validity state to 'error/invalid'
 
-			if (event && event.target && event.target.labels) { // Chrome (does not update display if setting with jQuery)
+				//nEvent.target.labels[0].dataset.error = str_errorMsg; // try a different way for Chrome
 
-				event.target.labels[0].dataset.error = str_errorMsg; // can't get jQuery.data() to work
+				// $field.next('label').data('error', str_errorMsg); // other browsers
+
+				
+
+				//$field[0].setCustomValidity(''); // anything other than the empty string indicates a validation error
+
+				// no need to reset error message content
+
+				//$field.attr('aria-invalid', false); // make sure to expose the new validity state to assistive technologies
+
+				//window.validate_field($field); // leverage Materialize's built-in method for displaying/hiding field validation messages
+
+				
+				//$field.removeClass('invalid'); // simulate Materialize's validate_field method
+
+				//$field.addClass('valid');
 			}
 
-			else { // Other browsers (updates value but not display, falls back on value in HTML)
+			catch(e) {
 
-				$field.next('label').data('error', str_errorMsg);
+				console.log(e);
 			}
 		}
+		*/
 	};
 
 
@@ -1617,11 +1668,13 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {Date} date A valid Date object, or a moment if supported by the browser, or null
 	*/
 
-	app.View.prototype.getDateTimePickerValue = function(str_inputId) {
+	app.View.prototype.getDateTimePickerValue = function(Element_e) {
 
-		var data = $('#str_inputId').data(), date = null;
+		var data = $(Element_e).data(), date = null;
 
-		if (typeof data.DateTimePicker !== 'undefined') { // we can access the DateTimePicker js object
+		if (typeof data !== 'undefined' && typeof data.DateTimePicker !== 'undefined') { // we can access the DateTimePicker js object
+
+			//console.log('using moment with custom widget value');
 
 			if (typeof moment !== 'undefined') { // moment is available
 
@@ -1634,7 +1687,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		else { // parse the input's value manually
 
-			date = $('#str_inputId').val();
+			//console.log('parsing manually');
+
+			date = $(Element_e).val();
 
 			if (typeof moment !== 'undefined') { // use moment if available (probably won't work on mobile)
 
@@ -1650,7 +1705,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 						'DD. MMM YYYY hh:mm A', // 12h/24h, month name, date/month order as used natively by iOS and x-OS Chrome
 
-						'MM/DD/YYYY hh:mm:ss' // 12h, numbers only, UK/European date/month order
+						'ddd MMM DD YYYY HH:mm:ss Z' // UTC format (e.g. 'Fri Mar 11 2016 00:45:50 GMT+0100 (Romance Standard Time)')
 					],
 
 					true
@@ -1662,7 +1717,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (date === null) { // try to brute force parsing if moment - and all else - fails
 
-			date = Date.parse(date);
+			//console.log('brute forcing with Date');
+
+			date = Date.parse($(Element_e).val());
 
 			date = !isNaN(date) ? new Date(date): null;
 		}
@@ -1698,10 +1755,10 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
 
-			|| !app.device().isMobile()) { // always prefer custom picker on desktop) { // Use custom widget
+			|| !app.device().isMobile()) { // use custom widget (always prefer on lap/desktop)
 
 			
-			// Initialize bootstrap-datetimepicker widget
+			// Set bootstrap-datetimepicker widget options
 
 			$('input[type="datetime-local"]').datetimepicker({
 
@@ -1711,20 +1768,13 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				ignoreReadonly: true,
 
-				locale: moment.locale('en')
+				locale: moment.locale('en'),
+
+				showClear: true
 			});
 
 			
-			// Attach event handlers
-
-			$('input[type="datetime-local"]').on('dp.change', function(nEvent) {
-
-				console.log(nEvent.currentTarget.id);//.getDateTimePickerValue('event-start-date'));
-
-			});
-
-			
-			// Enable direct editing in input box
+			// Enable direct (keyboard) editing in input box
 
 			$('input[type="datetime-local"]').each(function(ix, item) { // not sure if all of these need to be set on every instance
 
@@ -1750,7 +1800,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			$('.datetimepicker-input').each(function(ix, item) { // iterate through any and all datetime-pickers
 
-				val = $(item).data().value;
+				val = $(item).val() || $(item).data().value;
 
 				if (val !== '') { // there is a date entry
 
@@ -1789,9 +1839,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			// Make sure any existing value(s) is/are presented, and nicely formatted
 
+			// This ought to be redundant since we already set the value at creation,
+			// but mobiles are very finicky about this, so keeping what works for now.
+
 			$('.datetimepicker-input').each(function(ix, item) { // iterate through any and all datetime-pickers
 
-				val = $(item).data().value;
+				val = $(item).val() || $(item).data().value;
 
 				if (val !== '') { // there is a date entry
 
@@ -1803,18 +1856,49 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 					$(item).val(val.toISOString().split('T')[0] + 'T' + val.getHours() + ':' + val.getMinutes());
 				}
 			});
-
-			// attach event handlers
-			// note: short of manual polling, there seems to be very little support for 'changey' input events on mobile
-			// but focus and blur seem to work, and be compatible with the native picker widgets, so working with them.
-			
-			$('input[type="datetime-local"]').blur(function(nEvent) { // placeholder until I get to the actual implementation
-
-				console.log(nEvent.currentTarget.id);//.getDateTimePickerValue('event-start-date'));
-			});
 		}
 	};
 
+
+	/** Helper for interactive validation of date fields
+	*
+	* @param {String} date A string may/not represent a valid date
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+
+	/*DEPRECATED: Use getDateTimePickerValue() instead
+	app.View.prototype.isDateValid = function(str_date, bool_strict) {
+
+		if (typeof moment !== 'undefined') { // use moment if available (preferred for increased reliability)
+
+			var m = moment(
+
+				str_date,
+
+				[ // try a number of expected formats, in order of likelyhood for en-us locale
+
+					'YYYY-MM-DDTHH:mm', // ISO 8601
+
+					'MM/DD/YYYY HH:mm A', // 12h, numbers only, US/North American date/month order
+
+					'DD MMM YYYY hh:mm A', // 12h/24h, month name, date/month order as used natively by iOS and x-OS Chrome
+
+					'ddd MMM DD YYYY HH:mm:ss Z' // UTC format (e.g. 'Fri Mar 11 2016 00:45:50 GMT+0100 (Romance Standard Time)')
+				],
+
+				bool_strict ? true : false //default to lax parsing, no need to be picky about delimiters
+			)
+
+			return m.isValid();
+		}
+
+		else { // resort to Date, b/c in this app a mistake is not a big deal, but unreasonable strictness is
+
+			return !isNaN(Date.parse(str_date));
+		}
+	}
+	*/
 
 
 	/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference)
@@ -2126,6 +2210,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		
 		// Initialize
 
+			/* UNCOMMENT AFTER DEBUGGING
 			$('.dropdown-button').dropdown( // Materialize dropdown needs this call when created dynamically
 			{
 				inDuration: 300,
@@ -2142,6 +2227,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				
 				alignment: 'left' // Displays dropdown with edge aligned to the left of button
 			});
+
+			*/
 
 
 			$('#nav-delete-icon').hide();
@@ -2216,7 +2303,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.View.prototype.validateCapacity = function(event, str_capacityId) {
+	app.View.prototype.validateCapacity = function(nEvent, str_capacityId) {
 		
 		// Using HTML5 constraint validation to please my Udacity reviewers
 
@@ -2246,12 +2333,54 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	};
 
 
+	/** Event handler for interactive validation of simple date field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+
+	app.View.prototype.validateDate = function(Element_e) {//nEvent, str_dateId) {
+
+		var self = app.View.prototype;
+
+		if (Element_e.validity && Element_e.validity.valueMissing
+
+		|| ($(Element_e).attr('required') && $(Element_e).val() === '')) { //console.log('// required but empty');
+
+			return false;
+
+			//console.log('value value missing: ' + str_dateId);
+
+			//this.displayValidation(event, str_dateId, 'Please enter date', false);
+		}
+
+		else if (self.getDateTimePickerValue(Element_e) === null) { //console.log('// invalid entry');
+
+			return false;
+
+			//console.log('not valid: ' + str_dateId);
+
+			//this.displayValidation(event, str_dateId, 'Please enter date as mm/dd/yyyy hh:mm', false);
+		}
+
+		else { //console.log('// valid entry');
+
+			//console.log('valid: ' + str_dateId);
+
+			//this.displayValidation(event, str_dateId, 'Please enter date', true);
+
+			return true;
+		}
+
+		return false;
+	};
+
+
 	/** Event handler for interactive validation of email field
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.View.prototype.validateEmail = function(event, str_emailId, bool_required) {
+	app.View.prototype.validateEmail = function(nEvent, str_emailId, bool_required) {
 
 		/* Tried the HTML5 email validity constraint but found it too lax
 		*
@@ -2271,12 +2400,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (email !== '') { // always validate email if it exists
 
-			this.displayValidation(event, str_emailId, 'Please enter in format "address@server.domain"', valid);
+			this.displayValidation(nEvent, str_emailId, 'Please enter in format "address@server.domain"', valid);
 		}
 
 		else if (bool_required) { // no entry, require if required(!)
 
-			this.displayValidation(event, str_emailId, 'Please enter email', false);
+			this.displayValidation(nEvent, str_emailId, 'Please enter email', false);
 
 			return valid || !bool_required; // empty is OK if not required
 		}
@@ -2290,15 +2419,15 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.View.prototype.validateName = function(event, str_nameId, str_errorMsg, bool_required) {
+	app.View.prototype.validateName = function(Element_e) {
 
-		// Using HTML5 constraint validation to please my Udacity reviewers
+		var isValid = !Element_e.validity.valueMissing;
 
-		var valid = !$('#' + str_nameId)[0].validity.valueMissing;
+		//$('#' + str_nameId + '-label').data('error', 'custom error message'); //debug, remove in production
 
-		this.displayValidation(event, str_nameId, str_errorMsg, valid);
+		//this.displayValidation(nEvent, str_nameId, str_errorMsg, valid);
 
-		return valid;
+		return isValid;
 	}
 
 
@@ -2309,7 +2438,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.View.prototype.validatePassword = function(event, str_passwordId, str_hintsPrefix) {
+	app.View.prototype.validatePassword = function(nEvent, str_passwordId, str_hintsPrefix) {
 
 		/* Relying solely on HTML5 constraint validation here would require me to write a compound regex
 		*
@@ -2362,7 +2491,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		this.displayValidation(
 
-			event,
+			nEvent,
 
 			str_passwordId,
 
@@ -2381,7 +2510,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.View.prototype.validatePasswordConfirmation = function(event, str_passwordId, str_confirmationId) {
+	app.View.prototype.validatePasswordConfirmation = function(nEvent, str_passwordId, str_confirmationId) {
 
 		// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
 
@@ -2389,7 +2518,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		this.displayValidation(
 
-			event,
+			nEvent,
 
 			str_confirmationId,
 

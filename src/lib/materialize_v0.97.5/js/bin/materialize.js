@@ -2633,10 +2633,15 @@ $(document).ready(function(){
 
     // Add active when element has focus
     $(document).on('focus', input_selector, function () {
+      
+		//console.log('focus'); // debug
+
       $(this).siblings('label, i').addClass('active');
     });
 
     $(document).on('blur', input_selector, function () {
+      
+    	console.log('Materialize main');
       var $inputElement = $(this);
       if ($inputElement.val().length === 0 && $inputElement[0].validity.badInput !== true && $inputElement.attr('placeholder') === undefined) {
         $inputElement.siblings('label, i').removeClass('active');
@@ -2653,8 +2658,13 @@ $(document).ready(function(){
       var lenAttr = parseInt(object.attr('length'));
       var len = object.val().length;
 
+     // console.log('blur' + object.attr('id')); // debug
+
       if (object.val().length === 0 && object[0].validity.badInput === false) {
         if (object.hasClass('validate')) {
+          
+         // console.log('removing both valid and invalid classes'); // debug
+
           object.removeClass('valid');
           object.removeClass('invalid');
         }
@@ -2663,10 +2673,16 @@ $(document).ready(function(){
         if (object.hasClass('validate')) {
           // Check for character counter attributes
           if ((object.is(':valid') && hasLength && (len <= lenAttr)) || (object.is(':valid') && !hasLength)) {
+            
+          // console.log('removing invalid, adding valid class'); // debug
+
             object.removeClass('invalid');
             object.addClass('valid');
           }
           else {
+            
+          	// console.log('removing valid, adding invalid class'); // debug
+
             object.removeClass('valid');
             object.addClass('invalid');
           }

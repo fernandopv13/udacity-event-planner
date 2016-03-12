@@ -82,9 +82,9 @@ app.Device.prototype.isMobile = function() {
 		
 		// If none of the device's dimensions exceed 1024px, assume its a phone or tablet
 
-		return window.matchMedia("(max-device-height: 1024px)").matches
+		return window.matchMedia('(max-device-height: 1024px)').matches
 
-			&& window.matchMedia("(max-device-width: 1024px)").matches
+			&& window.matchMedia('(max-device-width: 1024px)').matches
 
 	} else { // brute force old school, even if it may raise eyebrows
 

@@ -75,6 +75,9 @@ app.FormView.prototype.delete = function(nEvent) {
 
 app.FormView.prototype.onLoad = function(nEvent) {
 
+	Materialize.updateTextFields(); // make sure labels are set correctly
+
+	
 	$('#nav-delete-icon').show('slow'); // show delete icon in navbar
 
 	

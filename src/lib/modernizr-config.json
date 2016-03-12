@@ -1,0 +1,9 @@
+{
+  "minify": false,
+  "options": [],
+  "feature-detects": [
+    "test/inputtypes",
+    "test/forms/validation",
+    "test/window/matchmedia"
+  ]
+}

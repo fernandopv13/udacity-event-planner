@@ -1,6 +1,6 @@
 /*!
  * modernizr v3.3.1
- * Build http://modernizr.com/download?-inputtypes-matchmedia-dontmin
+ * Build http://modernizr.com/download?-formvalidation-inputtypes-matchmedia-dontmin
  *
  * Copyright (c)
  *  Faruk Ates
@@ -175,6 +175,16 @@
   ;
 
   /**
+   * docElement is a convenience wrapper to grab the root element of the document
+   *
+   * @access private
+   * @returns {HTMLElement|SVGElement} The root element of the document
+   */
+
+  var docElement = document.documentElement;
+  
+
+  /**
    * cssToDOM takes a kebab-case string and converts it to camelCase
    * e.g. box-sizing -> boxSizing
    *
@@ -190,6 +200,160 @@
     }).replace(/^-/, '');
   }
   ;
+
+  /**
+   * A convenience helper to check if the document we are running in is an SVG document
+   *
+   * @access private
+   * @returns {boolean}
+   */
+
+  var isSVG = docElement.nodeName.toLowerCase() === 'svg';
+  
+
+  /**
+   * createElement is a convenience wrapper around document.createElement. Since we
+   * use createElement all over the place, this allows for (slightly) smaller code
+   * as well as abstracting away issues with creating elements in contexts other than
+   * HTML documents (e.g. SVG documents).
+   *
+   * @access private
+   * @function createElement
+   * @returns {HTMLElement|SVGElement} An HTML or SVG element
+   */
+
+  function createElement() {
+    if (typeof document.createElement !== 'function') {
+      // This is the case in IE7, where the type of createElement is "object".
+      // For this reason, we cannot call apply() as Object is not a Function.
+      return document.createElement(arguments[0]);
+    } else if (isSVG) {
+      return document.createElementNS.call(document, 'http://www.w3.org/2000/svg', arguments[0]);
+    } else {
+      return document.createElement.apply(document, arguments);
+    }
+  }
+
+  ;
+
+  /**
+   * since we have a fairly large number of input tests that don't mutate the input
+   * we create a single element that can be shared with all of those tests for a
+   * minor perf boost
+   *
+   * @access private
+   * @returns {HTMLInputElement}
+   */
+  var inputElem = createElement('input');
+  
+/*!
+{
+  "name": "Form input types",
+  "property": "inputtypes",
+  "caniuse": "forms",
+  "tags": ["forms"],
+  "authors": ["Mike Taylor"],
+  "polyfills": [
+    "jquerytools",
+    "webshims",
+    "h5f",
+    "webforms2",
+    "nwxforms",
+    "fdslider",
+    "html5slider",
+    "galleryhtml5forms",
+    "jscolor",
+    "html5formshim",
+    "selectedoptionsjs",
+    "formvalidationjs"
+  ]
+}
+!*/
+/* DOC
+Detects support for HTML5 form input types and exposes Boolean subproperties with the results:
+
+```javascript
+Modernizr.inputtypes.color
+Modernizr.inputtypes.date
+Modernizr.inputtypes.datetime
+Modernizr.inputtypes['datetime-local']
+Modernizr.inputtypes.email
+Modernizr.inputtypes.month
+Modernizr.inputtypes.number
+Modernizr.inputtypes.range
+Modernizr.inputtypes.search
+Modernizr.inputtypes.tel
+Modernizr.inputtypes.time
+Modernizr.inputtypes.url
+Modernizr.inputtypes.week
+```
+*/
+
+  // Run through HTML5's new input types to see if the UA understands any.
+  //   This is put behind the tests runloop because it doesn't return a
+  //   true/false like all the other tests; instead, it returns an object
+  //   containing each input type with its corresponding true/false value
+
+  // Big thanks to @miketaylr for the html5 forms expertise. miketaylr.com/
+  var inputtypes = 'search tel url email datetime date month week time datetime-local number range color'.split(' ');
+  var inputs = {};
+
+  Modernizr.inputtypes = (function(props) {
+    var len = props.length;
+    var smile = '1)';
+    var inputElemType;
+    var defaultView;
+    var bool;
+
+    for (var i = 0; i < len; i++) {
+
+      inputElem.setAttribute('type', inputElemType = props[i]);
+      bool = inputElem.type !== 'text' && 'style' in inputElem;
+
+      // We first check to see if the type we give it sticks..
+      // If the type does, we feed it a textual value, which shouldn't be valid.
+      // If the value doesn't stick, we know there's input sanitization which infers a custom UI
+      if (bool) {
+
+        inputElem.value         = smile;
+        inputElem.style.cssText = 'position:absolute;visibility:hidden;';
+
+        if (/^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined) {
+
+          docElement.appendChild(inputElem);
+          defaultView = document.defaultView;
+
+          // Safari 2-4 allows the smiley as a value, despite making a slider
+          bool =  defaultView.getComputedStyle &&
+            defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
+            // Mobile android web browser has false positive, so must
+            // check the height to see if the widget is actually there.
+            (inputElem.offsetHeight !== 0);
+
+          docElement.removeChild(inputElem);
+
+        } else if (/^(search|tel)$/.test(inputElemType)) {
+          // Spec doesn't define any special parsing or detectable UI
+          //   behaviors so we pass these through as true
+
+          // Interestingly, opera fails the earlier test, so it doesn't
+          //  even make it here.
+
+        } else if (/^(url|email)$/.test(inputElemType)) {
+          // Real url and email support comes with prebaked validation.
+          bool = inputElem.checkValidity && inputElem.checkValidity() === false;
+
+        } else {
+          // If the upgraded input compontent rejects the :) text, we got a winner
+          bool = inputElem.value != smile;
+        }
+      }
+
+      inputs[ props[i] ] = !!bool;
+    }
+    return inputs;
+  })(inputtypes);
+
 
   /**
    * If the browsers follow the spec, then they would expose vendor-specific style as:
@@ -377,68 +541,6 @@
   ;
 
   /**
-   * domToCSS takes a camelCase string and converts it to kebab-case
-   * e.g. boxSizing -> box-sizing
-   *
-   * @access private
-   * @function domToCSS
-   * @param {string} name - String name of camelCase prop we want to convert
-   * @returns {string} The kebab-case version of the supplied name
-   */
-
-  function domToCSS(name) {
-    return name.replace(/([A-Z])/g, function(str, m1) {
-      return '-' + m1.toLowerCase();
-    }).replace(/^ms-/, '-ms-');
-  }
-  ;
-
-  /**
-   * docElement is a convenience wrapper to grab the root element of the document
-   *
-   * @access private
-   * @returns {HTMLElement|SVGElement} The root element of the document
-   */
-
-  var docElement = document.documentElement;
-  
-
-  /**
-   * A convenience helper to check if the document we are running in is an SVG document
-   *
-   * @access private
-   * @returns {boolean}
-   */
-
-  var isSVG = docElement.nodeName.toLowerCase() === 'svg';
-  
-
-  /**
-   * createElement is a convenience wrapper around document.createElement. Since we
-   * use createElement all over the place, this allows for (slightly) smaller code
-   * as well as abstracting away issues with creating elements in contexts other than
-   * HTML documents (e.g. SVG documents).
-   *
-   * @access private
-   * @function createElement
-   * @returns {HTMLElement|SVGElement} An HTML or SVG element
-   */
-
-  function createElement() {
-    if (typeof document.createElement !== 'function') {
-      // This is the case in IE7, where the type of createElement is "object".
-      // For this reason, we cannot call apply() as Object is not a Function.
-      return document.createElement(arguments[0]);
-    } else if (isSVG) {
-      return document.createElementNS.call(document, 'http://www.w3.org/2000/svg', arguments[0]);
-    } else {
-      return document.createElement.apply(document, arguments);
-    }
-  }
-
-  ;
-
-  /**
    * Create our "modernizr" element that we do most feature tests on.
    *
    * @access private
@@ -466,6 +568,23 @@
   });
 
   
+
+  /**
+   * domToCSS takes a camelCase string and converts it to kebab-case
+   * e.g. boxSizing -> box-sizing
+   *
+   * @access private
+   * @function domToCSS
+   * @param {string} name - String name of camelCase prop we want to convert
+   * @returns {string} The kebab-case version of the supplied name
+   */
+
+  function domToCSS(name) {
+    return name.replace(/([A-Z])/g, function(str, m1) {
+      return '-' + m1.toLowerCase();
+    }).replace(/^ms-/, '-ms-');
+  }
+  ;
 
   /**
    * getBody returns the body of a document, or an element that can stand in for
@@ -849,122 +968,130 @@ Detects support for matchMedia.
 
 
   /**
-   * since we have a fairly large number of input tests that don't mutate the input
-   * we create a single element that can be shared with all of those tests for a
-   * minor perf boost
+   * testStyles injects an element with style element and some CSS rules
    *
-   * @access private
-   * @returns {HTMLInputElement}
+   * @memberof Modernizr
+   * @name Modernizr.testStyles
+   * @optionName Modernizr.testStyles()
+   * @optionProp testStyles
+   * @access public
+   * @function testStyles
+   * @param {string} rule - String representing a css rule
+   * @param {function} callback - A function that is used to test the injected element
+   * @param {number} [nodes] - An integer representing the number of additional nodes you want injected
+   * @param {string[]} [testnames] - An array of strings that are used as ids for the additional nodes
+   * @returns {boolean}
+   * @example
+   *
+   * `Modernizr.testStyles` takes a CSS rule and injects it onto the current page
+   * along with (possibly multiple) DOM elements. This lets you check for features
+   * that can not be detected by simply checking the [IDL](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Interface_development_guide/IDL_interface_rules).
+   *
+   * ```js
+   * Modernizr.testStyles('#modernizr { width: 9px; color: papayawhip; }', function(elem, rule) {
+   *   // elem is the first DOM node in the page (by default #modernizr)
+   *   // rule is the first argument you supplied - the CSS rule in string form
+   *
+   *   addTest('widthworks', elem.style.width === '9px')
+   * });
+   * ```
+   *
+   * If your test requires multiple nodes, you can include a third argument
+   * indicating how many additional div elements to include on the page. The
+   * additional nodes are injected as children of the `elem` that is returned as
+   * the first argument to the callback.
+   *
+   * ```js
+   * Modernizr.testStyles('#modernizr {width: 1px}; #modernizr2 {width: 2px}', function(elem) {
+   *   document.getElementById('modernizr').style.width === '1px'; // true
+   *   document.getElementById('modernizr2').style.width === '2px'; // true
+   *   elem.firstChild === document.getElementById('modernizr2'); // true
+   * }, 1);
+   * ```
+   *
+   * By default, all of the additional elements have an ID of `modernizr[n]`, where
+   * `n` is its index (e.g. the first additional, second overall is `#modernizr2`,
+   * the second additional is `#modernizr3`, etc.).
+   * If you want to have more meaningful IDs for your function, you can provide
+   * them as the fourth argument, as an array of strings
+   *
+   * ```js
+   * Modernizr.testStyles('#foo {width: 10px}; #bar {height: 20px}', function(elem) {
+   *   elem.firstChild === document.getElementById('foo'); // true
+   *   elem.lastChild === document.getElementById('bar'); // true
+   * }, 2, ['foo', 'bar']);
+   * ```
+   *
    */
-  var inputElem = createElement('input');
+
+  var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
   
 /*!
 {
-  "name": "Form input types",
-  "property": "inputtypes",
-  "caniuse": "forms",
-  "tags": ["forms"],
-  "authors": ["Mike Taylor"],
-  "polyfills": [
-    "jquerytools",
-    "webshims",
-    "h5f",
-    "webforms2",
-    "nwxforms",
-    "fdslider",
-    "html5slider",
-    "galleryhtml5forms",
-    "jscolor",
-    "html5formshim",
-    "selectedoptionsjs",
-    "formvalidationjs"
-  ]
+  "name": "Form Validation",
+  "property": "formvalidation",
+  "tags": ["forms", "validation", "attribute"],
+  "builderAliases": ["forms_validation"]
 }
 !*/
 /* DOC
-Detects support for HTML5 form input types and exposes Boolean subproperties with the results:
+This implementation only tests support for interactive form validation.
+To check validation for a specific type or a specific other constraint,
+the test can be combined:
 
-```javascript
-Modernizr.inputtypes.color
-Modernizr.inputtypes.date
-Modernizr.inputtypes.datetime
-Modernizr.inputtypes['datetime-local']
-Modernizr.inputtypes.email
-Modernizr.inputtypes.month
-Modernizr.inputtypes.number
-Modernizr.inputtypes.range
-Modernizr.inputtypes.search
-Modernizr.inputtypes.tel
-Modernizr.inputtypes.time
-Modernizr.inputtypes.url
-Modernizr.inputtypes.week
-```
+- `Modernizr.inputtypes.number && Modernizr.formvalidation` (browser supports rangeOverflow, typeMismatch etc. for type=number)
+- `Modernizr.input.required && Modernizr.formvalidation` (browser supports valueMissing)
 */
 
-  // Run through HTML5's new input types to see if the UA understands any.
-  //   This is put behind the tests runloop because it doesn't return a
-  //   true/false like all the other tests; instead, it returns an object
-  //   containing each input type with its corresponding true/false value
-
-  // Big thanks to @miketaylr for the html5 forms expertise. miketaylr.com/
-  var inputtypes = 'search tel url email datetime date month week time datetime-local number range color'.split(' ');
-  var inputs = {};
-
-  Modernizr.inputtypes = (function(props) {
-    var len = props.length;
-    var smile = '1)';
-    var inputElemType;
-    var defaultView;
-    var bool;
-
-    for (var i = 0; i < len; i++) {
-
-      inputElem.setAttribute('type', inputElemType = props[i]);
-      bool = inputElem.type !== 'text' && 'style' in inputElem;
-
-      // We first check to see if the type we give it sticks..
-      // If the type does, we feed it a textual value, which shouldn't be valid.
-      // If the value doesn't stick, we know there's input sanitization which infers a custom UI
-      if (bool) {
-
-        inputElem.value         = smile;
-        inputElem.style.cssText = 'position:absolute;visibility:hidden;';
-
-        if (/^range$/.test(inputElemType) && inputElem.style.WebkitAppearance !== undefined) {
-
-          docElement.appendChild(inputElem);
-          defaultView = document.defaultView;
-
-          // Safari 2-4 allows the smiley as a value, despite making a slider
-          bool =  defaultView.getComputedStyle &&
-            defaultView.getComputedStyle(inputElem, null).WebkitAppearance !== 'textfield' &&
-            // Mobile android web browser has false positive, so must
-            // check the height to see if the widget is actually there.
-            (inputElem.offsetHeight !== 0);
-
-          docElement.removeChild(inputElem);
-
-        } else if (/^(search|tel)$/.test(inputElemType)) {
-          // Spec doesn't define any special parsing or detectable UI
-          //   behaviors so we pass these through as true
-
-          // Interestingly, opera fails the earlier test, so it doesn't
-          //  even make it here.
-
-        } else if (/^(url|email)$/.test(inputElemType)) {
-          // Real url and email support comes with prebaked validation.
-          bool = inputElem.checkValidity && inputElem.checkValidity() === false;
-
-        } else {
-          // If the upgraded input compontent rejects the :) text, we got a winner
-          bool = inputElem.value != smile;
-        }
-      }
-
-      inputs[ props[i] ] = !!bool;
+  Modernizr.addTest('formvalidation', function() {
+    var form = createElement('form');
+    if (!('checkValidity' in form) || !('addEventListener' in form)) {
+      return false;
     }
-    return inputs;
-  })(inputtypes);
+    if ('reportValidity' in form) {
+      return true;
+    }
+    var invalidFired = false;
+    var input;
+
+    Modernizr.formvalidationapi =  true;
+
+    // Prevent form from being submitted
+    form.addEventListener('submit', function(e) {
+      // Old Presto based Opera does not validate form, if submit is prevented
+      // although Opera Mini servers use newer Presto.
+      if (!window.opera || window.operamini) {
+        e.preventDefault();
+      }
+      e.stopPropagation();
+    }, false);
+
+    // Calling form.submit() doesn't trigger interactive validation,
+    // use a submit button instead
+    //older opera browsers need a name attribute
+    form.innerHTML = '<input name="modTest" required="required" /><button></button>';
+
+    testStyles('#modernizr form{position:absolute;top:-99999em}', function(node) {
+      node.appendChild(form);
+
+      input = form.getElementsByTagName('input')[0];
+
+      // Record whether "invalid" event is fired
+      input.addEventListener('invalid', function(e) {
+        invalidFired = true;
+        e.preventDefault();
+        e.stopPropagation();
+      }, false);
+
+      //Opera does not fully support the validationMessage property
+      Modernizr.formvalidationmessage = !!input.validationMessage;
+
+      // Submit form by clicking submit button
+      form.getElementsByTagName('button')[0].click();
+    });
+
+    return invalidFired;
+  });
 
 
   // Run each test

@@ -44,15 +44,23 @@
 
 		
 		<!-- Library source files -->
-			<script src="../lib/jquery-2.1.1.min.js"></script>
-			<script src="../lib/modernizr_v3.3.1-matchmedia-inputtypes.js"></script>
-			<script src="../lib/materialize.min.js"></script>
+			<script src="../lib/polyfills/Object.js"></script>
+			<script src="../lib/polyfills/Array.js"></script>
+			<script src="../lib/polyfills/H5F_v1.1.1/src/H5F.js"></script><!-- HTML5 forms polyfill -->
+			<script src="../lib/polyfills/Storage.js"></script>
+			
+			<script src="../lib/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js; stic with 2.1.1 until materialize/picker.js catch up -->
+			<script src="../lib/bootstrap_v3.3.6/js/bootstrap.min.js"></script><!-- for bootstrap-datetimepicker (minimal bs install) -->
+			<script src="../lib/modernizr_v3.3.1-custom.js"></script><!-- for bootstrap-datetimepicker -->
+			<script src="../lib/moment.js_V2.12.0/min/moment-with-locales.min.js"></script><!-- for bootstrap-datetimepicker -->
+			<script src="../lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script><!-- Replacement after built-in picker was frowned upon by Udacity reviewer -->
+			<script src="../lib/materialize_v0.97.5/js/bin/materialize.js"></script>
 			
 		
 		<!-- App source files -->
-			<script src="../assets/js/Object.js"></script>
-			<script src="../assets/js/Error.js"></script>
 			<script src="../assets/js/Device.js"></script>
+			<script src="../assets/js/Error.js"></script>
+			<script src="../assets/js/Materialize-forms-override.js"></script>
 			
 			<script src="../assets/js/IInterfaceable.js"></script>
 			<script src="../assets/js/IHost.js"></script>
