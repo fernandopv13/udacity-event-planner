@@ -283,16 +283,16 @@ app.ISerializable.prototype.default_writeObject = function() {
 	
 	if (typeof this.id() === 'undefined' || this.id() !== parseInt(this.id()) || this.id() < 0) {throw new RangeError('Invalid ID: ' + this.id());}
 	
-	
 	try { // several things may fail here...
 		
 		localStorage.setItem(app.prefs.localStoragePrefix() + this.className() + '.' + this.id(), JSON.stringify(this));
-
 	}
 	
-	catch(e) { // ...so, for now, just bubble up the native error
+	catch(e) { // notcrazy about this interface communicating directly in the UI, but will have to do for now
 		
-		throw e;
+		console.log(e);
+
+		Materialize.toast('There was a problem saving your event. Are you in private/incognito mode? Try non-private browsing instead.', 5000);
 	}
 	
 	return true;

@@ -1,6 +1,6 @@
 /*!
  * modernizr v3.3.1
- * Build http://modernizr.com/download?-formvalidation-inputtypes-matchmedia-dontmin
+ * Build http://modernizr.com/download?-formvalidation-inputtypes-localstorage-matchmedia-dontmin
  *
  * Copyright (c)
  *  Faruk Ates
@@ -84,6 +84,53 @@
   Modernizr = new Modernizr();
 
   
+/*!
+{
+  "name": "Local Storage",
+  "property": "localstorage",
+  "caniuse": "namevalue-storage",
+  "tags": ["storage"],
+  "knownBugs": [],
+  "notes": [],
+  "warnings": [],
+  "polyfills": [
+    "joshuabell-polyfill",
+    "cupcake",
+    "storagepolyfill",
+    "amplifyjs",
+    "yui-cacheoffline"
+  ]
+}
+!*/
+
+  // In FF4, if disabled, window.localStorage should === null.
+
+  // Normally, we could not test that directly and need to do a
+  //   `('localStorage' in window) && ` test first because otherwise Firefox will
+  //   throw bugzil.la/365772 if cookies are disabled
+
+  // Also in iOS5 Private Browsing mode, attempting to use localStorage.setItem
+  // will throw the exception:
+  //   QUOTA_EXCEEDED_ERROR DOM Exception 22.
+  // Peculiarly, getItem and removeItem calls do not throw.
+
+  // Because we are forced to try/catch this, we'll go aggressive.
+
+  // Just FWIW: IE8 Compat mode supports these features completely:
+  //   www.quirksmode.org/dom/html5.html
+  // But IE8 doesn't support either with local files
+
+  Modernizr.addTest('localstorage', function() {
+    var mod = 'modernizr';
+    try {
+      localStorage.setItem(mod, mod);
+      localStorage.removeItem(mod);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  });
+
 
   var classes = [];
   
@@ -183,23 +230,6 @@
 
   var docElement = document.documentElement;
   
-
-  /**
-   * cssToDOM takes a kebab-case string and converts it to camelCase
-   * e.g. box-sizing -> boxSizing
-   *
-   * @access private
-   * @function cssToDOM
-   * @param {string} name - String name of kebab-case prop we want to convert
-   * @returns {string} The camelCase version of the supplied name
-   */
-
-  function cssToDOM(name) {
-    return name.replace(/([a-z])-([a-z])/g, function(str, m1, m2) {
-      return m1 + m2.toUpperCase();
-    }).replace(/^-/, '');
-  }
-  ;
 
   /**
    * A convenience helper to check if the document we are running in is an SVG document
@@ -353,6 +383,249 @@ Modernizr.inputtypes.week
     }
     return inputs;
   })(inputtypes);
+
+
+  /**
+   * cssToDOM takes a kebab-case string and converts it to camelCase
+   * e.g. box-sizing -> boxSizing
+   *
+   * @access private
+   * @function cssToDOM
+   * @param {string} name - String name of kebab-case prop we want to convert
+   * @returns {string} The camelCase version of the supplied name
+   */
+
+  function cssToDOM(name) {
+    return name.replace(/([a-z])-([a-z])/g, function(str, m1, m2) {
+      return m1 + m2.toUpperCase();
+    }).replace(/^-/, '');
+  }
+  ;
+
+  /**
+   * getBody returns the body of a document, or an element that can stand in for
+   * the body if a real body does not exist
+   *
+   * @access private
+   * @function getBody
+   * @returns {HTMLElement|SVGElement} Returns the real body of a document, or an
+   * artificially created element that stands in for the body
+   */
+
+  function getBody() {
+    // After page load injecting a fake body doesn't work so check if body exists
+    var body = document.body;
+
+    if (!body) {
+      // Can't use the real body create a fake one.
+      body = createElement(isSVG ? 'svg' : 'body');
+      body.fake = true;
+    }
+
+    return body;
+  }
+
+  ;
+
+  /**
+   * injectElementWithStyles injects an element with style element and some CSS rules
+   *
+   * @access private
+   * @function injectElementWithStyles
+   * @param {string} rule - String representing a css rule
+   * @param {function} callback - A function that is used to test the injected element
+   * @param {number} [nodes] - An integer representing the number of additional nodes you want injected
+   * @param {string[]} [testnames] - An array of strings that are used as ids for the additional nodes
+   * @returns {boolean}
+   */
+
+  function injectElementWithStyles(rule, callback, nodes, testnames) {
+    var mod = 'modernizr';
+    var style;
+    var ret;
+    var node;
+    var docOverflow;
+    var div = createElement('div');
+    var body = getBody();
+
+    if (parseInt(nodes, 10)) {
+      // In order not to give false positives we create a node for each test
+      // This also allows the method to scale for unspecified uses
+      while (nodes--) {
+        node = createElement('div');
+        node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
+        div.appendChild(node);
+      }
+    }
+
+    style = createElement('style');
+    style.type = 'text/css';
+    style.id = 's' + mod;
+
+    // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
+    // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
+    (!body.fake ? div : body).appendChild(style);
+    body.appendChild(div);
+
+    if (style.styleSheet) {
+      style.styleSheet.cssText = rule;
+    } else {
+      style.appendChild(document.createTextNode(rule));
+    }
+    div.id = mod;
+
+    if (body.fake) {
+      //avoid crashing IE8, if background image is used
+      body.style.background = '';
+      //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
+      body.style.overflow = 'hidden';
+      docOverflow = docElement.style.overflow;
+      docElement.style.overflow = 'hidden';
+      docElement.appendChild(body);
+    }
+
+    ret = callback(div, rule);
+    // If this is done after page load we don't want to remove the body so check if body exists
+    if (body.fake) {
+      body.parentNode.removeChild(body);
+      docElement.style.overflow = docOverflow;
+      // Trigger layout so kinetic scrolling isn't disabled in iOS6+
+      docElement.offsetHeight;
+    } else {
+      div.parentNode.removeChild(div);
+    }
+
+    return !!ret;
+
+  }
+
+  ;
+
+  /**
+   * testStyles injects an element with style element and some CSS rules
+   *
+   * @memberof Modernizr
+   * @name Modernizr.testStyles
+   * @optionName Modernizr.testStyles()
+   * @optionProp testStyles
+   * @access public
+   * @function testStyles
+   * @param {string} rule - String representing a css rule
+   * @param {function} callback - A function that is used to test the injected element
+   * @param {number} [nodes] - An integer representing the number of additional nodes you want injected
+   * @param {string[]} [testnames] - An array of strings that are used as ids for the additional nodes
+   * @returns {boolean}
+   * @example
+   *
+   * `Modernizr.testStyles` takes a CSS rule and injects it onto the current page
+   * along with (possibly multiple) DOM elements. This lets you check for features
+   * that can not be detected by simply checking the [IDL](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Interface_development_guide/IDL_interface_rules).
+   *
+   * ```js
+   * Modernizr.testStyles('#modernizr { width: 9px; color: papayawhip; }', function(elem, rule) {
+   *   // elem is the first DOM node in the page (by default #modernizr)
+   *   // rule is the first argument you supplied - the CSS rule in string form
+   *
+   *   addTest('widthworks', elem.style.width === '9px')
+   * });
+   * ```
+   *
+   * If your test requires multiple nodes, you can include a third argument
+   * indicating how many additional div elements to include on the page. The
+   * additional nodes are injected as children of the `elem` that is returned as
+   * the first argument to the callback.
+   *
+   * ```js
+   * Modernizr.testStyles('#modernizr {width: 1px}; #modernizr2 {width: 2px}', function(elem) {
+   *   document.getElementById('modernizr').style.width === '1px'; // true
+   *   document.getElementById('modernizr2').style.width === '2px'; // true
+   *   elem.firstChild === document.getElementById('modernizr2'); // true
+   * }, 1);
+   * ```
+   *
+   * By default, all of the additional elements have an ID of `modernizr[n]`, where
+   * `n` is its index (e.g. the first additional, second overall is `#modernizr2`,
+   * the second additional is `#modernizr3`, etc.).
+   * If you want to have more meaningful IDs for your function, you can provide
+   * them as the fourth argument, as an array of strings
+   *
+   * ```js
+   * Modernizr.testStyles('#foo {width: 10px}; #bar {height: 20px}', function(elem) {
+   *   elem.firstChild === document.getElementById('foo'); // true
+   *   elem.lastChild === document.getElementById('bar'); // true
+   * }, 2, ['foo', 'bar']);
+   * ```
+   *
+   */
+
+  var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
+  
+/*!
+{
+  "name": "Form Validation",
+  "property": "formvalidation",
+  "tags": ["forms", "validation", "attribute"],
+  "builderAliases": ["forms_validation"]
+}
+!*/
+/* DOC
+This implementation only tests support for interactive form validation.
+To check validation for a specific type or a specific other constraint,
+the test can be combined:
+
+- `Modernizr.inputtypes.number && Modernizr.formvalidation` (browser supports rangeOverflow, typeMismatch etc. for type=number)
+- `Modernizr.input.required && Modernizr.formvalidation` (browser supports valueMissing)
+*/
+
+  Modernizr.addTest('formvalidation', function() {
+    var form = createElement('form');
+    if (!('checkValidity' in form) || !('addEventListener' in form)) {
+      return false;
+    }
+    if ('reportValidity' in form) {
+      return true;
+    }
+    var invalidFired = false;
+    var input;
+
+    Modernizr.formvalidationapi =  true;
+
+    // Prevent form from being submitted
+    form.addEventListener('submit', function(e) {
+      // Old Presto based Opera does not validate form, if submit is prevented
+      // although Opera Mini servers use newer Presto.
+      if (!window.opera || window.operamini) {
+        e.preventDefault();
+      }
+      e.stopPropagation();
+    }, false);
+
+    // Calling form.submit() doesn't trigger interactive validation,
+    // use a submit button instead
+    //older opera browsers need a name attribute
+    form.innerHTML = '<input name="modTest" required="required" /><button></button>';
+
+    testStyles('#modernizr form{position:absolute;top:-99999em}', function(node) {
+      node.appendChild(form);
+
+      input = form.getElementsByTagName('input')[0];
+
+      // Record whether "invalid" event is fired
+      input.addEventListener('invalid', function(e) {
+        invalidFired = true;
+        e.preventDefault();
+        e.stopPropagation();
+      }, false);
+
+      //Opera does not fully support the validationMessage property
+      Modernizr.formvalidationmessage = !!input.validationMessage;
+
+      // Submit form by clicking submit button
+      form.getElementsByTagName('button')[0].click();
+    });
+
+    return invalidFired;
+  });
 
 
   /**
@@ -584,105 +857,6 @@ Modernizr.inputtypes.week
       return '-' + m1.toLowerCase();
     }).replace(/^ms-/, '-ms-');
   }
-  ;
-
-  /**
-   * getBody returns the body of a document, or an element that can stand in for
-   * the body if a real body does not exist
-   *
-   * @access private
-   * @function getBody
-   * @returns {HTMLElement|SVGElement} Returns the real body of a document, or an
-   * artificially created element that stands in for the body
-   */
-
-  function getBody() {
-    // After page load injecting a fake body doesn't work so check if body exists
-    var body = document.body;
-
-    if (!body) {
-      // Can't use the real body create a fake one.
-      body = createElement(isSVG ? 'svg' : 'body');
-      body.fake = true;
-    }
-
-    return body;
-  }
-
-  ;
-
-  /**
-   * injectElementWithStyles injects an element with style element and some CSS rules
-   *
-   * @access private
-   * @function injectElementWithStyles
-   * @param {string} rule - String representing a css rule
-   * @param {function} callback - A function that is used to test the injected element
-   * @param {number} [nodes] - An integer representing the number of additional nodes you want injected
-   * @param {string[]} [testnames] - An array of strings that are used as ids for the additional nodes
-   * @returns {boolean}
-   */
-
-  function injectElementWithStyles(rule, callback, nodes, testnames) {
-    var mod = 'modernizr';
-    var style;
-    var ret;
-    var node;
-    var docOverflow;
-    var div = createElement('div');
-    var body = getBody();
-
-    if (parseInt(nodes, 10)) {
-      // In order not to give false positives we create a node for each test
-      // This also allows the method to scale for unspecified uses
-      while (nodes--) {
-        node = createElement('div');
-        node.id = testnames ? testnames[nodes] : mod + (nodes + 1);
-        div.appendChild(node);
-      }
-    }
-
-    style = createElement('style');
-    style.type = 'text/css';
-    style.id = 's' + mod;
-
-    // IE6 will false positive on some tests due to the style element inside the test div somehow interfering offsetHeight, so insert it into body or fakebody.
-    // Opera will act all quirky when injecting elements in documentElement when page is served as xml, needs fakebody too. #270
-    (!body.fake ? div : body).appendChild(style);
-    body.appendChild(div);
-
-    if (style.styleSheet) {
-      style.styleSheet.cssText = rule;
-    } else {
-      style.appendChild(document.createTextNode(rule));
-    }
-    div.id = mod;
-
-    if (body.fake) {
-      //avoid crashing IE8, if background image is used
-      body.style.background = '';
-      //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
-      body.style.overflow = 'hidden';
-      docOverflow = docElement.style.overflow;
-      docElement.style.overflow = 'hidden';
-      docElement.appendChild(body);
-    }
-
-    ret = callback(div, rule);
-    // If this is done after page load we don't want to remove the body so check if body exists
-    if (body.fake) {
-      body.parentNode.removeChild(body);
-      docElement.style.overflow = docOverflow;
-      // Trigger layout so kinetic scrolling isn't disabled in iOS6+
-      docElement.offsetHeight;
-    } else {
-      div.parentNode.removeChild(div);
-    }
-
-    return !!ret;
-
-  }
-
   ;
 
   /**
@@ -965,133 +1139,6 @@ Detects support for matchMedia.
 */
 
   Modernizr.addTest('matchmedia', !!prefixed('matchMedia', window));
-
-
-  /**
-   * testStyles injects an element with style element and some CSS rules
-   *
-   * @memberof Modernizr
-   * @name Modernizr.testStyles
-   * @optionName Modernizr.testStyles()
-   * @optionProp testStyles
-   * @access public
-   * @function testStyles
-   * @param {string} rule - String representing a css rule
-   * @param {function} callback - A function that is used to test the injected element
-   * @param {number} [nodes] - An integer representing the number of additional nodes you want injected
-   * @param {string[]} [testnames] - An array of strings that are used as ids for the additional nodes
-   * @returns {boolean}
-   * @example
-   *
-   * `Modernizr.testStyles` takes a CSS rule and injects it onto the current page
-   * along with (possibly multiple) DOM elements. This lets you check for features
-   * that can not be detected by simply checking the [IDL](https://developer.mozilla.org/en-US/docs/Mozilla/Developer_guide/Interface_development_guide/IDL_interface_rules).
-   *
-   * ```js
-   * Modernizr.testStyles('#modernizr { width: 9px; color: papayawhip; }', function(elem, rule) {
-   *   // elem is the first DOM node in the page (by default #modernizr)
-   *   // rule is the first argument you supplied - the CSS rule in string form
-   *
-   *   addTest('widthworks', elem.style.width === '9px')
-   * });
-   * ```
-   *
-   * If your test requires multiple nodes, you can include a third argument
-   * indicating how many additional div elements to include on the page. The
-   * additional nodes are injected as children of the `elem` that is returned as
-   * the first argument to the callback.
-   *
-   * ```js
-   * Modernizr.testStyles('#modernizr {width: 1px}; #modernizr2 {width: 2px}', function(elem) {
-   *   document.getElementById('modernizr').style.width === '1px'; // true
-   *   document.getElementById('modernizr2').style.width === '2px'; // true
-   *   elem.firstChild === document.getElementById('modernizr2'); // true
-   * }, 1);
-   * ```
-   *
-   * By default, all of the additional elements have an ID of `modernizr[n]`, where
-   * `n` is its index (e.g. the first additional, second overall is `#modernizr2`,
-   * the second additional is `#modernizr3`, etc.).
-   * If you want to have more meaningful IDs for your function, you can provide
-   * them as the fourth argument, as an array of strings
-   *
-   * ```js
-   * Modernizr.testStyles('#foo {width: 10px}; #bar {height: 20px}', function(elem) {
-   *   elem.firstChild === document.getElementById('foo'); // true
-   *   elem.lastChild === document.getElementById('bar'); // true
-   * }, 2, ['foo', 'bar']);
-   * ```
-   *
-   */
-
-  var testStyles = ModernizrProto.testStyles = injectElementWithStyles;
-  
-/*!
-{
-  "name": "Form Validation",
-  "property": "formvalidation",
-  "tags": ["forms", "validation", "attribute"],
-  "builderAliases": ["forms_validation"]
-}
-!*/
-/* DOC
-This implementation only tests support for interactive form validation.
-To check validation for a specific type or a specific other constraint,
-the test can be combined:
-
-- `Modernizr.inputtypes.number && Modernizr.formvalidation` (browser supports rangeOverflow, typeMismatch etc. for type=number)
-- `Modernizr.input.required && Modernizr.formvalidation` (browser supports valueMissing)
-*/
-
-  Modernizr.addTest('formvalidation', function() {
-    var form = createElement('form');
-    if (!('checkValidity' in form) || !('addEventListener' in form)) {
-      return false;
-    }
-    if ('reportValidity' in form) {
-      return true;
-    }
-    var invalidFired = false;
-    var input;
-
-    Modernizr.formvalidationapi =  true;
-
-    // Prevent form from being submitted
-    form.addEventListener('submit', function(e) {
-      // Old Presto based Opera does not validate form, if submit is prevented
-      // although Opera Mini servers use newer Presto.
-      if (!window.opera || window.operamini) {
-        e.preventDefault();
-      }
-      e.stopPropagation();
-    }, false);
-
-    // Calling form.submit() doesn't trigger interactive validation,
-    // use a submit button instead
-    //older opera browsers need a name attribute
-    form.innerHTML = '<input name="modTest" required="required" /><button></button>';
-
-    testStyles('#modernizr form{position:absolute;top:-99999em}', function(node) {
-      node.appendChild(form);
-
-      input = form.getElementsByTagName('input')[0];
-
-      // Record whether "invalid" event is fired
-      input.addEventListener('invalid', function(e) {
-        invalidFired = true;
-        e.preventDefault();
-        e.stopPropagation();
-      }, false);
-
-      //Opera does not fully support the validationMessage property
-      Modernizr.formvalidationmessage = !!input.validationMessage;
-
-      // Submit form by clicking submit button
-      form.getElementsByTagName('button')[0].click();
-    });
-
-    return invalidFired;
-  });
 
 
   // Run each test

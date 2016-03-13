@@ -520,11 +520,11 @@ app.Controller = function() {
 
 		this.notifyObservers = function(Model_m, int_id, View_v) {
 			
-			if (View_v !== undefined) { // expected by ViewUpdateHandlers
+			if (View_v !== undefined) {
 
-				_observers.forEach(function(observer) { // expected by Model
+				_observers.forEach(function(observer) {
 
-					observer.update(int_id, Model_m, View_v);
+					observer.update(int_id, Model_m, View_v); // expected by ViewUpdateHandler
 				});
 			}
 

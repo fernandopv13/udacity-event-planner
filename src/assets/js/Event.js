@@ -663,7 +663,6 @@ app.Event.prototype.update = function(Event_e, int_id) {
 		// Do some housekeeping common to all Model updates
 
 		this.ssuper().prototype.onUpdate.call(this, Event_e);
-
 		
 		return true;
 	}

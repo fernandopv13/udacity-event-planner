@@ -93,7 +93,7 @@ app.ViewSubmitHandler.prototype.execute = function(int_UIAction, Model_m, View_v
 		ctrl.newModel(null); // reset and dereference temporary model
 	}
 
-	ctrl.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits
+	ctrl.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits (later, uncouple from controller using Observer pattern (i.e. implement IObservable))
 
 	window.history.back(); // go one step back in browser history
 };

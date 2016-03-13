@@ -193,9 +193,9 @@ var app = (function(self) {
 
 		$('#preloader').hide('fast');
 
-		$('#preloader').removeClass('hidden');
+		$('#preloader').addClass('hidden');
 
-		$('#preloader').attr('aria-hidden', false); // later, investigate if this could do more of the work of hiding
+		$('#preloader').attr('aria-hidden', true); // later, investigate if this could do more of the work of hiding
 
 		
 		// Set up registries to track created objects

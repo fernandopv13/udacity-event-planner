@@ -67,6 +67,7 @@ app.EventView.prototype.constructor = app.EventView; // Reset constructor proper
 * Public instance methods (on prototype)
 *---------------------------------------------------------------------------------------*/
 
+
 /** Enables navigation to the event's guest list from the event form */
 
 app.EventView.prototype.navigateToGuestList = function(nEvent) {
@@ -96,7 +97,7 @@ app.EventView.prototype.render = function(Event_e) {
 			{
 				element: 'form',			
 				
-				attributes: {autocomplete: 'off'},//, novalidate: true},
+				attributes: {id: 'event-form', autocomplete: 'off'},//, novalidate: true},
 				
 				classList: ['col', 's12']
 			});
@@ -140,11 +141,11 @@ app.EventView.prototype.render = function(Event_e) {
 
 				true,
 
-				Event_e.name() ? Event_e.name() : '',
+				Event_e.name() ? Event_e.name() : ''//,
 
-				'',
+				//'',
 
-				'app.View.prototype.validateName'
+				//'app.View.prototype.validateName'
 			));
 		
 		
@@ -237,12 +238,14 @@ app.EventView.prototype.render = function(Event_e) {
 
 				Event_e.start(),
 
+				'',
+
 				'app.EventView.prototype.validateStartDate'
 
 			).children[0]); 
 				
 			
-			outerDiv.appendChild(this.createDateField( // End date
+			var endDate = this.createDateField( // End date
 
 				's6',
 
@@ -250,13 +253,19 @@ app.EventView.prototype.render = function(Event_e) {
 
 				'Ends',
 
-				false, // add 'validate' class manually
+				false, // we do not require an end date but, if present, validate it against the start date
 
 				Event_e.end(),
 
+				'Please use format mm/dd/yyyy hh:mm, and make sure end is after start',
+
 				'app.EventView.prototype.validateEndDate'
 
-			).children[0]);
+			).children[0];
+
+			endDate.children[0].classList.add('validate'); // 'validate' normally only comes with required field, so add seperately here
+
+			outerDiv.appendChild(endDate);
 			
 
 			/*DEPRECATED
@@ -646,8 +655,11 @@ app.EventView.prototype.render = function(Event_e) {
 
 			this.$renderContext().append(formElement);
 
-		// Initialize
+		// Initialize post-render
 
+			//H5F.setup(document.getElementById("event-form")); // hook up H5F polyfill to form; setCustomValidity support seems erratic
+
+			
 			$('#event-name').attr('autofocus', true); // set initial focus on name
 			
 			
@@ -665,13 +677,14 @@ app.EventView.prototype.render = function(Event_e) {
 			$('#event-location').focus(this.suggestLocations); // suggest locations
 
 			
-
 			this.initDateTimePicker(); // generic initialization of bootstrap-datetime pickers
 
 			// Attach event handlers (dp.change doesn't 'take' if iterating, so going manual)
 
 			// Note: short of manual polling, there seems to be very little support for 'changey' input events on mobile.
 			// But focus and blur seem to work, and to be compatible with the native picker widgets, so working with them.
+
+			/*
 
 			$('#event-start-date').on('dp.change', function(nEvent) { // change event from custom widget (if any)
 
@@ -684,6 +697,7 @@ app.EventView.prototype.render = function(Event_e) {
 				Materialize.updateTextFields(nEvent.currentTarget);
 
 			}.bind(this));
+			*/
 
 			/*DEPRECATED
 			$('#event-start-date').blur(function(nEvent) { // blur event on input
@@ -704,7 +718,7 @@ app.EventView.prototype.render = function(Event_e) {
 
 			*/
 
-
+			/*
 			$('#event-end-date').on('dp.change', function(nEvent) { // change event from custom widget (if any)
 
 				//console.log('dp.change on end date')
@@ -716,6 +730,7 @@ app.EventView.prototype.render = function(Event_e) {
 				Materialize.updateTextFields(nEvent.currentTarget);
 
 			}.bind(this));
+			*/
 						
 			
 			/*DEPRECATED
@@ -857,16 +872,17 @@ app.EventView.prototype.render = function(Event_e) {
 				*/
 			
 
+			/*
 			$('#event-capacity').keyup(function(nEvent) { // validate capacity
 
 				this.validateCapacity(event, 'event-capacity');
 	
 			}.bind(this));
-
+			*/
 			
-			$('#event-edit-guests-button').click(function(event) { // edit guest list button
+			$('#event-edit-guests-button').click(function(nEvent) { // edit guest list button
 
-				this.navigateToGuestList(event);
+				this.navigateToGuestList(nEvent);
 	
 			}.bind(this));
 
@@ -874,7 +890,7 @@ app.EventView.prototype.render = function(Event_e) {
 			$('#event-host').focus(this.suggestHosts); // suggest hosts
 
 			
-			$('#event-host-type-organization, #event-host-type-person').click(function(event) { // reset host if host type changed
+			$('#event-host-type-organization, #event-host-type-person').click(function(nEvent) { // reset host if host type changed
 
 				$('#event-host').val('');
 			});
@@ -883,16 +899,16 @@ app.EventView.prototype.render = function(Event_e) {
 			//$('textarea#description').characterCounter(); // count characters in description
 
 			
-			$('#event-form-cancel').click(function(event) { // cancel edits
+			$('#event-form-cancel').click(function(nEvent) { // cancel edits
 
-				this.cancel(event);
+				this.cancel(nEvent);
 
 			}.bind(this));
 
 
-			$('#event-form-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
+			$('#event-form-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
 
-				this.submit(event);
+				this.submit(nEvent);
 
 			}.bind(this));
 	}
@@ -918,29 +934,9 @@ app.EventView.prototype.render = function(Event_e) {
 * @todo Fix host hack
 */
 
-app.EventView.prototype.submit = function(Event_e) {
-
-	// First display any and all validation errors at once
-
-	void this.validateName(Event_e, 'event-name', 'Please enter name', true);
-
-	void this.validateDateRange()
-
-	void this.validateTimeRange()
-
-	void this.validateCapacity(Event_e, 'event-capacity')
-
-	// Then do it again to obtain validation status
-
-	// (Chain stops at first false, so no use for UI)
+app.EventView.prototype.submit = function(nEvent) {
 	
-	if (this.validateName(Event_e, 'event-name', 'Please enter name', true) // Submit results if all validations pass
-
-		&& this.validateDateRange()
-
-		&& this.validateTimeRange()
-
-		&& this.validateCapacity(Event_e, 'event-capacity')) { 
+	if (this.validateForm($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 
 		this.ssuper().prototype.submit.call(
 
@@ -952,6 +948,15 @@ app.EventView.prototype.submit = function(Event_e) {
 
 				$('#event-type').val(),
 
+				(function() {
+
+					var date = this.getDateTimePickerValue($('#event-start-date'));
+
+					return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
+
+				}.bind(this))(),
+
+				/*
 				(function() { // start date
 
 					var start_date = parseInt($('#event-start-date-hidden').val());
@@ -969,7 +974,17 @@ app.EventView.prototype.submit = function(Event_e) {
 
 					return null;
 				})(),
+				*/
 
+				(function() {
+
+					var date = this.getDateTimePickerValue($('#event-end-date'));
+
+					return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
+
+				}.bind(this))(),
+
+				/*
 				(function() { // end date
 
 					var end_date = parseInt($('#event-end-date-hidden').val());
@@ -987,6 +1002,7 @@ app.EventView.prototype.submit = function(Event_e) {
 
 					return null;
 				})(),
+				*/
 
 				$('#event-location').val(),
 
@@ -1015,12 +1031,20 @@ app.EventView.prototype.submit = function(Event_e) {
 				//new app.Organization($('#event-host').val()), //hack
 				
 				parseInt($('#event-capacity').val())
-			)
+			),
+
+			app.View.UIAction.SUBMIT
 		);
 
 		return true;
 	}
 
+	// else
+
+	Materialize.updateTextFields(); // make sure validation errors are shown
+
+	alert('submit failed, form not valid');
+	
 	return false;
 }
 
@@ -1157,6 +1181,10 @@ app.EventView.prototype.validateEndDate = function(Element_e) {
 
 	ret = false; // if all else fails, return false
 
+	$(Element_e).siblings('label').data('error',  // pre-emptively (re)set error message to default
+
+		$(Element_e).siblings('label').data('error_default'));
+	
 	if ($(Element_e).val() !== '') { // an entry has been made in end date
 
 		if (self.validateDate(Element_e)) { // end date is a valid date
@@ -1176,6 +1204,11 @@ app.EventView.prototype.validateEndDate = function(Element_e) {
 
 			ret =  false;
 		}
+	}
+
+	else { // end field is empty (OK unless required)
+
+		ret = $(Element_e).attr('required') ? false : true;
 	}
 
 	Element_e.setCustomValidity(ret ? '' : false); // set up for global handler, anything other than the empty string is taken as indicating an error
@@ -1498,5 +1531,18 @@ app.EventView.prototype.validateTimeRange = function() {
 	$end_time.removeClass('invalid');
 
 	return true;
+}
+*/
+
+/*
+function stdTimeZoneOffset() {
+
+	self = new Date();
+
+	//var jan = new Date((self).getFullYear(), 0, 1);
+
+	//var jul = new Date(self.getFullYear(), 6, 1);
+
+	return Math.max(new Date((self).getFullYear(), 0, 1).getTimezoneOffset(), new Date(self.getFullYear(), 6, 1).getTimezoneOffset());
 }
 */

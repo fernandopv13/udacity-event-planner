@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public abstract class ViewUpdateHandler implements Iobserver
+* public abstract class ViewUpdateHandler implements IObserver
 ******************************************************************************/
 
 var app = app || {};

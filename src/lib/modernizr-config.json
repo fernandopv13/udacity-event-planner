@@ -4,6 +4,7 @@
   "feature-detects": [
     "test/inputtypes",
     "test/forms/validation",
+    "test/storage/localstorage",
     "test/window/matchmedia"
   ]
 }

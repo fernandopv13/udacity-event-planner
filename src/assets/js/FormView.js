@@ -71,7 +71,7 @@ app.FormView.prototype.delete = function(nEvent) {
 };
 
 
-/** Initializes event handlers and other functionality after the View has rendered to the DOM */
+/** Initializes event handlers and other functionality after the View has been unhidden */
 
 app.FormView.prototype.onLoad = function(nEvent) {
 

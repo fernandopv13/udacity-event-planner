@@ -165,7 +165,7 @@ app.Model.prototype.onUpdate = function(Model_obj) {
 
 	Model_obj = undefined;
 	
-
+	
 	// Write new state to local storage, if available
 
 	var account = app.controller.selectedAccount();
@@ -182,7 +182,7 @@ app.Model.prototype.onUpdate = function(Model_obj) {
 
 	this.registerObserver(app.controller);
 
-
+	
 	// Notify observers (i.e. controller)
 
 	this.notifyObservers(this);

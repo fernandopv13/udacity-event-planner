@@ -234,7 +234,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {HTMLDivElement} DIV element
 	*/
 
-	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_d, str_customValidator) {
+	app.View.prototype.createDateField = function (str_width, str_dateId, str_label, bool_required, Date_d, str_errorMsg, str_customValidator) {
 
 		var outerDiv =  this.createElement( // outer div
 		{
@@ -260,7 +260,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			id: str_dateId,
 			
-			value: Date_d ? Date_d.toISOString() : '', // only works sometimes, so also set in data, and when initializing post-render
+			value: Date_d ? Date_d.toISOString().replace('Z', '') : '',
 
 			//readonly: true,
 
@@ -300,7 +300,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			classList: Date_d ? ['form-label', 'active'] : ['form-label'],
 			
-			dataset: {error: 'Please enter date in format mm/dd/yyyy hh:mm'},
+			dataset: {error: str_errorMsg ? str_errorMsg : 'Please use format mm/dd/yyyy hh:mm'},
 			
 			innerHTML: str_label
 		});
@@ -799,9 +799,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{
 			element: 'input',			
 			
-			attributes: attributes
+			attributes: attributes,
 			
-			//classList: ['validate'] // validate seems to causecauses error messages to only show when input has focus, not what I want
+			classList: ['validate']
 		}));
 		
 		
@@ -1472,7 +1472,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	*
 	* @return {HTMLDivElement} DIV element
 	*/
-
+	/*DEPRECATED
 	app.View.prototype.createTimeField = function (str_width, str_timeId, str_label, bool_required, Date_d) {
 
 		var outerDiv =  this.createElement( // outer div
@@ -1581,6 +1581,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		
 		return outerDiv;
 	}
+	*/
 
 
 	/* Displays or hides field error messages during interactive form validation
@@ -1711,7 +1712,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 					true
 				);
 
-				date = date.isValid() ? date : null;
+				date = date.isValid() ? date: null;
 			}
 		}
 
@@ -1802,19 +1803,25 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				val = $(item).val() || $(item).data().value;
 
-				if (val !== '') { // there is a date entry
+				if (val !== null) { // there is a date entry
 
 					if (typeof moment !== 'undefined') { // moment is available
 
 						if (moment(val).isValid()) { // entry is a valid date/moment
 
-							$(item).val(moment(val).format('MM/DD/YYYY h:mm A')); // insert reformatted date into UI
+							val = moment(val);
+
+							val.add(-val.toDate().getTimezoneOffset(), 'minutes'); // compensate for UTC and DST offset
+
+							$(item).val(val.format('MM/DD/YYYY h:mm A')); // insert reformatted date into UI
 						}
 					}
 
 					else { // no moment, so cobble 12h string together from individual date components
 
 						val = new Date(val);
+
+						val.setMinutes(val.getTimezoneOffset()) // compensate for UTC and DST offset
 
 						$(item).val(
 
@@ -1832,6 +1839,14 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 						);
 					}
 				}
+			}.bind(this));
+
+
+			// attach event handler(s)
+
+			$('.datetimepicker-input').on('dp.change', function(nEvent) {
+
+				Materialize.updateTextFields(nEvent.currentTarget);
 			});
 		}
 
@@ -1849,11 +1864,16 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				if (val !== '') { // there is a date entry
 
 					// native datetime-locals require an ISO 8601 string with no trailing 'Z'
-					// we also want to trim the seconds, or else some browsers will diaplay them, some not
+					// we also want to trim the seconds, or else some browsers will display them, some not
 
-					val = new Date(val)
+					val = new Date(val);
 
 					$(item).val(val.toISOString().split('T')[0] + 'T' + val.getHours() + ':' + val.getMinutes());
+
+					// This currently fails in Firefox on Android: it formats the date using a comma separator, indicates
+					// that as a validation error and then blocks clearing this with setCustomValidity().
+					// Modernizr' formvalidation test aren't a reliable predicter of what works (produces both false
+					// positives and negatives), so can't use that. Oh well,...
 				}
 			});
 		}
@@ -2344,7 +2364,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (Element_e.validity && Element_e.validity.valueMissing
 
-		|| ($(Element_e).attr('required') && $(Element_e).val() === '')) { //console.log('// required but empty');
+		|| ($(Element_e).attr('required') && $(Element_e).val() === '')) { //alert('// required but empty');
 
 			return false;
 
@@ -2353,7 +2373,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			//this.displayValidation(event, str_dateId, 'Please enter date', false);
 		}
 
-		else if (self.getDateTimePickerValue(Element_e) === null) { //console.log('// invalid entry');
+		else if (self.getDateTimePickerValue(Element_e) === null) { //alert('// invalid entry');
 
 			return false;
 
@@ -2362,7 +2382,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			//this.displayValidation(event, str_dateId, 'Please enter date as mm/dd/yyyy hh:mm', false);
 		}
 
-		else { //console.log('// valid entry');
+		else { //alert('// valid entry');
 
 			//console.log('valid: ' + str_dateId);
 
@@ -2414,22 +2434,59 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	};
 
 
-	/** Event handler for interactive validation of person name field
+	/** Validates a form element using the HTML5 constraint validation API.
+	*
+	* Executes any and all custom form field validators before performing evaluation.
+	*
+	* @param {HTMLFormElement} form A DOM reference to the form to be evaluated
+	*
+	* @return {Boolean} true if all elements are valid after performing custom field validations, otherwise false
+	*/
+
+	app.View.prototype.validateForm = function(Element_form) {
+
+		// Run custom validator on every relevant form element, if defined
+
+		var input_selector = 'input[type=text], input[type=password], input[type=email], input[type=url], input[type=tel], input[type=number], input[type=search], textarea, input[type="datetime-local"]';
+
+		$(Element_form).find(input_selector).each(function(ix, element) {
+
+			if ($(element).data && typeof $(element).data('customValidator') !== 'undefined') { // field has custom validator attribute
+
+				var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, window); // resolve dot string into js reference (w/o resorting to eval()!)
+
+				if (element.setCustomValidity && typeof fn === 'function') { // custom validator is a function
+
+					// This seems broken in Chrome for Android (CyanogenMod), and neither H5F nor webshim can makeit work
+
+					element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
+				}
+			}
+		});
+
+		return $(Element_form)[0].checkValidity();
+	};
+
+
+
+	/** Event handler for interactive validation of required input fields.
+	*
+	* Fall-back for browsers that don't support the HTML5 constraint validation API.
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
+	/*DEPRECATED
+	app.View.prototype.validateRequiredField = function(Element_e) {
 
-	app.View.prototype.validateName = function(Element_e) {
-
-		var isValid = !Element_e.validity.valueMissing;
+		//var isValid = !Element_e.validity.valueMissing;
 
 		//$('#' + str_nameId + '-label').data('error', 'custom error message'); //debug, remove in production
 
 		//this.displayValidation(nEvent, str_nameId, str_errorMsg, valid);
 
-		return isValid;
+		return (typeof $(Element_e).attr('required') !== 'undefined') ? $(Element_e).val().length > 0 : true;
 	}
-
+	*/
 
 	/** Event handler for interactive validation of password field.
 	*

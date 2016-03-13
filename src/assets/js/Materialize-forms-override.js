@@ -37,7 +37,7 @@
 
 				var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, window); // resolve dot string into js reference (w/o resorting to eval()!)
 
-				if (typeof fn === 'function') { // custom validator is a function
+				if (element.setCustomValidity && typeof fn === 'function') { // custom validator is a function
 
 					element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
 				}
@@ -76,8 +76,6 @@
 			input_selector += ', input[type="datetime-local"]'; // not strictly speaking a text field, but we want the same behaviour re. this function
 
 			if (element) {
-
-				console.log(element.id);
 
 				updateCustomValidity(element); // run custom validator, if any
 
@@ -132,8 +130,9 @@
 			
 			var $inputElement = $(this);
 
-			
-			updateCustomValidity($inputElement[0]); // run custom validator, if any
+			//console.log($inputElement);
+
+			updateCustomValidity(($inputElement)[0].id); // run custom validator, if any
 
 			//setActive($inputElement[0]); // set/remove 'active' class on label
 
