@@ -142,7 +142,7 @@ app.SignInView.prototype.render = function() {
 		{
 			element: 'form',			
 			
-			attributes: {autocomplete: 'off', id: 'sign-in-form', novalidate: false},
+			attributes: {autocomplete: 'off', id: 'sign-in-form'},//, novalidate: false},
 			
 			classList: ['col', 's12']
 		});
@@ -193,6 +193,7 @@ app.SignInView.prototype.render = function() {
 			'app.View.prototype.validatePassword'
 		));
 
+		//console.log(containerDiv);
 
 	// Add sign-in button
 
@@ -301,7 +302,7 @@ app.SignInView.prototype.render = function() {
 
 			$('#sign-in-password').val('DEMO5%demo');
 
-			this.submit();
+			this.submit(nEvent);
 
 		}.bind(this));
 
@@ -319,21 +320,9 @@ app.SignInView.prototype.render = function() {
 };
 
 
-app.SignInView.prototype.submit = function(event) {
+app.SignInView.prototype.submit = function(nEvent) {
 
-	// First display any and all validation errors at once
-
-	void this.validateEmail(event, 'sign-in-email', true);
-
-	void this.validatePassword(event, 'sign-in-password', 'sign-in-password-hints');
-
-	// Then do it again to obtain validation status
-
-	// (Chain stops at first false, so no use for UI)
-
-	if (this.validateEmail(event, 'sign-in-email', true)
-
-		&& this.validatePassword(event, 'sign-in-password', 'sign-in-password-hints')) { // Submit results if all validations pass
+	if (this.validateForm($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 
 		// Create a temporary, new account with the data from the form
 
@@ -344,6 +333,8 @@ app.SignInView.prototype.submit = function(event) {
 		account.password(new app.Password($('#sign-in-password').val()));
 		
 		// Dispatch submission using function in parent class
+
+		console.log('calling super');
 
 		this.ssuper().prototype.submit.call(this, account, app.View.UIAction.SIGNIN);
 

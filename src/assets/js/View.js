@@ -605,7 +605,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			classList: email && email.address() ? ['form-label', 'active'] : ['form-label'],
 			
-			dataset: {error: 'Please enter email in format address@server.domain'},
+			dataset: {error: 'Please enter email in format address@server.domain', success: 'Email is valid'},
 			
 			innerHTML: str_label
 		});
@@ -894,8 +894,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			classList: ['validate']
 		}));
-		
-		
+
+				
 		labelElement = this.createElement( // label
 		{	
 			element: 'label',			
@@ -1070,7 +1070,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		innerDiv.appendChild(pElement);
 		
-		
+		//console.log(outerDiv);
+
 		return outerDiv;
 	};
 
@@ -2458,12 +2459,16 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				if (element.setCustomValidity && typeof fn === 'function') { // custom validator is a function
 
-					// This seems broken in Chrome for Android (CyanogenMod), and neither H5F nor webshim can makeit work
+					// This seems broken in Chrome for Android (CyanogenMod), and neither H5F nor webshim can make it work
 
 					element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
 				}
 			}
 		});
+
+		// update display of error messages
+
+		Materialize.updateTextFields();
 
 		return $(Element_form)[0].checkValidity();
 	};
