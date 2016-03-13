@@ -193,8 +193,7 @@ app.SignInView.prototype.render = function() {
 			'app.View.prototype.validatePassword'
 		));
 
-		//console.log(containerDiv);
-
+		
 	// Add sign-in button
 
 		containerDiv =  this.createElement( // div
@@ -260,6 +259,17 @@ app.SignInView.prototype.render = function() {
 		$('#sign-in-email').attr('autofocus', true);
 
 
+		$('#sign-in-email').on('input', function(nEvent) { // validate password
+
+			if (nEvent.currentTarget.value.length > 3) {
+
+				this.validateEmail(nEvent.currentTarget);
+
+				Materialize.updateTextFields(nEvent.currentTarget);
+			}
+
+		}.bind(this));
+
 		/*DEPRECATED
 		$('#sign-in-email').keyup(function(nEvent) { // validate email
 
@@ -281,14 +291,16 @@ app.SignInView.prototype.render = function() {
 		}.bind(this));
 
 
-		$('#sign-in-password').keyup(function(nEvent) { // validate password
+		$('#sign-in-password').on('input', function(nEvent) { // validate password
 
-			this.validatePassword(nEvent.currentTarget, 'sign-in-password-hints');
+			//this.validatePassword(nEvent.currentTarget, 'sign-in-password-hints');
+
+			Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validation, so no need for explicit call
 
 		}.bind(this));
 
 		
-		$('#sign-in-password').blur(function(nEvent) { // hide password hints
+		$('#sign-in-password').blur(function(nEvent) { // hide password hints (global handler takes care of the rest)
 
 			$('#sign-in-password-hints').hide('slow');
 
@@ -333,8 +345,6 @@ app.SignInView.prototype.submit = function(nEvent) {
 		account.password(new app.Password($('#sign-in-password').val()));
 		
 		// Dispatch submission using function in parent class
-
-		console.log('calling super');
 
 		this.ssuper().prototype.submit.call(this, account, app.View.UIAction.SIGNIN);
 

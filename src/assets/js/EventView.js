@@ -1043,8 +1043,6 @@ app.EventView.prototype.submit = function(nEvent) {
 
 	Materialize.updateTextFields(); // make sure validation errors are shown
 
-	alert('submit failed, form not valid');
-	
 	return false;
 }
 
@@ -1077,7 +1075,6 @@ app.EventView.prototype.suggestHosts = function() {
 
 		$listElement.append(optionElement);
 	}
-	//console.log($listElement); //debug
 };
 
 

@@ -1069,8 +1069,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		}));
 
 		innerDiv.appendChild(pElement);
-		
-		//console.log(outerDiv);
 
 		return outerDiv;
 	};
@@ -1680,8 +1678,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (typeof data !== 'undefined' && typeof data.DateTimePicker !== 'undefined') { // we can access the DateTimePicker js object
 
-			//console.log('using moment with custom widget value');
-
 			if (typeof moment !== 'undefined') { // moment is available
 
 				if (data.DateTimePicker.date() && data.DateTimePicker.date().isValid()) { // we have a valid moment instance
@@ -1692,8 +1688,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		}
 
 		else { // parse the input's value manually
-
-			//console.log('parsing manually');
 
 			date = $(Element_e).val();
 
@@ -1722,8 +1716,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		}
 
 		if (date === null) { // try to brute force parsing if moment - and all else - fails
-
-			//console.log('brute forcing with Date');
 
 			date = Date.parse($(Element_e).val());
 
@@ -2372,8 +2364,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			return false;
 
-			//console.log('value value missing: ' + str_dateId);
-
 			//this.displayValidation(event, str_dateId, 'Please enter date', false);
 		}
 
@@ -2381,14 +2371,10 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			return false;
 
-			//console.log('not valid: ' + str_dateId);
-
 			//this.displayValidation(event, str_dateId, 'Please enter date as mm/dd/yyyy hh:mm', false);
 		}
 
 		else { //alert('// valid entry');
-
-			//console.log('valid: ' + str_dateId);
 
 			//this.displayValidation(event, str_dateId, 'Please enter date', true);
 
@@ -2501,7 +2487,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.View.prototype.validatePassword = function(Element_e, str_hintsPrefix) {
+	app.View.prototype.validatePassword = function(Element_e) {
 
 		/* Relying solely on HTML5 constraint validation here would require me to write a compound regex
 		*
@@ -2537,18 +2523,17 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				ret = ret && tmp === null; // add up results
 
-				$('#' + str_hintsPrefix + '-' + prop).find('i').html(tmp ? 'error' : 'done'); // display icon
+				$('#' + Element_e.id + '-hints-' + prop).find('i').html(tmp ? 'error' : 'done'); // display icon
 			}
 
 			else { // the rest are all the same
 
 				ret = ret && tmp; // add up results
 
-				$('#' + str_hintsPrefix + '-' + prop).find('i').html(tmp ? 'done' : 'error'); // display icon
+				$('#' + Element_e.id + '-hints-' + prop).find('i').html(tmp ? 'done' : 'error'); // display icon
 			}
 		}
 
-		
 		// Display validation message (or not)
 
 		/*DEPRECATED
@@ -2563,7 +2548,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			ret
 		);
 		*/
-
 
 		return ret;
 	};

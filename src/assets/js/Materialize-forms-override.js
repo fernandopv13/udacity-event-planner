@@ -39,7 +39,11 @@
 
 				if (element.setCustomValidity && typeof fn === 'function') { // custom validator is a function
 
+					//$('#before').html('before: ' + element.checkValidity()); // debug
+
 					element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
+
+					//$('#after').html('after: ' + element.checkValidity());// debug
 				}
 			}
 		}
@@ -179,7 +183,7 @@
 				
 				if (object.hasClass('validate')) { // wants validation
 					
-					// console.log('1: remove both'); // debug
+					$('#validate').html('1: remove both'); // debug
 
 					object.removeClass('valid'); // default presentation
 					
@@ -191,20 +195,20 @@
 
 				if (object.hasClass('validate')) {
 					
+					// Original code fails in some cases on iOS
+					// No time to investigate, brute forcing an alternative approach
+
 					// Check for character counter attributes
+					//if ((object.is(':valid') && hasLength && (len <= lenAttr)) || (object.is(':valid') && !hasLength)) {
 					
-					if ((object.is(':valid') && hasLength && (len <= lenAttr)) || (object.is(':valid') && !hasLength)) {
-						
-						//console.log('2: mark textarea valid?'); // debug
-						
+					if (object[0].checkValidity()) {	
+
 						object.removeClass('invalid');
 						
 						object.addClass('valid');
 					}
 					
 					else {
-						
-						//console.log('3: mark textarea invalid'); // debug
 						
 						object.removeClass('valid');
 						
