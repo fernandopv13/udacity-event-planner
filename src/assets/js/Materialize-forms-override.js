@@ -71,6 +71,8 @@
 		
 		Materialize.updateTextFields = function(element) {
 
+			console.log(element);
+
 			var input_selector = 'input[type=text], input[type=password], input[type=email], input[type=url], input[type=tel], input[type=number], input[type=search], textarea';
 			
 			input_selector += ', input[type="datetime-local"]'; // not strictly speaking a text field, but we want the same behaviour re. this function
@@ -130,9 +132,7 @@
 			
 			var $inputElement = $(this);
 
-			//console.log($inputElement);
-
-			updateCustomValidity(($inputElement)[0].id); // run custom validator, if any
+			updateCustomValidity($inputElement[0]);//.id); // run custom validator, if any
 
 			//setActive($inputElement[0]); // set/remove 'active' class on label
 

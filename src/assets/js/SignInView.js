@@ -172,7 +172,9 @@ app.SignInView.prototype.render = function() {
 
 			true,
 
-			''
+			'',
+
+			'app.View.prototype.validateEmail'
 		));
 
 
@@ -186,7 +188,9 @@ app.SignInView.prototype.render = function() {
 
 			'sign-in-password-hints',
 
-			''
+			'',
+
+			'app.View.prototype.validatePassword'
 		));
 
 
@@ -255,16 +259,17 @@ app.SignInView.prototype.render = function() {
 		$('#sign-in-email').attr('autofocus', true);
 
 
-		$('#sign-in-email').keyup(function(event) { // validate email
+		/*DEPRECATED
+		$('#sign-in-email').keyup(function(nEvent) { // validate email
 
-			this.validateEmail(event, 'sign-in-email', true);
+			this.validateEmail(nEvent.currentTarget);
 
 		}.bind(this));
+		*/
 		
-		
-		$('#sign-in-password').focus(function(event) { // update and show password hints
+		$('#sign-in-password').focus(function(nEvent) { // update and show password hints
 
-			this.validatePassword(event, 'sign-in-password', 'sign-in-password-hints');
+			this.validatePassword(nEvent, 'sign-in-password', 'sign-in-password-hints');
 
 			$('#sign-in-password-hints').show('slow');
 
@@ -275,14 +280,14 @@ app.SignInView.prototype.render = function() {
 		}.bind(this));
 
 
-		$('#sign-in-password').keyup(function(event) { // validate password
+		$('#sign-in-password').keyup(function(nEvent) { // validate password
 
-			this.validatePassword(event, 'sign-in-password', 'sign-in-password-hints');
+			this.validatePassword(nEvent, 'sign-in-password', 'sign-in-password-hints');
 
 		}.bind(this));
 
 		
-		$('#sign-in-password').blur(function(event) { // hide password hints
+		$('#sign-in-password').blur(function(nEvent) { // hide password hints
 
 			$('#sign-in-password-hints').hide('slow');
 
@@ -290,7 +295,7 @@ app.SignInView.prototype.render = function() {
 		});
 
 
-		$('#sign-in-demo-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
+		$('#sign-in-demo-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
 
 			$('#sign-in-email').val('demo@demo.demo');
 
@@ -301,7 +306,7 @@ app.SignInView.prototype.render = function() {
 		}.bind(this));
 
 
-		$('#sign-in-submit').click(function(event) {
+		$('#sign-in-submit').click(function(nEvent) {
 
 			this.submit(event);
 

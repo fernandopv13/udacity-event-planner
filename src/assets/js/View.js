@@ -546,7 +546,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {HTMLDivElement} DIV element
 	*/
 
-	app.View.prototype.createEmailField = function (str_width, str_EmailId, str_label, bool_required, Email_email) {
+	app.View.prototype.createEmailField = function (str_width, str_EmailId, str_label, bool_required, Email_email, str_customValidator) {
 
 		var email = Email_email;
 
@@ -589,9 +589,11 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{
 			element: 'input',			
 			
-			attributes: attributes
+			attributes: attributes,
+
+			dataset: str_customValidator ? {customValidator: str_customValidator} : {},
 			
-			//classList: [validate''] // validate seems to causecauses error messages to only show when input has focus, not what I want
+			classList: ['validate']
 		}));
 		
 		
@@ -603,7 +605,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			
 			classList: email && email.address() ? ['form-label', 'active'] : ['form-label'],
 			
-			dataset: {error: 'Please use format "address@server.domain"'},
+			dataset: {error: 'Please enter email in format address@server.domain'},
 			
 			innerHTML: str_label
 		});
@@ -845,7 +847,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {HTMLDivElement} DIV element
 	*/
 
-	app.View.prototype.createPasswordField = function (str_width, str_passwordId, str_hintsPrefix, Account_account) {
+	app.View.prototype.createPasswordField = function (str_width, str_passwordId, str_hintsPrefix, Account_account, str_customValidator) {
 
 		var account = Account_account, outerDiv, innerDiv, labelElement, pElement;
 
@@ -886,9 +888,11 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				'aria-labelledby': str_passwordId + '-label',
 
 				role: 'textbox'
-			}
-			
-			//classList: ['validate'] // validate seems to causecauses error messages to only show when input has focus, not what I want
+			},
+
+			dataset: str_customValidator ? {customValidator: str_customValidator} : {},
+
+			classList: ['validate']
 		}));
 		
 		
@@ -1118,9 +1122,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				'aria-labelledby': str_confirmationId + '-label',
 
 				role: 'textbox'
-			}
+			},
 			
-			//classList: ['validate']// validate seems to causecauses error messages to only show when input has focus, not what I want
+			classList: ['validate']
 		}));
 		
 		
@@ -1573,9 +1577,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		{	
 			element: 'div',			
 			
-			attributes: {id: str_timeId + '-error'}
+			attributes: {id: str_timeId + '-error'},
 			
-			//classList: ['custom-validate'] // validate seems to causecauses error messages to only show when input has focus, not what I want
+			classList: ['custom-validate']
 		}));
 
 		
@@ -1955,7 +1959,6 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		return; // dummy method to make sure it's always available
 	};
-
 
 
 	/** Utility for dynamically rendering main navigation directly to the DOM
@@ -2400,7 +2403,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.View.prototype.validateEmail = function(nEvent, str_emailId, bool_required) {
+	app.View.prototype.validateEmail = function(Element_e) {
 
 		/* Tried the HTML5 email validity constraint but found it too lax
 		*
@@ -2409,28 +2412,24 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		* See unit test for Email class using com_github_dominicsayers_isemail.tests for details.
 		*/
 
-		var $email = $('#' + str_emailId),
+		var testMail = new app.Email($(Element_e).val()),
 
-		email = $email.val(),
+		isRequired = typeof $(Element_e).attr('required') !== 'undefined';
 
-		testMail = new app.Email(email),
+		if ($(Element_e).val() !== '') { // always validate email if it exists
 
-		valid = testMail.isValid();
-
-
-		if (email !== '') { // always validate email if it exists
-
-			this.displayValidation(nEvent, str_emailId, 'Please enter in format "address@server.domain"', valid);
+			return testMail.isValid();
 		}
 
-		else if (bool_required) { // no entry, require if required(!)
-
-			this.displayValidation(nEvent, str_emailId, 'Please enter email', false);
-
-			return valid || !bool_required; // empty is OK if not required
-		}
+		else if (!isRequired) { // empty is OK if not required
 		
-		return valid;
+			return true;
+		}
+
+		else { // no entry, but required
+
+			return false;
+		}
 	};
 
 
