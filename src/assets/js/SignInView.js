@@ -269,7 +269,7 @@ app.SignInView.prototype.render = function() {
 		
 		$('#sign-in-password').focus(function(nEvent) { // update and show password hints
 
-			this.validatePassword(nEvent, 'sign-in-password', 'sign-in-password-hints');
+			this.validatePassword(nEvent.currentTarget, 'sign-in-password-hints');
 
 			$('#sign-in-password-hints').show('slow');
 
@@ -282,7 +282,7 @@ app.SignInView.prototype.render = function() {
 
 		$('#sign-in-password').keyup(function(nEvent) { // validate password
 
-			this.validatePassword(nEvent, 'sign-in-password', 'sign-in-password-hints');
+			this.validatePassword(nEvent.currentTarget, 'sign-in-password-hints');
 
 		}.bind(this));
 

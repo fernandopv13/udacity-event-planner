@@ -2400,6 +2400,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 	/** Event handler for interactive validation of email field
 	*
+	* @param {HTMLElement} A DOm reference to the email field
+	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
@@ -2494,17 +2496,16 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.View.prototype.validatePassword = function(nEvent, str_passwordId, str_hintsPrefix) {
+	app.View.prototype.validatePassword = function(Element_e, str_hintsPrefix) {
 
 		/* Relying solely on HTML5 constraint validation here would require me to write a compound regex
 		*
 		* meeting all the requirements of the individial static validation functions in the Password class.
 		*
-		* This is too much of a headache both to create and maintain. So relying directly on Password instead.
+		* This is too much of a headache both to create and maintain. So relying directly on Password class instead.
 		*/
 
-		var password = $('#' + str_passwordId).val(), ret = true, tmp;
-
+		var password = $(Element_e).val(), ret = true, tmp;
 
 		// Validate password and manage display of password hints
 
@@ -2527,7 +2528,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			tmp = tests[prop](password); // run test
 
-			if (prop === 'illegal') { // this reverses the logic, and has a non-Boolean return, so deal separately
+			if (prop === 'illegal') { // this reverses the logic, and has a non-Boolean return, so deal with it separately
 
 				ret = ret && tmp === null; // add up results
 
@@ -2545,6 +2546,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 		
 		// Display validation message (or not)
 
+		/*DEPRECATED
 		this.displayValidation(
 
 			nEvent,
@@ -2555,6 +2557,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			ret
 		);
+		*/
 
 
 		return ret;
