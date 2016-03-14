@@ -117,7 +117,7 @@ app.SignInView.prototype.render = function() {
 		}));
 
 
-	// Add heading
+	// Add heading and teaser
 		
 		containerDiv =  this.createElement( // div
 		{
@@ -135,6 +135,16 @@ app.SignInView.prototype.render = function() {
 			attributes: {role: 'heading'},
 
 			innerHTML: this.heading()
+		}));
+
+		containerDiv.appendChild(this.createElement(
+		{
+			element: 'p',
+
+			classList: ['center-align'],
+
+			innerHTML: 'You\'re back. Awesome!'
+			
 		}));
 
 	
@@ -205,8 +215,7 @@ app.SignInView.prototype.render = function() {
 			classList: ['row', 'center-align']
 		});
 
-		//this.$renderContext().append(containerDiv);
-
+		
 		formElement.appendChild(containerDiv);
 
 		
@@ -228,10 +237,9 @@ app.SignInView.prototype.render = function() {
 		{
 			element: 'div',			
 			
-			classList: ['row', 'center-align']
+			classList: ['row', 'center-align', 'hidden'] // // Udacity reviewer didn't like this idea, so hiding it
 		});
 
-		//this.$renderContext().append(containerDiv);
 		formElement.appendChild(containerDiv);
 
 		containerDiv.appendChild(this.createElement(

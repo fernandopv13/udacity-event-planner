@@ -350,7 +350,7 @@ app.EventView.prototype.render = function(Event_e) {
 					
 					value: Event_e.type() ? Event_e.type() : '',
 					
-					list: 'event-types',
+					list: 'suggested-event-types',
 
 					'aria-labelledby': 'event-type-label',
 
@@ -377,7 +377,7 @@ app.EventView.prototype.render = function(Event_e) {
 			{	
 				element: 'datalist',			
 				
-				attributes: {id: 'event-types'}
+				attributes: {id: 'suggested-event-types'}
 			}));
 			
 			
@@ -404,7 +404,7 @@ app.EventView.prototype.render = function(Event_e) {
 
 				'Capacity',
 
-				true,
+				false,
 
 				Event_e.capacity() ? Event_e.capacity() : 0,
 
@@ -679,6 +679,7 @@ app.EventView.prototype.render = function(Event_e) {
 			
 			this.initDateTimePicker(); // generic initialization of bootstrap-datetime pickers
 
+
 			// Attach event handlers (dp.change doesn't 'take' if iterating, so going manual)
 
 			// Note: short of manual polling, there seems to be very little support for 'changey' input events on mobile.
@@ -879,6 +880,10 @@ app.EventView.prototype.render = function(Event_e) {
 	
 			}.bind(this));
 			*/
+
+
+			$('#event-type').focus(this.suggestedEventTypes); // suggest event types
+
 			
 			$('#event-edit-guests-button').click(function(nEvent) { // edit guest list button
 
@@ -1045,6 +1050,51 @@ app.EventView.prototype.submit = function(nEvent) {
 
 	return false;
 }
+
+
+/** Suggest event types based on a hard-coded list
+*
+* Datalists not supported by Safari at the time of this writing, but fails silently with no adverse effects.
+*/
+
+app.EventView.prototype.suggestedEventTypes = function() {
+
+	var $listElement = $('#suggested-event-types'), optionElement;
+
+	$listElement.empty();
+
+	var types =
+	[
+		'Birthday party',
+
+		'Bachelor\'s party',
+
+		'Business meeting',
+
+		'Conference talk',
+
+		'Family gathering',
+
+		'Job interview',
+
+		'Religious festival',
+
+		'Romantic dinner',
+
+		'Wedding'
+	]
+
+	for (var ix in types) {
+		
+		optionElement = document.createElement('option');
+
+		optionElement.value = types[ix];
+
+		optionElement.innerHTML = types[ix];
+
+		$listElement.append(optionElement);
+	}
+};
 
 
 /** Suggest hosts based on hosts of previous events in the account.

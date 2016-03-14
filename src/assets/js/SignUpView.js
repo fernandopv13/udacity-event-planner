@@ -237,6 +237,71 @@ app.SignUpView.prototype.render = function() {
 		));
 
 
+	// Add optional extras instruction
+
+		containerDiv.appendChild(this.createElement(
+		{
+			element: 'p',
+
+			classList: ['center-align'],
+
+			innerHTML: 'Some optional extras:'
+			
+		}));
+
+	
+	// Add account holder name field
+
+		containerDiv.appendChild(this.createTextField(
+
+			's12',
+
+			'sign-up-name',
+
+			'Your Name',
+
+			false,
+
+			''
+		));
+
+
+	// Add birthday field
+
+			containerDiv.appendChild(this.createDateField(
+
+				's12',
+
+				'sign-up-birthday',
+
+				'Your Birthday',
+
+				false,
+
+				'',
+				
+				'',
+
+				'app.View.prototype.validateDate'
+			))
+
+
+	// Add job title field
+
+		containerDiv.appendChild(this.createTextField(
+
+			's12',
+
+			'sign-up-jobtitle',
+
+			'Your Job Title',
+
+			false,
+
+			''
+		));
+
+
 	// Add sign-up button
 
 		containerDiv =  this.createElement( // div
@@ -262,13 +327,13 @@ app.SignUpView.prototype.render = function() {
 		}));
 
 	
-	// Add demo sign-in link
+	// Add demo sign-in link (disabled/hidden)
 
 		containerDiv =  this.createElement( // div
 		{
 			element: 'div',			
 			
-			classList: ['row', 'center-align']
+			classList: ['row', 'center-align', 'hidden'] // Udacity reviewer didn't like this idea, so hiding it
 		});
 
 		formElement.appendChild(containerDiv);
@@ -355,26 +420,7 @@ app.SignUpView.prototype.render = function() {
 		});
 
 
-		/*DEPRECATED
-		$('#sign-up-password').change(function(nEvent) { // show password confirmation, if password changed
-
-			console.log('pw change');
-
-			this.isPasswordDirty = true; // enable confirmation
-
-			$('#sign-up-password-confirmation-parent').show('slow');
-
-		}.bind(this));
-		*/
-
-
-		/*
-		$('#sign-up-password-confirmation').on('input', function(nEvent) { // validate password confirmation
-
-			Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
-
-		}.bind(this));
-		*/
+		this.initDateTimePicker();
 
 
 		$('#sign-up-open-demo').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
@@ -408,6 +454,22 @@ app.SignUpView.prototype.submit = function(nEvent) {
 		account.email(new app.Email($('#sign-up-email').val()));
 
 		account.password(new app.Password($('#sign-up-password').val()));
+
+		var accountHolder = new app.Person( // trying to keep it simple; don't scare users away before they have signed up!
+
+			$('#sign-up-name').val(),
+
+			null,
+
+			$('#sign-up-jobtitle').val(),
+
+			null,
+
+			new Date($('#sign-up-birthday').val())
+		)
+
+		void account.accountHolder(accountHolder);
+
 		
 		// Dispatch submission using function in parent class
 
