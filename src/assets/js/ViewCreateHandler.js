@@ -75,6 +75,18 @@ app.ViewCreateHandler.prototype.execute = function(int_UIAction, Model_m, View_v
 
 	switch (Model_m.constructor) {
 
+		case app.Account:
+
+			ctrl.selectedAccount(Model_m); // set new account to current
+
+			ctrl.onAccountSelected.call(ctrl, Model_m); // open its (empty) event list
+
+			void (new app.View()).renderNavigation('Meetup Planner'); // show navigation
+
+			Materialize.toast('Success, your account is ready for you to enjoy.', 4000);
+
+			break;
+
 		case app.Event:
 
 			ctrl.newModel(Model_m); // store new model for future reference
@@ -103,7 +115,7 @@ app.ViewCreateHandler.prototype.execute = function(int_UIAction, Model_m, View_v
 
 		default:
 
-			//console.log('not supported')
+			console.log(Model_m.className() + ' not supported');
 	}
 
 	ctrl.registerObserver(Model_m);

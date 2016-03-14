@@ -64,13 +64,13 @@ app.GuestListView.prototype.constructor = app.GuestListView; //Reset constructor
 
 app.GuestListView.prototype.render = function(Event_e) {
 	
-	function renderListItem(Person_g, self) {
+	function renderListItem(Person_g, self) { // list item generator
 		
 		var listElmnt = self.createElement({
 
 			element: 'li',
 
-			attributes: {id: 'guest-list-id-' + Person_g.id()},
+			attributes: {id: 'guest-list-id-' + Person_g.id(), role: 'listitem'},
 
 			classList: ['collection-item', 'avatar'],
 
@@ -159,6 +159,8 @@ app.GuestListView.prototype.render = function(Event_e) {
 
 		element: 'ul',
 
+		attributes: {role: 'list'},
+
 		classList: ['collection', 'with-header']
 	});
 
@@ -166,6 +168,8 @@ app.GuestListView.prototype.render = function(Event_e) {
 	UlElement.appendChild(this.createElement({
 
 		element: 'h4',
+
+		attributes: {role: 'heading'},
 
 		classList: ['collection-header'],
 
@@ -234,7 +238,7 @@ app.GuestListView.prototype.render = function(Event_e) {
 	{
 		element: 'div',
 
-		attributes: {id: 'secondary-nav'},
+		attributes: {id: 'secondary-nav', role: 'navigation'},
 		
 		classList: ['secondary-nav']
 	});

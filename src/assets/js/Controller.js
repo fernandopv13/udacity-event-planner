@@ -397,7 +397,9 @@ app.Controller = function() {
 
 					guestView: new app.PersonView('guest-view', 'Edit Guest'), // guest form
 
-					signInView: new app.SignInView('sign-in-view', 'Sign In') // front page view
+					signInView: new app.SignInView('sign-in-view', 'Sign In'), // sign in view
+
+					signUpView: new app.SignUpView('sign-up-view', 'Sign Up') // sign in view
 				}
 
 				

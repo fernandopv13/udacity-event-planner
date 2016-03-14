@@ -132,6 +132,8 @@ app.SignInView.prototype.render = function() {
 
 			element: 'h4',
 
+			attributes: {role: 'heading'},
+
 			innerHTML: this.heading()
 		}));
 
@@ -193,7 +195,7 @@ app.SignInView.prototype.render = function() {
 			'app.View.prototype.validatePassword'
 		));
 
-		
+
 	// Add sign-in button
 
 		containerDiv =  this.createElement( // div
@@ -263,9 +265,9 @@ app.SignInView.prototype.render = function() {
 
 			if (nEvent.currentTarget.value.length > 3) {
 
-				this.validateEmail(nEvent.currentTarget);
+				//this.validateEmail(nEvent.currentTarget);
 
-				Materialize.updateTextFields(nEvent.currentTarget);
+				Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
 			}
 
 		}.bind(this));

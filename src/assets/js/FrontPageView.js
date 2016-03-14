@@ -88,7 +88,7 @@ app.FrontPageView.prototype.render = function() {
 		}));
 
 	
-	// Add logo
+	// Add logo and teaser
 
 		containerDiv =  this.createElement( // div
 		{
@@ -173,9 +173,9 @@ app.FrontPageView.prototype.render = function() {
 
 		$('#front-page-sign-up').click(function(event) { // go to sign-up view
 
-			//this.notifyObservers(new app.SignUpView(), null, app.View.UIAction.NAVIGATE);
+			this.notifyObservers(new app.SignUpView(), null, app.View.UIAction.NAVIGATE);
 
-			Materialize.toast('Sign up is not implemented in this demo. Sorry.', 4000)
+			//Materialize.toast('Sign up is not implemented in this demo. Sorry.', 4000)
 
 		}.bind(this));
 

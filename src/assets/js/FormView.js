@@ -133,6 +133,8 @@ app.FormView.prototype.onUnLoad = function(nEvent) {
 
 app.FormView.prototype.submit = function(Model_m, int_UIaction) {
 
+	console.log('FormView');
+
 	this.notifyObservers(this, Model_m, typeof int_UIaction === 'number' ? int_UIaction : app.View.UIAction.SUBMIT);
 
 	return true;

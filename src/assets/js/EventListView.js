@@ -66,13 +66,13 @@ app.EventListView.prototype.constructor = app.EventListView; //Reset constructor
 
 app.EventListView.prototype.render = function(Account_a) {
 	
-	function renderListItem(Event_e, self) {
+	function renderListItem(Event_e, self) { // list item generator
 
 		var listElmnt = self.createElement({ // li
 
 			element: 'li',
 
-			attributes: {id: 'event-list-id-' + Event_e.id()},
+			attributes: {id: 'event-list-id-' + Event_e.id(), role: 'listitem'},
 
 			classList: ['collection-item']
 		});
@@ -128,6 +128,8 @@ app.EventListView.prototype.render = function(Account_a) {
 
 		element: 'ul',
 
+		attributes: {role: 'list'},
+
 		classList: ['collection', 'with-header']
 	});
 
@@ -137,6 +139,8 @@ app.EventListView.prototype.render = function(Account_a) {
 		element: 'h4',
 
 		classList: ['collection-header'],
+
+		attributes: {role: 'heading'},
 
 		innerHTML: this.heading()
 	}));

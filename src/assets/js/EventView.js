@@ -175,7 +175,7 @@ app.EventView.prototype.render = function(Event_e) {
 
 					'aria-labelledby': 'event-location-label',
 
-					role: 'text'
+					role: 'textbox'
 				}
 			}));
 			
@@ -354,7 +354,7 @@ app.EventView.prototype.render = function(Event_e) {
 
 					'aria-labelledby': 'event-type-label',
 
-					role: 'text'
+					role: 'textbox'
 				}
 			}));
 			
@@ -602,7 +602,7 @@ app.EventView.prototype.render = function(Event_e) {
 
 					'aria-labelledby': 'event-description-label',
 
-					role: 'text',
+					role: 'textbox',
 
 					'aria-multiline': true
 				},

@@ -740,6 +740,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 			element: 'h4',
 
+			attributes: {role: 'heading'},
+
 			innerHTML: str_heading
 
 		}));
@@ -890,7 +892,12 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				role: 'textbox'
 			},
 
-			dataset: str_customValidator ? {customValidator: str_customValidator} : {},
+			dataset:
+			{
+				customValidator: str_customValidator ? str_customValidator : '',
+
+				value: account && account.password() && account.password().password() ? account.password().password() : ''
+			},
 
 			classList: ['validate']
 		}));
@@ -1080,7 +1087,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	*/
 
 
-	app.View.prototype.createPasswordConfirmationField = function (str_width, str_confirmationId) {
+	app.View.prototype.createPasswordConfirmationField = function (str_width, str_confirmationId, str_customValidator) {
 
 		var outerDiv =  this.createElement( // outer div
 		{
@@ -1122,6 +1129,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				role: 'textbox'
 			},
+
+			dataset: str_customValidator ? {customValidator: str_customValidator} : {},
 			
 			classList: ['validate']
 		}));
@@ -1590,7 +1599,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	/* Displays or hides field error messages during interactive form validation
 	*
 	*/
-	//DEPRECATED
+	/*DEPRECATED
 	app.View.prototype.displayValidation = function(nEvent, str_fieldId, str_errorMsg, bool_valid) {
 
 		var $field = $('#' + str_fieldId), $label = $('#' + str_fieldId + '-label');
@@ -1662,7 +1671,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			}
 		}
 		*/
-	};
+	//};
 
 
 	/** Gets (parses) value of datetime picker using datetime-local input field
@@ -2558,12 +2567,19 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
-	app.View.prototype.validatePasswordConfirmation = function(nEvent, str_passwordId, str_confirmationId) {
+	app.View.prototype.validatePasswordConfirmation = function(Element_e) {
 
 		// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
 
-		var valid = $('#' + str_confirmationId).val() === $('#' + str_passwordId).val() || !this.isPasswordDirty;
+		var pw_org = $('#' + Element_e.id.replace('-confirmation', '')).data('value'), // original pw
 
+		pw = $('#' + Element_e.id.replace('-confirmation', '')).val(), // current password entry
+
+		pw2 = $(Element_e).val(); // conformation
+
+		return pw === pw2 || pw === pw_org // // pw and confirmation match, or pw hasn't changed
+
+		/*DEPRECATED
 		this.displayValidation(
 
 			nEvent,
@@ -2573,7 +2589,5 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 			'Must be the same as password',
 
 			valid
-		);
-
-		return valid;
+		);*/
 	};

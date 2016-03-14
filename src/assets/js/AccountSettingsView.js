@@ -192,7 +192,9 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 					
 					id: 'account-settings-location',
 					
-					value: account.defaultLocation() ? account.defaultLocation(): ''
+					value: account.defaultLocation() ? account.defaultLocation(): '',
+
+					role: 'textbox'
 				}
 			}));
 			
@@ -297,7 +299,7 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 			}.bind(this));
 
 
-			$('#account-settings-password').keyup(function(event) { // validate password
+			$('#account-settings-password').on('input', function(event) { // validate password
 
 				this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
 
@@ -319,14 +321,14 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 			}.bind(this));
 
 
-			$('#account-settings-password-confirmation').keyup(function(event) { // validate password confirmation
+			$('#account-settings-password-confirmation').on('input', function(event) { // validate password confirmation
 
 				this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
 	
 			}.bind(this));
 
 
-			$('#account-settings-capacity').keyup(function(event) { // validate default capacity
+			$('#account-settings-capacity').on('input', function(event) { // validate default capacity
 
 				this.validateCapacity(event, 'account-settings-capacity');
 	
