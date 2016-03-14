@@ -13,14 +13,10 @@
 		<!--Import styles -->
 		<!-- @gulp-app-style-tags-begin -->
 		<link rel="stylesheet" href="lib/bootstrap_v3.3.6/css/bootstrap.min.css"><!-- for bootstrap-datetimepicker -->
-		<link rel="stylesheet" href="lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.css">
+		<link rel="stylesheet" href="lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.min.css">
 		<!--link type="text/css" rel="stylesheet" href="assets/css/materialize.css" media="screen"/-->
-		<link type="text/css" rel="stylesheet" href="assets/css/app.css" media="screen"/><!-- Concatenated to include Materialize.css -->
+		<link rel="stylesheet" href="assets/css/app.css" media="screen"/><!-- Concatenated to include Materialize.css -->
 		<!-- @gulp-app-style-tags-end -->
-		
-		
-
-		
 
 	</head>
 
@@ -73,7 +69,7 @@
 
 				</div>
 
-				<!-- Containers for dynamically populated main content views -->
+			<!-- Containers for dynamically populated main content views -->
 
 				<div id="front-page-view" class="row hidden" aria-hidden="true"></div>
 
@@ -94,11 +90,10 @@
 				<div id="guest-list-view" class="row hidden" aria-hidden="true"></div>
 
 				<div id="guest-view" class="row hidden" aria-hidden="true"></div>
-
 							
 			</div>
 
-		<!-- Library source files -->
+		<!-- JavaScript library source files -->
 			<script src="lib/polyfills/Object.js"></script>
 			<script src="lib/polyfills/Array.js"></script>
 			<!--script src="lib/polyfills/H5F_v1.1.1/src/H5F.js"></script --><!-- HTML5 forms polyfill (ineffective) -->
@@ -107,14 +102,15 @@
 			
 			<script src="lib/jquery-2.1.1.min.js"></script> <!--Import jQuery before materialize.js; stic with 2.1.1 until materialize/picker.js catch up -->
 			<script src="lib/bootstrap_v3.3.6/js/bootstrap.min.js"></script><!-- for bootstrap-datetimepicker (minimal bs install) -->
-			<script src="lib/modernizr_v3.3.1-custom.js"></script><!-- for bootstrap-datetimepicker -->
+			<script src="lib/modernizr_v3.3.1/modernizr_v3.3.1-custom.js"></script><!-- for bootstrap-datetimepicker -->
 			<script src="lib/moment.js_V2.12.0/min/moment-with-locales.min.js"></script><!-- for bootstrap-datetimepicker -->
 			<!--script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script--><!-- Replacement after built-in picker was frowned upon by Udacity reviewer -->
-			<script src="lib/bootstrap-datetimepicker_v4.17.37/src/js/bootstrap-datetimepicker.js"></script>
-			<script src="lib/materialize.min.js"></script>
+			<script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script>
+			<script src="lib/materialize_v0.97.5/js/bin/materialize.min.js"></script>
+			
 			<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
 			
-		<!-- App source files -->
+		<!-- JavaScript app source files (will be concatenated and minified to single 'app.js' in build process) -->
 			<!-- @gulp-app-script-tags-begin -->
 			<script src="assets/js/Device.js"></script>
 			<script src="assets/js/Error.js"></script>
@@ -159,21 +155,23 @@
 			<script src="assets/js/ViewSignInHandler.js"></script>
 			<script src="assets/js/ViewSubmitHandler.js"></script>
 			<script src="assets/js/app.js"></script>
-			<script src="test/util/data.js"></script>
+			<script src="assets/js/demodata.js"></script>
 			<!-- @gulp-app-script-tags-end -->
 
 		<script>
 			
 			window.onload = function() { // $(document).ready()) may fire too early, so going old school
 				
-				webshim.polyfill('forms');
+				webshim.polyfill('forms'); // this may be ineffective, as th eforms have yet to render; maybe call as part of form's onLoad/onRender call
 
 				app.init();
-			
 			};
 		</script>
+		
 		<noscript>
+			
 			This app relies very heavily on scripted content running in the browser 'front-end'. You seem to have scripting disabled, or perhaps prefer not to enable it. Which is fine. But at this time the app is only available with scripting enabled. Sorry.
+
 		</noscript>
 
 
