@@ -1127,7 +1127,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 				'aria-labelledby': str_confirmationId + '-label',
 
-				role: 'textbox'
+				role: 'textbox',
+
+				tabindex: 0
 			},
 
 			dataset: str_customValidator ? {customValidator: str_customValidator} : {},
@@ -1743,7 +1745,7 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	*
 	* @return {void}
 	*
-	* @todo investigate if changing 'aria-hidden' could do more of the work of hiding. (Checked jQuery source: hide() does not seem to change aria-hidden attribute.)
+	* @todo Find a way of re-styling the timepicker using CSS rather than JS, make am/pm button prettier
 	*/
 
 	app.View.prototype.hide = function(obj_options) {
@@ -1778,6 +1780,14 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 				locale: moment.locale('en'),
 
 				showClear: true
+			});
+
+
+			// Do some basic cleanup of the timepicker's styling
+
+			$('input[type="datetime-local"]').focus(function(nEvent) {
+
+				$('td').children('.btn').removeClass('btn'); // a bit crude, but should be OK for now
 			});
 
 			
@@ -2327,11 +2337,9 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
-
+	//DEPRECATED: But don't jankit just yet (check first)
 	app.View.prototype.validateCapacity = function(nEvent, str_capacityId) {
 		
-		// Using HTML5 constraint validation to please my Udacity reviewers
-
 		var validity = $('#' + str_capacityId)[0].validity;
 
 		
@@ -2369,21 +2377,21 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		if (Element_e.validity && Element_e.validity.valueMissing
 
-		|| ($(Element_e).attr('required') && $(Element_e).val() === '')) { //alert('// required but empty');
+		|| $(Element_e).val().length === 0) { //console.log('// required but empty')
 
-			return false;
+			return typeof $(Element_e).attr('required') === 'undefined';
 
 			//this.displayValidation(event, str_dateId, 'Please enter date', false);
 		}
 
-		else if (self.getDateTimePickerValue(Element_e) === null) { //alert('// invalid entry');
+		else if (self.getDateTimePickerValue(Element_e) === null) { //console.log('// invalid entry');
 
 			return false;
 
 			//this.displayValidation(event, str_dateId, 'Please enter date as mm/dd/yyyy hh:mm', false);
 		}
 
-		else { //alert('// valid entry');
+		else { //console.log('// valid entry');
 
 			//this.displayValidation(event, str_dateId, 'Please enter date', true);
 
@@ -2457,6 +2465,8 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 					// This seems broken in Chrome for Android (CyanogenMod), and neither H5F nor webshim can make it work
 
 					element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
+
+					console.log(element.id + ': ' + element.checkValidity());
 				}
 			}
 		});
@@ -2575,19 +2585,15 @@ Mix in default methods from implemented interfaces, unless overridden by class o
 
 		pw = $('#' + Element_e.id.replace('-confirmation', '')).val(), // current password entry
 
-		pw2 = $(Element_e).val(); // conformation
+		pw2 = $(Element_e).val(); // confirmation
 
-		return pw === pw2 || pw === pw_org // // pw and confirmation match, or pw hasn't changed
+		var ret = pw === pw2;
 
-		/*DEPRECATED
-		this.displayValidation(
+		//console.log(ret);
 
-			nEvent,
+		ret = ret || pw === pw_org;
 
-			str_confirmationId,
+		//console.log(ret);
 
-			'Must be the same as password',
-
-			valid
-		);*/
+		return ret; // // pw and confirmation match, or pw hasn't changed
 	};

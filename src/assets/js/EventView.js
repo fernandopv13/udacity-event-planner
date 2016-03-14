@@ -679,7 +679,7 @@ app.EventView.prototype.render = function(Event_e) {
 			
 			this.initDateTimePicker(); // generic initialization of bootstrap-datetime pickers
 
-
+			
 			// Attach event handlers (dp.change doesn't 'take' if iterating, so going manual)
 
 			// Note: short of manual polling, there seems to be very little support for 'changey' input events on mobile.
@@ -1168,7 +1168,9 @@ app.EventView.prototype.suggestLocations = function() {
 
 			// don't currently have access to a secure server, so,
 
-			// mock geolocation result for the time being
+			// mocked geolocation result during development
+
+			// this works, but isn't helpful for people in different locations
 
 			/*
 			position = {
@@ -1185,6 +1187,8 @@ app.EventView.prototype.suggestLocations = function() {
 			}*/
 		}
 	}
+
+	//console.log(position);
 
 	if (position) {// position is defined
 

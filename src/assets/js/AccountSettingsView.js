@@ -121,7 +121,9 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 
 				true,
 
-				account.email()
+				account.email(),
+
+				'app.View.prototype.validateEmail'
 			));
 
 
@@ -133,9 +135,11 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 
 				'account-settings-password',
 
-				 'account-settings-password-hints',
+				'account-settings-password-hints',
 
-				 Account_account
+				Account_account,
+
+				'app.View.prototype.validatePassword'
 			));
 
 
@@ -145,7 +149,9 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 
 				's12',
 
-				'account-settings-password-confirmation'
+				'account-settings-password-confirmation',
+
+				'app.View.prototype.validatePasswordConfirmation'
 			));
 
 			
@@ -281,15 +287,53 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 			this.$renderContext().append(formElement);
 
 
-		// (Re)assign event handlers to form elements
+		// Initialize and (re)assign evnet handlers to form elements
 
-			$('#account-settings-email').keyup(function(event) { // validate email
+			$('#account-settings-email, #account-settings-password, #account-settings-password-confirmation').on('input', function(nEvent) { // interactively validate email, password etc
 
-				this.validateEmail(event, 'account-settings-email', true);
+			if (nEvent.currentTarget.value.length > 3) { // allow people to get started before showing error message (we need at least 3 chars anyway)
+
+				//this.validateEmail(nEvent.currentTarget);
+
+				Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
+			}
 
 			}.bind(this));
 			
 			
+			$('#account-settings-password').focus(function(nEvent) { // update and show password hints
+
+				this.validatePassword(nEvent.currentTarget, '#account-settings-password-hints');
+
+				$('#account-settings-password-hints').show('slow');
+
+				$('#account-settings-password-hints').removeClass('hidden');
+
+				$('#account-settings-password-hints').attr('aria-hidden', false); // doesn't seem to have any effect on screen reader
+
+			}.bind(this));
+
+
+			$('#account-settings-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
+
+				$('#account-settings-password-hints').hide('slow');
+
+				$('#account-settings-password-hints').attr('aria-hidden', true);
+
+				if ($(nEvent.currentTarget).val().length > 0 // pw is not empty
+
+					&& $(nEvent.currentTarget).val() !== $(nEvent.currentTarget).data('value') // pw is 'dirty'
+
+					&&  $(nEvent.currentTarget).checkValidity()) { // pw is valid
+
+						$('#account-settings-password-confirmation-parent').removeClass('hidden');
+
+						$('#account-settings-password-confirmation-parent').show('slow');
+				}
+			});
+
+
+			/*
 			$('#account-settings-password').focus(function(event) { // update and show password hints
 
 				this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
@@ -297,6 +341,7 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 				$('#account-settings-password-hints').show('slow');
 
 			}.bind(this));
+
 
 
 			$('#account-settings-password').on('input', function(event) { // validate password
@@ -310,8 +355,11 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 
 				$('#account-settings-password-hints').hide('slow');
 			});
+
+			*/
 			
 
+			/*
 			$('#account-settings-password').change(function(event) { // show password confirmation, if password changed
 
 				this.isPasswordDirty = true; // enable confirmation
@@ -326,25 +374,28 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 				this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
 	
 			}.bind(this));
+			*/
 
 
-			$('#account-settings-capacity').on('input', function(event) { // validate default capacity
+			/*DEPRECATED: Constraint vlidation API should suffice
+			$('#account-settings-capacity').on('input', function(nEvent) { // validate default capacity
 
 				this.validateCapacity(event, 'account-settings-capacity');
 	
 			}.bind(this));
+			*/
 
 
-			$('#account-settings-cancel').click(function(event) {
+			$('#account-settings-cancel').click(function(nEvent) {
 
-				this.cancel(event);
+				this.cancel(nEvent);
 				
 			}.bind(this));
 
 
-			$('#account-settings-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
+			$('#account-settings-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
 
-				this.submit(event);
+				this.submit(nEvent);
 
 			}.bind(this));
 	}
@@ -370,34 +421,9 @@ app.AccountSettingsView.prototype.render = function(Account_account) {
 * @todo Fix host hack
 */
 
-app.AccountSettingsView.prototype.submit = function(event) {
+app.AccountSettingsView.prototype.submit = function(nEvent) {
 
-	// First display any and all validation errors at once
-
-	void this.validateEmail(event, 'account-settings-email', true);
-
-	void this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
-
-	void this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
-
-	void this.validateCapacity(event, 'account-settings-capacity');
-
-	// Then do it again to obtain validation status
-
-	// (Chain stops at first false, so no use for UI)
-
-	var valid =
-
-		this.validateEmail(event, 'account-settings-email', true)
-
-		&& this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints')
-
-		&& this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation')
-
-		&& this.validateCapacity(event, 'account-settings-capacity');
-	
-	
-	if (valid) { // Submit results if all validations pass
+	if (this.validateForm($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 
 		// Create a temporary, new account with the data from the form
 

@@ -46,7 +46,7 @@ app.Router.prototype.onPopState = function(PopStateEvent_e) {
 
 		id = parseInt(PopStateEvent_e.state.id);
 
-		console.log('popped: ' + className + ', ' + id);
+		//console.log('popped: ' + className + ', ' + id);
 
 		switch (className) {
 
@@ -110,7 +110,7 @@ app.Router.prototype.onViewChange = function(View_v) {
 
 			if (!history.state || history.state.className !== className) { // don't set state if navigating back
 
-				console.log('pushing: ' + className + ', ' + id);
+				//console.log('pushing: ' + className + ', ' + id);
 
 				history.pushState(
 				{

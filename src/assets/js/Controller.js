@@ -97,7 +97,7 @@ app.Controller = function() {
 				}
 			}
 			
-			return _currentView;
+			return _currentView; // always return the current reference
 		};
 
 
@@ -827,7 +827,7 @@ app.Controller = function() {
 
 			if (Model_m && Model_m.constructor && Model_m.constructor.registry) {
 
-				Model_m.constructor.registry.removeObject(Model_m);
+				Model_m.constructor.registry.remove(Model_m);
 			}
 
 			Model_m = undefined;

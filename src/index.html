@@ -2,9 +2,9 @@
 	<head>
 		
 		<title> Meetup Event Planner</title>
-		
 		<meta charset="utf-8">
-		
+		<!--Let browser know app is optimized for mobile-->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		
 		<!--Import Google Icon Font used by Materialize-->
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -20,9 +20,7 @@
 		
 		
 
-
-		<!--Let browser know app is optimized for mobile-->
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		
 
 	</head>
 
@@ -111,7 +109,8 @@
 			<script src="lib/bootstrap_v3.3.6/js/bootstrap.min.js"></script><!-- for bootstrap-datetimepicker (minimal bs install) -->
 			<script src="lib/modernizr_v3.3.1-custom.js"></script><!-- for bootstrap-datetimepicker -->
 			<script src="lib/moment.js_V2.12.0/min/moment-with-locales.min.js"></script><!-- for bootstrap-datetimepicker -->
-			<script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script><!-- Replacement after built-in picker was frowned upon by Udacity reviewer -->
+			<!--script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script--><!-- Replacement after built-in picker was frowned upon by Udacity reviewer -->
+			<script src="lib/bootstrap-datetimepicker_v4.17.37/src/js/bootstrap-datetimepicker.js"></script>
 			<script src="lib/materialize.min.js"></script>
 			<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
 			
@@ -173,6 +172,9 @@
 			
 			};
 		</script>
+		<noscript>
+			This app relies very heavily on scripted content running in the browser 'front-end'. You seem to have scripting disabled, or perhaps prefer not to enable it. Which is fine. But at this time the app is only available with scripting enabled. Sorry.
+		</noscript>
 
 
 	</body>

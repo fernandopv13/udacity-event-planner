@@ -285,7 +285,7 @@ fieldset {
 }
 
 
-// Override som defaults to make bootstrap-datetimepicker match Materialize's colour scheme
+// Override some defaults to make bootstrap-datetimepicker match Materialize's colour scheme
 
 a {
 	color: #26a69a;
@@ -302,4 +302,13 @@ td.today {
 	border: 1px solid #9e9e9e;
 	/*border-radius: 3px;*/
 	box-shadow: 3px 3px 5px #9e9e9e;
+}
+
+
+// up/down chevrons in timepicker
+.glyphicon-chevron-up,
+	.glyphicon-chevron-down,
+	.glyphicon-chevron-up:hover,
+	.glyphicon-chevron-down:hover {
+		color:#000;
 }

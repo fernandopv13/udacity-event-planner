@@ -96,13 +96,13 @@
 
 			function setup() {
 
-				if (useCustomPicker()) { // use custom widget
+				if (true){//useCustomPicker()) { // use custom widget
 
 					// initialize datetimepickers
 
 					$('input[type="datetime-local"]').datetimepicker({
 
-						//debug: true,
+						debug: true,
 
 						focusOnShow: true, // give textbox focus when showing picker
 
@@ -152,11 +152,86 @@
 		</script>
 
 		<style>
-			
-			/* Override som defaults to make bootstrap-datetimepicker match Materialize's colour scheme  */
+		
+				/* Override som defaults to make bootstrap-datetimepicker match Materialize's colour scheme  */
 
-			a {
+			/*
+
+			a:after,
+			.btn,
+			.btn-large,
+			.btn-primary,
+			..btn:hover,
+			.btn-large:hover,
+			.btn-primary:hover,
+			.glyphicon:hover,
+			.glyphicon-chevron-up:hover,
+			 .glyphicon-chevron-down:hover
+			 {
+				background color: #fff !important;
+				color: #000 !important;
+				
+			}*/
+
+			
+			/*a,
+			a:after,
+			a.btn,
+			.btn,
+			.btn-large,
+			.btn-primary,
+			.btn:hover,
+			.btn-large:hover,
+			.btn-primary:hover,
+			.glyphicon,
+			.glyphicon:hover,
+			.glyphicon-chevron-up,
+			.glyphicon-chevron-down,
+			.glyphicon-chevron-up:hover,
+			.glyphicon-chevron-down:hover{
+				background-color: none;
+				border: none;
+				outline: none;
+				box-shadow: none;
+				transition: none;
+			}*/
+			
+			.bootstrap-datetimepicker-widget .btn[data-action="incrementHours"]::after,
+			.bootstrap-datetimepicker-widget .btn[data-action="incrementMinutes"]::after,
+			.bootstrap-datetimepicker-widget .btn[data-action="decrementHours"]::after,
+  			.bootstrap-datetimepicker-widget .btn[data-action="decrementMinutes"]::after {
+  				content: none;
+				display: none
+  			}
+			
+			.btn,
+			.btn-large{
+				background-color: none;
+				outline: none;
+				display: block;
+				box-shadow: none;
+			}
+
+			.btn:before,
+			.btn:after,
+			.btn-large:before,
+			.btn-large:after{
+				content: none;
+				display:none;
+			}
+			
+			
+
+			.glyphicon {
 				color: #26a69a;
+			}
+			
+			.glyphicon-chevron-up,
+			.glyphicon-chevron-down,
+			.glyphicon-chevron-up:hover,
+			.glyphicon-chevron-down:hover {
+				color:#000;
+
 			}
 
 			td.active,

@@ -156,7 +156,7 @@ app.SignUpView.prototype.render = function() {
 			{
 				element: 'p',
 
-				innerHTML: 'Please fill the blanks and we\'ll get you going like 1-2-3.'
+				innerHTML: 'Please fill in the blanks and we\'ll get you going like 1-2-3.'
 		}));
 
 		containerDiv.appendChild(this.createElement(
