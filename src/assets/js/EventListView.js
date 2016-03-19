@@ -6,219 +6,223 @@
 
 var app = app || {};
 
-/** @classdesc View class for event list(s). Renders list in UI, and captures UI events in list.
-*
-* @extends ListView
-*
-* @param (String) elementId Id of the HTML DOM element the view is bound to
-*
-* @param (String) heading Content for the list heading
-*
-* @constructor
-*
-* @author Ulrik H. Gade, March 2016
-*
-* @todo Add unit testing (of rendering in browser)
-*/
+(function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-app.EventListView = function(str_elementId, str_heading) {
+	/** @classdesc View class for event list(s). Renders list in UI, and captures UI events in list.
+	*
+	* @extends ListView
+	*
+	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	*
+	* @param (String) heading Content for the list heading
+	*
+	* @constructor
+	*
+	* @author Ulrik H. Gade, March 2016
+	*
+	* @todo Add unit testing (of rendering in browser)
+	*/
+
+	module.EventListView = function(str_elementId, str_heading) {
+
+		/*----------------------------------------------------------------------------------------
+		* Call (chain) parent class constructor
+		*---------------------------------------------------------------------------------------*/
+		
+		// Set temporary literals for use by parent class constructor
+
+		this.className = 'EventListView';
+
+		this.ssuper = module.ListView;
+
+		
+		// Initialize instance members inherited from parent class
+		
+		module.ListView.call(this, module.Account, str_elementId, str_heading);
+
+
+		/*----------------------------------------------------------------------------------------
+		* Other initialization
+		*---------------------------------------------------------------------------------------*/
+			
+		this.parentList().push(module.EventListView);
+	};
 
 	/*----------------------------------------------------------------------------------------
-	* Call (chain) parent class constructor
-	*---------------------------------------------------------------------------------------*/
-	
-	// Set temporary literals for use by parent class constructor
+	* Inherit from ListView
+	*---------------------------------------------------------------------------------------*/	
 
-	this.className = 'EventListView';
+	module.EventListView.prototype = Object.create(module.ListView.prototype); // Set up inheritance
 
-	this.ssuper = app.ListView;
-
-	
-	// Initialize instance members inherited from parent class
-	
-	app.ListView.call(this, app.Account, str_elementId, str_heading);
+	module.EventListView.prototype.constructor = module.EventListView; //Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
-	* Other initialization
+	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
+
+	/** Renders collection of events in an account to list in the UI
+	*
+	* @param {Account} Account The currently selected Account
+	*/
+
+	module.EventListView.prototype.render = function(Account_a) {
 		
-	this.parentList().push(app.EventListView);
-};
+		function renderListItem(Event_e, self) { // list item generator
 
-/*----------------------------------------------------------------------------------------
-* Inherit from ListView
-*---------------------------------------------------------------------------------------*/	
+			var listElmnt = self.createElement({ // li
 
-app.EventListView.prototype = Object.create(app.ListView.prototype); // Set up inheritance
+				element: 'li',
 
-app.EventListView.prototype.constructor = app.EventListView; //Reset constructor property
+				attributes: {id: 'event-list-id-' + Event_e.id(), role: 'listitem'},
 
-
-/*----------------------------------------------------------------------------------------
-* Public instance methods (on prototype)
-*---------------------------------------------------------------------------------------*/
-
-/** Renders collection of events in an account to list in the UI
-*
-* @param {Account} Account The currently selected Account
-*/
-
-app.EventListView.prototype.render = function(Account_a) {
-	
-	function renderListItem(Event_e, self) { // list item generator
-
-		var listElmnt = self.createElement({ // li
-
-			element: 'li',
-
-			attributes: {id: 'event-list-id-' + Event_e.id(), role: 'listitem'},
-
-			classList: ['collection-item']
-		});
+				classList: ['collection-item']
+			});
 
 
-		var divElmnt = self.createElement({ // div
+			var divElmnt = self.createElement({ // div
 
-			element: 'div',
+				element: 'div',
 
-			innerHTML: (Event_e.name() ? Event_e.name() : 'Unnamed event') + ' (' + Event_e.guests().length + ')',
+				innerHTML: (Event_e.name() ? Event_e.name() : 'Unnamed event') + ' (' + Event_e.guests().length + ')',
 
-			listeners:
-			{
-				click: function(e) {self.onClick(e, Event_e);}
+				listeners:
+				{
+					click: function(e) {self.onClick(e, Event_e);}
 
-				//click: function(e) {self.notifyObservers(self, Event_e.id());}
+					//click: function(e) {self.notifyObservers(self, Event_e.id());}
 
-				//click: function(e) {self.notifyObservers(self, Event_e, app.View.CLICKEVENT);}
-			}
-		});
+					//click: function(e) {self.notifyObservers(self, Event_e, module.View.CLICKEVENT);}
+				}
+			});
 
-					
-		var anchorElmnt = self.createElement({ // anchor
+						
+			var anchorElmnt = self.createElement({ // anchor
 
-			element: 'a',
+				element: 'a',
 
-			attributes: {href: '#!'},
+				attributes: {href: '#!'},
 
-			classList: ['secondary-content']
+				classList: ['secondary-content']
 
-		});
-
-		
-		anchorElmnt.appendChild(self.createElement({ // icon
-
-			element: 'i',
-
-			classList: ['material-icons'],
-
-			innerHTML: 'chevron_right'
-		}));
-		
-					
-		listElmnt.appendChild(divElmnt);
-		
-		divElmnt.appendChild(anchorElmnt);
-		
-		
-		return listElmnt;
-	}
-
-	var UlElement = this.createElement({
-
-		element: 'ul',
-
-		attributes: {role: 'list'},
-
-		classList: ['collection', 'with-header']
-	});
-
-
-	UlElement.appendChild(this.createElement({
-
-		element: 'h4',
-
-		classList: ['collection-header'],
-
-		attributes: {role: 'heading'},
-
-		innerHTML: this.heading()
-	}));
+			});
 
 			
-	if (Account_a !== null) { // we have an account
+			anchorElmnt.appendChild(self.createElement({ // icon
 
-		var events = Account_a.events() // generate list items
-		
-		for (var prop in events) {
+				element: 'i',
 
-			UlElement.appendChild(renderListItem(events[prop], this));
+				classList: ['material-icons'],
+
+				innerHTML: 'chevron_right'
+			}));
+			
+						
+			listElmnt.appendChild(divElmnt);
+			
+			divElmnt.appendChild(anchorElmnt);
+			
+			
+			return listElmnt;
 		}
-	}
 
-	else {
+		var UlElement = this.createElement({
 
-		var outerDiv =  this.createElement( // outer div
-		{
-			element: 'div',
+			element: 'ul',
 
-			classList: ['collection-item', 'row']
-		});
-		
-		UlElement.appendChild(outerDiv);
+			attributes: {role: 'list'},
 
-		
-		var innerDiv =  this.createElement( // inner div
-		{
-			element: 'div',			
-			
-			classList: ['col', 's12'],
-
-			innerHTML: 'No events have been added to this account yet.'
+			classList: ['collection', 'with-header']
 		});
 
-		outerDiv.appendChild(innerDiv);
 
-		
-		/*
-		innerDiv =  this.createElement( // inner div
-		{
-			element: 'div',			
-			
-			classList: ['col', 's4']
-		});
+		UlElement.appendChild(this.createElement({
 
-		outerDiv.appendChild(innerDiv);
+			element: 'h4',
 
-		innerDiv.appendChild(this.createElement({ // add guest button
-			
-			element: 'a',
-			
-			attributes: {id: 'event-list-add-event'},
-			
-			classList: ['waves-effect', 'waves-light', 'btn', 'right'],
+			classList: ['collection-header'],
 
-			innerHTML: 'Add event'
+			attributes: {role: 'heading'},
+
+			innerHTML: this.heading()
 		}));
-		*/
-	}
-	
-	// Update DOM
 
-	this.$renderContext().empty();
+				
+		if (Account_a !== null) { // we have an account
 
-	this.$renderContext().append(UlElement);
-	
-	this.$renderContext().append(this.createFloatingActionButton('event-list-add', 'add', 'red', 'Add event'));
+			var events = Account_a.events() // generate list items
+			
+			for (var prop in events) {
+
+				UlElement.appendChild(renderListItem(events[prop], this));
+			}
+		}
+
+		else {
+
+			var outerDiv =  this.createElement( // outer div
+			{
+				element: 'div',
+
+				classList: ['collection-item', 'row']
+			});
+			
+			UlElement.appendChild(outerDiv);
+
+			
+			var innerDiv =  this.createElement( // inner div
+			{
+				element: 'div',			
+				
+				classList: ['col', 's12'],
+
+				innerHTML: 'No events have been added to this account yet.'
+			});
+
+			outerDiv.appendChild(innerDiv);
+
+			
+			/*
+			innerDiv =  this.createElement( // inner div
+			{
+				element: 'div',			
+				
+				classList: ['col', 's4']
+			});
+
+			outerDiv.appendChild(innerDiv);
+
+			innerDiv.appendChild(this.createElement({ // add guest button
+				
+				element: 'a',
+				
+				attributes: {id: 'event-list-add-event'},
+				
+				classList: ['waves-effect', 'waves-light', 'btn', 'right'],
+
+				innerHTML: 'Add event'
+			}));
+			*/
+		}
+		
+		// Update DOM
+
+		this.$renderContext().empty();
+
+		this.$renderContext().append(UlElement);
+		
+		this.$renderContext().append(this.createFloatingActionButton('event-list-add', 'add', 'red', 'Add event'));
 
 
-	// Attach event handlers (other than for list item click)
+		// Attach event handlers (other than for list item click)
 
-	$('#event-list-add, #event-list-add-event').click(function(event) {
+		$('#event-list-add, #event-list-add-event').click(function(event) {
 
-		this.notifyObservers(this, new app.Event('New Event'), app.View.UIAction.CREATE);
+			this.notifyObservers(this, new module.Event('New Event'), module.View.UIAction.CREATE);
 
-		//app.controller.onAddEvent(event);
+			//module.controller.onAddEvent(event);
 
-	}.bind(this));
-};
+		}.bind(this));
+	};
+
+})(app);

@@ -6,140 +6,143 @@
 
 var app = app || {};
 
+(function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-/** @classdesc Manages the browser history so that back/forward navigation
-*
-* works meaningfully despite this being a single-page application.
-*
-* Minimalist implementation to get demo of app up and running. Requires HTML5 capable browser.
+	/** @classdesc Manages the browser history so that back/forward navigation
+	*
+	* works meaningfully despite this being a single-page application.
+	*
+	* Minimalist implementation to get demo of app up and running. Requires HTML5 capable browser.
 
-* More comprehensive solution awaits port of the app to Angular.js or similar framework.
-*
-* Does not support deep linking, and is a bit flaky. But will have to do for now.
-*
-* @constructor
-*
-* @author Ulrik H. Gade, March 2016
-*/
+	* More comprehensive solution awaits port of the app to Angular.js or similar framework.
+	*
+	* Does not support deep linking, and is a bit flaky. But will have to do for now.
+	*
+	* @constructor
+	*
+	* @author Ulrik H. Gade, March 2016
+	*/
 
-app.Router = function() {
+	module.Router = function() {
 
-};
+	};
 
 
-/*----------------------------------------------------------------------------------------
-* Public instance methods (on prototype)
-*---------------------------------------------------------------------------------------*/
+	/*----------------------------------------------------------------------------------------
+	* Public instance methods (on prototype)
+	*---------------------------------------------------------------------------------------*/
 
-/** Handles browser history's HTML5 onpopstate event
-*
-* Parses event object and loads app view matching the user's navigation
-*
-* @param {PopStateEvent} event Native browser PopStateEvent
- */
+	/** Handles browser history's HTML5 onpopstate event
+	*
+	* Parses event object and loads app view matching the user's navigation
+	*
+	* @param {PopStateEvent} event Native browser PopStateEvent
+	 */
 
-app.Router.prototype.onPopState = function(PopStateEvent_e) {
+	module.Router.prototype.onPopState = function(PopStateEvent_e) {
 
-	if (PopStateEvent_e.state && PopStateEvent_e.state.className) { // we're still in the app
+		if (PopStateEvent_e.state && PopStateEvent_e.state.className) { // we're still in the app
 
-		var className = PopStateEvent_e.state.className,
+			var className = PopStateEvent_e.state.className,
 
-		id = parseInt(PopStateEvent_e.state.id);
+			id = parseInt(PopStateEvent_e.state.id);
 
-		//console.log('popped: ' + className + ', ' + id);
+			//console.log('popped: ' + className + ', ' + id);
 
-		switch (className) {
+			switch (className) {
 
-			case 'EventListView':
+				case 'EventListView':
 
-				app.controller.update([new app.EventListView(), app.Account.registry.getObjectById(id), app.View.UIAction.NAVIGATE]);
+					module.controller.update([new module.EventListView(), module.Account.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
 
-				//app.controller.onAccountSelected(app.Account.registry.getObjectById(id));
+					//module.controller.onAccountSelected(module.Account.registry.getObjectById(id));
 
-				break;
+					break;
 
-			case 'EventView':
+				case 'EventView':
 
-				app.controller.update([new app.EventView(), app.Event.registry.getObjectById(id), app.View.UIAction.NAVIGATE]);
+					module.controller.update([new module.EventView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
 
-				//app.controller.onEventSelected(app.Event.registry.getObjectById(id));
+					//module.controller.onEventSelected(module.Event.registry.getObjectById(id));
 
-				break;
+					break;
 
-			case 'GuestListView':
+				case 'GuestListView':
 
-				app.controller.update([new app.GuestListView(), app.Event.registry.getObjectById(id), app.View.UIAction.NAVIGATE]);
+					module.controller.update([new module.GuestListView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
 
-				//app.controller.onGuestListSelected(app.controller.selectedEvent());
+					//module.controller.onGuestListSelected(module.controller.selectedEvent());
 
-				break;
+					break;
 
-			case 'PersonView':
+				case 'PersonView':
 
-				app.controller.update([new app.PersonView(), app.Person.registry.getObjectById(id), app.View.UIAction.NAVIGATE]);
+					module.controller.update([new module.PersonView(), module.Person.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
 
-				//app.controller.onGuestSelected(app.Person.registry.getObjectById(id));
+					//module.controller.onGuestSelected(module.Person.registry.getObjectById(id));
 
-				break;
+					break;
 
-			default: // includes AccountProfileView and AccountSettingsView
+				default: // includes AccountProfileView and AccountSettingsView
 
-				app.controller.update([new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, app.View.UIAction.NAVIGATE]);
+					module.controller.update([new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, module.View.UIAction.NAVIGATE]);
 
-				//window.history.back();
+					//window.history.back();
+			}
+		}
+
+		// else: users is about to back out of the app
+	}
+
+
+	/** Updates browser history and location bar URL to match user's navigation within the app
+	*	
+	* @param {View} view The View which has just been made the focus of the app
+	*
+	*/
+
+	module.Router.prototype.onViewChange = function(View_v) {
+
+		if (history.pushState) {
+
+			var className = View_v.className(), id = View_v.model() ? View_v.model().id() : null;
+
+			try {// needs to be run off a server to work
+
+				if (!history.state || history.state.className !== className) { // don't set state if navigating back
+
+					//console.log('pushing: ' + className + ', ' + id);
+
+					history.pushState(
+					{
+						className: className,
+
+						id: id
+					},
+
+						'',
+
+						'#!'
+
+						+ className.toLowerCase().slice(0, className.length - 4) // pop 'View' from class name
+
+						+ '?id=' + id // add model object id
+					);
+				}
+
+				/*
+				else {
+
+					console.log('did not push');
+				}
+				*/
+			}
+
+			catch(e) {
+
+				console.log(e);
+			}
 		}
 	}
 
-	// else: users is about to back out of the app
-}
-
-
-/** Updates browser history and location bar URL to match user's navigation within the app
-*	
-* @param {View} view The View which has just been made the focus of the app
-*
-*/
-
-app.Router.prototype.onViewChange = function(View_v) {
-
-	if (history.pushState) {
-
-		var className = View_v.className(), id = View_v.model() ? View_v.model().id() : null;
-
-		try {// needs to be run off a server to work
-
-			if (!history.state || history.state.className !== className) { // don't set state if navigating back
-
-				//console.log('pushing: ' + className + ', ' + id);
-
-				history.pushState(
-				{
-					className: className,
-
-					id: id
-				},
-
-					'',
-
-					'#!'
-
-					+ className.toLowerCase().slice(0, className.length - 4) // pop 'View' from class name
-
-					+ '?id=' + id // add model object id
-				);
-			}
-
-			/*
-			else {
-
-				console.log('did not push');
-			}
-			*/
-		}
-
-		catch(e) {
-
-			console.log(e);
-		}
-	}
-}
+})(app);

@@ -33,6 +33,8 @@
 
 		function updateCustomValidity(element) {
 
+			return true; // debug
+
 			if ($(element).data && typeof $(element).data('customValidator') !== 'undefined') { // field has custom validator attribute
 
 				var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, window); // resolve dot string into js reference (w/o resorting to eval()!)

@@ -6,85 +6,89 @@
 
 var app = app || {};
 
-/** @classdesc Handles 'select' action from View on behalf of Controller.
-*
-* Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
-*
-* @constructor
-*
-* @extends ViewUpdateHandler
-*
-* @author Ulrik H. Gade, March 2016
-*/
+(function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-app.ViewSelectHandler = function(Controller_c) {
+	/** @classdesc Handles 'select' action from View on behalf of Controller.
+	*
+	* Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
+	*
+	* @constructor
+	*
+	* @extends ViewUpdateHandler
+	*
+	* @author Ulrik H. Gade, March 2016
+	*/
+
+	module.ViewSelectHandler = function(Controller_c) {
+
+		/*----------------------------------------------------------------------------------------
+		* Call (chain) parent class constructor
+		*---------------------------------------------------------------------------------------*/
+		
+		// Set temporary literals for use by parent class constructor
+
+		this.ssuper = module.ViewUpdateHandler;
+
+		this.uiAction = module.View.UIAction.SELECT;
+
+		
+		// Initialize instance members inherited from parent class
+		
+		module.ViewUpdateHandler.call(this, Controller_c);
+		
+		
+		/*----------------------------------------------------------------------------------------
+		* Other initialization
+		*---------------------------------------------------------------------------------------*/
+
+		this.parentList().push(module.ViewSelectHandler);
+	};
 
 	/*----------------------------------------------------------------------------------------
-	* Call (chain) parent class constructor
-	*---------------------------------------------------------------------------------------*/
-	
-	// Set temporary literals for use by parent class constructor
+	* Inherit from ViewUpdateHandler
+	*---------------------------------------------------------------------------------------*/	
 
-	this.ssuper = app.ViewUpdateHandler;
+	module.ViewSelectHandler.prototype = Object.create(module.ViewUpdateHandler.prototype); // Set up inheritance
 
-	this.uiAction = app.View.UIAction.SELECT;
+	module.ViewSelectHandler.prototype.constructor = module.ViewSelectHandler; //Reset constructor property
 
-	
-	// Initialize instance members inherited from parent class
-	
-	app.ViewUpdateHandler.call(this, Controller_c);
-	
-	
+
+
 	/*----------------------------------------------------------------------------------------
-	* Other initialization
+	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
-	this.parentList().push(app.ViewSelectHandler);
-};
+	/** Handles 'select' user action in a View on behalf of a Controller.
+	*
+	* 
+	*
+	* @param {int} UIAction An integer representing the user action to respond to
+	*
+	* @param {Model} m The Model bound to the view spawning the notification
+	*
+	* @param {View} v The View spawning the notification
+	*
+	* @return {void}
+	*/
 
-/*----------------------------------------------------------------------------------------
-* Inherit from ViewUpdateHandler
-*---------------------------------------------------------------------------------------*/	
+	module.ViewSelectHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-app.ViewSelectHandler.prototype = Object.create(app.ViewUpdateHandler.prototype); // Set up inheritance
+		var ctrl = this.controller();
 
-app.ViewSelectHandler.prototype.constructor = app.ViewSelectHandler; //Reset constructor property
+		switch (View_v.constructor) {
 
+			case module.EventListView: // selection made in event list
 
+				ctrl.onEventSelected.call(ctrl, Model_m);
 
-/*----------------------------------------------------------------------------------------
-* Public instance methods (beyond accessors)
-*---------------------------------------------------------------------------------------*/
+				break;
 
-/** Handles 'select' user action in a View on behalf of a Controller.
-*
-* 
-*
-* @param {int} UIAction An integer representing the user action to respond to
-*
-* @param {Model} m The Model bound to the view spawning the notification
-*
-* @param {View} v The View spawning the notification
-*
-* @return {void}
-*/
+			case module.GuestListView: // selection made in guest list
 
-app.ViewSelectHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
+				ctrl.onGuestSelected.call(ctrl, Model_m);
 
-	var ctrl = this.controller();
+				break;
+		}
+	};
 
-	switch (View_v.constructor) {
-
-		case app.EventListView: // selection made in event list
-
-			ctrl.onEventSelected.call(ctrl, Model_m);
-
-			break;
-
-		case app.GuestListView: // selection made in guest list
-
-			ctrl.onGuestSelected.call(ctrl, Model_m);
-
-			break;
-	}
-};
+})(app);

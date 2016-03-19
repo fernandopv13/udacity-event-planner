@@ -782,7 +782,7 @@ describe('class View', function(){
 		});
 
 
-		it('defines a displayValidation() method', function() {
+		xit('defines a displayValidation() method', function() {
 				
 			// verify that method signature exists
 			

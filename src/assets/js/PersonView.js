@@ -6,475 +6,479 @@
 
 var app = app || {};
 
-/** @classdesc View class for individual Persons. Renders person in UI, and captures UI events on person.
-*
-* @constructor
-*
-* @extends FormView
-*
-* @param (String) elementId Id of the HTML DOM element the view is bound to
-*
-* @param (String) heading Content for the list heading
-*
-* @author Ulrik H. Gade, March 2016
-*/
+(function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-app.PersonView = function(str_elementId, str_heading) {
+	/** @classdesc View class for individual Persons. Renders person in UI, and captures UI events on person.
+	*
+	* @constructor
+	*
+	* @extends FormView
+	*
+	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	*
+	* @param (String) heading Content for the list heading
+	*
+	* @author Ulrik H. Gade, March 2016
+	*/
+
+	module.PersonView = function(str_elementId, str_heading) {
+
+		/*----------------------------------------------------------------------------------------
+		* Call (chain) parent class constructor
+		*---------------------------------------------------------------------------------------*/
+		
+		// Set temporary literals for use by parent class constructor
+
+		this.className = 'PersonView';
+
+		this.ssuper = module.FormView;
+
+		
+		// Initialize instance members inherited from parent class
+		
+		module.FormView.call(this, module.Person, str_elementId, str_heading);
+		
+
+		/*----------------------------------------------------------------------------------------
+		* Other initialization
+		*---------------------------------------------------------------------------------------*/
+			
+		this.parentList().push(module.PersonView);
+	};
 
 	/*----------------------------------------------------------------------------------------
-	* Call (chain) parent class constructor
-	*---------------------------------------------------------------------------------------*/
-	
-	// Set temporary literals for use by parent class constructor
+	* Inherit from FormView
+	*---------------------------------------------------------------------------------------*/	
 
-	this.className = 'PersonView';
+	module.PersonView.prototype = Object.create(module.FormView.prototype); // Set up inheritance
 
-	this.ssuper = app.FormView;
+	module.PersonView.prototype.constructor = module.PersonView; //Reset constructor property
 
-	
-	// Initialize instance members inherited from parent class
-	
-	app.FormView.call(this, app.Person, str_elementId, str_heading);
-	
 
 	/*----------------------------------------------------------------------------------------
-	* Other initialization
+	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
-		
-	this.parentList().push(app.PersonView);
-};
 
-/*----------------------------------------------------------------------------------------
-* Inherit from FormView
-*---------------------------------------------------------------------------------------*/	
+	/** (Re)renders person to form in UI
+	*
+	* @param {Person} The person from which to present data in the form
+	*
+	* @return void
+	 */
 
-app.PersonView.prototype = Object.create(app.FormView.prototype); // Set up inheritance
+	module.PersonView.prototype.render = function(Person_p) {
 
-app.PersonView.prototype.constructor = app.PersonView; //Reset constructor property
+		var person = Person_p, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
 
-
-/*----------------------------------------------------------------------------------------
-* Public instance methods (on prototype)
-*---------------------------------------------------------------------------------------*/
-
-/** (Re)renders person to form in UI
-*
-* @param {Person} The person from which to present data in the form
-*
-* @return void
- */
-
-app.PersonView.prototype.render = function(Person_p) {
-
-	var person = Person_p, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
-
-	if (person !== null) {
-		
-		// Setup up form and container div
-
-			formElement =  this.createElement(
-			{
-				element: 'form',			
-				
-				attributes: {autocomplete: 'off', novalidate: true},
-				
-				classList: ['col', 's12']
-			});
-
-
-			containerDiv =  this.createElement(
-			{
-				element: 'div',			
-				
-				classList: ['row']
-			});
+		if (person !== null) {
 			
+			// Setup up form and container div
 
-			formElement.appendChild(containerDiv);
-		
-
-		// Add heading
-			
-			containerDiv.appendChild(this.createHeading('s12', this.heading()));
-
-			
-		// Add hidden person id field
-
-			containerDiv.appendChild(this.createElement({
-
-				element: 'input',
-
-				attributes: {id: 'guest-id', type: 'hidden', value: Person_p.id()}
-			}));
-
-		
-		// Add guest name field
-
-			containerDiv.appendChild(this.createTextField(
-
-				's12',
-
-				'guest-name',
-
-				'Guest Name',
-
-				true,
-
-				person.name()
-			));
-		
-		
-		// Add email field
-
-			containerDiv.appendChild(this.createEmailField(
-
-				's12',
-
-				'guest-email',
-
-				'Email',
-
-				true,
-
-				person.email()
-			));
-
-		
-		// Add job title field
-
-			containerDiv.appendChild(this.createTextField(
-
-				's12',
-
-				'guest-jobtitle',
-
-				'Job Title',
-
-				false,
-
-				person.jobTitle()
-			));
-			
-
-		// Add employer field
-
-			innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
-				
-				classList: ['input-field', 'col', 's12']
-			});
-			
-			
-			innerDiv.appendChild(this.createElement( // input
-			{
-				element: 'input',			
-				
-				attributes:
+				formElement =  this.createElement(
 				{
-					type: 'text',
+					element: 'form',			
 					
-					id: 'guest-employer',
+					attributes: {autocomplete: 'off', novalidate: true},
 					
-					value: person.employer() && person.employer().name() ? person.employer().name() : '',
-					
-					list: 'suggested-employers',
+					classList: ['col', 's12']
+				});
 
-					'aria-labelledby': 'guest-employer-label',
 
-					role: 'text'
-				}
-			}));
+				containerDiv =  this.createElement(
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				});
+				
+
+				formElement.appendChild(containerDiv);
+			
+
+			// Add heading
+				
+				containerDiv.appendChild(this.createHeading('s12', this.heading()));
+
+				
+			// Add hidden person id field
+
+				containerDiv.appendChild(this.createElement({
+
+					element: 'input',
+
+					attributes: {id: 'guest-id', type: 'hidden', value: Person_p.id()}
+				}));
+
+			
+			// Add guest name field
+
+				containerDiv.appendChild(this.createTextField(
+
+					's12',
+
+					'guest-name',
+
+					'Guest Name',
+
+					true,
+
+					person.name()
+				));
 			
 			
-			innerDiv.appendChild(this.createElement( // label
-			{	
-				element: 'label',			
-				
-				attributes: {for: 'guest-employer', id: 'guest-employer-label'},
-				
-				classList: person.employer() && person.employer().name() ? ['form-label', 'active'] : ['form-label'],
-				
-				dataset: {error: 'Please enter employer'},
-				
-				innerHTML: 'Employer'
-			}));
+			// Add email field
+
+				containerDiv.appendChild(this.createEmailField(
+
+					's12',
+
+					'guest-email',
+
+					'Email',
+
+					true,
+
+					person.email()
+				));
+
 			
-			
-			innerDiv.appendChild(this.createElement( // data list
-			{	
-				element: 'datalist',			
+			// Add job title field
+
+				containerDiv.appendChild(this.createTextField(
+
+					's12',
+
+					'guest-jobtitle',
+
+					'Job Title',
+
+					false,
+
+					person.jobTitle()
+				));
 				
-				attributes: {id: 'suggested-employers'}
-			}));
-			
-			
-			outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
+
+			// Add employer field
+
+				innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
 				
-				classList: ['row']
-			});
+				
+				innerDiv.appendChild(this.createElement( // input
+				{
+					element: 'input',			
+					
+					attributes:
+					{
+						type: 'text',
 						
-			outerDiv.appendChild(innerDiv);
-			
-			containerDiv.appendChild(outerDiv);			
-
-
-		// Add birthday field
-
-			containerDiv.appendChild(this.createDateField(
-
-				's12',
-
-				'guest-birthday',
-
-				'Birthday',
-
-				false,
-
-				person.birthday()
-			));
-			
-		
-		// Add requirement indicator (asterisk) explanation
-
-			containerDiv.appendChild(this.createRequiredFieldExplanation());
-
+						id: 'guest-employer',
 						
-		// Add submit and cancel buttons
+						value: person.employer() && person.employer().name() ? person.employer().name() : '',
+						
+						list: 'suggested-employers',
 
-			containerDiv.appendChild(this.createSubmitCancelButtons('guest-form'))
+						'aria-labelledby': 'guest-employer-label',
+
+						role: 'text'
+					}
+				}));
+				
+				
+				innerDiv.appendChild(this.createElement( // label
+				{	
+					element: 'label',			
+					
+					attributes: {for: 'guest-employer', id: 'guest-employer-label'},
+					
+					classList: person.employer() && person.employer().name() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter employer'},
+					
+					innerHTML: 'Employer'
+				}));
+				
+				
+				innerDiv.appendChild(this.createElement( // data list
+				{	
+					element: 'datalist',			
+					
+					attributes: {id: 'suggested-employers'}
+				}));
+				
+				
+				outerDiv =  this.createElement( // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+							
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);			
+
+
+			// Add birthday field
+
+				containerDiv.appendChild(this.createDateField(
+
+					's12',
+
+					'guest-birthday',
+
+					'Birthday',
+
+					false,
+
+					person.birthday()
+				));
+				
 			
-		
-		// Update DOM
+			// Add requirement indicator (asterisk) explanation
+
+				containerDiv.appendChild(this.createRequiredFieldExplanation());
+
+							
+			// Add submit and cancel buttons
+
+				containerDiv.appendChild(this.createSubmitCancelButtons('guest-form'))
+				
+			
+			// Update DOM
+
+				this.$renderContext().empty();
+
+				this.$renderContext().append(formElement);
+
+
+			// Initialize and (re)assign event handlers to form elements
+
+				$('#guest-name').attr('autofocus', true)
+
+				$('#guest-birthday.datepicker').pickadate({
+					
+					//closeOnSelect: true, // bug: ineffective
+					
+					closeOnClear: true,
+					
+					onSet: function() {this.close()},
+					
+					selectMonths: true, // Creates a dropdown to control month
+					
+					selectYears: 15 // Creates a dropdown of 15 years to control year
+				});
+
+				
+				//$('#guest-location').focus(this.suggestLocations);
+
+				
+				$('#guest-name').keyup(function(event) {
+
+					this.validateName(event, 'guest-name', 'Please enter name', true);
+
+				}.bind(this));
+				
+
+				$('#guest-email').keyup(function(event) {
+
+					this.validateEmail(event, 'guest-email', 'Please enter email', true);
+
+				}.bind(this));
+
+
+				$('#guest-employer').focus(this.suggestEmployers);
+
+
+				$('#guest-form-cancel').click(function(event) {
+
+					this.cancel(event);
+
+				}.bind(this));
+
+
+				$('#guest-form-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
+
+					this.submit(event);
+
+				}.bind(this));
+		}
+
+		else { // present default message
 
 			this.$renderContext().empty();
 
-			this.$renderContext().append(formElement);
+			this.$renderContext().append(this.createElement(
+			{
+				element: 'p',
+
+				innerHTML: 'No guest selected. Please select or create a guest in order to edit details.'
+			}));
+		}
+	};
 
 
-		// Initialize and (re)assign event handlers to form elements
+	/** Submits person form to controller if it passes all validations
+	*
+	* @return {Boolean} true if validation and is succesful, otherwise false
+	*/
 
-			$('#guest-name').attr('autofocus', true)
+	module.PersonView.prototype.submit = function(event) {
 
-			$('#guest-birthday.datepicker').pickadate({
-				
-				//closeOnSelect: true, // bug: ineffective
-				
-				closeOnClear: true,
-				
-				onSet: function() {this.close()},
-				
-				selectMonths: true, // Creates a dropdown to control month
-				
-				selectYears: 15 // Creates a dropdown of 15 years to control year
-			});
+		// First display any and all validation errors in the UI
 
-			
-			//$('#guest-location').focus(this.suggestLocations);
+		this.validateName(event, 'guest-name', 'Please enter name', true);
 
-			
-			$('#guest-name').keyup(function(event) {
-
-				this.validateName(event, 'guest-name', 'Please enter name', true);
-
-			}.bind(this));
-			
-
-			$('#guest-email').keyup(function(event) {
-
-				this.validateEmail(event, 'guest-email', 'Please enter email', true);
-
-			}.bind(this));
+		void this.validateEmail(event, 'guest-email', 'Please enter email', true);
 
 
-			$('#guest-employer').focus(this.suggestEmployers);
+		// Then do it again to obtain validation status
 
-
-			$('#guest-form-cancel').click(function(event) {
-
-				this.cancel(event);
-
-			}.bind(this));
-
-
-			$('#guest-form-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
-
-				this.submit(event);
-
-			}.bind(this));
-	}
-
-	else { // present default message
-
-		this.$renderContext().empty();
-
-		this.$renderContext().append(this.createElement(
-		{
-			element: 'p',
-
-			innerHTML: 'No guest selected. Please select or create a guest in order to edit details.'
-		}));
-	}
-};
-
-
-/** Submits person form to controller if it passes all validations
-*
-* @return {Boolean} true if validation and is succesful, otherwise false
-*/
-
-app.PersonView.prototype.submit = function(event) {
-
-	// First display any and all validation errors in the UI
-
-	this.validateName(event, 'guest-name', 'Please enter name', true);
-
-	void this.validateEmail(event, 'guest-email', 'Please enter email', true);
-
-
-	// Then do it again to obtain validation status
-
-	// (Chain stops at first false, so no use for UI)
-	
-	if (this.validateName(event, 'guest-name', 'Please enter name', true)
-
-	&& this.validateEmail(event, 'guest-email', 'Please enter email', true)){ // Submit results if all validations pass
-
-		// Notify observers by passing them a new Person with the data from the form
-
-		this.ssuper().prototype.submit.call(
-
-			this,
-			
-			new app.Person(
-
-				$('#guest-name').val(),
-
-				(function() { // employer parameter
-
-					// use existing Organization if there is a match, else create a new one
-
-					// may accumulate some unintentional duplicates over time, with no way of removing them, but ok for now
-
-					var employer = $('#guest-employer').val();
-
-					if (employer && employer !== '') { // employer name entered
-
-						var tmp = app.Organization.registry.getObjectByAttribute('name', employer);
-
-						if (tmp) { // name matches existing Organization, so use that
-
-							return tmp;
-						}
-
-						else { // no match, so create new Organization
-
-							return new app.Organization(employer);
-						}
-					}
-
-					// otherwise returns 'undefined'
-				})(),
-
-				//new app.Organization($('#guest-employer').val()), //hack
-
-				$('#guest-jobtitle').val(),
-
-				new app.Email($('#guest-email').val()),
-
-				$('#guest-birthday').val() ? new Date($('#guest-birthday').val()) : null
-			)
-		);
+		// (Chain stops at first false, so no use for UI)
 		
-		return true;
-	}
+		if (this.validateName(event, 'guest-name', 'Please enter name', true)
 
-	return false;
-};
+		&& this.validateEmail(event, 'guest-email', 'Please enter email', true)){ // Submit results if all validations pass
 
+			// Notify observers by passing them a new Person with the data from the form
 
-/** Suggest employer names based on employers of guests participating in the account's events */
+			this.ssuper().prototype.submit.call(
 
-app.PersonView.prototype.suggestEmployers = function(event) {
+				this,
+				
+				new module.Person(
 
-	// Get list of employers in account
+					$('#guest-name').val(),
 
-	var employers = [], events = app.controller.selectedAccount().events();
+					(function() { // employer parameter
 
-	var $listElmnt = $('#suggested-locations'), optionElmnt;
+						// use existing Organization if there is a match, else create a new one
 
-	for (var ev in events) { // for every event in account
+						// may accumulate some unintentional duplicates over time, with no way of removing them, but ok for now
 
-		events[ev].guests().forEach(function(guest) { // for every guest (person) in event
+						var employer = $('#guest-employer').val();
 
-			if (guest.employer()) { // employer is defined
+						if (employer && employer !== '') { // employer name entered
 
-				if (employers.indexOf(guest.employer()) === -1) { // employer is not already in list
+							var tmp = module.Organization.registry.getObjectByAttribute('name', employer);
 
-					employers.push(guest.employer());
-				}
-			}
-		});
-	}
+							if (tmp) { // name matches existing Organization, so use that
 
-	// Generate suggestion datalist for employer field
+								return tmp;
+							}
 
-	employers.sort(function(a,b) { // sort alfabetically
+							else { // no match, so create new Organization
 
-		return a.name() === b.name() ? 0 : (a.name() < b.name() ? -1 : 1);
-	});
+								return new module.Organization(employer);
+							}
+						}
 
-	
-	$listElmnt = $('#suggested-employers');
+						// otherwise returns 'undefined'
+					})(),
 
-	$listElmnt.empty();
+					//new module.Organization($('#guest-employer').val()), //hack
 
-	employers.forEach(function(employer) {
+					$('#guest-jobtitle').val(),
 
-		optionElmnt = document.createElement('option');
+					new module.Email($('#guest-email').val()),
 
-		optionElmnt.value = employer.name();
-
-		//console.log(employer.name());
-
-		$listElmnt.append(optionElmnt);
-
-	}.bind(this));
-};
-
-
-/* Event handler for interactive validation of person name field
-*
-* @return {Boolean} true if validation is succesful, otherwise false
-*/
-
-app.PersonView.prototype.validateName = function(person) {
-
-	var $name = $('#guest-name');
-
-	if ($name.val() === '') { // empty
-	
-		if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
-
-			person.target.labels[0].dataset.error = 'Please enter guest name';
+					$('#guest-birthday').val() ? new Date($('#guest-birthday').val()) : null
+				)
+			);
+			
+			return true;
 		}
-
-		else { // Other browsers (updated value may not display, falls back on value in HTML)
-
-			$name.next('label').data('error', 'Please enter guest name');
-		}
-
-		$name.addClass('invalid');
 
 		return false;
-	}
+	};
 
-	else {
 
-		$name.removeClass('invalid');
-	}
+	/** Suggest employer names based on employers of guests participating in the account's events */
 
-	return true;
-};
+	module.PersonView.prototype.suggestEmployers = function(event) {
+
+		// Get list of employers in account
+
+		var employers = [], events = module.controller.selectedAccount().events();
+
+		var $listElmnt = $('#suggested-locations'), optionElmnt;
+
+		for (var ev in events) { // for every event in account
+
+			events[ev].guests().forEach(function(guest) { // for every guest (person) in event
+
+				if (guest.employer()) { // employer is defined
+
+					if (employers.indexOf(guest.employer()) === -1) { // employer is not already in list
+
+						employers.push(guest.employer());
+					}
+				}
+			});
+		}
+
+		// Generate suggestion datalist for employer field
+
+		employers.sort(function(a,b) { // sort alfabetically
+
+			return a.name() === b.name() ? 0 : (a.name() < b.name() ? -1 : 1);
+		});
+
+		
+		$listElmnt = $('#suggested-employers');
+
+		$listElmnt.empty();
+
+		employers.forEach(function(employer) {
+
+			optionElmnt = document.createElement('option');
+
+			optionElmnt.value = employer.name();
+
+			//console.log(employer.name());
+
+			$listElmnt.append(optionElmnt);
+
+		}.bind(this));
+	};
+
+
+	/* Event handler for interactive validation of person name field
+	*
+	* @return {Boolean} true if validation is succesful, otherwise false
+	*/
+
+	module.PersonView.prototype.validateName = function(person) {
+
+		var $name = $('#guest-name');
+
+		if ($name.val() === '') { // empty
+		
+			if (person && person.target.labels) { // Chrome (does not update display if setting with jQuery)
+
+				person.target.labels[0].dataset.error = 'Please enter guest name';
+			}
+
+			else { // Other browsers (updated value may not display, falls back on value in HTML)
+
+				$name.next('label').data('error', 'Please enter guest name');
+			}
+
+			$name.addClass('invalid');
+
+			return false;
+		}
+
+		else {
+
+			$name.removeClass('invalid');
+		}
+
+		return true;
+	};
+	
+})(app);

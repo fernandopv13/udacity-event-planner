@@ -6,75 +6,79 @@
 
 var app = app || {};
 
-/** @classdesc Handles 'cancel' action from View on behalf of Controller.
-*
-* Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
-*
-* @constructor
-*
-* @extends ViewUpdateHandler
-*
-* @author Ulrik H. Gade, March 2016
-*/
+(function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-app.ViewCancelHandler = function(Controller_c) {
+	/** @classdesc Handles 'cancel' action from View on behalf of Controller.
+	*
+	* Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
+	*
+	* @constructor
+	*
+	* @extends ViewUpdateHandler
+	*
+	* @author Ulrik H. Gade, March 2016
+	*/
+
+	module.ViewCancelHandler = function(Controller_c) {
+
+		/*----------------------------------------------------------------------------------------
+		* Call (chain) parent class constructor
+		*---------------------------------------------------------------------------------------*/
+		
+		// Set temporary literals for use by parent class constructor
+
+		this.ssuper = module.ViewUpdateHandler;
+
+		this.uiAction = module.View.UIAction.CANCEL;
+
+		
+		// Initialize instance members inherited from parent class
+		
+		module.ViewUpdateHandler.call(this, Controller_c);
+		
+		
+		/*----------------------------------------------------------------------------------------
+		* Other initialization
+		*---------------------------------------------------------------------------------------*/
+
+		this.parentList().push(module.ViewCancelHandler);
+	};
 
 	/*----------------------------------------------------------------------------------------
-	* Call (chain) parent class constructor
-	*---------------------------------------------------------------------------------------*/
-	
-	// Set temporary literals for use by parent class constructor
+	* Inherit from ViewUpdateHandler
+	*---------------------------------------------------------------------------------------*/	
 
-	this.ssuper = app.ViewUpdateHandler;
+	module.ViewCancelHandler.prototype = Object.create(module.ViewUpdateHandler.prototype); // Set up inheritance
 
-	this.uiAction = app.View.UIAction.CANCEL;
+	module.ViewCancelHandler.prototype.constructor = module.ViewCancelHandler; //Reset constructor property
 
-	
-	// Initialize instance members inherited from parent class
-	
-	app.ViewUpdateHandler.call(this, Controller_c);
-	
-	
+
+
 	/*----------------------------------------------------------------------------------------
-	* Other initialization
+	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
-	this.parentList().push(app.ViewCancelHandler);
-};
+	/** Handles 'cancel' user action in a View on behalf of a Controller
+	*
+	* @param {int} UIAction An integer representing the user action to respond to
+	*
+	* @param {Model} m The Model bound to the view spawning the notification
+	*
+	* @param {View} v The View spawning the notification
+	*
+	* @return {void}
+	*/
 
-/*----------------------------------------------------------------------------------------
-* Inherit from ViewUpdateHandler
-*---------------------------------------------------------------------------------------*/	
+	module.ViewCancelHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-app.ViewCancelHandler.prototype = Object.create(app.ViewUpdateHandler.prototype); // Set up inheritance
+		var n = this.controller().newModel();
 
-app.ViewCancelHandler.prototype.constructor = app.ViewCancelHandler; //Reset constructor property
+		if (n) { // creation of new model cancelled
 
+			n.constructor.registry.removeObject(n); // remove from registry
 
+			this.controller().newModel(null); // reset reference
+		}
+	};
 
-/*----------------------------------------------------------------------------------------
-* Public instance methods (beyond accessors)
-*---------------------------------------------------------------------------------------*/
-
-/** Handles 'cancel' user action in a View on behalf of a Controller
-*
-* @param {int} UIAction An integer representing the user action to respond to
-*
-* @param {Model} m The Model bound to the view spawning the notification
-*
-* @param {View} v The View spawning the notification
-*
-* @return {void}
-*/
-
-app.ViewCancelHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
-
-	var n = this.controller().newModel();
-
-	if (n) { // creation of new model cancelled
-
-		n.constructor.registry.removeObject(n); // remove from registry
-
-		this.controller().newModel(null); // reset reference
-	}
-};
+})(app);

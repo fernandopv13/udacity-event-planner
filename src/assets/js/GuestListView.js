@@ -6,288 +6,292 @@
 
 var app = app || {};
 
-/** @classdesc View class for event guest list. Renders list in UI, and captures UI events in list.
-*
-* @extends ListView
-*
-* @param {String} elementId Id of the HTML DOM element the view is bound to
-*
-* @param {String} heading Content for the list heading
-*
-* @constructor
-*
-* @author Ulrik H. Gade, March 2016
-*/
+(function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-app.GuestListView = function(str_elementId, str_heading) {
+	/** @classdesc View class for event guest list. Renders list in UI, and captures UI events in list.
+	*
+	* @extends ListView
+	*
+	* @param {String} elementId Id of the HTML DOM element the view is bound to
+	*
+	* @param {String} heading Content for the list heading
+	*
+	* @constructor
+	*
+	* @author Ulrik H. Gade, March 2016
+	*/
+
+	module.GuestListView = function(str_elementId, str_heading) {
+
+		/*----------------------------------------------------------------------------------------
+		* Call (chain) parent class constructor
+		*---------------------------------------------------------------------------------------*/
+		
+		// Set temporary literals for use by parent class constructor
+
+		this.className = 'GuestListView';
+
+		this.ssuper = module.ListView;
+
+		
+		/** Initialize instance members inherited from parent class*/
+		
+		module.ListView.call(this, module.Event, str_elementId, str_heading);
+
+		
+		/*----------------------------------------------------------------------------------------
+		* Other initialization
+		*---------------------------------------------------------------------------------------*/
+			
+		this.parentList().push(module.GuestListView);
+	};
 
 	/*----------------------------------------------------------------------------------------
-	* Call (chain) parent class constructor
-	*---------------------------------------------------------------------------------------*/
-	
-	// Set temporary literals for use by parent class constructor
+	* Inherit from ListView
+	*---------------------------------------------------------------------------------------*/	
 
-	this.className = 'GuestListView';
+	module.GuestListView.prototype = Object.create(module.ListView.prototype); // Set up inheritance
 
-	this.ssuper = app.ListView;
+	module.GuestListView.prototype.constructor = module.GuestListView; //Reset constructor property
 
-	
-	/** Initialize instance members inherited from parent class*/
-	
-	app.ListView.call(this, app.Event, str_elementId, str_heading);
 
-	
 	/*----------------------------------------------------------------------------------------
-	* Other initialization
+	* Publicinstance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
+
+	/** Renders guest list for an event in the UI
+	*
+	* @param {Event} The event whose guest list we want to render
+	 */
+
+	module.GuestListView.prototype.render = function(Event_e) {
 		
-	this.parentList().push(app.GuestListView);
-};
+		function renderListItem(Person_g, self) { // list item generator
+			
+			var listElmnt = self.createElement({
 
-/*----------------------------------------------------------------------------------------
-* Inherit from ListView
-*---------------------------------------------------------------------------------------*/	
+				element: 'li',
 
-app.GuestListView.prototype = Object.create(app.ListView.prototype); // Set up inheritance
+				attributes: {id: 'guest-list-id-' + Person_g.id(), role: 'listitem'},
 
-app.GuestListView.prototype.constructor = app.GuestListView; //Reset constructor property
+				classList: ['collection-item', 'avatar'],
 
-
-/*----------------------------------------------------------------------------------------
-* Publicinstance methods (on prototype)
-*---------------------------------------------------------------------------------------*/
-
-/** Renders guest list for an event in the UI
-*
-* @param {Event} The event whose guest list we want to render
- */
-
-app.GuestListView.prototype.render = function(Event_e) {
-	
-	function renderListItem(Person_g, self) { // list item generator
-		
-		var listElmnt = self.createElement({
-
-			element: 'li',
-
-			attributes: {id: 'guest-list-id-' + Person_g.id(), role: 'listitem'},
-
-			classList: ['collection-item', 'avatar'],
-
-			listeners:
-			{
-				click: function(e) {self.onClick(e, Person_g);}
-
-				//click: function(e) {self.notifyObservers(self, Person_g.id());}
-			}
-		});
-
-					
-		if (Person_g.imgUrl()) { // use existing image
-
-			listElmnt.appendChild(self.createElement({
-
-				element: 'img',
-
-				attributes:
+				listeners:
 				{
-					src: Person_g.imgUrl(),
+					click: function(e) {self.onClick(e, Person_g);}
 
-					alt: Person_g.name()
-				},
+					//click: function(e) {self.notifyObservers(self, Person_g.id());}
+				}
+			});
 
-				classList: ['circle']
-			}));
-		}
+						
+			if (Person_g.imgUrl()) { // use existing image
 
-		else { // use generic avatar
+				listElmnt.appendChild(self.createElement({
+
+					element: 'img',
+
+					attributes:
+					{
+						src: Person_g.imgUrl(),
+
+						alt: Person_g.name()
+					},
+
+					classList: ['circle']
+				}));
+			}
+
+			else { // use generic avatar
+
+				listElmnt.appendChild(self.createElement({
+
+					element: 'i',
+
+					classList: ['circle', 'material-icons'],
+
+					innerHTML: 'account_circle'
+				}));
+			}
+
 
 			listElmnt.appendChild(self.createElement({
+
+				element: 'span',
+
+				innerHTML: Person_g.name() ? Person_g.name() : ''
+			}));
+
+						
+			listElmnt.appendChild(self.createElement({
+
+				element: 'p',
+
+				innerHTML: Person_g.email() && Person_g.email().address() ? Person_g.email().address() : ''
+			}));
+
+			
+			var anchorElmnt = self.createElement({
+
+				element: 'a',
+
+				attributes: {href: '#!'},
+
+				classList: ['secondary-content']
+			});
+
+
+			anchorElmnt.appendChild(self.createElement({
 
 				element: 'i',
 
-				classList: ['circle', 'material-icons'],
+				classList: ['material-icons'],
 
-				innerHTML: 'account_circle'
+				innerHTML: 'chevron_right'
 			}));
+
+			listElmnt.appendChild(anchorElmnt);
+			
+			
+			return listElmnt;
+		}
+
+		
+		var UlElement = this.createElement({
+
+			element: 'ul',
+
+			attributes: {role: 'list'},
+
+			classList: ['collection', 'with-header']
+		});
+
+		
+		UlElement.appendChild(this.createElement({
+
+			element: 'h4',
+
+			attributes: {role: 'heading'},
+
+			classList: ['collection-header'],
+
+			innerHTML: this.heading()
+		}));
+
+				
+		if (Event_e !== null && Event_e.guests().length > 0) {
+
+			Event_e.guests().forEach(function(guest) { // generate list items
+
+				UlElement.appendChild(renderListItem(guest, this));
+
+			}, this);
+		}
+
+		else {
+
+			var outerDiv =  this.createElement( // outer div
+			{
+				element: 'div',
+
+				classList: ['collection-item', 'row']
+			});
+			
+			UlElement.appendChild(outerDiv);
+
+			
+			var innerDiv =  this.createElement( // inner div
+			{
+				element: 'div',			
+				
+				classList: ['col', 's12'],
+
+				innerHTML: 'No guests have been added to this event yet.'
+			});
+
+			outerDiv.appendChild(innerDiv);
+
+			
+			/*
+			innerDiv =  this.createElement( // inner div
+			{
+				element: 'div',			
+				
+				classList: ['col', 's4']
+			});
+
+			outerDiv.appendChild(innerDiv);
+
+			innerDiv.appendChild(this.createElement({ // add guest button
+				
+				element: 'a',
+				
+				attributes: {id: 'guest-list-add-guest'},
+				
+				classList: ['waves-effect', 'waves-light', 'btn', 'right'],
+
+				innerHTML: 'Add guest'
+			}));
+			*/
 		}
 
 
-		listElmnt.appendChild(self.createElement({
-
-			element: 'span',
-
-			innerHTML: Person_g.name() ? Person_g.name() : ''
-		}));
-
-					
-		listElmnt.appendChild(self.createElement({
-
-			element: 'p',
-
-			innerHTML: Person_g.email() && Person_g.email().address() ? Person_g.email().address() : ''
-		}));
-
-		
-		var anchorElmnt = self.createElement({
-
-			element: 'a',
-
-			attributes: {href: '#!'},
-
-			classList: ['secondary-content']
-		});
-
-
-		anchorElmnt.appendChild(self.createElement({
-
-			element: 'i',
-
-			classList: ['material-icons'],
-
-			innerHTML: 'chevron_right'
-		}));
-
-		listElmnt.appendChild(anchorElmnt);
-		
-		
-		return listElmnt;
-	}
-
-	
-	var UlElement = this.createElement({
-
-		element: 'ul',
-
-		attributes: {role: 'list'},
-
-		classList: ['collection', 'with-header']
-	});
-
-	
-	UlElement.appendChild(this.createElement({
-
-		element: 'h4',
-
-		attributes: {role: 'heading'},
-
-		classList: ['collection-header'],
-
-		innerHTML: this.heading()
-	}));
-
-			
-	if (Event_e !== null && Event_e.guests().length > 0) {
-
-		Event_e.guests().forEach(function(guest) { // generate list items
-
-			UlElement.appendChild(renderListItem(guest, this));
-
-		}, this);
-	}
-
-	else {
-
-		var outerDiv =  this.createElement( // outer div
+		var navElement =  this.createElement( // 'back' arrow above list
 		{
 			element: 'div',
 
-			classList: ['collection-item', 'row']
+			attributes: {id: 'secondary-nav', role: 'navigation'},
+			
+			classList: ['secondary-nav']
 		});
-		
-		UlElement.appendChild(outerDiv);
 
-		
-		var innerDiv =  this.createElement( // inner div
+		navElement.appendChild(this.createElement(
 		{
-			element: 'div',			
-			
-			classList: ['col', 's12'],
+			element: 'i',
 
-			innerHTML: 'No guests have been added to this event yet.'
-		});
+			classList: ['material-icons', 'left'],
 
-		outerDiv.appendChild(innerDiv);
+			innerHTML: 'arrow_back'
 
-		
-		/*
-		innerDiv =  this.createElement( // inner div
-		{
-			element: 'div',			
-			
-			classList: ['col', 's4']
-		});
-
-		outerDiv.appendChild(innerDiv);
-
-		innerDiv.appendChild(this.createElement({ // add guest button
-			
-			element: 'a',
-			
-			attributes: {id: 'guest-list-add-guest'},
-			
-			classList: ['waves-effect', 'waves-light', 'btn', 'right'],
-
-			innerHTML: 'Add guest'
 		}));
-		*/
-	}
 
 
-	var navElement =  this.createElement( // 'back' arrow above list
-	{
-		element: 'div',
+		navElement.appendChild(this.createElement(
+		{
+			element: 'span',
 
-		attributes: {id: 'secondary-nav', role: 'navigation'},
+			innerHTML: this.model().name()
+
+		}));
+
 		
-		classList: ['secondary-nav']
-	});
+		// Update DOM
+		
+		this.$renderContext().empty();
 
-	navElement.appendChild(this.createElement(
-	{
-		element: 'i',
+		this.$renderContext().append(navElement);
 
-		classList: ['material-icons', 'left'],
+		this.$renderContext().append(UlElement);
 
-		innerHTML: 'arrow_back'
-
-	}));
+		this.$renderContext().append(this.createFloatingActionButton('guest-list-add', 'add', 'red', 'Add guest'));
 
 
-	navElement.appendChild(this.createElement(
-	{
-		element: 'span',
+		// Attach event handlers (other than for list item click)
 
-		innerHTML: this.model().name()
+		$('#secondary-nav').click(function(event) {
 
-	}));
+			window.history.back();
 
+			$('#secondary-nav').off();
+
+		}.bind(this));
+
+
+		$('#guest-list-add, #guest-list-add-guest').click(function(event) {
+
+			this.notifyObservers(this, new module.Person('New Guest'), module.View.UIAction.CREATE);
+
+		}.bind(this));
+	};
 	
-	// Update DOM
-	
-	this.$renderContext().empty();
-
-	this.$renderContext().append(navElement);
-
-	this.$renderContext().append(UlElement);
-
-	this.$renderContext().append(this.createFloatingActionButton('guest-list-add', 'add', 'red', 'Add guest'));
-
-
-	// Attach event handlers (other than for list item click)
-
-	$('#secondary-nav').click(function(event) {
-
-		window.history.back();
-
-		$('#secondary-nav').off();
-
-	}.bind(this));
-
-
-	$('#guest-list-add, #guest-list-add-guest').click(function(event) {
-
-		this.notifyObservers(this, new app.Person('New Guest'), app.View.UIAction.CREATE);
-
-	}.bind(this));
-};
+})(app);
