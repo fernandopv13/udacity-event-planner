@@ -98,13 +98,13 @@ var app = app || {};
 
 	module.SignUpView.prototype.render = function() {
 
-		var containerDiv, formElement, buttonElement, linkElement;
+		var widgetFactory = app.UIWidgetFactory.instance();
 			
 		this.$renderContext().empty();
 
 		// Add logo
 
-			containerDiv =  this.createElement( // div
+			var containerDiv =  this.createElement( // div
 			{
 				element: 'div',			
 				
@@ -113,7 +113,7 @@ var app = app || {};
 
 			this.$renderContext().append(containerDiv);
 
-			containerDiv.appendChild(this.createElement(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'img',
 
@@ -134,7 +134,7 @@ var app = app || {};
 
 		// Add heading and teaser
 			
-			containerDiv =  this.createElement( // div
+			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
@@ -143,8 +143,8 @@ var app = app || {};
 
 			this.$renderContext().append(containerDiv);
 
-			containerDiv.appendChild(this.createElement({
-
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			{
 				element: 'h4',
 
 				attributes: {role: 'heading'},
@@ -152,14 +152,14 @@ var app = app || {};
 				innerHTML: this.heading()
 			}));
 
-			containerDiv.appendChild(this.createElement(
-				{
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			{
 					element: 'p',
 
 					innerHTML: 'Please fill in the blanks and we\'ll get you going like 1-2-3.'
 			}));
 
-			containerDiv.appendChild(this.createElement(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 					element: 'p',
 
@@ -169,7 +169,7 @@ var app = app || {};
 
 		// Setup up form and container div
 
-			formElement =  this.createElement( // form
+			var formElement = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // form
 			{
 				element: 'form',			
 				
@@ -181,7 +181,7 @@ var app = app || {};
 			this.$renderContext().append(formElement);
 
 
-			containerDiv =  this.createElement( // div
+			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
@@ -193,53 +193,53 @@ var app = app || {};
 
 		// Add email field
 
-			containerDiv.appendChild(this.createEmailField(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
+			{
+				width: 's12',
 
-				's12',
+				id: 'sign-up-email',
 
-				'sign-up-email',
+				label: 'Email',
 
-				'Email',
+				required: true,
 
-				true,
+				datasource: null,
 
-				'',
-
-				'module.View.prototype.validateEmail'
-			));
+				errormessage: 'Please enter email'
+			}));
 
 
 		// Add password field
 
-			containerDiv.appendChild(this.createPasswordField(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
+			{
+				width: 's12',
 
-				's12',
+				id: 'sign-up-password',
 
-				'sign-up-password',
+				label: 'Password',
 
-				'sign-up-password-hints',
+				datasource: null,
 
-				'',
-
-				'module.View.prototype.validatePassword'
-			));
+				hintsprefix: 'sign-up-password-hints'
+			}));
 
 		
 		// Add password confirmation field
 
-			containerDiv.appendChild(this.createPasswordConfirmationField(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordConfirmationInputWidget',
+			{
+				width: 's12',
 
-				's12',
+				id: 'sign-up-password-confirmation',
 
-				'sign-up-password-confirmation',
-
-				'module.View.prototype.validatePasswordConfirmation'
-			));
+				label: 'Confirm Password'
+			}));
 
 
 		// Add optional extras instruction
 
-			containerDiv.appendChild(this.createElement(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -252,59 +252,53 @@ var app = app || {};
 		
 		// Add account holder name field
 
-			containerDiv.appendChild(this.createTextField(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+			{
+				width: 's12',
 
-				's12',
+				id: 'sign-up-name',
 
-				'sign-up-name',
+				label: 'Your Name',
 
-				'Your Name',
+				required: false,
 
-				false,
-
-				''
-			));
+				datasource: null
+			}));
 
 
 		// Add birthday field
 
-				containerDiv.appendChild(this.createDateField(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'DateInputWidget',
+			{
+				width: 's12',
 
-					's12',
+				id: 'sign-up-birthday',
 
-					'sign-up-birthday',
+				label: 'Your Birthday',
 
-					'Your Birthday',
-
-					false,
-
-					'',
-					
-					'',
-
-					'module.View.prototype.validateDate'
-				))
+				required: false
+			}))
 
 
 		// Add job title field
 
-			containerDiv.appendChild(this.createTextField(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+			{
+				width:'s12',
 
-				's12',
+				id: 'sign-up-jobtitle',
 
-				'sign-up-jobtitle',
+				label: 'Your Job Title',
 
-				'Your Job Title',
+				datasource: null,
 
-				false,
-
-				''
-			));
+				required: false
+			}));
 
 
 		// Add sign-up button
 
-			containerDiv =  this.createElement( // div
+			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'div',			
 				
@@ -315,8 +309,8 @@ var app = app || {};
 			formElement.appendChild(containerDiv);
 
 			
-			containerDiv.appendChild(this.createElement({ // button
-				
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
+			{
 				element: 'a',
 				
 				attributes: {id: 'sign-up-submit', role: 'button', tabindex: 0},
@@ -329,7 +323,7 @@ var app = app || {};
 		
 		// Add demo sign-in link (disabled/hidden)
 
-			containerDiv =  this.createElement( // div
+			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
@@ -338,7 +332,7 @@ var app = app || {};
 
 			formElement.appendChild(containerDiv);
 
-			containerDiv.appendChild(this.createElement(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -349,8 +343,8 @@ var app = app || {};
 			}));
 
 			
-			containerDiv.appendChild(this.createElement({ // link
-				
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
+			{
 				element: 'a',
 				
 				attributes: {id: 'sign-up-open-demo', role: 'button', tabindex:0},

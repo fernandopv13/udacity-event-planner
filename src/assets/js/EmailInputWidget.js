@@ -93,7 +93,7 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			if (obj_options !== null && obj_options.datasource.constructor !== module.Email) {
+			if (typeof obj_options.datasource !== 'undefined' && obj_options.datasource !== null && obj_options.datasource.constructor !== module.Email) {
 
 				throw new IllegalArgumentError('Data source must be instance of Email, or null');
 			}

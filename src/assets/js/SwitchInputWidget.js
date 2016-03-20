@@ -97,7 +97,7 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			if (obj_options !== null && typeof obj_options.datasource !== 'boolean') {
+			if (typeof obj_options.datasource !== 'undefined' && obj_options.datasource !== null && typeof obj_options.datasource !== 'boolean') {
 
 				throw new IllegalArgumentError('Data source must be a Boolean, or null');
 			}

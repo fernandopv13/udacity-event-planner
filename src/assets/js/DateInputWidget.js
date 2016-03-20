@@ -114,7 +114,7 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			if (options.datasource !== null && options.datasource.constructor !== Date) {
+			if (typeof obj_options.datasource !== 'undefined' && options.datasource !== null && options.datasource.constructor !== Date) {
 
 				throw new IllegalArgumentError('Data source must be instance of Date, or null');
 			}

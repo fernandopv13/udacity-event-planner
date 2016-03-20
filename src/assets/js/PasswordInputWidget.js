@@ -97,7 +97,7 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			if (obj_options !== null && obj_options.datasource.constructor !== app.Password) {
+			if (typeof obj_options.datasource !== 'undefined' && obj_options.datasource !== null && obj_options.datasource.constructor !== app.Password) {
 
 				throw new IllegalArgumentError('Data source must be an instance of Password, or null');
 			}

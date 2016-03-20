@@ -97,7 +97,7 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			if (obj_options !== null && typeof obj_options.datasource !== 'string') {
+			if (typeof obj_options.datasource !== 'undefined' && obj_options.datasource !== null && typeof obj_options.datasource !== 'string') {
 
 				throw new IllegalArgumentError('Data source must be a String, or null');
 			}
