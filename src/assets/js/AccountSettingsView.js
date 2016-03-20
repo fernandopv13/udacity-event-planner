@@ -67,15 +67,15 @@ var app = app || {};
 	* @return void
 	 */
 
-	module.AccountSettingsView.prototype.render = function(Account_account) {
+	module.AccountSettingsView.prototype.render = function(Account_a) {
 
-		var account = Account_account, accountHolder, formElement, containerDiv, innerDiv, outerDiv, labelElement, pElement, buttonElement, iconElement, spanElement, switchElement, $formDiv;
+		var widgetFactory = app.UIWidgetFactory.instance();
 			
-		if (account) {
+		if (Account_a) {
 			
 			// Setup up form and container div
 
-				formElement =  this.createElement( // form
+				var formElement = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // form
 				{
 					element: 'form',			
 					
@@ -85,7 +85,7 @@ var app = app || {};
 				});
 
 
-				containerDiv =  this.createElement( // div
+				var containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 				{
 					element: 'div',			
 					
@@ -103,94 +103,88 @@ var app = app || {};
 
 			// Add hidden account id field
 
-				containerDiv.appendChild(this.createElement({
-
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+				{
 					element: 'input',
 
-					attributes: {id: 'account-settings-id', type: 'hidden', value: account.id()}
+					attributes: {id: 'account-settings-id', type: 'hidden', value: Account_a.id()}
 				}));
 
 			
 			// Add email field
 
-				containerDiv.appendChild(this.createEmailField(
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
+				{
+					width: 's12',
 
-					's12',
+					id: 'account-settings-email',
 
-					'account-settings-email',
+					label: 'Email',
 
-					'Email',
+					required: true,
 
-					true,
-
-					account.email(),
-
-					'module.View.prototype.validateEmail'
-				));
+					datasource: Account_a.email()
+				}));
 
 
 			// Add password field
 
-				containerDiv.appendChild(this.createPasswordField(
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
+				{
+					width: 's12',
 
-					's12',
+					id: 'account-settings-password',
 
-					'account-settings-password',
+					label: 'Password',
 
-					'account-settings-password-hints',
+					hintsprefix: 'account-settings-password-hints',
 
-					Account_account,
-
-					'module.View.prototype.validatePassword'
-				));
+					datasource: Account_a.password() || null
+				}));
 
 
 			// Add password confirmation field
 
-				containerDiv.appendChild(this.createPasswordConfirmationField(
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordConfirmationInputWidget',
+				{
+					width: 's12',
 
-					's12',
-
-					'account-settings-password-confirmation',
-
-					'module.View.prototype.validatePasswordConfirmation'
-				));
+					id: 'account-settings-password-confirmation'
+				}));
 
 				
 			// Add default event capacity field
 
-				containerDiv.appendChild(this.createNumberField(
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'NumberInputWidget',
+				{
+					width: 's12',
 
-					's12',
+					id: 'account-settings-capacity',
 
-					'account-settings-capacity',
+					label: 'Default Event Capacity',
 
-					'Default Event Capacity',
+					required: true,
 
-					true,
+					datasource: Account_a.defaultCapacity() ? Account_a.defaultCapacity() : 0,
 
-					account.defaultCapacity() ? account.defaultCapacity() : 0,
+					min: 0,
 
-					0,
+					step: 1,
 
-					null,
-
-					1,
-
-					'Please enter capacity (0 or greater)'
-				));
+					errormessage: 'Please enter capacity (0 or greater)'
+				}));
 				
 
 			// Add default location field
 
-				innerDiv =  this.createElement( // inner div
+				var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
 				{
 					element: 'div',			
 					
 					classList: ['input-field', 'col', 's12']
 				});
 				
-				innerDiv.appendChild(this.createElement( //input
+				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', //input
 				{
 					element: 'input',			
 					
@@ -200,20 +194,20 @@ var app = app || {};
 						
 						id: 'account-settings-location',
 						
-						value: account.defaultLocation() ? account.defaultLocation(): '',
+						value: Account_a.defaultLocation() ? Account_a.defaultLocation(): '',
 
 						role: 'textbox'
 					}
 				}));
 				
 				
-				innerDiv.appendChild(this.createElement( // label
+				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'account-settings-location'},
 					
-					classList: ['active'], //account.defaultLocation() ? ['form-label', 'active'] : ['form-label'],
+					classList: ['active'], //Account_a.defaultLocation() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter default location'},
 					
@@ -221,7 +215,7 @@ var app = app || {};
 				}));
 				
 				
-				outerDiv =  this.createElement( // outer div
+				var outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
 				{
 					element: 'div',
 					
@@ -231,55 +225,121 @@ var app = app || {};
 				
 				outerDiv.appendChild(innerDiv);
 
-				outerDiv.appendChild(this.createFieldDescription('Entering a default location (e.g. a city and/or street name) helps the app suggest relevant venues when you plan a new event.'));
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'InputDescriptionWidget',
+				{
+					datasource: 'Entering a default location (e.g. a city and/or street name) helps the app suggest relevant venues when you plan a new event.',
+
+					divider: false
+				}));
+
+				//outerDiv.appendChild(this.createFieldDescription('Entering a default location (e.g. a city and/or street name) helps the app suggest relevant venues when you plan a new event.'));
 				
 				containerDiv.appendChild(outerDiv);
 
 
 			// Add local storage permission field
 
-				outerDiv = this.createSwitchField(
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'SwitchInputWidget',
+				{
+					width: 's7',
 
-					's7',
+					id: 'account-settings-localstorage',
 
-					'account-settings-localstorage',
+					label: 'Allow local storage',
 
-					'Allow local storage',
+					datasource: Account_a.localStorageAllowed()
+				});
 
-					account.localStorageAllowed()
-				);
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'InputDescriptionWidget',
+				{
+					datasource: 'Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.',
 
-				outerDiv.appendChild(this.createFieldDescription('Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.'));
+					divider: false
+				}));
+
+				//outerDiv.appendChild(this.createFieldDescription('Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.'));
 
 				containerDiv.appendChild(outerDiv);
 
 			
 			// Add geolocation permission field
 
-				outerDiv = this.createSwitchField(
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'SwitchInputWidget',
+				{
+					width: 's7',
 
-					's7',
+					id: 'account-settings-geolocation',
 
-					'account-settings-geolocation',
+					label: 'Allow local geolocation',
 
-					'Allow local geolocation',
+					datasource: Account_a.geoLocationAllowed()
+				});
+				
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'InputDescriptionWidget',
+				{
+					datasource: 'Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device.',
 
-					account.geoLocationAllowed()
-				);
+					divider: false
+				}));
 
-				outerDiv.appendChild(this.createFieldDescription('Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device.'));
+				//outerDiv.appendChild(this.createFieldDescription('Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device.'));
 
 				containerDiv.appendChild(outerDiv);
 
 			
 			// Add requirement indicator (asterisk) explanation
 
-				containerDiv.appendChild(this.createRequiredFieldExplanation());
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				});
+				
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+				{
+					element: 'p',
+					
+					classList: ['required-indicator'],
+						
+					innerHTML: '* indicates a required field'
+				}));
+
+				containerDiv.appendChild(outerDiv);
+
+				//containerDiv.appendChild(this.createRequiredFieldExplanation());
 
 			
 			// Add submit and cancel buttons
 
-				containerDiv.appendChild(this.createSubmitCancelButtons('account-settings'));
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row', 'form-submit']
+				});
+				
+				
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'CancelButtonWidget',  // cancel button
+				{					
+					id: 'account-settings-form-cancel',
+
+					label: 'Cancel'
+				}));
+				
+
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
+				{					
+					id: 'account-settings-form-submit',
+
+					label: 'Done',
+
+					icon: 'send'
+				}));
+
+				containerDiv.appendChild(outerDiv);
+
+				//containerDiv.appendChild(this.createSubmitCancelButtons('account-settings'));
 
 			
 			// Update DOM
@@ -431,19 +491,19 @@ var app = app || {};
 
 			var account = new module.Account();
 
-			account.email(new module.Email($('#account-settings-email').val()));
+			Account_a.email(new module.Email($('#account-settings-email').val()));
 
-			account.password(new module.Password($('#account-settings-password').val()));
+			Account_a.password(new module.Password($('#account-settings-password').val()));
 
 			// leaving source.accountHolder undefined causes Account update() to skip it, leaving the original intact
 
-			account.defaultCapacity(parseInt($('#account-settings-capacity').val()));
+			Account_a.defaultCapacity(parseInt($('#account-settings-capacity').val()));
 
-			account.defaultLocation($('#account-settings-location').val());
+			Account_a.defaultLocation($('#account-settings-location').val());
 
-			account.geoLocationAllowed($('#account-settings-geolocation').prop('checked'));
+			Account_a.geoLocationAllowed($('#account-settings-geolocation').prop('checked'));
 
-			account.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
+			Account_a.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
 
 			
 			//this.notifyObservers(account, parseInt($('#account-settings-id').val()));

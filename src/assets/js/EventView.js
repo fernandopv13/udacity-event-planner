@@ -981,6 +981,8 @@ var app = app || {};
 					innerHTML: '* indicates a required field'
 				}));
 
+				containerDiv.appendChild(outerDiv);
+
 				//containerDiv.appendChild(this.createRequiredFieldExplanation());
 
 					
