@@ -372,22 +372,9 @@ var app = app || {};
 	* @return {Boolean} true if validation and is succesful, otherwise false
 	*/
 
-	module.PersonView.prototype.submit = function(event) {
+	module.PersonView.prototype.submit = function(nEvent) {
 
-		// First display any and all validation errors in the UI
-
-		this.validateName(event, 'guest-name', 'Please enter name', true);
-
-		void this.validateEmail(event, 'guest-email', 'Please enter email', true);
-
-
-		// Then do it again to obtain validation status
-
-		// (Chain stops at first false, so no use for UI)
-		
-		if (this.validateName(event, 'guest-name', 'Please enter name', true)
-
-		&& this.validateEmail(event, 'guest-email', 'Please enter email', true)){ // Submit results if all validations pass
+		if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 
 			// Notify observers by passing them a new Person with the data from the form
 

@@ -85,7 +85,7 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;;
+			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;
 
 			var formElement = createElement(
 			{
@@ -134,8 +134,6 @@ var app = app || {};
 
 		module.FormWidget.prototype.validate = function(HTMLFormElement_f) {
 
-			return true; // debug
-
 			// Run custom validator on every relevant form element, if defined
 
 			var input_selector = 'input[type=text], input[type=password], input[type=email], input[type=url], input[type=tel], input[type=number], input[type=search], textarea, input[type="datetime-local"]';
@@ -144,7 +142,9 @@ var app = app || {};
 
 				if ($(element).data && typeof $(element).data('customValidator') !== 'undefined') { // field has custom validator attribute
 
-					var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, window); // resolve dot string into js reference (w/o resorting to eval()!)
+					//var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, window); // resolve dot string into js reference (w/o resorting to eval()!)
+
+					var clss = module[$(element).data('customValidator')], fn = typeof clss !== 'undefined' ? clss.prototype.validate : null;
 
 					if (element.setCustomValidity && typeof fn === 'function') { // custom validator is a function
 
@@ -152,7 +152,7 @@ var app = app || {};
 
 						element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
 
-						console.log(element.id + ': ' + element.checkValidity());
+						//console.log(element.id + ': ' + element.checkValidity()); // debug
 					}
 				}
 			});

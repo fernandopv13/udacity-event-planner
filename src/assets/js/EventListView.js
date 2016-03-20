@@ -89,10 +89,6 @@ var app = app || {};
 				listeners:
 				{
 					click: function(e) {self.onClick(e, Event_e);}
-
-					//click: function(e) {self.notifyObservers(self, Event_e.id());}
-
-					//click: function(e) {self.notifyObservers(self, Event_e, module.View.CLICKEVENT);}
 				}
 			});
 
@@ -180,29 +176,6 @@ var app = app || {};
 			});
 
 			outerDiv.appendChild(innerDiv);
-
-			
-			/*
-			innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
-				
-				classList: ['col', 's4']
-			});
-
-			outerDiv.appendChild(innerDiv);
-
-			innerDiv.appendChild(this.createElement({ // add guest button
-				
-				element: 'a',
-				
-				attributes: {id: 'event-list-add-event'},
-				
-				classList: ['waves-effect', 'waves-light', 'btn', 'right'],
-
-				innerHTML: 'Add event'
-			}));
-			*/
 		}
 		
 		// Update DOM
@@ -211,16 +184,23 @@ var app = app || {};
 
 		this.$renderContext().append(UlElement);
 		
-		this.$renderContext().append(this.createFloatingActionButton('event-list-add', 'add', 'red', 'Add event'));
+		this.$renderContext().append(app.UIWidgetFactory.instance().createProduct('FloatingActionButtonWidget',
+		{
+			id: 'event-list-add',
 
+			icon: 'add',
+
+			color: 'red',
+
+			label: 'Add event'
+		}));
+		
 
 		// Attach event handlers (other than for list item click)
 
 		$('#event-list-add, #event-list-add-event').click(function(event) {
 
 			this.notifyObservers(this, new module.Event('New Event'), module.View.UIAction.CREATE);
-
-			//module.controller.onAddEvent(event);
 
 		}.bind(this));
 	};

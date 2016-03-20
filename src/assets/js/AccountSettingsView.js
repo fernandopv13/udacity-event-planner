@@ -232,8 +232,6 @@ var app = app || {};
 					divider: false
 				}));
 
-				//outerDiv.appendChild(this.createFieldDescription('Entering a default location (e.g. a city and/or street name) helps the app suggest relevant venues when you plan a new event.'));
-				
 				containerDiv.appendChild(outerDiv);
 
 
@@ -256,8 +254,6 @@ var app = app || {};
 
 					divider: false
 				}));
-
-				//outerDiv.appendChild(this.createFieldDescription('Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.'));
 
 				containerDiv.appendChild(outerDiv);
 
@@ -282,8 +278,6 @@ var app = app || {};
 					divider: false
 				}));
 
-				//outerDiv.appendChild(this.createFieldDescription('Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device.'));
-
 				containerDiv.appendChild(outerDiv);
 
 			
@@ -307,9 +301,7 @@ var app = app || {};
 
 				containerDiv.appendChild(outerDiv);
 
-				//containerDiv.appendChild(this.createRequiredFieldExplanation());
-
-			
+							
 			// Add submit and cancel buttons
 
 				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
@@ -339,9 +331,7 @@ var app = app || {};
 
 				containerDiv.appendChild(outerDiv);
 
-				//containerDiv.appendChild(this.createSubmitCancelButtons('account-settings'));
-
-			
+				
 			// Update DOM
 
 				this.$renderContext().empty();
@@ -355,8 +345,6 @@ var app = app || {};
 
 				if (nEvent.currentTarget.value.length > 3) { // allow people to get started before showing error message (we need at least 3 chars anyway)
 
-					//this.validateEmail(nEvent.currentTarget);
-
 					Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
 				}
 
@@ -365,7 +353,7 @@ var app = app || {};
 				
 				$('#account-settings-password').focus(function(nEvent) { // update and show password hints
 
-					this.validatePassword(nEvent.currentTarget, '#account-settings-password-hints');
+					app.PasswordInputWidget.instance().validate(nEvent.currentTarget, '#account-settings-password-hints');
 
 					$('#account-settings-password-hints').show('slow');
 
@@ -393,59 +381,6 @@ var app = app || {};
 							$('#account-settings-password-confirmation-parent').show('slow');
 					}
 				});
-
-
-				/*
-				$('#account-settings-password').focus(function(event) { // update and show password hints
-
-					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
-
-					$('#account-settings-password-hints').show('slow');
-
-				}.bind(this));
-
-
-
-				$('#account-settings-password').on('input', function(event) { // validate password
-
-					this.validatePassword(event, 'account-settings-password', 'account-settings-password-hints');
-
-				}.bind(this));
-
-				
-				$('#account-settings-password').blur(function(event) { // hide password hints
-
-					$('#account-settings-password-hints').hide('slow');
-				});
-
-				*/
-				
-
-				/*
-				$('#account-settings-password').change(function(event) { // show password confirmation, if password changed
-
-					this.isPasswordDirty = true; // enable confirmation
-
-					$('#account-settings-password-confirmation-parent').show('slow');
-
-				}.bind(this));
-
-
-				$('#account-settings-password-confirmation').on('input', function(event) { // validate password confirmation
-
-					this.validatePasswordConfirmation(event, 'account-settings-password', 'account-settings-password-confirmation');
-		
-				}.bind(this));
-				*/
-
-
-				/*DEPRECATED: Constraint vlidation API should suffice
-				$('#account-settings-capacity').on('input', function(nEvent) { // validate default capacity
-
-					this.validateCapacity(event, 'account-settings-capacity');
-		
-				}.bind(this));
-				*/
 
 
 				$('#account-settings-cancel').click(function(nEvent) {
@@ -485,7 +420,7 @@ var app = app || {};
 
 	module.AccountSettingsView.prototype.submit = function(nEvent) {
 
-		if (this.validateForm($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
+		if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 
 			// Create a temporary, new account with the data from the form
 
@@ -506,8 +441,6 @@ var app = app || {};
 			Account_a.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
 
 			
-			//this.notifyObservers(account, parseInt($('#account-settings-id').val()));
-
 			this.ssuper().prototype.submit.call(
 
 				this,

@@ -60,8 +60,6 @@ var app = app || {};
 
 	/** Handles 'navigate' user action in a View on behalf of a Controller.
 	*
-	* 
-	*
 	* @param {int} UIAction An integer representing the user action to respond to
 	*
 	* @param {Model} m The Model bound to the view spawning the notification

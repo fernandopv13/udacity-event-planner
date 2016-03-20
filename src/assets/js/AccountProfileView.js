@@ -322,9 +322,6 @@ var app = app || {};
 				});
 				
 				
-				//$('#account-holder-location').focus(this.suggestLocations);
-
-				
 				$('#account-holder-name').keyup(function(event) {
 
 					this.validateName(event, 'account-holder-name', 'Please enter your name', true);
@@ -376,19 +373,7 @@ var app = app || {};
 
 	module.AccountProfileView.prototype.submit = function(nEvent) {
 
-		// First display any and all validation errors at once
-
-		void this.validateName(event, 'account-holder-name', 'Please enter your name', true);
-
-		void this.validateEmail(event, 'account-holder-email', false);
-
-		// Then do it again to obtain validation status
-
-		// (Chain stops at first false, so no use for UI)
-		
-		if (this.validateName(event, 'account-holder-name', 'Please enter your name', true)
-
-			&& this.validateEmail(event, 'account-holder-email', false)) { // Submit results if all validations pass
+		if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 
 			// Nofity observers by passing them a new Person with the data from the form
 

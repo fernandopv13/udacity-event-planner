@@ -470,28 +470,7 @@ var app = app || {};
 
 					_views.frontPageView.show();
 
-					//_views.signInView.render();
-
-					//_views.signInView.show();
-
-					/*
-					this.selectedAccount(module.Account.registry.getObjectById(0)); //debug
-					
-					this.selectedAccount().defaultLocation('Copenhagen'); // debug
-
-					this.selectedAccount().geoLocationAllowed(true); // debug
-
-					this.selectedAccount().localStorageAllowed(true); // debug
-
-					this.selectedAccount().accountHolder(new module.Person('Superuser')); // debug
-
-					this.selectedAccount().accountHolder().email(new module.Email('superuser@acme.corp')); // debug
-
-					this.selectedAccount().accountHolder().jobTitle('Master Octopus'); // debug
-					
-					_onAccountSelected.call(this, this.selectedAccount()); // debug
-					*/
-			};
+				};
 
 			
 			/** Returns true if class implements the interface passed in (by function reference).
@@ -632,18 +611,10 @@ var app = app || {};
 
 				switch (int_uiaction) {
 
+					/*
 					case module.View.UIAction.CANCEL:
 
 						this.notifyObservers(Model_m, int_uiaction, View_v);
-
-						/*
-						if (_newModel) { // creation of new model cancelled
-
-							_newModel.constructor.registry.removeObject(_newModel); // remove from registry
-
-							_newModel = null; // reset reference
-						}
-						*/
 
 						break;
 
@@ -651,47 +622,11 @@ var app = app || {};
 
 						this.notifyObservers(Model_m, int_uiaction, View_v);
 
-						//_onCreateModel.call(this, Model_m);
-
 						break;
 
 					case module.View.UIAction.DELETE:
 
 						this.notifyObservers(Model_m, int_uiaction, View_v);
-
-						/*
-						this.removeObserver(Model_m);
-
-						switch(Model_m.constructor) {
-
-							case module.Event: // remove event completely from app
-
-								var evtName = Model_m.name();
-
-								module.Account.registry.removeObject(Model_m);
-
-								this.selectedAccount().removeEvent(Model_m);
-
-								this.currentView().model(undefined);
-
-								Model_m = undefined;
-
-								Materialize.toast(evtName + ' was deleted', 4000);
-
-								break;
-
-							case module.Person: // remove person (guest) from this event, but keep in account
-
-								this.selectedEvent().removeGuest(Model_m);
-
-								Materialize.toast(Model_m.name() + ' was taken off the guest list', 4000);
-
-								break;
-						}
-
-						window.history.back();
-
-						*/
 
 						break;
 
@@ -699,49 +634,21 @@ var app = app || {};
 
 						this.notifyObservers(Model_m, int_uiaction, View_v);
 
-						/*
-						var view;
-
-						for (var prop in _views) { // get (existing) view matching the request
-
-							if (_views[prop].constructor === View_v.constructor) {
-
-								view = _views[prop];
-							}
-						}
-
-						if (view) {
-
-							this.currentView(view, Model_m);
-						}
-
-						View_v = undefined; // try to speed up garbage collection of temporary helper object
-						*/
-
 						break;
 					
 					case module.View.UIAction.SELECT:
 
 						this.notifyObservers(Model_m, int_uiaction, View_v);
 
-						/*
-						switch (View_v.constructor) { // list item selected
+						break;
 
-							case module.EventListView: // selection made in event list
+					case module.View.UIAction.SUBMIT: // update to Model submitted by form
 
-								_onEventSelected.call(this, Model_m);
-
-								break;
-
-							case module.GuestListView: // selection made in guest list
-
-								_onGuestSelected.call(this, Model_m);
-
-								break;
-						}
-						*/
+						this.notifyObservers(Model_m, int_uiaction, View_v);
 
 						break;
+
+					*/
 					
 					case module.View.UIAction.SIGNIN: // submission from sign in form
 
@@ -788,41 +695,11 @@ var app = app || {};
 
 						break;
 					
-					case module.View.UIAction.SUBMIT: // update to Model submitted by form
+					default:
 
 						this.notifyObservers(Model_m, int_uiaction, View_v);
 
-						/*
-						if (_newModel) { // new Model succesfully added to the account, insert into ecosystem
-
-							switch(Model_m.constructor) {
-
-								case module.Event:
-
-									this.selectedAccount().addEvent(_newModel); // add to event list
-
-									break;
-
-								case module.Person:
-
-									this.selectedEvent().addGuest(_newModel); // add to guest list
-
-									break;
-							}
-
-							_newModel = null; // reset and dereference temporary model
-						}
-
-						this.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits
-
-						window.history.back(); // go one step back in browser history
-						*/
-
-						break;
-
-					default:
-
-						console.log('UI action ' + int_uiaction + ' not supported');
+						//console.log('UI action ' + int_uiaction + ' not supported');
 				}
 
 				// remove temporary Model passed in from View (to prepare for garbage collection)

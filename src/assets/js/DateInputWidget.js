@@ -219,68 +219,7 @@ var app = app || {};
 			return outerDiv;
 		};
 
-		
-		/** Gets (parses) value of datetime picker using datetime-local input field
-		*
-		* @param {String} id Id of the input field
-		*
-		* @return {Date} date A valid Date object, or a moment if supported by the browser, or null
-		*/
-
-		module.DateInputWidget.prototype.value = function(HTMLInputElement_e) {
-
-			var data = $(HTMLInputElement_e).data(), date = null;
-
-			if (typeof data !== 'undefined' && typeof data.DateTimePicker !== 'undefined') { // we can access the DateTimePicker js object
-
-				if (typeof moment !== 'undefined') { // moment is available
-
-					if (data.DateTimePicker.date() && data.DateTimePicker.date().isValid()) { // we have a valid moment instance
-
-						date = data.DateTimePicker.date() // get that moment
-					}
-				}
-			}
-
-			else { // parse the input's value manually
-
-				date = $(HTMLInputElement_e).val();
-
-				if (typeof moment !== 'undefined') { // use moment if available (probably won't work on mobile)
-
-					date = moment(
-
-						date,
-
-						[ // try a number of expected formats, in order of likelyhood for en-us locale
-
-							'YYYY-MM-DDTHH:mm', // ISO 8601
-
-							'MM/DD/YYYY HH:mm A', // 12h, numbers only, US/North American date/month order
-
-							'DD. MMM YYYY hh:mm A', // 12h/24h, month name, date/month order as used natively by iOS and x-OS Chrome
-
-							'ddd MMM DD YYYY HH:mm:ss Z' // UTC format (e.g. 'Fri Mar 11 2016 00:45:50 GMT+0100 (Romance Standard Time)')
-						],
-
-						true
-					);
-
-					date = date.isValid() ? date: null;
-				}
-			}
-
-			if (date === null) { // try to brute force parsing if moment - and all else - fails
-
-				date = Date.parse($(Element_e).val());
-
-				date = !isNaN(date) ? new Date(date): null;
-			}
-
-			return date;
-		}
-
-		
+	
 		/** Initializes any and all datetime pickers on the pages using datetime-local inputs */
 
 		module.DateInputWidget.prototype.init = function(HTMLInputElement_e) {
@@ -447,6 +386,66 @@ var app = app || {};
 			return false;
 		};
 
+		
+		/** Gets (parses) value of datetime picker using datetime-local input field
+		*
+		* @param {String} id Id of the input field
+		*
+		* @return {Date} date A valid Date object, or a moment if supported by the browser, or null
+		*/
+
+		module.DateInputWidget.prototype.value = function(HTMLInputElement_e) {
+
+			var data = $(HTMLInputElement_e).data(), date = null;
+
+			if (typeof data !== 'undefined' && typeof data.DateTimePicker !== 'undefined') { // we can access the DateTimePicker js object
+
+				if (typeof moment !== 'undefined') { // moment is available
+
+					if (data.DateTimePicker.date() && data.DateTimePicker.date().isValid()) { // we have a valid moment instance
+
+						date = data.DateTimePicker.date() // get that moment
+					}
+				}
+			}
+
+			else { // parse the input's value manually
+
+				date = $(HTMLInputElement_e).val();
+
+				if (typeof moment !== 'undefined') { // use moment if available (probably won't work on mobile)
+
+					date = moment(
+
+						date,
+
+						[ // try a number of expected formats, in order of likelyhood for en-us locale
+
+							'YYYY-MM-DDTHH:mm', // ISO 8601
+
+							'MM/DD/YYYY HH:mm A', // 12h, numbers only, US/North American date/month order
+
+							'DD. MMM YYYY hh:mm A', // 12h/24h, month name, date/month order as used natively by iOS and x-OS Chrome
+
+							'ddd MMM DD YYYY HH:mm:ss Z' // UTC format (e.g. 'Fri Mar 11 2016 00:45:50 GMT+0100 (Romance Standard Time)')
+						],
+
+						true
+					);
+
+					date = date.isValid() ? date: null;
+				}
+			}
+
+			if (date === null) { // try to brute force parsing if moment - and all else - fails
+
+				date = Date.parse($(HTMLInputElement_e).val());
+
+				date = !isNaN(date) ? new Date(date): null;
+			}
+
+			return date;
+		}
 
 	/*----------------------------------------------------------------------------------------
 	* Public class (static) members

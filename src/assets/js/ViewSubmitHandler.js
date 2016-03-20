@@ -53,14 +53,11 @@ var app = app || {};
 	module.ViewSubmitHandler.prototype.constructor = module.ViewSubmitHandler; //Reset constructor property
 
 
-
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
 	/** Handles 'submit' user action in a View on behalf of a Controller.
-	*
-	* 
 	*
 	* @param {int} UIAction An integer representing the user action to respond to
 	*

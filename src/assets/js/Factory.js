@@ -37,37 +37,6 @@ var app = app || {};
 		* Accessors for private instance fields (dependency injection enables access for subclasses)
 		*---------------------------------------------------------------------------------------*/
 
-			/** Gets singleton instance of class (read-only). Creates instance if none exists.
-			*
-			* @return {Factory} instance Singleton instance of the Factory
-			*
-			* @throws {IllegalArgumentError} If trying to set the instance.
-			*/
-
-			/*
-			this.instance = (function(obj_prop) { // mimic Accessor class, but deal with singleton creation
-
-				return function() {
-
-					if (arguments.length === 0) {
-
-						if (obj_prop === null) { // no instance, so create one
-
-							obj_prop = new this.constructor();
-						}
-					}
-
-					else {
-
-						throw new IllegalArgumentError('"instance" is read-only')
-					}
-
-					return obj_prop; // objects from subclass get their own copy of the private property, and can access it
-				};
-
-			}(_instance));
-			*/
-
 			/** Gets the collection of Products registered with this Factory (the property is read-only, but the collection is mutable)
 			*
 			* @return {Object} products Collection of registered products (by id)
@@ -99,7 +68,6 @@ var app = app || {};
 	};
 
 
-
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
@@ -117,9 +85,9 @@ var app = app || {};
 	* @throws {IllegalArgumentError} If Product type is already registered with this factory
 	*/
 		
-	module.Factory.prototype.registerProduct = function(fn_Product) {
+	module.Factory.prototype.registerProduct = function(Fnc_Product) {
 		
-		var obj = new fn_Product();
+		var obj = new Fnc_Product();
 
 		if (obj instanceof this.productType()) { // Product type is derived from the right subclass of Product
 
@@ -127,7 +95,7 @@ var app = app || {};
 
 			if (typeof this.products()[type] === 'undefined') { // type (name) not already registered
 
-					this.products()[type] = fn_Product // register new Product
+					this.products()[type] = Fnc_Product // register new Product
 			}
 
 			else {
@@ -142,6 +110,7 @@ var app = app || {};
 		}
 	};
 
+
 	/** Unregisters a Product type so that the Factory can no longer create it.
 	*
 	* Products are unregistered by their type string (not case-sensitive to prevent redundant registrations).
@@ -155,9 +124,9 @@ var app = app || {};
 	* @throws {IllegalArgumentError} If Product type is already registered with this factory
 	*/
 		
-	module.Factory.prototype.removeProduct = function(fn_Product) {
+	module.Factory.prototype.removeProduct = function(Fnc_Product) {
 		
-		var obj = new fn_Product();
+		var obj = new Fnc_Product();
 
 		if (obj instanceof this.productType()) { // Product type is derived from the right subclass of Product
 

@@ -363,8 +363,6 @@ var app = app || {};
 
 				if (nEvent.currentTarget.value.length > 3) { // allow people to get started before showing error message (we need at least 3 chars anyway)
 
-					//this.validateEmail(nEvent.currentTarget);
-
 					Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
 				}
 
@@ -373,7 +371,7 @@ var app = app || {};
 			
 			$('#sign-up-password').focus(function(nEvent) { // update and show password hints
 
-				this.validatePassword(nEvent.currentTarget, 'sign-up-password-hints');
+				app.PasswordInputWidget.instance().validate(nEvent.currentTarget, 'sign-up-password-hints');
 
 				$('#sign-up-password-hints').show('slow');
 
@@ -384,17 +382,6 @@ var app = app || {};
 			}.bind(this));
 
 
-			/*
-			$('#sign-up-password').on('input', function(nEvent) { // validate password
-
-				//$(nEvent.currentTarget).data('dirty', true); // enable confirmation when leaving pw field, b/c it changed
-
-				//Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
-
-			}.bind(this));
-			*/
-
-			
 			$('#sign-up-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
 
 				$('#sign-up-password-hints').hide('slow');
@@ -414,9 +401,9 @@ var app = app || {};
 			});
 
 
-			this.initDateTimePicker();
-
-
+			app.DateInputWidget.instance().init();
+			
+			
 			$('#sign-up-open-demo').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
 
 				this.openDemo(nEvent);
@@ -439,7 +426,7 @@ var app = app || {};
 
 	module.SignUpView.prototype.submit = function(nEvent) {
 
-		if (this.validateForm($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
+		if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 
 			// Create a temporary, new account with the data from the form
 

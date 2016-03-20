@@ -45,11 +45,6 @@ var app = app || {};
 		
 
 		/*----------------------------------------------------------------------------------------
-		* Public instance fields (non-encapsulated data members)
-		*---------------------------------------------------------------------------------------*/
-		
-
-		/*----------------------------------------------------------------------------------------
 		* Accessors for private instance fields
 		*---------------------------------------------------------------------------------------*/
 
@@ -62,7 +57,6 @@ var app = app || {};
 
 		this.controller = new module.Accessor(_controller, true);
 		
-
 
 		/** Gets a collection of classes or 'interfaces' (by function reference) the object extends or implements. Includes the class of the object itself.
 		*
@@ -94,22 +88,6 @@ var app = app || {};
 		*/
 
 		this.uiAction = new module.Accessor(_uiAction, true);
-		
-		
-		/*----------------------------------------------------------------------------------------
-		* Private instance methods (may depend on accessors, so declare after them)
-		*---------------------------------------------------------------------------------------*/
-		
-		
-		/*----------------------------------------------------------------------------------------
-		* Public instance methods (beyond accessors)
-		*---------------------------------------------------------------------------------------*/
-
-
-		/*----------------------------------------------------------------------------------------
-		* Other object initialization (using parameter parsing/constructor 'polymorphism')
-		*---------------------------------------------------------------------------------------*/
-		
 	};
 
 
@@ -169,7 +147,6 @@ var app = app || {};
 	* @return {void}
 	*/
 
-
 	module.ViewUpdateHandler.prototype.update = function(int_UIAction, Model_m, View_v) {
 		
 		if (arguments.length === 3) { // the number of args is right
@@ -187,12 +164,6 @@ var app = app || {};
 		}
 	};
 
-
-	/*----------------------------------------------------------------------------------------
-	* Public class (static) members
-	*---------------------------------------------------------------------------------------*/
-			
-		
 
 	/*----------------------------------------------------------------------------------------
 	Mix in default methods from implemented interfaces, unless overridden by class or ancestor

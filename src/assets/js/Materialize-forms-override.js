@@ -33,19 +33,17 @@
 
 		function updateCustomValidity(element) {
 
-			return true; // debug
-
 			if ($(element).data && typeof $(element).data('customValidator') !== 'undefined') { // field has custom validator attribute
 
-				var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, window); // resolve dot string into js reference (w/o resorting to eval()!)
+				//var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, window); // resolve dot string into js reference (w/o resorting to eval()!)
+
+				var clss = app[$(element).data('customValidator')], fn = typeof clss !== 'undefined' ? clss.prototype.validate : null;
 
 				if (element.setCustomValidity && typeof fn === 'function') { // custom validator is a function
 
-					//$('#before').html('before: ' + element.checkValidity()); // debug
-
 					element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
 
-					//$('#after').html('after: ' + element.checkValidity());// debug
+					//console.log(element.id + ': ' + element.checkValidity());// debug
 				}
 			}
 		}

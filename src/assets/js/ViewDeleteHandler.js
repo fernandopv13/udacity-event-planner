@@ -53,15 +53,12 @@ var app = app || {};
 	module.ViewDeleteHandler.prototype.constructor = module.ViewDeleteHandler; //Reset constructor property
 
 
-
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
 	/** Handles 'delete' user action in a View on behalf of a Controller.
-	*
 	* 
-	*
 	* @param {int} UIAction An integer representing the user action to respond to
 	*
 	* @param {Model} m The Model bound to the view spawning the notification

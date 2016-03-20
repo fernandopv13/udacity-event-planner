@@ -190,6 +190,7 @@ describe('class View', function(){
 		});
 
 
+		/*
 		it('can create a new DOM element', function(){
 
 			var testElement = app.View.prototype.createElement(
@@ -222,14 +223,17 @@ describe('class View', function(){
 
 			expect(testElement.innerHTML).toBe('my div');
 		});
+		*/
 
 
+		/*
 		xit('can create a floating action button', function() {
 
 
 		});
+		*/
 
-
+		/*
 		xit('can create a new standard date field', function(){
 
 			var testElement = app.View.prototype.createDateField.call(
@@ -281,8 +285,10 @@ describe('class View', function(){
 
 			expect(el.id).toBe('test-date-error');
 		});
+		*/
 
 
+		/*
 		it('can create a new standard email field', function(){
 
 			var testElement = app.View.prototype.createEmailField.call(
@@ -330,8 +336,10 @@ describe('class View', function(){
 
 			expect(el.nextSibling.classList[0]).toBe('required-indicator');
 		});
+		*/
 
 
+		/*
 		it('can create a new field description', function(){
 
 			// Planning to factor out divider (to be handled by CSS), so not testing here
@@ -351,6 +359,7 @@ describe('class View', function(){
 
 			expect(el.innerHTML).toBe('Test field description');
 		});
+		*/
 
 
 		it('can create a new heading', function(){
@@ -384,6 +393,7 @@ describe('class View', function(){
 		});
 
 
+		/*
 		it('can create a new standard number field', function(){
 
 			var testElement = app.View.prototype.createNumberField.call(
@@ -439,8 +449,10 @@ describe('class View', function(){
 
 			expect(el.dataset.error).toBe('Test error message');
 		});
+		*/
 
 
+		/*
 		it('can create a new password field', function(){
 
 			var el = app.View.prototype.createPasswordField.call(
@@ -488,8 +500,10 @@ describe('class View', function(){
 
 			expect(el.classList[0]).toBe('password-validation-hint');
 		});
+		*/
 
 
+		/*
 		it('can create a new password confirmation field', function(){
 
 			var el = app.View.prototype.createPasswordConfirmationField.call(
@@ -530,7 +544,8 @@ describe('class View', function(){
 			el = el.nextSibling;
 
 			expect(el.classList[0]).toBe('required-indicator');
-		});
+		});*/
+
 
 
 		it('can create a new required field explanation', function(){
@@ -550,6 +565,7 @@ describe('class View', function(){
 		});
 
 
+		/*
 		it('can create form cancel and submit buttons', function(){
 
 			var el = app.View.prototype.createSubmitCancelButtons.call(
@@ -589,8 +605,10 @@ describe('class View', function(){
 
 			expect(el.innerHTML).toBe('send');
 		});
+		*/
 
 		
+		/*
 		it('can create a new switch field', function(){
 
 			var el = app.View.prototype.createSwitchField.call(
@@ -670,8 +688,10 @@ describe('class View', function(){
 
 			expect(el.innerHTML).toBe('Yes');
 		});
+		*/
 
 
+		/*
 		it('can create a new text field', function(){
 
 			var el = app.View.prototype.createTextField.call(
@@ -720,9 +740,11 @@ describe('class View', function(){
 			el = el.nextSibling;
 
 			expect(el.classList[0]).toBe('required-indicator');
-		});
+		});*/
 
 
+
+		/*
 		xit('can create a new standard time field', function(){
 
 			var el = app.View.prototype.createTimeField.call(
@@ -780,8 +802,10 @@ describe('class View', function(){
 
 			expect(el.classList[0]).toBe('custom-validate');
 		});
+		*/
 
 
+		/*
 		xit('defines a displayValidation() method', function() {
 				
 			// verify that method signature exists
@@ -790,6 +814,7 @@ describe('class View', function(){
 			
 			expect(typeof app.View.prototype.displayValidation).toBe('function');
 		});
+		*/
 		
 
 		xit('can hide itself', function() {

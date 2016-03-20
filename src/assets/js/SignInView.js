@@ -270,20 +270,11 @@ var app = app || {};
 
 				if (nEvent.currentTarget.value.length > 3) {
 
-					//this.validateEmail(nEvent.currentTarget);
-
 					Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
 				}
 
 			}.bind(this));
 
-			/*DEPRECATED
-			$('#sign-in-email').keyup(function(nEvent) { // validate email
-
-				this.validateEmail(nEvent.currentTarget);
-
-			}.bind(this));
-			*/
 			
 			$('#sign-in-password').focus(function(nEvent) { // update and show password hints
 
@@ -299,8 +290,6 @@ var app = app || {};
 
 
 			$('#sign-in-password').on('input', function(nEvent) { // validate password
-
-				//this.validatePassword(nEvent.currentTarget, 'sign-in-password-hints');
 
 				Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validation, so no need for explicit call
 
@@ -341,7 +330,7 @@ var app = app || {};
 
 	module.SignInView.prototype.submit = function(nEvent) {
 
-		if (this.validateForm($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
+		if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 
 			// Create a temporary, new account with the data from the form
 

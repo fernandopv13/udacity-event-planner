@@ -47,15 +47,11 @@ var app = app || {};
 
 			id = parseInt(PopStateEvent_e.state.id);
 
-			//console.log('popped: ' + className + ', ' + id);
-
 			switch (className) {
 
 				case 'EventListView':
 
 					module.controller.update([new module.EventListView(), module.Account.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
-
-					//module.controller.onAccountSelected(module.Account.registry.getObjectById(id));
 
 					break;
 
@@ -63,15 +59,11 @@ var app = app || {};
 
 					module.controller.update([new module.EventView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
 
-					//module.controller.onEventSelected(module.Event.registry.getObjectById(id));
-
 					break;
 
 				case 'GuestListView':
 
 					module.controller.update([new module.GuestListView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
-
-					//module.controller.onGuestListSelected(module.controller.selectedEvent());
 
 					break;
 
@@ -79,15 +71,11 @@ var app = app || {};
 
 					module.controller.update([new module.PersonView(), module.Person.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
 
-					//module.controller.onGuestSelected(module.Person.registry.getObjectById(id));
-
 					break;
 
 				default: // includes AccountProfileView and AccountSettingsView
 
 					module.controller.update([new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, module.View.UIAction.NAVIGATE]);
-
-					//window.history.back();
 			}
 		}
 
@@ -111,8 +99,6 @@ var app = app || {};
 
 				if (!history.state || history.state.className !== className) { // don't set state if navigating back
 
-					//console.log('pushing: ' + className + ', ' + id);
-
 					history.pushState(
 					{
 						className: className,
@@ -129,13 +115,6 @@ var app = app || {};
 						+ '?id=' + id // add model object id
 					);
 				}
-
-				/*
-				else {
-
-					console.log('did not push');
-				}
-				*/
 			}
 
 			catch(e) {

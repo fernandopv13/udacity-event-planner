@@ -63,8 +63,6 @@ app.FormView.prototype.constructor = app.FormView; // Reset constructor property
 
 app.FormView.prototype.delete = function(nEvent) {
 
-	//console.log(this.model());
-
 	this.onUnLoad();
 
 	this.notifyObservers(this, this.model(), app.View.UIAction.DELETE);

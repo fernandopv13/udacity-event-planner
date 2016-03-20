@@ -64,24 +64,7 @@ var app = app || {}; // create a simple namespace for the module
 
 			observer.update(args);
 
-			
-			/*
-			Object_obj = Object_obj ? Object_obj : this;
-
-			if (arguments.length > 1) { // id present
-
-				observer.update(Object_obj, int_objId);
-			}
-
-			else {
-
-				observer.update(Object_obj);
-			}
-			*/
-
-			
-			
-		});//.bind(this));
+		});
 	};
 
 
@@ -95,8 +78,6 @@ var app = app || {}; // create a simple namespace for the module
 	*/
 
 	module.IObservable.prototype.default_registerObserver = function(IObserver_o) {
-
-		//var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
 
 		if (IObserver_o.isInstanceOf && IObserver_o.isInstanceOf(module.IObserver)) {
 
@@ -133,8 +114,6 @@ var app = app || {}; // create a simple namespace for the module
 
 	module.IObservable.prototype.default_removeObserver = function(IObserver_o) {
 
-		//var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
-
 		if (IObserver_o.isInstanceOf && IObserver_o.isInstanceOf(module.IObserver)) {
 
 			var ix = this.observers().indexOf(IObserver_o);
@@ -145,15 +124,6 @@ var app = app || {}; // create a simple namespace for the module
 			}
 			
 			if (this.observers().length > 1) {this.observers().splice(ix, 1);} else {this.observers.pop();}
-
-			/*
-			while (ix > -1 && this.observers.length > 1) { // remove duplicates, avoiding infinite loop
-
-				this.observers = this.observers.splice(ix, 1);
-
-				ix = this.observers.indexOf(IObserver_o);
-			}
-			*/
 		}
 
 		else {

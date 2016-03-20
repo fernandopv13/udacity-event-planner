@@ -83,7 +83,7 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;;
+			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;
 
 			var buttonElement = createElement({ // cancel button
 				

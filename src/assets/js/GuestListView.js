@@ -273,8 +273,16 @@ var app = app || {};
 
 		this.$renderContext().append(UlElement);
 
-		this.$renderContext().append(this.createFloatingActionButton('guest-list-add', 'add', 'red', 'Add guest'));
+		this.$renderContext().append(app.UIWidgetFactory.instance().createProduct('FloatingActionButtonWidget',
+		{
+			id: 'guest-list-add',
 
+			icon: 'add',
+
+			color: 'red',
+
+			label: 'Add guest'
+		}));
 
 		// Attach event handlers (other than for list item click)
 
