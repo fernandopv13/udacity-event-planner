@@ -68,13 +68,13 @@ var app = app || {};
 
 	module.PersonView.prototype.render = function(Person_p) {
 
-		var person = Person_p, formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
+		var widgetFactory = app.UIWidgetFactory.instance();
 
-		if (person !== null) {
+		if (Person_p !== null) {
 			
 			// Setup up form and container div
 
-				formElement =  this.createElement(
+				var formElement =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 				{
 					element: 'form',			
 					
@@ -84,7 +84,7 @@ var app = app || {};
 				});
 
 
-				containerDiv =  this.createElement(
+				var containerDiv =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 				{
 					element: 'div',			
 					
@@ -102,7 +102,7 @@ var app = app || {};
 				
 			// Add hidden person id field
 
-				containerDiv.appendChild(this.createElement({
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',{
 
 					element: 'input',
 
@@ -112,55 +112,55 @@ var app = app || {};
 			
 			// Add guest name field
 
-				containerDiv.appendChild(this.createTextField(
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+				{
+					width: 's12',
 
-					's12',
+					id: 'guest-name',
 
-					'guest-name',
+					label: 'Guest Name',
 
-					'Guest Name',
+					required: true,
 
-					true,
-
-					person.name()
-				));
+					datasource: Person_p.name() || null
+				}));
 			
 			
 			// Add email field
 
-				containerDiv.appendChild(this.createEmailField(
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
+				{
+					width: 's12',
 
-					's12',
+					id: 'guest-email',
 
-					'guest-email',
+					label: 'Email',
 
-					'Email',
+					required: true,
 
-					true,
-
-					person.email()
-				));
+					datasource: Person_p.email() || null
+				}));
 
 			
 			// Add job title field
 
-				containerDiv.appendChild(this.createTextField(
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+				{
+					width: 's12',
 
-					's12',
+					id: 'guest-jobtitle',
 
-					'guest-jobtitle',
+					label: 'Job Title',
 
-					'Job Title',
+					required: false,
 
-					false,
-
-					person.jobTitle()
-				));
+					datasource: Person_p.jobTitle() || null
+				}));
 				
 
 			// Add employer field
 
-				innerDiv =  this.createElement( // inner div
+				var innerDiv =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
 				{
 					element: 'div',			
 					
@@ -168,7 +168,7 @@ var app = app || {};
 				});
 				
 				
-				innerDiv.appendChild(this.createElement( // input
+				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // input
 				{
 					element: 'input',			
 					
@@ -178,7 +178,7 @@ var app = app || {};
 						
 						id: 'guest-employer',
 						
-						value: person.employer() && person.employer().name() ? person.employer().name() : '',
+						value: Person_p.employer() && Person_p.employer().name() ? Person_p.employer().name() : '',
 						
 						list: 'suggested-employers',
 
@@ -189,13 +189,13 @@ var app = app || {};
 				}));
 				
 				
-				innerDiv.appendChild(this.createElement( // label
+				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // label
 				{	
 					element: 'label',			
 					
 					attributes: {for: 'guest-employer', id: 'guest-employer-label'},
 					
-					classList: person.employer() && person.employer().name() ? ['form-label', 'active'] : ['form-label'],
+					classList: Person_p.employer() && Person_p.employer().name() ? ['form-label', 'active'] : ['form-label'],
 					
 					dataset: {error: 'Please enter employer'},
 					
@@ -203,7 +203,7 @@ var app = app || {};
 				}));
 				
 				
-				innerDiv.appendChild(this.createElement( // data list
+				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // data list
 				{	
 					element: 'datalist',			
 					
@@ -211,7 +211,7 @@ var app = app || {};
 				}));
 				
 				
-				outerDiv =  this.createElement( // outer div
+				var outerDiv =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
 				{
 					element: 'div',
 					
@@ -225,28 +225,73 @@ var app = app || {};
 
 			// Add birthday field
 
-				containerDiv.appendChild(this.createDateField(
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'DateInputWidget',
+				{
+					width: 's12',
 
-					's12',
+					id: 'guest-birthday',
 
-					'guest-birthday',
+					label: 'Birthday',
 
-					'Birthday',
+					required: false,
 
-					false,
-
-					person.birthday()
-				));
+					datasource: Person_p.birthday() || null
+				}));
 				
 			
 			// Add requirement indicator (asterisk) explanation
 
-				containerDiv.appendChild(this.createRequiredFieldExplanation());
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				});
+				
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+				{
+					element: 'p',
+					
+					classList: ['required-indicator'],
+						
+					innerHTML: '* indicates a required field'
+				}));
+
+				containerDiv.appendChild(outerDiv);
+
+				//containerDiv.appendChild(this.createRequiredFieldExplanation());
 
 							
 			// Add submit and cancel buttons
 
-				containerDiv.appendChild(this.createSubmitCancelButtons('guest-form'))
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row', 'form-submit']
+				});
+				
+				
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'CancelButtonWidget',  // cancel button
+				{					
+					id: 'guest-form-cancel',
+
+					label: 'Cancel'
+				}));
+				
+
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
+				{					
+					id: 'guest-form-submit',
+
+					label: 'Done',
+
+					icon: 'send'
+				}));
+
+				containerDiv.appendChild(outerDiv);
+
+				//containerDiv.appendChild(this.createSubmitCancelButtons('guest-form'))
 				
 			
 			// Update DOM
@@ -312,7 +357,7 @@ var app = app || {};
 
 			this.$renderContext().empty();
 
-			this.$renderContext().append(this.createElement(
+			this.$renderContext().append(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 

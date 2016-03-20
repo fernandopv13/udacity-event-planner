@@ -127,7 +127,7 @@ var app = app || {};
 			
 			// Add email field
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
+				var outerDiv = widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
 				{
 					width: 's12',
 
@@ -169,7 +169,7 @@ var app = app || {};
 							
 			// Add employer field
 
-				innerDiv =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
+				var innerDiv =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
 				{
 					element: 'div',			
 					
