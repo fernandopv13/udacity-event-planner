@@ -65,14 +65,14 @@ var app = app || {};
 
 	module.FrontPageView.prototype.render = function() {
 
-		var containerDiv, buttonElement, linkElement;
+		var widgetFactory = app.UIWidgetFactory.instance();
 			
 		this.$renderContext().empty();
 
 		
 		// Add heading
 			
-			containerDiv =  this.createElement( // inner div
+			var containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
 			{
 				element: 'div',			
 				
@@ -82,8 +82,8 @@ var app = app || {};
 			this.$renderContext().append(containerDiv);
 
 			
-			containerDiv.appendChild(this.createElement({
-
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			{
 				element: 'h4',
 
 				innerHTML: this.heading()
@@ -92,7 +92,7 @@ var app = app || {};
 		
 		// Add logo and teaser
 
-			containerDiv =  this.createElement( // div
+			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
@@ -102,14 +102,14 @@ var app = app || {};
 			this.$renderContext().append(containerDiv);
 
 			
-			containerDiv.appendChild(this.createElement(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'img',
 
 				attributes: {src: 'assets/img/logo.png', alt: 'Logo'}
 			}));
 
-			containerDiv.appendChild(this.createElement(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -119,7 +119,7 @@ var app = app || {};
 		
 		// Add sign-up button
 
-			containerDiv =  this.createElement( // div
+			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
@@ -129,8 +129,8 @@ var app = app || {};
 			this.$renderContext().append(containerDiv);
 
 			
-			containerDiv.appendChild(this.createElement({ // button
-				
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
+			{
 				element: 'a',
 				
 				attributes: {id: 'front-page-sign-up', role: 'button'},
@@ -143,7 +143,7 @@ var app = app || {};
 
 		// Add sign-in link
 
-			containerDiv =  this.createElement( // div
+			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
@@ -153,7 +153,7 @@ var app = app || {};
 			this.$renderContext().append(containerDiv);
 
 
-			containerDiv.appendChild(this.createElement(
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -162,8 +162,8 @@ var app = app || {};
 			}));
 
 			
-			containerDiv.appendChild(this.createElement({ // link
-				
+			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
+			{
 				element: 'a',
 				
 				attributes: {id: 'front-page-sign-in', role: 'button'},
