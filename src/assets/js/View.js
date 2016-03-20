@@ -489,7 +489,7 @@ var app = app || {}; // create a simple namespace for the module
 					error: 'Please try again'
 				},
 				
-				innerHTML: 'Hello world'
+				innerHTML: 'Hello world',
 
 				listeners:
 				{

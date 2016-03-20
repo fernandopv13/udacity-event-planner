@@ -19,7 +19,15 @@ describe('Class UIWidgetFactory', function(){
 			
 			expect((new app.UIWidgetFactory()).constructor).toBe(app.UIWidgetFactory);
 	});
-		
+	
+
+	it('can get a singleton instance of itself', function() {
+
+		expect(app.UIWidgetFactory.instance().constructor).toBe(app.UIWidgetFactory);
+
+		expect(app.UIWidgetFactory.instance()).toBe(app.UIWidgetFactory.instance());
+	});
+
 		
 	describe('instance', function() {
 		
@@ -44,5 +52,41 @@ describe('Class UIWidgetFactory', function(){
 			expect(testFactory.productType()).toBe(app.UIWidget);
 		});
 
+
+		it('can create an HTML element', function() {
+
+			// HTMLElement is fully covered by its own unit test, so just verify that call works
+
+			var testElement = app.HTMLElement.instance().createProduct(
+			{
+				element: 'div', // the type of element required
+			});
+
+			expect(testElement.constructor).toBe(HTMLDivElement);
+
+		});
+
+
+		it('can create a date input field', function() {
+
+			// DateInput is fully covered by its own unit test, so just verify that call works
+
+			var testElement = app.UIWidgetFactory.instance().createProduct('DateInput',
+			{
+				width: 's12',
+
+				id: 'test',
+
+				label: 'Test date',
+
+				required: true,
+
+				datasource: new Date(),
+
+				errormessage: 'Please enter date'
+			});
+
+			expect(testElement.constructor).toBe(HTMLDivElement);
+		});
 	});
 });

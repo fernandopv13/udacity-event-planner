@@ -23,7 +23,7 @@ describe('Class DateInput', function(){
 
 	it('can create a new instance', function() {
 			
-			expect((new app.DateInput()).constructor).toBe(app.DateInput);
+		expect((new app.DateInput()).constructor).toBe(app.DateInput);
 	});
 
 	
@@ -47,9 +47,50 @@ describe('Class DateInput', function(){
 		});
 		
 		
-		xit('can create an HTML date field', function() {
+		it('can create a new standard date field', function(){
 
+			var testElement = app.UIWidgetFactory.instance().createProduct('DateInput',
+			{
+				width: 's6',
 
+				id: 'test-date',
+
+				label: 'Test Date',
+
+				required: true,
+
+				datasource: new Date(1000),
+
+				errormessage: 'Please enter date'
+			});
+
+			expect(testElement.constructor).toBe(HTMLDivElement); // outer div
+
+			expect(testElement.classList[0]).toBe('row');
+
+			expect(testElement.firstChild.constructor).toBe(HTMLDivElement); // inner div
+
+			expect(testElement.firstChild.classList[2]).toBe('s6');
+
+			var el = testElement.firstChild.firstChild; // input
+
+			expect(el.type).toBe('datetime-local');
+
+			expect(el.id).toBe('test-date');
+
+			expect(el.required).toBe(true);
+
+			expect(Date.parse(el.value)).toBe(1000); //expect(el.value).toBe('1/1/1970');
+
+			//expect(el.readonly).toBe(true);
+
+			expect(el.required).toBe(true);
+
+			expect(el.classList[1]).toBe('validate');
+
+			el = el.nextSibling; // label
+
+			expect(el.htmlFor).toBe('test-date');
 		});
 
 

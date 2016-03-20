@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public abstract class DateInput extends InputWidget
+* public class DateInput extends InputWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -9,11 +9,11 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Abstract base class for the abstract factory method pattern used to create and manage UIwidgets.
-	*
-	* Represents widgets in a form that take data input from users.
+	/** @classdesc Creates, initializes and validates HTML date input fields. Use as singleton to conserve memory resources.
 	*
 	* @constructor
+	*
+	* @extends InputWidget
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
@@ -40,9 +40,9 @@ var app = app || {};
 	* Inherit from UIWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-	module.DateInput.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
+		module.DateInput.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
 
-	module.DateInput.prototype.constructor = module.DateInput // Reset constructor property
+		module.DateInput.prototype.constructor = module.DateInput // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -51,18 +51,68 @@ var app = app || {};
 
 		// Register with factory
 
-		module.InputWidgetFactory.instance().registerProduct(module.DateInput);
+		module.UIWidgetFactory.instance().registerProduct(module.DateInput);
 
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
+		/** Factory method for creating date picker fields for forms
+		*
+		* Uses a slightly customized version of Eonasdan's bootstrap-datetimepicker:
+		* https://github.com/Eonasdan/bootstrap-datetimepicker
+		* http://eonasdan.github.io/bootstrap-datetimepicker/
+		*
+		* Design goals:
+		* 1. Present a pleasant, coherent visual experience to sighted users using modern technology
+		* 2. Provide rich interaction for those who are physically and technically able, and want, to use it
+		* 3. On lap/desktops, allow people to type in using the keyboard if they prefer that efficiency
+		* 4. Support users relying on assistive technologies (e.g. screen readers)
+		* 5. Provide a graceful, functional fallback for all other cases
+		*
+		* Assumptions (after investigation):
+		* 1. The native datetime picker widgets on mobile (tested on Android and iOS), have excellent visual/interaction design, and acceptable accessibility; so only use custom widget when native support is unavailable
+		* 2. Even when supported, the datetime-local widgets on (Windows) lap/desktops are a bad design fit for the module.s reliance on Materialize.css and/or have unsatisfying visual/interaction design; so always override with custom widget
+		* 3. Keyboard entry is a primary input method on lap/desktops, on mobile (touch) alternatives are preferable
+		* 4. It is acceptable to not provide a fully accessible version of the custom date picker widget, as long as people using assistive tech can enter directly into the input field unhindered and undisturbed by the widget
+		*
+		* @param {Object} JSON object literal containing specs of date input to be created. See comments in code for an example.
+		*
+		* @return {HTMLDivElement} The requested element
+		*
+		* @throws {ReferenceError} If no options are specified
+		
+		* @throws {IllegalArgumentError} If datasource is not an instance of Date
+		*/
+
 		module.DateInput.prototype.createProduct = function(obj_options) {
+
+			/* Sample JSON specification object using all default features:
+
+			{
+				width: 's12',
+
+				id: 'test',
+
+				label: 'Test date',
+
+				required: true,
+
+				datasource: new Date(),
+
+				errormessage: 'Please enter date'
+			}
+			*/
 
 			var options = obj_options;
 
-			var createElement = module.View.prototype.createElement;
+			var createElement = module.HTMLElement.instance().createProduct;
+
+			if (typeof obj_options === 'undefined' || obj_options === {}) {
+
+				throw new ReferenceError('Options not specified');
+			}
 
 			if (options.datasource !== null && options.datasource.constructor !== Date) {
 
@@ -111,7 +161,7 @@ var app = app || {};
 
 			var dataset = {value: options.datasource ? options.datasource.toISOString().replace('Z', '') : ''};
 
-			dataset.customValidator = 'DateInput.prototype.validate';
+			dataset.customValidator = 'DateInput';
 
 			innerDiv.appendChild(createElement( // input
 			{
@@ -177,9 +227,9 @@ var app = app || {};
 		* @return {Date} date A valid Date object, or a moment if supported by the browser, or null
 		*/
 
-		module.DateInput.prototype.value = function(HTMLInputElement) {
+		module.DateInput.prototype.value = function(HTMLInputElement_e) {
 
-			var data = $(HTMLInputElement).data(), date = null;
+			var data = $(HTMLInputElement_e).data(), date = null;
 
 			if (typeof data !== 'undefined' && typeof data.DateTimePicker !== 'undefined') { // we can access the DateTimePicker js object
 
@@ -194,7 +244,7 @@ var app = app || {};
 
 			else { // parse the input's value manually
 
-				date = $(HTMLInputElement).val();
+				date = $(HTMLInputElement_e).val();
 
 				if (typeof moment !== 'undefined') { // use moment if available (probably won't work on mobile)
 
@@ -230,9 +280,10 @@ var app = app || {};
 			return date;
 		}
 
+		
 		/** Initializes any and all datetime pickers on the pages using datetime-local inputs */
 
-		module.DateInput.prototype.init = function() {
+		module.DateInput.prototype.init = function(HTMLInputElement_e) {
 
 			if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
 
@@ -374,20 +425,16 @@ var app = app || {};
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/
 
-		module.DateInput.prototype.validate = function(HTMLInputElement) {
+		module.DateInput.prototype.validate = function(HTMLInputElement_e) {
 
-			var self = module.DateInput.prototype;
+			if (HTMLInputElement_e.validity && HTMLInputElement_e.validity.valueMissing
 
-			if (HTMLInputElement.validity && HTMLInputElement.validity.valueMissing
+			|| $(HTMLInputElement_e).val().length === 0) { //console.log('// required but empty')
 
-			|| $(HTMLInputElement).val().length === 0) { //console.log('// required but empty')
-
-				return typeof $(HTMLInputElement).attr('required') === 'undefined';
-
-				//this.displayValidation(event, str_dateId, 'Please enter date', false);
+				return typeof $(HTMLInputElement_e).attr('required') === 'undefined';
 			}
 
-			else if (self.getDateTimePickerValue(HTMLInputElement) === null) { //console.log('// invalid entry');
+			else if (module.DateInput.instance().value(HTMLInputElement_e) === null) { //console.log('// invalid entry');
 
 				return false;
 			}
