@@ -49,7 +49,7 @@ describe('Class PasswordInputWidget', function(){
 		
 		it('can create a new standard password field', function(){
 
-			var el = app.InputWidgetFactory.instance().createProduct('PasswordInputWidget',
+			var el = app.UIWidgetFactory.instance().createProduct('PasswordInputWidget',
 			{
 				width: 's12',
 

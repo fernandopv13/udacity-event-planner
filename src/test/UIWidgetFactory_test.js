@@ -148,5 +148,177 @@ describe('Class UIWidgetFactory', function(){
 
 			expect(el.id).toBe('test-submit-button');
 		});
+
+
+		it('can create a date input field', function() {
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var testElement = app.UIWidgetFactory.instance().createProduct('DateInputWidget',
+			{
+				width: 's12',
+
+				id: 'test',
+
+				label: 'Test date',
+
+				required: true,
+
+				datasource: new Date(),
+
+				errormessage: 'Please enter date'
+			});
+
+			expect(testElement.constructor).toBe(HTMLDivElement);
+		});
+
+
+		it('can create a standard email field', function(){
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var testElement = app.UIWidgetFactory.instance().createProduct('EmailInputWidget',
+			{
+				width: 's12',
+
+				id: 'test-email',
+
+				label: 'Test Email',
+
+				required: true,
+
+				datasource: new app.Email('test@server.domain'),
+
+				errormessage: 'Please enter email'
+			});
+
+			expect(testElement.constructor).toBe(HTMLDivElement); // outer div
+
+		});
+
+
+		it('can create a standard number field', function(){
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var testElement = app.UIWidgetFactory.instance().createProduct('NumberInputWidget',
+			{
+				width: 's12',
+
+				id: 'test-number',
+
+				label: 'Test Number',
+
+				required: true,
+
+				datasource: 23, // anything that typeof will evaluate as 'number'
+
+				errormessage: 'Please enter number',
+
+				min: 0, // integer
+
+				max: 50, // integer
+
+				step: 1 // integer
+			});
+
+			expect(testElement.constructor).toBe(HTMLDivElement); // outer div
+		});
+
+
+		it('can create a standard password field', function(){
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var el = app.UIWidgetFactory.instance().createProduct('PasswordInputWidget',
+			{
+				width: 's12',
+
+				id: 'test-password',
+
+				label: 'Test Password',
+
+				required: true,
+
+				datasource: new app.Password(),
+
+				errormessage: 'Please enter password',
+
+				hintsprefix: 'test-password-hints'
+			});
+
+			expect(el.constructor).toBe(HTMLDivElement); // outer div
+		});
+
+
+		it('can create a standard password confirmation field', function(){
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var el = app.UIWidgetFactory.instance().createProduct('PasswordConfirmationInputWidget',
+			{
+				width: 's12',
+
+				id: 'test-password-confirmation',
+
+				label: 'Test Password Confirmation',
+
+				required: true,
+
+				//datasource: new app.Password(),
+
+				errormessage: 'Please confirm password'
+			});
+
+			expect(el.constructor).toBe(HTMLDivElement); // outer div
+		});
+
+
+		it('can create a standard switch (checkbox) field', function(){
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var el = app.UIWidgetFactory.instance().createProduct('SwitchInputWidget',
+			{
+				width: 's7',
+
+				id: 'switch-test',
+
+				label: 'Test Switch',
+
+				datasource: true,
+
+				yes: 'Yes',
+
+				no: 'no'
+			});
+
+			expect(el.constructor).toBe(HTMLDivElement); // outer div
+		});
+
+
+		it('can create a standard text field', function(){
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var el = app.UIWidgetFactory.instance().createProduct('TextInputWidget',
+			{
+				width: 's12',
+
+				id: 'text-test',
+
+				label: 'Test Text',
+
+				required: true,
+
+				datasource: 'Some text',
+
+				datalist: 'text-test-list',
+
+				validator: 'TextInputWidget'
+			});
+
+			expect(el.constructor).toBe(HTMLDivElement); // outer div
+		});
 	});
 });

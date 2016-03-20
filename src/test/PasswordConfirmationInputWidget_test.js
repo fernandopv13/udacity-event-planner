@@ -49,7 +49,7 @@ describe('Class PasswordConfirmationInputWidget', function(){
 		
 		it('can create a new standard password confirmation field', function(){
 
-			var el = app.InputWidgetFactory.instance().createProduct('PasswordConfirmationInputWidget',
+			var el = app.UIWidgetFactory.instance().createProduct('PasswordConfirmationInputWidget',
 			{
 				width: 's12',
 

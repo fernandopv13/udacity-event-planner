@@ -49,7 +49,7 @@ describe('Class NumberInputWidget', function(){
 		
 		it('can create a new standard number field', function(){
 
-			var testElement = app.InputWidgetFactory.instance().createProduct('NumberInputWidget',
+			var testElement = app.UIWidgetFactory.instance().createProduct('NumberInputWidget',
 			{
 				width: 's12',
 

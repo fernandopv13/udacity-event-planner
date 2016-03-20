@@ -49,7 +49,7 @@ describe('Class SwitchInputWidget', function(){
 		
 		it('can create a new standard switch (checkbox) field', function(){
 
-			var el = app.InputWidgetFactory.instance().createProduct('SwitchInputWidget',
+			var el = app.UIWidgetFactory.instance().createProduct('SwitchInputWidget',
 			{
 				width: 's7',
 

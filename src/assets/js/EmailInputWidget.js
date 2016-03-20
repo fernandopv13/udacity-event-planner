@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.InputWidgetFactory.instance().registerProduct(module.EmailInputWidget);
+		module.UIWidgetFactory.instance().registerProduct(module.EmailInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------

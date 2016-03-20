@@ -49,7 +49,7 @@ describe('Class EmailInputWidget', function(){
 		
 		it('can create a new standard email field', function(){
 
-			var testElement = app.InputWidgetFactory.instance().createProduct('EmailInputWidget',
+			var testElement = app.UIWidgetFactory.instance().createProduct('EmailInputWidget',
 			{
 				width: 's12',
 

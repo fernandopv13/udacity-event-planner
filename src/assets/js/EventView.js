@@ -89,13 +89,25 @@ var app = app || {};
 
 	module.EventView.prototype.render = function(Event_e) {
 
-		var formElement, containerDiv, innerDiv, outerDiv, labelElement, buttonElement, iconElement, $formDiv;
+		var widgetFactory = app.UIWidgetFactory.instance();
 		
 		if (Event_e !== null) {
 			
 			// Setup up form and container div
 
-				formElement =  this.createElement(
+				var formElement = widgetFactory.createProduct.call(widgetFactory, 'FormWidget',
+				{
+					id: 'event-form',
+
+					autocomplete: 'off',
+
+					novalidate: true
+				});
+
+				var containerDiv = formElement.firstChild;
+
+				/*
+				var formElement =  this.createElement(
 				{
 					element: 'form',			
 					
@@ -105,7 +117,7 @@ var app = app || {};
 				});
 
 
-				containerDiv =  this.createElement(
+				var containerDiv =  this.createElement(
 				{
 					element: 'div',			
 					
@@ -114,8 +126,8 @@ var app = app || {};
 				
 
 				formElement.appendChild(containerDiv);
+				*/
 
-			
 			// Add heading
 				
 				containerDiv.appendChild(this.createHeading('s12', this.heading()));
@@ -123,16 +135,39 @@ var app = app || {};
 
 			// Add hidden event id field
 
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+				{
+					element: 'input',
+
+					attributes: {id: 'event-id', type: 'hidden', value: Event_e.id()}
+				}));
+
+				/*
 				containerDiv.appendChild(this.createElement({
 
 					element: 'input',
 
 					attributes: {id: 'event-id', type: 'hidden', value: Event_e.id()}
 				}))
+				*/
 
 			
 			// Add event name field
 
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+				{
+					width: 's12',
+
+					id: 'event-name',
+
+					label: 'Event Name',
+
+					required: true,
+
+					datasource: Event_e.name() ? Event_e.name() : ''
+				}));
+
+				/*
 				containerDiv.appendChild(this.createTextField(
 
 					's12',
@@ -149,18 +184,34 @@ var app = app || {};
 
 					//'module.View.prototype.validateName'
 				));
+				*/
 			
 			
 			// Add location field
 
-				innerDiv =  this.createElement( // inner div
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory,'TextInputWidget',
 				{
-					element: 'div',			
+					id: 'event-location',
+					
+					width: 's12',
+
+					label: 'Location',
+
+					required: false,
+
+					datasource: Event_e.location() ? Event_e.location() : '',
+
+					datalist: 'suggested-locations'
+				}));
+
+				/*
+				var innerDiv =  this.createElement( // inner div
+				{
+					element: 'div',
 					
 					classList: ['input-field', 'col', 's12']
 				});
-				
-				
+
 				innerDiv.appendChild(this.createElement( // input
 				{
 					element: 'input',			
@@ -213,12 +264,62 @@ var app = app || {};
 							
 				outerDiv.appendChild(innerDiv);
 				
-				containerDiv.appendChild(outerDiv);			
+				containerDiv.appendChild(outerDiv);	
+
+				*/	
 			
 
 			// Add start date and end date fields
 
-				outerDiv =  this.createElement( // outer div
+				var outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+
+				containerDiv.appendChild(outerDiv); // Add to container
+
+
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory,'DateInputWidget',
+				{
+					id: 'event-start-date',
+
+					width: 's6',
+
+					label: 'Starts',
+
+					required: true,
+
+					datasource: Event_e.start()
+
+					//errormessage: '...'
+
+				}).children[0]); // extract from wrapper
+
+				
+				var endDate = widgetFactory.createProduct.call(widgetFactory,'DateInputWidget',
+				{
+					id: 'event-end-date',
+
+					width: 's6',
+
+					label: 'Ends',
+
+					required: true,
+
+					datasource: Event_e.end()
+
+					//errormessage: '...'
+
+				}).children[0]; // extract from wrapper
+
+				endDate.children[0].classList.add('validate'); // 'validate' normally only comes with required field, so add seperately here
+
+				outerDiv.appendChild(endDate);
+
+				/*
+				var outerDiv =  this.createElement( // outer div
 				{
 					element: 'div',
 					
@@ -268,7 +369,7 @@ var app = app || {};
 				endDate.children[0].classList.add('validate'); // 'validate' normally only comes with required field, so add seperately here
 
 				outerDiv.appendChild(endDate);
-				
+				*/
 
 				/*DEPRECATED
 				outerDiv.appendChild(this.createTimeField( // Time
@@ -333,6 +434,22 @@ var app = app || {};
 
 			// Add event type field
 
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory,'TextInputWidget',
+				{
+					id: 'event-type',
+
+					width: 's12',
+
+					label: 'Event Type',
+
+					required: false,
+
+					datasource: Event_e.type() || '',
+
+					datalist: 'suggested-event-types'
+				}));
+
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -395,9 +512,55 @@ var app = app || {};
 				
 				containerDiv.appendChild(outerDiv);
 
+				*/
+
 			
 			// Add capacity field and edit guest list button
 
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'NumberInputWidget',
+				{
+					id: 'event-capacity',
+
+					width: 's6',
+
+					label: 'Capacity',
+
+					required: false,
+
+					datasource: Event_e.capacity() ? Event_e.capacity() : 0,
+
+					min: 0,
+
+					step: 1,
+
+					errormessage: 'Please enter capacity (0 or greater)'
+				});
+
+				containerDiv.appendChild(outerDiv);
+				
+
+				var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
+				{
+					element: 'div',
+
+					classList: ['col', 's6']
+				});
+
+
+				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
+				{
+					element: 'a',
+
+					attributes: {id: 'event-edit-guests-button', role: 'button', tabindex: 0},
+					
+					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+
+					innerHTML: 'Edit guests'
+				}));
+
+				outerDiv.appendChild(innerDiv);
+
+				/*
 				outerDiv = this.createNumberField(
 				
 					's6',
@@ -442,10 +605,27 @@ var app = app || {};
 				}));
 
 				outerDiv.appendChild(innerDiv);
+			*/
 			
 
 			// Add host field
 
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+				{
+					id: 'event-host',
+
+					width: 's12',
+
+					label: 'Host',
+
+					required: false,
+
+					datasource: Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : '',
+
+					datalist: 'suggested-hosts'
+				}));
+
+				/*
 				containerDiv.appendChild(this.createTextField( // main input
 
 					's12',
@@ -468,8 +648,44 @@ var app = app || {};
 					
 					attributes: {id: 'suggested-hosts'}
 				}));
-				
 
+				*/
+				
+				innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // IHost type selector
+				{
+					element: 'div',
+
+					classList: ['radioset-container','input-field', 'col', 's12']
+				});
+
+				containerDiv.appendChild(innerDiv);
+
+				
+				var fieldsetElement = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // fieldset
+				{
+					element: 'fieldset',
+
+					attributes:
+					{
+						id: 'event-host-type'
+					},
+					
+					classList: ['materialize-textarea'],
+
+					innerHTML: Event_e.description()
+				});
+
+				innerDiv.appendChild(fieldsetElement);
+
+				
+				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // legend
+				{
+					element: 'legend',
+
+					innerHTML: 'Host type'
+				}));
+				
+				/*
 				innerDiv =  this.createElement( // IHost type selector
 				{
 					element: 'div',
@@ -504,7 +720,7 @@ var app = app || {};
 
 					innerHTML: 'Host type'
 				}));
-
+				*/
 
 				var attributes = 
 				{
@@ -521,6 +737,28 @@ var app = app || {};
 
 				if ((!Event_e.host() || !Event_e.host().isInstanceOf(module.Person))) {attributes.checked = true;} // default to org
 
+				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // org radio
+				{
+					element: 'input',
+
+					attributes: attributes
+				}));
+
+				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // org label
+				{
+					element: 'label',
+
+					attributes:
+					{
+						id: 'event-host-type-organization-label',
+
+						for: 'event-host-type-organization'
+					},
+
+					innerHTML: 'Organization'
+				}));
+
+				/*
 				fieldsetElement.appendChild(this.createElement( // org radio
 				{
 					element: 'input',
@@ -541,7 +779,7 @@ var app = app || {};
 
 					innerHTML: 'Organization'
 				}));
-
+				*/
 				
 				attributes = 
 				{
@@ -558,6 +796,28 @@ var app = app || {};
 
 				if ((Event_e.host() && Event_e.host().isInstanceOf(module.Person))) {attributes.checked = true;}
 
+				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // person radio
+				{
+					element: 'input',
+
+					attributes: attributes
+				}));
+
+				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // person label
+				{
+					element: 'label',
+
+					attributes:
+					{
+						id: 'event-host-type-person-label',
+
+						for: 'event-host-type-person'
+					},
+
+					innerHTML: 'Person'
+				}));
+
+				/*
 				fieldsetElement.appendChild(this.createElement( // person radio
 				{
 					element: 'input',
@@ -578,10 +838,70 @@ var app = app || {};
 
 					innerHTML: 'Person'
 				}));
+				*/
 
 			
 			// Add description field
+				
+				innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
+				{
+					element: 'div',			
+					
+					classList: ['input-field', 'col', 's12']
+				});
+				
 
+				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // input
+				{
+					element: 'textarea',			
+					
+					attributes:
+					{
+						id: 'event-description',
+						
+						length: 120,
+						
+						maxlength: 120,
+
+						'aria-labelledby': 'event-description-label',
+
+						role: 'textbox',
+
+						'aria-multiline': true
+					},
+					
+					classList: ['materialize-textarea'],
+
+					innerHTML: Event_e.description()
+				}));
+				
+				
+				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // label
+				{	
+					element: 'label',			
+					
+					attributes:	{for: 'event-description', id: 'event-description-label'},
+					
+					classList: Event_e.description() ? ['form-label', 'active'] : ['form-label'],
+					
+					dataset: {error: 'Please enter description'},
+					
+					innerHTML: 'Description'
+				}));
+				
+				
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				{
+					element: 'div',
+					
+					classList: ['row']
+				});
+				
+							
+				outerDiv.appendChild(innerDiv);
+				
+				containerDiv.appendChild(outerDiv);
+				/*
 				innerDiv =  this.createElement( // inner div
 				{
 					element: 'div',			
@@ -640,16 +960,61 @@ var app = app || {};
 				outerDiv.appendChild(innerDiv);
 				
 				containerDiv.appendChild(outerDiv);
+				*/
 
 
 			// Add requirement indicator (asterisk) explanation
 
-				containerDiv.appendChild(this.createRequiredFieldExplanation());
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				});
+				
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+				{
+					element: 'p',
+					
+					classList: ['required-indicator'],
+						
+					innerHTML: '* indicates a required field'
+				}));
+
+				//containerDiv.appendChild(this.createRequiredFieldExplanation());
 
 					
 			// Add submit and cancel buttons
 
-				containerDiv.appendChild(this.createSubmitCancelButtons('event-form'))
+				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				{
+					element: 'div',			
+					
+					classList: ['row', 'form-submit']
+				});
+				
+				
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'CancelButtonWidget',  // cancel button
+				{					
+					id: 'event-form-cancel',
+
+					label: 'Cancel'
+				}));
+				
+
+				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
+				{					
+					id: 'event-form-submit',
+
+					label: 'Done',
+
+					icon: 'send'
+				}));
+
+				containerDiv.appendChild(outerDiv);
+				
+				
+				//containerDiv.appendChild(this.createSubmitCancelButtons('event-form'))
 			
 			// Update DOM
 

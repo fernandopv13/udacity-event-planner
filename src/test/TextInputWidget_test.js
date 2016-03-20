@@ -49,7 +49,7 @@ describe('Class TextInputWidget', function(){
 		
 		it('can create a new standard text field', function(){
 
-			var el = app.InputWidgetFactory.instance().createProduct('TextInputWidget',
+			var el = app.UIWidgetFactory.instance().createProduct('TextInputWidget',
 			{
 				width: 's12',
 

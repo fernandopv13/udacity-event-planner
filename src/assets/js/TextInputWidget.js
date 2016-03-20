@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.InputWidgetFactory.instance().registerProduct(module.TextInputWidget);
+		module.UIWidgetFactory.instance().registerProduct(module.TextInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------
@@ -184,6 +184,16 @@ var app = app || {};
 			}
 
 			innerDiv.appendChild(labelElement);
+
+			if (options.datalist) { // datalist element
+
+				innerDiv.appendChild(createElement(
+				{
+					element: 'datalist',			
+					
+					attributes: {id: options.datalist}
+				}));
+			}
 
 			
 			return outerDiv;

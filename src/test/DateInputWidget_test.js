@@ -49,7 +49,7 @@ describe('Class DateInputWidget', function(){
 		
 		it('can create a new standard date field', function(){
 
-			var testElement = app.InputWidgetFactory.instance().createProduct('DateInputWidget',
+			var testElement = app.UIWidgetFactory.instance().createProduct('DateInputWidget',
 			{
 				width: 's6',
 

@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.InputWidgetFactory.instance().registerProduct(module.DateInputWidget);
+		module.UIWidgetFactory.instance().registerProduct(module.DateInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------
