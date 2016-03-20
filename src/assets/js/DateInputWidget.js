@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class DateInput extends InputWidget
+* public class DateInputWidget extends InputWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -17,10 +17,10 @@ var app = app || {};
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
-	* @return {DateInput} Not supposed to be instantiated, except when creating singleton
+	* @return {DateInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
 
-	module.DateInput = function() {
+	module.DateInputWidget = function() {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -28,7 +28,7 @@ var app = app || {};
 		
 			// Set temporary literals for use by parent class constructor
 
-			this.type = this.type || 'DateInput';
+			this.type = this.type || 'DateInputWidget';
 
 			
 			// Initialize instance members inherited from parent class
@@ -40,9 +40,9 @@ var app = app || {};
 	* Inherit from UIWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.DateInput.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
+		module.DateInputWidget.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
 
-		module.DateInput.prototype.constructor = module.DateInput // Reset constructor property
+		module.DateInputWidget.prototype.constructor = module.DateInputWidget // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.UIWidgetFactory.instance().registerProduct(module.DateInput);
+		module.InputWidgetFactory.instance().registerProduct(module.DateInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ var app = app || {};
 		* @throws {IllegalArgumentError} If datasource is not an instance of Date
 		*/
 
-		module.DateInput.prototype.createProduct = function(obj_options) {
+		module.DateInputWidget.prototype.createProduct = function(obj_options) {
 
 			/* Sample JSON specification object using all default features:
 
@@ -161,7 +161,7 @@ var app = app || {};
 
 			var dataset = {value: options.datasource ? options.datasource.toISOString().replace('Z', '') : ''};
 
-			dataset.customValidator = 'DateInput';
+			dataset.customValidator = 'DateInputWidget';
 
 			innerDiv.appendChild(createElement( // input
 			{
@@ -227,7 +227,7 @@ var app = app || {};
 		* @return {Date} date A valid Date object, or a moment if supported by the browser, or null
 		*/
 
-		module.DateInput.prototype.value = function(HTMLInputElement_e) {
+		module.DateInputWidget.prototype.value = function(HTMLInputElement_e) {
 
 			var data = $(HTMLInputElement_e).data(), date = null;
 
@@ -283,7 +283,7 @@ var app = app || {};
 		
 		/** Initializes any and all datetime pickers on the pages using datetime-local inputs */
 
-		module.DateInput.prototype.init = function(HTMLInputElement_e) {
+		module.DateInputWidget.prototype.init = function(HTMLInputElement_e) {
 
 			if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
 
@@ -425,7 +425,7 @@ var app = app || {};
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/
 
-		module.DateInput.prototype.validate = function(HTMLInputElement_e) {
+		module.DateInputWidget.prototype.validate = function(HTMLInputElement_e) {
 
 			if (HTMLInputElement_e.validity && HTMLInputElement_e.validity.valueMissing
 
@@ -434,7 +434,7 @@ var app = app || {};
 				return typeof $(HTMLInputElement_e).attr('required') === 'undefined';
 			}
 
-			else if (module.DateInput.instance().value(HTMLInputElement_e) === null) { //console.log('// invalid entry');
+			else if (module.DateInputWidget.instance().value(HTMLInputElement_e) === null) { //console.log('// invalid entry');
 
 				return false;
 			}
@@ -457,25 +457,25 @@ var app = app || {};
 		* Treat as if private, though not possible to enforce in JS. Use static instance() method instead.
 		*/
 
-		module.DateInput._instance = null;
+		module.DateInputWidget._instance = null;
 
 
 		/** Gets an instance of the class for use as singleton (read-only) */
 
-		module.DateInput.instance = function() {
+		module.DateInputWidget.instance = function() {
 			
 			if (arguments.length === 0) {
 
-				if (typeof module.DateInput._instance === 'undefined'
+				if (typeof module.DateInputWidget._instance === 'undefined'
 
-				|| module.DateInput._instance === null
+				|| module.DateInputWidget._instance === null
 
-				|| module.DateInput._instance.constructor !== module.DateInput) {
+				|| module.DateInputWidget._instance.constructor !== module.DateInputWidget) {
 
-					module.DateInput._instance = new module.DateInput();
+					module.DateInputWidget._instance = new module.DateInputWidget();
 				}
 
-				return module.DateInput._instance;
+				return module.DateInputWidget._instance;
 			}
 
 			else {

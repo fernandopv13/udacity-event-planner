@@ -1,37 +1,37 @@
 'use strict';
 
-/* Jasmine.js unit test suite for NumberInput class in Meetup Event Planner app.
+/* Jasmine.js unit test suite for NumberInputWidget class in Meetup Event Planner app.
 *
 *  This suite designed to be able to be run as independently as possible from other tests
 *  and/or funcitonality. UI and other integration testing is done seperately.
 
 */
 
-describe('Class NumberInput', function(){
+describe('Class NumberInputWidget', function(){
 	
 	it('inherits from InputWidget', function() {
 
-		expect((new app.NumberInput()) instanceof app.InputWidget).toBe(true);
+		expect((new app.NumberInputWidget()) instanceof app.InputWidget).toBe(true);
 
-		expect(typeof (new app.NumberInput()).createProduct).toBe('function');
+		expect(typeof (new app.NumberInputWidget()).createProduct).toBe('function');
 
-		expect(typeof (new app.NumberInput()).init).toBe('function');
+		expect(typeof (new app.NumberInputWidget()).init).toBe('function');
 
-		expect(typeof (new app.NumberInput()).validate).toBe('function');
+		expect(typeof (new app.NumberInputWidget()).validate).toBe('function');
 	});
 
 
 	it('can create a new instance', function() {
 			
-		expect((new app.NumberInput()).constructor).toBe(app.NumberInput);
+		expect((new app.NumberInputWidget()).constructor).toBe(app.NumberInputWidget);
 	});
 
 	
 	it('can get a singleton instance of itself', function() {
 
-		expect(app.NumberInput.instance().constructor).toBe(app.NumberInput);
+		expect(app.NumberInputWidget.instance().constructor).toBe(app.NumberInputWidget);
 
-		expect(app.NumberInput.instance()).toBe(app.NumberInput.instance());
+		expect(app.NumberInputWidget.instance()).toBe(app.NumberInputWidget.instance());
 	});
 		
 	
@@ -43,13 +43,13 @@ describe('Class NumberInput', function(){
 			
 			// Create a fresh instance to work with
 			
-			testFactory = new app.NumberInput();
+			testFactory = new app.NumberInputWidget();
 		});
 		
 		
 		it('can create a new standard number field', function(){
 
-			var testElement = app.UIWidgetFactory.instance().createProduct('NumberInput',
+			var testElement = app.InputWidgetFactory.instance().createProduct('NumberInputWidget',
 			{
 				width: 's12',
 

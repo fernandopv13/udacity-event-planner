@@ -1,37 +1,37 @@
 'use strict';
 
-/* Jasmine.js unit test suite for PasswordConfirmationInput class in Meetup Event Planner app.
+/* Jasmine.js unit test suite for PasswordConfirmationInputWidget class in Meetup Event Planner app.
 *
 *  This suite designed to be able to be run as independently as possible from other tests
 *  and/or funcitonality. UI and other integration testing is done seperately.
 
 */
 
-describe('Class PasswordConfirmationInput', function(){
+describe('Class PasswordConfirmationInputWidget', function(){
 	
 	it('inherits from InputWidget', function() {
 
-		expect((new app.PasswordConfirmationInput()) instanceof app.InputWidget).toBe(true);
+		expect((new app.PasswordConfirmationInputWidget()) instanceof app.InputWidget).toBe(true);
 
-		expect(typeof (new app.PasswordConfirmationInput()).createProduct).toBe('function');
+		expect(typeof (new app.PasswordConfirmationInputWidget()).createProduct).toBe('function');
 
-		expect(typeof (new app.PasswordConfirmationInput()).init).toBe('function');
+		expect(typeof (new app.PasswordConfirmationInputWidget()).init).toBe('function');
 
-		expect(typeof (new app.PasswordConfirmationInput()).validate).toBe('function');
+		expect(typeof (new app.PasswordConfirmationInputWidget()).validate).toBe('function');
 	});
 
 
 	it('can create a new instance', function() {
 			
-		expect((new app.PasswordConfirmationInput()).constructor).toBe(app.PasswordConfirmationInput);
+		expect((new app.PasswordConfirmationInputWidget()).constructor).toBe(app.PasswordConfirmationInputWidget);
 	});
 
 	
 	it('can get a singleton instance of itself', function() {
 
-		expect(app.PasswordConfirmationInput.instance().constructor).toBe(app.PasswordConfirmationInput);
+		expect(app.PasswordConfirmationInputWidget.instance().constructor).toBe(app.PasswordConfirmationInputWidget);
 
-		expect(app.PasswordConfirmationInput.instance()).toBe(app.PasswordConfirmationInput.instance());
+		expect(app.PasswordConfirmationInputWidget.instance()).toBe(app.PasswordConfirmationInputWidget.instance());
 	});
 		
 	
@@ -43,13 +43,13 @@ describe('Class PasswordConfirmationInput', function(){
 			
 			// Create a fresh instance to work with
 			
-			testFactory = new app.PasswordConfirmationInput();
+			testFactory = new app.PasswordConfirmationInputWidget();
 		});
 		
 		
 		it('can create a new standard password confirmation field', function(){
 
-			var el = app.UIWidgetFactory.instance().createProduct('PasswordConfirmationInput',
+			var el = app.InputWidgetFactory.instance().createProduct('PasswordConfirmationInputWidget',
 			{
 				width: 's12',
 

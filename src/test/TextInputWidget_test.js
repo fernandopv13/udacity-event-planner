@@ -1,37 +1,37 @@
 'use strict';
 
-/* Jasmine.js unit test suite for TextInput class in Meetup Event Planner app.
+/* Jasmine.js unit test suite for TextInputWidget class in Meetup Event Planner app.
 *
 *  This suite designed to be able to be run as independently as possible from other tests
 *  and/or funcitonality. UI and other integration testing is done seperately.
 
 */
 
-describe('Class TextInput', function(){
+describe('Class TextInputWidget', function(){
 	
 	it('inherits from InputWidget', function() {
 
-		expect((new app.TextInput()) instanceof app.InputWidget).toBe(true);
+		expect((new app.TextInputWidget()) instanceof app.InputWidget).toBe(true);
 
-		expect(typeof (new app.TextInput()).createProduct).toBe('function');
+		expect(typeof (new app.TextInputWidget()).createProduct).toBe('function');
 
-		expect(typeof (new app.TextInput()).init).toBe('function');
+		expect(typeof (new app.TextInputWidget()).init).toBe('function');
 
-		expect(typeof (new app.TextInput()).validate).toBe('function');
+		expect(typeof (new app.TextInputWidget()).validate).toBe('function');
 	});
 
 
 	it('can create a new instance', function() {
 			
-		expect((new app.TextInput()).constructor).toBe(app.TextInput);
+		expect((new app.TextInputWidget()).constructor).toBe(app.TextInputWidget);
 	});
 
 	
 	it('can get a singleton instance of itself', function() {
 
-		expect(app.TextInput.instance().constructor).toBe(app.TextInput);
+		expect(app.TextInputWidget.instance().constructor).toBe(app.TextInputWidget);
 
-		expect(app.TextInput.instance()).toBe(app.TextInput.instance());
+		expect(app.TextInputWidget.instance()).toBe(app.TextInputWidget.instance());
 	});
 		
 	
@@ -43,13 +43,13 @@ describe('Class TextInput', function(){
 			
 			// Create a fresh instance to work with
 			
-			testFactory = new app.TextInput();
+			testFactory = new app.TextInputWidget();
 		});
 		
 		
-		it('can create a new standard password confirmation field', function(){
+		it('can create a new standard text field', function(){
 
-			var el = app.UIWidgetFactory.instance().createProduct('TextInput',
+			var el = app.InputWidgetFactory.instance().createProduct('TextInputWidget',
 			{
 				width: 's12',
 
@@ -63,7 +63,7 @@ describe('Class TextInput', function(){
 
 				datalist: 'text-test-list',
 
-				validator: 'TextInput'
+				validator: 'TextInputWidget'
 			});
 
 			expect(el.constructor).toBe(HTMLDivElement); // outer div

@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class SwitchInput extends InputWidget
+* public class PasswordConfirmationInputWidget extends InputWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -17,10 +17,10 @@ var app = app || {};
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
-	* @return {SwitchInput} Not supposed to be instantiated, except when creating singleton
+	* @return {PasswordConfirmationInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
 
-	module.SwitchInput = function() {
+	module.PasswordConfirmationInputWidget = function() {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -28,7 +28,7 @@ var app = app || {};
 		
 			// Set temporary literals for use by parent class constructor
 
-			this.type = this.type || 'SwitchInput';
+			this.type = this.type || 'PasswordConfirmationInputWidget';
 
 			
 			// Initialize instance members inherited from parent class
@@ -40,9 +40,9 @@ var app = app || {};
 	* Inherit from UIWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.SwitchInput.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
+		module.PasswordConfirmationInputWidget.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
 
-		module.SwitchInput.prototype.constructor = module.SwitchInput // Reset constructor property
+		module.PasswordConfirmationInputWidget.prototype.constructor = module.PasswordConfirmationInputWidget // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.UIWidgetFactory.instance().registerProduct(module.SwitchInput);
+		module.InputWidgetFactory.instance().registerProduct(module.PasswordConfirmationInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------
@@ -71,24 +71,20 @@ var app = app || {};
 		* @todo Add support for non-HTML5 compliant browsers
 		*/
 
-		module.SwitchInput.prototype.createProduct = function(obj_options) {
+		module.PasswordConfirmationInputWidget.prototype.createProduct = function(obj_options) {
 
 			/* Sample JSON specification object using all default features:
 
 			{
-				width: 's7',
+				width: 's12',
 
-				id: 'switch-test',
+				id: 'test-password-confirmation',
 
-				label: 'Test Switch',
+				label: 'Test Password Confirmation',
 
-				datasource: true,
+				required: true,
 
-				errormessage: 'Please confirm password',
-
-				yes: 'Yes',
-
-				no: 'no'
+				errormessage: 'Please confirm password'
 			}
 			*/
 
@@ -97,147 +93,90 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			if (obj_options !== null && typeof obj_options.datasource !== 'boolean') {
-
-				throw new IllegalArgumentError('Data source must be a Boolean, or null');
-			}
-			
 			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;
 
-
+			
 			var outerDiv = createElement( // outer div
 			{
 				element: 'div',
 
-				classList: ['row']
+				attributes: {id: options.id + '-parent'},
+				
+				classList: ['row', 'hidden']
 			});
-
+						
 			
-			var innerDiv = createElement( // inner div for main switch label
+			var innerDiv = createElement( // inner div
 			{
 				element: 'div',			
 				
-				classList: ['col', options.width]
+				classList: ['input-field', 'col', options.width]
 			});
 
 			outerDiv.appendChild(innerDiv);
+			
 
+			innerDiv.appendChild(createElement( // input
+			{
+				element: 'input',			
+				
+				attributes:
+				{
+					type: 'text',
+					
+					id: options.id,
+					
+					value: '',
 
-			innerDiv.appendChild(createElement( // main switch label
-			{	
-				element: 'span',
+					required: options.required ? true : false,
 
-				attributes: {id: options.id + '-label'},
+					'aria-required': true,
 
-				classList: ['form-label', 'input-switch-label'],
+					'aria-labelledby': options.id + '-label',
 
-				innerHTML: options.label
+					role: 'textbox',
 
+					tabindex: 0
+				},
+
+				dataset: {customValidator: 'PasswordConfirmationInputWidget'},
+				
+				classList: ['validate']
 			}));
-
-			
-			innerDiv = createElement( // inner div for switch widget
-			{
-				element: 'div',			
-				
-				classList: ['switch-container', 'col', 's' + (12 - parseInt(options.width.slice(1)))]
-			});
-
-			outerDiv.appendChild(innerDiv);
 			
 			
-			var switchElement = createElement( // switch div
-			{
-				element: 'div',
-				
-				classList: ['switch']
-			});
-
-			innerDiv.appendChild(switchElement);
-			
-			
-			var spanElement = createElement({ // div holding switch widget itself
-
-				element: 'span',
-
-				classList: ['input-switch-widget']
-			});
-
-			switchElement.appendChild(spanElement);
-
-
 			var labelElement = createElement( // label
 			{	
 				element: 'label',			
 				
-				attributes: {for: options.id},
+				attributes: {for: options.id, id: options.id + '-label'},
 				
-				classList: ['form-label', 'active']
+				classList: ['form-label'],
+				
+				dataset: {error: options.errormessage ? options.errormessage : 'Please confirm password', success: 'Password confirmed'},
+				
+				innerHTML: 'Confirm Password'
 			});
 			
-			
-			labelElement.appendChild(createElement( // 'not selected' minor label
-			{	
+			labelElement.appendChild(createElement( // required field indicator
+			{
 				element: 'span',
 
-				classList: ['form-label', 'input-switch-off-label'],
+				classList: ['required-indicator'],
 
-				innerHTML: options.off ? options.off : 'No'
-
+				innerHTML: '*'
 			}));
+
+			innerDiv.appendChild(labelElement);
 
 			
-			labelElement.appendChild(createElement( // input
-			{	
-				element: 'input',			
-				
-				attributes: (function(){
-
-					var attr =
-					{
-						id: options.id,
-
-						type: 'checkbox',
-
-						'aria-labelledby': options.id + '-label',
-
-						role: 'checkbox'
-					};
-
-					if (options.datasource) {attr.checked = true;}
-
-					return attr;
-				})()
-			}));
-
-			
-			labelElement.appendChild(createElement( // span
-			{	
-				element: 'span',
-				
-				classList: ['lever']
-			}));
-
-			
-			labelElement.appendChild(createElement( // 'selected' minor label
-			{	
-				element: 'span',
-
-				classList: ['form-label', 'input-switch-on-label'],
-
-				innerHTML: options.on ? options.on : 'Yes'
-
-			}));
-
-			spanElement.appendChild(labelElement);
-
 			return outerDiv;
 		};
 
 		
 		/** Initializes password field (required by UIWidget) */
 
-		module.SwitchInput.prototype.init = function(HTMLInputElement_e) {};
+		module.PasswordConfirmationInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
 		/** Event handler for interactive validation of password confirmation field.
@@ -245,9 +184,25 @@ var app = app || {};
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/
 
-		module.SwitchInput.prototype.validate = function(HTMLInputElement_e) {
+		module.PasswordConfirmationInputWidget.prototype.validate = function(HTMLInputElement_e) {
 
-			return true;
+			// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
+
+			var pw_org = $('#' + HTMLInputElement_e.id.replace('-confirmation', '')).data('value'), // original pw
+
+			pw = $('#' + HTMLInputElement_e.id.replace('-confirmation', '')).val(), // current password entry
+
+			pw2 = $(HTMLInputElement_e).val(); // confirmation
+
+			var ret = pw === pw2;
+
+			//console.log(ret);
+
+			ret = ret || pw === pw_org;
+
+			//console.log(ret);
+
+			return ret; // // pw and confirmation match, or pw hasn't changed
 		};
 
 
@@ -260,25 +215,25 @@ var app = app || {};
 		* Treat as if private, though not possible to enforce in JS. Use static instance() method instead.
 		*/
 
-		module.SwitchInput._instance = null;
+		module.PasswordConfirmationInputWidget._instance = null;
 
 
 		/** Gets an instance of the class for use as singleton (read-only) */
 
-		module.SwitchInput.instance = function() {
+		module.PasswordConfirmationInputWidget.instance = function() {
 			
 			if (arguments.length === 0) {
 
-				if (typeof module.SwitchInput._instance === 'undefined'
+				if (typeof module.PasswordConfirmationInputWidget._instance === 'undefined'
 
-				|| module.SwitchInput._instance === null
+				|| module.PasswordConfirmationInputWidget._instance === null
 
-				|| module.SwitchInput._instance.constructor !== module.SwitchInput) {
+				|| module.PasswordConfirmationInputWidget._instance.constructor !== module.PasswordConfirmationInputWidget) {
 
-					module.SwitchInput._instance = new module.SwitchInput();
+					module.PasswordConfirmationInputWidget._instance = new module.PasswordConfirmationInputWidget();
 				}
 
-				return module.SwitchInput._instance;
+				return module.PasswordConfirmationInputWidget._instance;
 			}
 
 			else {

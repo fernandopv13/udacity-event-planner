@@ -1,37 +1,37 @@
 'use strict';
 
-/* Jasmine.js unit test suite for PasswordInput class in Meetup Event Planner app.
+/* Jasmine.js unit test suite for PasswordInputWidget class in Meetup Event Planner app.
 *
 *  This suite designed to be able to be run as independently as possible from other tests
 *  and/or funcitonality. UI and other integration testing is done seperately.
 
 */
 
-describe('Class PasswordInput', function(){
+describe('Class PasswordInputWidget', function(){
 	
 	it('inherits from InputWidget', function() {
 
-		expect((new app.PasswordInput()) instanceof app.InputWidget).toBe(true);
+		expect((new app.PasswordInputWidget()) instanceof app.InputWidget).toBe(true);
 
-		expect(typeof (new app.PasswordInput()).createProduct).toBe('function');
+		expect(typeof (new app.PasswordInputWidget()).createProduct).toBe('function');
 
-		expect(typeof (new app.PasswordInput()).init).toBe('function');
+		expect(typeof (new app.PasswordInputWidget()).init).toBe('function');
 
-		expect(typeof (new app.PasswordInput()).validate).toBe('function');
+		expect(typeof (new app.PasswordInputWidget()).validate).toBe('function');
 	});
 
 
 	it('can create a new instance', function() {
 			
-		expect((new app.PasswordInput()).constructor).toBe(app.PasswordInput);
+		expect((new app.PasswordInputWidget()).constructor).toBe(app.PasswordInputWidget);
 	});
 
 	
 	it('can get a singleton instance of itself', function() {
 
-		expect(app.PasswordInput.instance().constructor).toBe(app.PasswordInput);
+		expect(app.PasswordInputWidget.instance().constructor).toBe(app.PasswordInputWidget);
 
-		expect(app.PasswordInput.instance()).toBe(app.PasswordInput.instance());
+		expect(app.PasswordInputWidget.instance()).toBe(app.PasswordInputWidget.instance());
 	});
 		
 	
@@ -43,13 +43,13 @@ describe('Class PasswordInput', function(){
 			
 			// Create a fresh instance to work with
 			
-			testFactory = new app.PasswordInput();
+			testFactory = new app.PasswordInputWidget();
 		});
 		
 		
 		it('can create a new standard password field', function(){
 
-			var el = app.UIWidgetFactory.instance().createProduct('PasswordInput',
+			var el = app.InputWidgetFactory.instance().createProduct('PasswordInputWidget',
 			{
 				width: 's12',
 

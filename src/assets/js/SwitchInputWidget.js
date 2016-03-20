@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class TextInput extends InputWidget
+* public class SwitchInputWidget extends InputWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -17,10 +17,10 @@ var app = app || {};
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
-	* @return {TextInput} Not supposed to be instantiated, except when creating singleton
+	* @return {SwitchInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
 
-	module.TextInput = function() {
+	module.SwitchInputWidget = function() {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -28,7 +28,7 @@ var app = app || {};
 		
 			// Set temporary literals for use by parent class constructor
 
-			this.type = this.type || 'TextInput';
+			this.type = this.type || 'SwitchInputWidget';
 
 			
 			// Initialize instance members inherited from parent class
@@ -40,9 +40,9 @@ var app = app || {};
 	* Inherit from UIWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.TextInput.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
+		module.SwitchInputWidget.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
 
-		module.TextInput.prototype.constructor = module.TextInput // Reset constructor property
+		module.SwitchInputWidget.prototype.constructor = module.SwitchInputWidget // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.UIWidgetFactory.instance().registerProduct(module.TextInput);
+		module.InputWidgetFactory.instance().registerProduct(module.SwitchInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------
@@ -71,24 +71,24 @@ var app = app || {};
 		* @todo Add support for non-HTML5 compliant browsers
 		*/
 
-		module.TextInput.prototype.createProduct = function(obj_options) {
+		module.SwitchInputWidget.prototype.createProduct = function(obj_options) {
 
 			/* Sample JSON specification object using all default features:
 
 			{
-				width: 's12',
+				width: 's7',
 
-				id: 'text-test',
+				id: 'switch-test',
 
-				label: 'Test Text',
+				label: 'Test Switch',
 
-				required: true,
+				datasource: true,
 
-				datasource: 'Some text', // String
+				errormessage: 'Please confirm password',
 
-				datalist: 'text-test-list', // id of datalist (optional)
+				yes: 'Yes',
 
-				validator: 'TextInput' // class used for custom validation (optional)
+				no: 'no'
 			}
 			*/
 
@@ -97,9 +97,9 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			if (obj_options !== null && typeof obj_options.datasource !== 'string') {
+			if (obj_options !== null && typeof obj_options.datasource !== 'boolean') {
 
-				throw new IllegalArgumentError('Data source must be a String, or null');
+				throw new IllegalArgumentError('Data source must be a Boolean, or null');
 			}
 			
 			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;
@@ -108,92 +108,136 @@ var app = app || {};
 			var outerDiv = createElement( // outer div
 			{
 				element: 'div',
-				
+
 				classList: ['row']
 			});
 
 			
-
-			var innerDiv = createElement( // inner div
+			var innerDiv = createElement( // inner div for main switch label
 			{
 				element: 'div',			
 				
-				classList: ['input-field', 'col', options.width]
+				classList: ['col', options.width]
+			});
+
+			outerDiv.appendChild(innerDiv);
+
+
+			innerDiv.appendChild(createElement( // main switch label
+			{	
+				element: 'span',
+
+				attributes: {id: options.id + '-label'},
+
+				classList: ['form-label', 'input-switch-label'],
+
+				innerHTML: options.label
+
+			}));
+
+			
+			innerDiv = createElement( // inner div for switch widget
+			{
+				element: 'div',			
+				
+				classList: ['switch-container', 'col', 's' + (12 - parseInt(options.width.slice(1)))]
 			});
 
 			outerDiv.appendChild(innerDiv);
 			
-
-			var attributes = 
+			
+			var switchElement = createElement( // switch div
 			{
-				type: 'text',
+				element: 'div',
 				
-				id: options.id,
-				
-				value: options.datasource ? options.datasource : '',
+				classList: ['switch']
+			});
 
-				'aria-labelledby': options.id + '-label',
-
-				role: 'textbox'
-			}
-
-			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
-
-			if (options.datalist) {attributes.list = options.datalist;}
-
-			var classList = [];
-
-			if (options.required) {classList.push('validate');}
-
-			innerDiv.appendChild(createElement( // input
-			{
-				element: 'input',			
-				
-				attributes: attributes,
-				
-				classList: classList,
-
-				dataset: options.validator ? {customValidator: options.validator} : ''
-			}));
+			innerDiv.appendChild(switchElement);
 			
 			
+			var spanElement = createElement({ // div holding switch widget itself
+
+				element: 'span',
+
+				classList: ['input-switch-widget']
+			});
+
+			switchElement.appendChild(spanElement);
+
+
 			var labelElement = createElement( // label
 			{	
 				element: 'label',			
 				
-				attributes: {for: options.id, id: options.id + '-label'},
+				attributes: {for: options.id},
 				
-				classList: options.datasource ? ['form-label', 'active'] : ['form-label'],
-				
-				dataset: {error: 'Please enter ' + options.label.toLowerCase()},
-				
-				innerHTML: options.label
+				classList: ['form-label', 'active']
 			});
+			
+			
+			labelElement.appendChild(createElement( // 'not selected' minor label
+			{	
+				element: 'span',
+
+				classList: ['form-label', 'input-switch-off-label'],
+
+				innerHTML: options.off ? options.off : 'No'
+
+			}));
 
 			
-			if (options.required) {
+			labelElement.appendChild(createElement( // input
+			{	
+				element: 'input',			
+				
+				attributes: (function(){
 
-				labelElement.appendChild(createElement( // required field indicator
-				{
-					element: 'span',
+					var attr =
+					{
+						id: options.id,
 
-					classList: ['required-indicator'],
+						type: 'checkbox',
 
-					innerHTML: '*'
-				}));
-			}
+						'aria-labelledby': options.id + '-label',
 
-			innerDiv.appendChild(labelElement);
+						role: 'checkbox'
+					};
+
+					if (options.datasource) {attr.checked = true;}
+
+					return attr;
+				})()
+			}));
 
 			
+			labelElement.appendChild(createElement( // span
+			{	
+				element: 'span',
+				
+				classList: ['lever']
+			}));
+
+			
+			labelElement.appendChild(createElement( // 'selected' minor label
+			{	
+				element: 'span',
+
+				classList: ['form-label', 'input-switch-on-label'],
+
+				innerHTML: options.on ? options.on : 'Yes'
+
+			}));
+
+			spanElement.appendChild(labelElement);
+
 			return outerDiv;
-			
 		};
-		
+
 		
 		/** Initializes password field (required by UIWidget) */
 
-		module.TextInput.prototype.init = function(HTMLInputElement_e) {};
+		module.SwitchInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
 		/** Event handler for interactive validation of password confirmation field.
@@ -201,25 +245,9 @@ var app = app || {};
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/
 
-		module.TextInput.prototype.validate = function(HTMLInputElement_e) {
+		module.SwitchInputWidget.prototype.validate = function(HTMLInputElement_e) {
 
-			// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
-
-			var pw_org = $('#' + HTMLInputElement_e.id.replace('-confirmation', '')).data('value'), // original pw
-
-			pw = $('#' + HTMLInputElement_e.id.replace('-confirmation', '')).val(), // current password entry
-
-			pw2 = $(HTMLInputElement_e).val(); // confirmation
-
-			var ret = pw === pw2;
-
-			//console.log(ret);
-
-			ret = ret || pw === pw_org;
-
-			//console.log(ret);
-
-			return ret; // // pw and confirmation match, or pw hasn't changed
+			return true;
 		};
 
 
@@ -232,25 +260,25 @@ var app = app || {};
 		* Treat as if private, though not possible to enforce in JS. Use static instance() method instead.
 		*/
 
-		module.TextInput._instance = null;
+		module.SwitchInputWidget._instance = null;
 
 
 		/** Gets an instance of the class for use as singleton (read-only) */
 
-		module.TextInput.instance = function() {
+		module.SwitchInputWidget.instance = function() {
 			
 			if (arguments.length === 0) {
 
-				if (typeof module.TextInput._instance === 'undefined'
+				if (typeof module.SwitchInputWidget._instance === 'undefined'
 
-				|| module.TextInput._instance === null
+				|| module.SwitchInputWidget._instance === null
 
-				|| module.TextInput._instance.constructor !== module.TextInput) {
+				|| module.SwitchInputWidget._instance.constructor !== module.SwitchInputWidget) {
 
-					module.TextInput._instance = new module.TextInput();
+					module.SwitchInputWidget._instance = new module.SwitchInputWidget();
 				}
 
-				return module.TextInput._instance;
+				return module.SwitchInputWidget._instance;
 			}
 
 			else {

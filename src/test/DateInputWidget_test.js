@@ -1,37 +1,37 @@
 'use strict';
 
-/* Jasmine.js unit test suite for DateInput class in Meetup Event Planner app.
+/* Jasmine.js unit test suite for DateInputWidget class in Meetup Event Planner app.
 *
 *  This suite designed to be able to be run as independently as possible from other tests
 *  and/or funcitonality. UI and other integration testing is done seperately.
 
 */
 
-describe('Class DateInput', function(){
+describe('Class DateInputWidget', function(){
 	
 	it('inherits from InputWidget', function() {
 
-		expect((new app.DateInput()) instanceof app.InputWidget).toBe(true);
+		expect((new app.DateInputWidget()) instanceof app.InputWidget).toBe(true);
 
-		expect(typeof (new app.DateInput()).createProduct).toBe('function');
+		expect(typeof (new app.DateInputWidget()).createProduct).toBe('function');
 
-		expect(typeof (new app.DateInput()).init).toBe('function');
+		expect(typeof (new app.DateInputWidget()).init).toBe('function');
 
-		expect(typeof (new app.DateInput()).validate).toBe('function');
+		expect(typeof (new app.DateInputWidget()).validate).toBe('function');
 	});
 
 
 	it('can create a new instance', function() {
 			
-		expect((new app.DateInput()).constructor).toBe(app.DateInput);
+		expect((new app.DateInputWidget()).constructor).toBe(app.DateInputWidget);
 	});
 
 	
 	it('can get a singleton instance of itself', function() {
 
-		expect(app.DateInput.instance().constructor).toBe(app.DateInput);
+		expect(app.DateInputWidget.instance().constructor).toBe(app.DateInputWidget);
 
-		expect(app.DateInput.instance()).toBe(app.DateInput.instance());
+		expect(app.DateInputWidget.instance()).toBe(app.DateInputWidget.instance());
 	});
 		
 	
@@ -43,13 +43,13 @@ describe('Class DateInput', function(){
 			
 			// Create a fresh instance to work with
 			
-			testFactory = new app.DateInput();
+			testFactory = new app.DateInputWidget();
 		});
 		
 		
 		it('can create a new standard date field', function(){
 
-			var testElement = app.UIWidgetFactory.instance().createProduct('DateInput',
+			var testElement = app.InputWidgetFactory.instance().createProduct('DateInputWidget',
 			{
 				width: 's6',
 

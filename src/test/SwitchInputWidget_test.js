@@ -1,37 +1,37 @@
 'use strict';
 
-/* Jasmine.js unit test suite for SwitchInput class in Meetup Event Planner app.
+/* Jasmine.js unit test suite for SwitchInputWidget class in Meetup Event Planner app.
 *
 *  This suite designed to be able to be run as independently as possible from other tests
 *  and/or funcitonality. UI and other integration testing is done seperately.
 
 */
 
-describe('Class SwitchInput', function(){
+describe('Class SwitchInputWidget', function(){
 	
 	it('inherits from InputWidget', function() {
 
-		expect((new app.SwitchInput()) instanceof app.InputWidget).toBe(true);
+		expect((new app.SwitchInputWidget()) instanceof app.InputWidget).toBe(true);
 
-		expect(typeof (new app.SwitchInput()).createProduct).toBe('function');
+		expect(typeof (new app.SwitchInputWidget()).createProduct).toBe('function');
 
-		expect(typeof (new app.SwitchInput()).init).toBe('function');
+		expect(typeof (new app.SwitchInputWidget()).init).toBe('function');
 
-		expect(typeof (new app.SwitchInput()).validate).toBe('function');
+		expect(typeof (new app.SwitchInputWidget()).validate).toBe('function');
 	});
 
 
 	it('can create a new instance', function() {
 			
-		expect((new app.SwitchInput()).constructor).toBe(app.SwitchInput);
+		expect((new app.SwitchInputWidget()).constructor).toBe(app.SwitchInputWidget);
 	});
 
 	
 	it('can get a singleton instance of itself', function() {
 
-		expect(app.SwitchInput.instance().constructor).toBe(app.SwitchInput);
+		expect(app.SwitchInputWidget.instance().constructor).toBe(app.SwitchInputWidget);
 
-		expect(app.SwitchInput.instance()).toBe(app.SwitchInput.instance());
+		expect(app.SwitchInputWidget.instance()).toBe(app.SwitchInputWidget.instance());
 	});
 		
 	
@@ -43,13 +43,13 @@ describe('Class SwitchInput', function(){
 			
 			// Create a fresh instance to work with
 			
-			testFactory = new app.SwitchInput();
+			testFactory = new app.SwitchInputWidget();
 		});
 		
 		
-		it('can create a new standard password confirmation field', function(){
+		it('can create a new standard switch (checkbox) field', function(){
 
-			var el = app.UIWidgetFactory.instance().createProduct('SwitchInput',
+			var el = app.InputWidgetFactory.instance().createProduct('SwitchInputWidget',
 			{
 				width: 's7',
 

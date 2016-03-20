@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class PasswordInput extends InputWidget
+* public class PasswordInputWidget extends InputWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -17,10 +17,10 @@ var app = app || {};
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
-	* @return {PasswordInput} Not supposed to be instantiated, except when creating singleton
+	* @return {PasswordInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
 
-	module.PasswordInput = function() {
+	module.PasswordInputWidget = function() {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -28,7 +28,7 @@ var app = app || {};
 		
 			// Set temporary literals for use by parent class constructor
 
-			this.type = this.type || 'PasswordInput';
+			this.type = this.type || 'PasswordInputWidget';
 
 			
 			// Initialize instance members inherited from parent class
@@ -40,9 +40,9 @@ var app = app || {};
 	* Inherit from UIWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.PasswordInput.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
+		module.PasswordInputWidget.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
 
-		module.PasswordInput.prototype.constructor = module.PasswordInput // Reset constructor property
+		module.PasswordInputWidget.prototype.constructor = module.PasswordInputWidget // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.UIWidgetFactory.instance().registerProduct(module.PasswordInput);
+		module.InputWidgetFactory.instance().registerProduct(module.PasswordInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ var app = app || {};
 		* @todo Add support for non-HTML5 compliant browsers
 		*/
 
-		module.PasswordInput.prototype.createProduct = function(obj_options) {
+		module.PasswordInputWidget.prototype.createProduct = function(obj_options) {
 
 			/* Sample JSON specification object using all default features:
 
@@ -146,7 +146,7 @@ var app = app || {};
 
 				dataset:
 				{
-					customValidator: 'PasswordInput',
+					customValidator: 'PasswordInputWidget',
 
 					value: options.datasource && options.datasource.password() ? options.datasource.password() : ''
 				},
@@ -335,7 +335,7 @@ var app = app || {};
 		
 		/** Initializes password field (required by UIWidget) */
 
-		module.PasswordInput.prototype.init = function(HTMLInputElement_e) {};
+		module.PasswordInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
 		/** Event handler for interactive validation of password field.
@@ -345,7 +345,7 @@ var app = app || {};
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/
 
-		module.PasswordInput.prototype.validate = function(HTMLInputElement_e) {
+		module.PasswordInputWidget.prototype.validate = function(HTMLInputElement_e) {
 
 			/* Relying solely on HTML5 constraint validation here would require me to write a compound regex
 			*
@@ -405,25 +405,25 @@ var app = app || {};
 		* Treat as if private, though not possible to enforce in JS. Use static instance() method instead.
 		*/
 
-		module.PasswordInput._instance = null;
+		module.PasswordInputWidget._instance = null;
 
 
 		/** Gets an instance of the class for use as singleton (read-only) */
 
-		module.PasswordInput.instance = function() {
+		module.PasswordInputWidget.instance = function() {
 			
 			if (arguments.length === 0) {
 
-				if (typeof module.PasswordInput._instance === 'undefined'
+				if (typeof module.PasswordInputWidget._instance === 'undefined'
 
-				|| module.PasswordInput._instance === null
+				|| module.PasswordInputWidget._instance === null
 
-				|| module.PasswordInput._instance.constructor !== module.PasswordInput) {
+				|| module.PasswordInputWidget._instance.constructor !== module.PasswordInputWidget) {
 
-					module.PasswordInput._instance = new module.PasswordInput();
+					module.PasswordInputWidget._instance = new module.PasswordInputWidget();
 				}
 
-				return module.PasswordInput._instance;
+				return module.PasswordInputWidget._instance;
 			}
 
 			else {

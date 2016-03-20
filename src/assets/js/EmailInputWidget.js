@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class NumberInput extends InputWidget
+* public class EmailInputWidget extends InputWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Creates, initializes and validates HTML number input fields. Use as singleton to conserve memory resources.
+	/** @classdesc Creates, initializes and validates HTML email input fields. Use as singleton to conserve memory resources.
 	*
 	* @constructor
 	*
@@ -17,10 +17,10 @@ var app = app || {};
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
-	* @return {NumberInput} Not supposed to be instantiated, except when creating singleton
+	* @return {EmailInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
 
-	module.NumberInput = function() {
+	module.EmailInputWidget = function() {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -28,7 +28,7 @@ var app = app || {};
 		
 			// Set temporary literals for use by parent class constructor
 
-			this.type = this.type || 'NumberInput';
+			this.type = this.type || 'EmailInputWidget';
 
 			
 			// Initialize instance members inherited from parent class
@@ -40,9 +40,9 @@ var app = app || {};
 	* Inherit from UIWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.NumberInput.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
+		module.EmailInputWidget.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
 
-		module.NumberInput.prototype.constructor = module.NumberInput // Reset constructor property
+		module.EmailInputWidget.prototype.constructor = module.EmailInputWidget // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.UIWidgetFactory.instance().registerProduct(module.NumberInput);
+		module.InputWidgetFactory.instance().registerProduct(module.EmailInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------
@@ -60,39 +60,31 @@ var app = app || {};
 
 		/** Factory method for creating email fields for forms
 		
-		* @param {Object} JSON object literal containing specs of input to be created. See comments in code for an example.
+		* @param {Object} JSON object literal containing specs of date input to be created. Se comments in code for an example.
 		*
 		* @return {HTMLDivElement} The requested element
 		*
 		* @throws {ReferenceError} If no options are specified
 		*
-		* @throws {IllegalArgumentError} If datasource is not a number
-		*
-		* @todo Add support for non-HTML5 compliant browsers
+		* @throws {IllegalArgumentError} If datasource is not an instance of Email
 		*/
 
-		module.NumberInput.prototype.createProduct = function(obj_options) {
+		module.EmailInputWidget.prototype.createProduct = function(obj_options) {
 
 			/* Sample JSON specification object using all default features:
 
 			{
 				width: 's12',
 
-				id: 'test-number',
+				id: 'test-email',
 
-				label: 'Test Number',
+				label: 'Test Email',
 
 				required: true,
 
-				datasource: 23, // anything that typeof will evaluate as 'number'
+				datasource: new app.Email('test@server.domain'),
 
-				errormessage: 'Please enter number',
-
-				min: 0, // integer
-
-				max: 50, // integer
-
-				step: 1 // integer
+				errormessage: 'Please enter email'
 			}
 			*/
 
@@ -101,16 +93,16 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			if (obj_options !== null && typeof obj_options.datasource !== 'number') {
+			if (obj_options !== null && obj_options.datasource.constructor !== module.Email) {
 
-				throw new IllegalArgumentError('Data source must be a number, or null');
+				throw new IllegalArgumentError('Data source must be instance of Email, or null');
 			}
 
 			var options = obj_options;
 
 			var createElement = module.HTMLElement.instance().createProduct;
 
-			
+						
 			var outerDiv =  createElement( // outer div
 			{
 				element: 'div',
@@ -118,6 +110,7 @@ var app = app || {};
 				classList: ['row']
 			});
 
+			
 
 			var innerDiv =  createElement( // inner div
 			{
@@ -125,28 +118,22 @@ var app = app || {};
 				
 				classList: ['input-field', 'col', options.width]
 			});
-			
+
 			outerDiv.appendChild(innerDiv);
+			
 
-
-			var attributes =
+			var attributes = 
 			{
+				type: 'email',
+				
 				id: options.id,
-
-				type: 'number',
-
-				value: options.datasource,
+				
+				value: options.datasource && options.datasource.address() ? options.datasource.address() : '',
 
 				'aria-labelledby': options.id + '-label',
 
 				role: 'textbox'
 			}
-
-			if (!isNaN(parseInt(options.min))) {attributes.min = options.min;}
-
-			if (!isNaN(parseInt(options.max))) {attributes.max = options.max;}
-
-			if (!isNaN(parseInt(options.step))) {attributes.step = options.step;}
 
 			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
 
@@ -155,6 +142,8 @@ var app = app || {};
 				element: 'input',			
 				
 				attributes: attributes,
+
+				dataset: {customValidator: 'Email'},
 				
 				classList: ['validate']
 			}));
@@ -166,9 +155,9 @@ var app = app || {};
 				
 				attributes: {for: options.id, id: options.id + '-label'},
 				
-				classList: options.datasource >= 0 ? ['form-label', 'active'] : ['form-label'],
+				classList: options.datasource && options.datasource.address() ? ['form-label', 'active'] : ['form-label'],
 				
-				dataset: {error: options.errormessage},
+				dataset: {error: 'Please enter email in format address@server.domain', success: 'Email is valid'},
 				
 				innerHTML: options.label
 			});
@@ -188,26 +177,48 @@ var app = app || {};
 
 			innerDiv.appendChild(labelElement);
 
-
+			
 			return outerDiv;
 		};
 
 		
 		/** Initializes email field (required by UIWidget) */
 
-		module.NumberInput.prototype.init = function(HTMLInputElement_e) {};
+		module.EmailInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
-		/** Event handler for interactive validation of number field
+		/** Event handler for interactive validation of email field
 		*
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/
 
-		module.NumberInput.prototype.validate = function(HTMLInputElement_e) {
+		module.EmailInputWidget.prototype.validate = function(HTMLInputElement_e) {
 
-			return $(HTMLInputElement_e).checkValidity(); // no need for custom validation, HTML5 validation suffices
+			/* Tried the HTML5 email validity constraint but found it too lax
+			*
+			* (it does not require a period or much else after the @), so rolling my own.
+			*
+			* See unit test for Email class using com_github_dominicsayers_isemail.tests for details.
+			*/
 
-			// later, maybe add branching to support non-HTML5 compliant browsers
+			var testMail = new module.Email($(HTMLInputElement_e).val()),
+
+			isRequired = typeof $(HTMLInputElement_e).attr('required') !== 'undefined';
+
+			if ($(HTMLInputElement_e).val() !== '') { // always validate email if it exists
+
+				return testMail.isValid();
+			}
+
+			else if (!isRequired) { // empty is OK if not required
+			
+				return true;
+			}
+
+			else { // no entry, but required
+
+				return false;
+			}
 		};
 
 
@@ -220,25 +231,25 @@ var app = app || {};
 		* Treat as if private, though not possible to enforce in JS. Use static instance() method instead.
 		*/
 
-		module.NumberInput._instance = null;
+		module.EmailInputWidget._instance = null;
 
 
 		/** Gets an instance of the class for use as singleton (read-only) */
 
-		module.NumberInput.instance = function() {
+		module.EmailInputWidget.instance = function() {
 			
 			if (arguments.length === 0) {
 
-				if (typeof module.NumberInput._instance === 'undefined'
+				if (typeof module.EmailInputWidget._instance === 'undefined'
 
-				|| module.NumberInput._instance === null
+				|| module.EmailInputWidget._instance === null
 
-				|| module.NumberInput._instance.constructor !== module.NumberInput) {
+				|| module.EmailInputWidget._instance.constructor !== module.EmailInputWidget) {
 
-					module.NumberInput._instance = new module.NumberInput();
+					module.EmailInputWidget._instance = new module.EmailInputWidget();
 				}
 
-				return module.NumberInput._instance;
+				return module.EmailInputWidget._instance;
 			}
 
 			else {

@@ -1,37 +1,37 @@
 'use strict';
 
-/* Jasmine.js unit test suite for EmailInput class in Meetup Event Planner app.
+/* Jasmine.js unit test suite for EmailInputWidget class in Meetup Event Planner app.
 *
 *  This suite designed to be able to be run as independently as possible from other tests
 *  and/or funcitonality. UI and other integration testing is done seperately.
 
 */
 
-describe('Class EmailInput', function(){
+describe('Class EmailInputWidget', function(){
 	
 	it('inherits from InputWidget', function() {
 
-		expect((new app.EmailInput()) instanceof app.InputWidget).toBe(true);
+		expect((new app.EmailInputWidget()) instanceof app.InputWidget).toBe(true);
 
-		expect(typeof (new app.EmailInput()).createProduct).toBe('function');
+		expect(typeof (new app.EmailInputWidget()).createProduct).toBe('function');
 
-		expect(typeof (new app.EmailInput()).init).toBe('function');
+		expect(typeof (new app.EmailInputWidget()).init).toBe('function');
 
-		expect(typeof (new app.EmailInput()).validate).toBe('function');
+		expect(typeof (new app.EmailInputWidget()).validate).toBe('function');
 	});
 
 
 	it('can create a new instance', function() {
 			
-		expect((new app.EmailInput()).constructor).toBe(app.EmailInput);
+		expect((new app.EmailInputWidget()).constructor).toBe(app.EmailInputWidget);
 	});
 
 	
 	it('can get a singleton instance of itself', function() {
 
-		expect(app.EmailInput.instance().constructor).toBe(app.EmailInput);
+		expect(app.EmailInputWidget.instance().constructor).toBe(app.EmailInputWidget);
 
-		expect(app.EmailInput.instance()).toBe(app.EmailInput.instance());
+		expect(app.EmailInputWidget.instance()).toBe(app.EmailInputWidget.instance());
 	});
 		
 	
@@ -43,13 +43,13 @@ describe('Class EmailInput', function(){
 			
 			// Create a fresh instance to work with
 			
-			testFactory = new app.EmailInput();
+			testFactory = new app.EmailInputWidget();
 		});
 		
 		
 		it('can create a new standard email field', function(){
 
-			var testElement = app.UIWidgetFactory.instance().createProduct('EmailInput',
+			var testElement = app.InputWidgetFactory.instance().createProduct('EmailInputWidget',
 			{
 				width: 's12',
 

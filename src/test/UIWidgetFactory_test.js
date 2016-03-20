@@ -55,9 +55,9 @@ describe('Class UIWidgetFactory', function(){
 
 		it('can create an HTML element', function() {
 
-			// HTMLElement is fully covered by its own unit test, so just verify that call works
+			// HTMLElement is fully covered by its own unit test// Widget is fully covered by its own unit tests, so just verify that call works, so just verify that call works
 
-			var testElement = app.HTMLElement.instance().createProduct(
+			var testElement = app.UIWidgetFactory.instance().createProduct('HTMLElement',
 			{
 				element: 'div', // the type of element required
 			});
@@ -67,26 +67,86 @@ describe('Class UIWidgetFactory', function(){
 		});
 
 
-		it('can create a date input field', function() {
+		it('can create a field description', function(){
 
-			// DateInput is fully covered by its own unit test, so just verify that call works
+			// Widget is fully covered by its own unit tests, so just verify that call works
 
-			var testElement = app.UIWidgetFactory.instance().createProduct('DateInput',
+			var el = app.UIWidgetFactory.instance().createProduct('InputDescriptionWidget',
 			{
-				width: 's12',
+				datasource: 'Test field description',
 
-				id: 'test',
-
-				label: 'Test date',
-
-				required: true,
-
-				datasource: new Date(),
-
-				errormessage: 'Please enter date'
+				divider: false
 			});
 
-			expect(testElement.constructor).toBe(HTMLDivElement);
+			expect(el.constructor).toBe(HTMLDivElement); // outer div
+		});
+
+
+		it('can create a form element', function() {
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var el = app.UIWidgetFactory.instance().createProduct('FormWidget',
+			{
+				id: 'test-form',
+
+				autocomplete: false,
+
+				novalidate: false
+			});
+			
+			expect(el.constructor).toBe(HTMLFormElement);
+		});
+
+
+		it('can create a cancel button', function() {
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var el = app.UIWidgetFactory.instance().createProduct('CancelButtonWidget',
+			{
+				id: 'test-cancel-button',
+
+				label: 'Cancel'
+			});
+					
+			expect(el.id).toBe('test-cancel-button');
+		});
+
+
+		it('can create a floating action button', function() {
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var el = app.UIWidgetFactory.instance().createProduct('FloatingActionButtonWidget',
+			{
+				id: 'action-button',
+
+				label: 'Cancel',
+
+				color: 'red',
+
+				icon: 'add'
+			});
+					
+			expect(el.firstChild.id).toBe('action-button');
+		});
+		
+
+		it('can create a submit button', function() {
+
+			// Widget is fully covered by its own unit tests, so just verify that call works
+
+			var el = app.UIWidgetFactory.instance().createProduct('SubmitButtonWidget',
+			{
+				id: 'test-submit-button',
+
+				label: 'Done',
+
+				icon: 'send'
+			});
+
+			expect(el.id).toBe('test-submit-button');
 		});
 	});
 });
