@@ -86,7 +86,6 @@ var app = app || {}; // create a simple namespace for the app
 		* Public instance methods (beyond accessors)
 		*---------------------------------------------------------------------------------------*/
 		
-		
 		/** Tests if email address is likely to be standards compliant.
 		*
 		* NOTE: Fully standards compliant email validation is seriously involved, and still won't guarantee that the address works without trying to send an actual email to it.

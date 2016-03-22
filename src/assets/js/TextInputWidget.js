@@ -88,7 +88,7 @@ var app = app || {};
 
 				datalist: 'text-test-list', // id of datalist (optional)
 
-				validator: 'TextInputWidget' // class used for custom validation (optional)
+				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to DateInputWidget.prototype.validate)
 			}
 			*/
 
@@ -153,7 +153,7 @@ var app = app || {};
 				
 				classList: classList,
 
-				dataset: options.validator ? {customValidator: options.validator} : ''
+				dataset: {customValidator: options.validator ? options.validator : (Modernizr && Modernizr.formvalidation ? '' : 'TextInputWidget.prototype.validate')}
 			}));
 			
 			
@@ -206,30 +206,29 @@ var app = app || {};
 		module.TextInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
-		/** Event handler for interactive validation of password confirmation field.
+		/** Event handler for interactive validation text input field.
+		*
+		* Fallback for browsers that don't support the HTML5 form validation API. 
 		*
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/
 
 		module.TextInputWidget.prototype.validate = function(HTMLInputElement_e) {
 
-			// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
+			var value = $(HTMLInputElement_e).val(),
 
-			var pw_org = $('#' + HTMLInputElement_e.id.replace('-confirmation', '')).data('value'), // original pw
+			isRequired = typeof $(HTMLInputElement_e).attr('required') !== 'undefined';
 
-			pw = $('#' + HTMLInputElement_e.id.replace('-confirmation', '')).val(), // current password entry
+			if (!isRequired || value !== '') { // true unless empty required field
 
-			pw2 = $(HTMLInputElement_e).val(); // confirmation
+				//console.log(true);
 
-			var ret = pw === pw2;
+				return true;
+			}
+			
+			//console.log(false);
 
-			//console.log(ret);
-
-			ret = ret || pw === pw_org;
-
-			//console.log(ret);
-
-			return ret; // // pw and confirmation match, or pw hasn't changed
+			return false; // default to false
 		};
 
 

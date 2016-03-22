@@ -84,7 +84,9 @@ var app = app || {};
 
 				datasource: new app.Email('test@server.domain'),
 
-				errormessage: 'Please enter email'
+				errormessage: 'Please enter email',
+
+				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to DateInputWidget.prototype.validate)
 			}
 			*/
 
@@ -143,7 +145,7 @@ var app = app || {};
 				
 				attributes: attributes,
 
-				dataset: {customValidator: 'Email'},
+				dataset: {customValidator: options.validator ? options.validator : 'EmailInputWidget.prototype.validate'},
 				
 				classList: ['validate']
 			}));

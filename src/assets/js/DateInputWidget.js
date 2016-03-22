@@ -102,6 +102,8 @@ var app = app || {};
 				datasource: new Date(),
 
 				errormessage: 'Please enter date'
+
+				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to DateInputWidget.prototype.validate)
 			}
 			*/
 
@@ -161,7 +163,7 @@ var app = app || {};
 
 			var dataset = {value: options.datasource ? options.datasource.toISOString().replace('Z', '') : ''};
 
-			dataset.customValidator = 'DateInputWidget';
+			dataset.customValidator = options.validator ? options.validator : 'DateInputWidget.prototype.validate';
 
 			innerDiv.appendChild(createElement( // input
 			{
@@ -183,7 +185,7 @@ var app = app || {};
 				
 				classList: options.datasource ? ['form-label', 'active'] : ['form-label'],
 				
-				dataset: {error: options.errormessage ? options.errormessage : 'Please use format mm/dd/yyyy hh:mm'},
+				dataset: {error: options.errormessage ? options.errormessage : 'Please enter date in format mm/dd/yyyy hh:mm'},
 				
 				innerHTML: options.label
 			});

@@ -92,7 +92,9 @@ var app = app || {};
 
 				max: 50, // integer
 
-				step: 1 // integer
+				step: 1, // integer
+
+				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to NumberInputWidget.prototype.validate)
 			}
 			*/
 
@@ -156,7 +158,9 @@ var app = app || {};
 				
 				attributes: attributes,
 				
-				classList: ['validate']
+				classList: ['validate'],
+
+				dataset: {customValidator: options.validator ? options.validator : (Modernizr && Modernizr.formvalidation ? '' : 'NumberInputWidget.prototype.validate')}
 			}));
 			
 			

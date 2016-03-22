@@ -20,6 +20,8 @@ var app = app || {}; // create a simple namespace for the module
 	*
 	* (Interfaces are implemented as mixins, using static method in IInterface.)
 	*
+	* @abstract
+	*
 	* @implements IInterface
 	*
 	* @implements IObservable

@@ -13,6 +13,8 @@ var app = app || {};
 	*
 	* @constructor
 	*
+	* @abstract
+	*
 	* @author Ulrik H. Gade, March 2016
 	*
 	* @return {Factory} Not supposed to be instantiated, except when setting up inheritance in subclasses (concrete factories)
@@ -152,6 +154,8 @@ var app = app || {};
 	/** Creates a new product of the requested type
 	*
 	* @param {String} type Type of the new Product to be created (case-insensitive)
+	*
+	* @abstract
 	*
 	* @return {Product} An instance of the relevant Product subclass
 	*

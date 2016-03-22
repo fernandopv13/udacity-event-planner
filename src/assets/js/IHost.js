@@ -10,7 +10,7 @@ var app = app || {}; // create a simple namespace for the app
 
 	/** @classdesc Represents a host for an event. Hosts can be any class implementing the interface, e.g. a Person or an Organization.
 	*
-	* @constructor
+	* @interface
 	*
 	* @return Nothing. An interface cannot be instantiated.
 	*
@@ -29,6 +29,8 @@ var app = app || {}; // create a simple namespace for the app
 		*---------------------------------------------------------------------------------------*/
 			
 		/** Sets or gets name of host (method signature)
+		*
+		* @abstract
 		*
 		* @param {String} name Name of host (optional, supply when setting)
 		*
@@ -50,6 +52,8 @@ var app = app || {}; // create a simple namespace for the app
 		* Simulates similar functionality in Java, with the aim of achieving loose coupling between collaborating objects
 		*
 		* (i.e. allows collaborators to only know about the interface, not the class(es) realizing it).
+		*
+		* @abstract
 		*
 		* @param {Function} interface Reference to the interface we wish to know if this object is an instance of
 		*

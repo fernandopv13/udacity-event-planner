@@ -322,18 +322,20 @@ var app = app || {};
 				//$('#guest-location').focus(this.suggestLocations);
 
 				
-				$('#guest-name').keyup(function(event) {
+				/*
+				$('#guest-name').keyup(function(nEvent) {
 
-					this.validateName(event, 'guest-name', 'Please enter name', true);
+					Materialize.updateTextFields(nEvent.currentTarget);
 
 				}.bind(this));
 				
 
-				$('#guest-email').keyup(function(event) {
+				$('#guest-email').keyup(function(nEvent) {
 
-					this.validateEmail(event, 'guest-email', 'Please enter email', true);
+					app.EmailInputWidget.instance().validate(nEvent.currentTarget);
 
 				}.bind(this));
+				*/
 
 
 				$('#guest-employer').focus(this.suggestEmployers);

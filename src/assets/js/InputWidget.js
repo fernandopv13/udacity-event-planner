@@ -13,6 +13,8 @@ var app = app || {};
 	*
 	* Represents widgets in a form that take data input from users.
 	*
+	* @abstract
+	*
 	* @constructor
 	*
 	* @extends UIWidget
@@ -50,6 +52,11 @@ var app = app || {};
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
+
+	/** 
+	* @abstract
+	*
+	*/
 
 	module.InputWidget.prototype.validate = function(HTMLInputElement) {
 

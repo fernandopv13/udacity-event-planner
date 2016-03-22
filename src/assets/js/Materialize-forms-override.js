@@ -24,8 +24,9 @@
 * and are welcome to incorporate the minor adjustments made free of charge, should they so choose.
 */
 
+var app = app || {};
 
-(function ($) {
+(function ($, module) {
 	
 	$(document).ready(function() {
  
@@ -35,9 +36,11 @@
 
 			if ($(element).data && typeof $(element).data('customValidator') !== 'undefined') { // field has custom validator attribute
 
+				//var clss = app[$(element).data('customValidator')], fn = typeof clss !== 'undefined' ? clss.prototype.validate : null;
+
 				//var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, window); // resolve dot string into js reference (w/o resorting to eval()!)
 
-				var clss = app[$(element).data('customValidator')], fn = typeof clss !== 'undefined' ? clss.prototype.validate : null;
+				var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, module); // resolve dot string into js reference (w/o resorting to eval()!)
 
 				if (element.setCustomValidity && typeof fn === 'function') { // custom validator is a function
 
@@ -67,8 +70,6 @@
 				$(element).siblings('label, i').removeClass('active'); // set label not 'active'
 			}
 		}
-
-
 
 		// Function to set text field labels 'active', or not.
 		// Run once on $(document).ready(), then call manually in the FormView's custom onLoad handler
@@ -128,9 +129,9 @@
 
 		// Attaching to the global object has the potential drawback of not allowing for separate,
 		// more complex validation before this code is run (global handlers seem to execute first).
-		// But it may be necessary for the code to work across all devices to be investigated.
+		// But it may be necessary for the code to work across all devices (to be investigated).
 
-		$(document).on('blur', input_selector, function () {
+		$(document).on('blur input', input_selector, function () {
 			
 			var $inputElement = $(this);
 
@@ -221,4 +222,4 @@
 		};
 	}); // End of $(document).ready
 
-}( jQuery ));
+}(jQuery, app));

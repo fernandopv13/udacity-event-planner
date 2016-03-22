@@ -17,6 +17,8 @@ var app = app || {}; // create a simple namespace for the module
 	*
 	* Please see individual interfaces for documentation of methods that have a default implementation.
 	*
+	* @abstract
+	*
 	* @implements IInterfaceable
 	*
 	* @implements IObservable

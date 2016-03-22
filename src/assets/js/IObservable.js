@@ -10,7 +10,7 @@ var app = app || {}; // create a simple namespace for the module
 
 	/** @classdesc The Obserable part of the 'Observer' pattern. Observables may be observed by Observers. When Observables change state, they notify their Observers to update. Expects implementing classes to define public 'observers' accessor method.
 	*
-	* @constructor
+	* @interface
 	*
 	* @return Nothing. An interface cannot be instantiated
 	*
@@ -25,13 +25,6 @@ var app = app || {}; // create a simple namespace for the module
 	*/
 
 	module.IObservable = function() {
-		
-		/*----------------------------------------------------------------------------------------
-		* Abstract method signatures
-		*---------------------------------------------------------------------------------------*/
-		
-		// None so far
-		
 		
 		/*----------------------------------------------------------------------------------------
 		* Block instantiation

@@ -84,7 +84,9 @@ var app = app || {};
 
 				required: true,
 
-				errormessage: 'Please confirm password'
+				errormessage: 'Please confirm password',
+
+				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to PasswordConfirmationInputWidget.prototype.validate)
 			}
 			*/
 
@@ -139,7 +141,7 @@ var app = app || {};
 					tabindex: 0
 				},
 
-				dataset: {customValidator: 'PasswordConfirmationInputWidget'},
+				dataset: {customValidator: options.validator ? options.validator : 'PasswordConfirmationInputWidget.prototype.validate'},
 				
 				classList: ['validate']
 			}));

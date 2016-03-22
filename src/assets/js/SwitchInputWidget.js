@@ -88,7 +88,9 @@ var app = app || {};
 
 				yes: 'Yes',
 
-				no: 'no'
+				no: 'no',
+
+				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults none)
 			}
 			*/
 
@@ -207,7 +209,9 @@ var app = app || {};
 					if (options.datasource) {attr.checked = true;}
 
 					return attr;
-				})()
+				})(),
+
+				dataset: {customValidator: options.validator ? options.validator : ''}
 			}));
 
 			
@@ -240,7 +244,9 @@ var app = app || {};
 		module.SwitchInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
-		/** Event handler for interactive validation of password confirmation field.
+		/** Event handler for interactive validation of switch (checkbox) field.
+		*
+		* Dummy method (required by InputWidget parent class), always returns true.
 		*
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/

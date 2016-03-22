@@ -10,7 +10,7 @@ var app = app || {}; // create a simple namespace for the app
 
 	/** @classdesc Represents an interface for classes that can be serialized for local or remote storage. Provides default methods that do most of the heavy lifting object of serialization and deserialization. Inspired by, but not a direct copy of, the similar Java API.
 	*
-	* @constructor
+	* @interface
 	*
 	* @return Nothing. An interface cannot be instantiated.
 	*
@@ -33,6 +33,8 @@ var app = app || {}; // create a simple namespace for the app
 		*
 		* Inherited methods do not have access to private members, so can't provide default.
 		*
+		* @abstract
+		*
 		* @return {String} name Object's class name as string. Must evaluate to valide function as property of app.
 		*/
 		
@@ -48,6 +50,8 @@ var app = app || {}; // create a simple namespace for the app
 		*
 		* Inherited methods do not have access to private members, so can't provide default method.
 		*
+		* @abstract
+		*
 		* @return {int} ID Object's unique ID (by class)
 		*/
 		
@@ -61,6 +65,8 @@ var app = app || {}; // create a simple namespace for the app
 
 		/** Converts object to JSON object
 		*
+		* @abstract
+		*
 		* @return {Object} JSON object representation of person (used to override default behaviour of JSON.stringify())
 		*/
 		
@@ -72,7 +78,10 @@ var app = app || {}; // create a simple namespace for the app
 		module.ISerializable.prototype.toJSON.errorMessage = 'Method signature "toJSON()" must be realized in derived classes';
 		
 		
-		/** Re-establishes references to complex members after they have been deserialized */
+		/** Re-establishes references to complex members after they have been deserialized
+		*
+		* @abstract
+		*/
 		
 		module.ISerializable.prototype.onDeserialized = function() {
 			

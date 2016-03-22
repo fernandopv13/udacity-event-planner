@@ -278,7 +278,7 @@ var app = app || {};
 			
 			$('#sign-in-password').focus(function(nEvent) { // update and show password hints
 
-				this.validatePassword(nEvent.currentTarget, 'sign-in-password-hints');
+				//Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validation, so no need for explicit call
 
 				$('#sign-in-password-hints').show('slow');
 
@@ -289,11 +289,13 @@ var app = app || {};
 			}.bind(this));
 
 
+			/*
 			$('#sign-in-password').on('input', function(nEvent) { // validate password
 
 				Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validation, so no need for explicit call
 
 			}.bind(this));
+			*/
 
 			
 			$('#sign-in-password').blur(function(nEvent) { // hide password hints (global handler takes care of the rest)

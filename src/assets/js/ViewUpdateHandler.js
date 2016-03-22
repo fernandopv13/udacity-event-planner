@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public abstract class ViewUpdateHandler implements IObserver
+* public abstract class ViewUpdateHandler implements IInterfaceable IObserver
 ******************************************************************************/
 
 var app = app || {};
@@ -11,6 +11,8 @@ var app = app || {};
 	/** @classdesc Abstract base class for handlers of updates from Views to a Controller, in the mold of the Strategy pattern.
 	*
 	* Relies on the Observer pattern for handling inter-object messaging among the collaborators.
+	*
+	* @abstract
 	*
 	* @constructor
 	*
@@ -103,6 +105,8 @@ var app = app || {};
 	/** Does the detailed work required for the type of UIAction this handler responds to.
 	*
 	* Key to the Stategy pattern, though we are calling indirectly in this app.
+	*
+	* @abstract
 	*
 	* @param {int} UIAction An integer representing the type of user action requiring a response
 	*

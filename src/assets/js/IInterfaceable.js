@@ -11,7 +11,7 @@ var app = app || {}; // create a simple namespace for the app
 	/** @classdesc Base interface for a Java-like interface mechanism in JavaScript. Guarantees
 	* behaviours that all classes using the mechanism must support, and provides utility methods.
 	*
-	* @constructor
+	* @interface
 	*
 	* @return Nothing. An interface cannot be instantiated
 	*
@@ -29,6 +29,8 @@ var app = app || {}; // create a simple namespace for the app
 		*---------------------------------------------------------------------------------------*/
 		
 		/** Determines if realizing class implements the interface passed in (by function reference).
+		*
+		* @abstract
 		*
 		* @param {Function} interface The interface we wish to determine whether the class implements
 		*

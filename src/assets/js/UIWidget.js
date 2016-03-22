@@ -11,6 +11,8 @@ var app = app || {};
 
 	/** @classdesc Abstract base class for the abstract factory method pattern used to create and manage UIwidgets.
 	*
+	* @abstract
+	*
 	* @constructor
 	*
 	* @extends Product
@@ -93,6 +95,8 @@ var app = app || {};
 	*---------------------------------------------------------------------------------------*/
 
 	/** Initializes UIWidget upon rendering it into the HTML DOM
+	*
+	* @abstract
 	*
 	* @return {void}
 	*

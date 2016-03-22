@@ -178,9 +178,11 @@ var app = app || {};
 
 					required: true,
 
-					datasource: Event_e.start()
+					datasource: Event_e.start(),
 
-					//errormessage: '...'
+					//errormessage: '...',
+
+					validator: 'EventView.prototype.validateStartDate'
 
 				}).children[0]); // extract from wrapper
 
@@ -193,9 +195,13 @@ var app = app || {};
 
 					label: 'Ends',
 
-					required: true,
+					required: false,
 
-					datasource: Event_e.end()
+					datasource: Event_e.end(),
+
+					validator: 'EventView.prototype.validateEndDate',
+
+					errormessage: 'Please enter end after start in format dd/mm/yyyy hh:mm'
 
 				}).children[0]; // extract from wrapper
 
@@ -828,13 +834,13 @@ var app = app || {};
 
 	module.EventView.prototype.validateEndDate = function(Element_e) {
 
-		var self = module.EventView.prototype, // context of call is window, so set 'this' reference to View hierarchy manually
+		var dateWidget = module.DateInputWidget.instance(),
 
-		endDate = self.getDateTimePickerValue(Element_e),
+		endDate = dateWidget.value(Element_e),
 
-		startDate = self.getDateTimePickerValue($('#event-start-date')[0]),
+		startDate = dateWidget.value($('#event-start-date')[0]),
 
-		ret = false; // if all else fails, return false
+		ret = false; // return false by default
 
 		$(Element_e).siblings('label').data('error',  // pre-emptively (re)set error message to default
 
@@ -842,7 +848,7 @@ var app = app || {};
 		
 		if ($(Element_e).val() !== '') { // an entry has been made in end date
 
-			if (self.validateDate(Element_e)) { // end date is a valid date
+			if (dateWidget.validate(Element_e)) { // end date is a valid date
 				
 				if (startDate !== null) { // a valid start date has been entered
 
@@ -880,13 +886,11 @@ var app = app || {};
 
 	module.EventView.prototype.validateStartDate = function(Element_e) {
 
-		var self = module.EventView.prototype, // context of call is window, so set 'this' reference to View hierarchy manually
+		var ret = false; // return false by default
 
-		ret = false; // if all else fails, return false
+		if (app.DateInputWidget.instance().validate(Element_e)) { // start date is a valid date
 
-		if (self.validateDate(Element_e)) { // start date is a valid date
-
-			self.validateEndDate(Element_e); // re-check that end, if entered, is still after start
+			Materialize.updateTextFields($('#event-end-date')[0]); // re-check that end, if entered, is still after start, else present error msg
 
 			ret = true;
 		}

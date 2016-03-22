@@ -88,7 +88,9 @@ var app = app || {};
 
 				errormessage: 'Please enter number',
 
-				hintsprefix: 'test-password-hints'
+				hintsprefix: 'test-password-hints',
+
+				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to PasswordInputWidget.prototype.validate)
 			}
 			*/
 
@@ -146,7 +148,7 @@ var app = app || {};
 
 				dataset:
 				{
-					customValidator: 'PasswordInputWidget',
+					customValidator: options.validator ? options.validator : 'PasswordInputWidget.prototype.validate',
 
 					value: options.datasource && options.datasource.password() ? options.datasource.password() : ''
 				},

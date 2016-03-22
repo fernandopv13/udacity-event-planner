@@ -10,7 +10,7 @@ var app = app || {}; // create a simple namespace for the module
 
 	/** @classdesc The Observer part of the 'Observer' pattern. Observers may register with observables, to be notified when observable changes state.
 	*
-	* @constructor
+	* @interface
 	*
 	* @return Nothing. An interface cannot be instantiated
 	*
@@ -30,6 +30,8 @@ var app = app || {}; // create a simple namespace for the module
 		*---------------------------------------------------------------------------------------*/
 		
 		/** Updates object when notified of change by observable (controller). Autosaves to local storage if available.
+		*
+		* @abstract
 		*
 		* @param {Object} obj Temporary object holding the data to update this object with
 		*
