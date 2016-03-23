@@ -153,9 +153,15 @@ var app = app || {};
 
 			if (options.listeners) {
 			
+				//console.log(options.listeners);
+
 				for (prop in options.listeners) {
 					
-					element.addEventListener(prop, options.listeners[prop]); // maybe use jQuery here instead
+					//element.addEventListener(prop, options.listeners[prop]); // maybe use jQuery here instead
+
+					//console.log('Attaching ' + prop + ' handler'); //debug
+
+					$(element).on(prop, options.listeners[prop]);
 				}
 			}
 

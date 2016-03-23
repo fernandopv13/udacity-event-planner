@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public abstract class ViewUpdateHandler implements IInterfaceable IObserver
+* public abstract class ViewUpdateHandler implements IInterfaceable, IObservable IObserver
 ******************************************************************************/
 
 var app = app || {};
@@ -17,6 +17,8 @@ var app = app || {};
 	* @constructor
 	*
 	* @implements IInterfaceable
+	*
+	* @implements IObservable
 	*
 	* @implements IObserver
 	*
@@ -39,6 +41,8 @@ var app = app || {};
 		
 		var _controller = Controller_c, // the Controller this handler is bound to
 
+		_observers = [], // Array of IObservers receiving updates from this view, required in order to implement IObservable
+
 		_parentList = [module.IInterfaceable, module.IObserver, module.ViewUpdateHandler], // list of interfaces implemented by this class (by function reference)
 
 		_super = (this.ssuper ? this.ssuper : Object), // reference to immediate parent class (by function) if provided by subclass, otherwise Object
@@ -58,6 +62,16 @@ var app = app || {};
 		*/
 
 		this.controller = new module.Accessor(_controller, true);
+		
+
+		/** Gets the collection of IObservers currently registered with the handler
+		*
+		* @return {Array} observers An array of IObservers
+		*
+		* @throws {IllegalArgumentError} If trying to set the observers array
+		*/
+
+		this.observers = new module.Accessor(_observers, true);
 		
 
 		/** Gets a collection of classes or 'interfaces' (by function reference) the object extends or implements. Includes the class of the object itself.
@@ -144,9 +158,9 @@ var app = app || {};
 	*
 	* @param {int} UIAction An integer representing the type of user action requiring a response
 	*
-	* @param {Model} m The Model bound to the view spawning the notification
+	* @param {Model} m The Model bound to the requested View
 	*
-	* @param {View} v The View spawning the notification
+	* @param {View} v The requested View
 	*
 	* @return {void}
 	*/
@@ -160,6 +174,8 @@ var app = app || {};
 				if (Model_m === null || (Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model))) { // second param is instance of Model
 
 					if (View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { // third param is instance of View
+
+						console.log('Executing UIAction ' + int_UIAction + ' on ' + View_v.className());
 
 						this.execute(int_UIAction, Model_m, View_v); // UIAction and call signature are a match, so respond
 					}
@@ -175,6 +191,8 @@ var app = app || {};
 
 	void module.IInterfaceable.mixInto(module.IInterfaceable, module.ViewUpdateHandler); // custom 'interface' framework
 
-	void module.IInterfaceable.mixInto(module.IObserver, module.ViewUpdateHandler); // the actual interface to implement
+	void module.IInterfaceable.mixInto(module.IObservable, module.ViewUpdateHandler); // the actual interfaces to implement
+
+	void module.IInterfaceable.mixInto(module.IObserver, module.ViewUpdateHandler);
 
 })(app);

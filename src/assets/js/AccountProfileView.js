@@ -279,7 +279,7 @@ var app = app || {};
 				
 				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'CancelButtonWidget',  // cancel button
 				{					
-					id: 'account-holder-form-cancel',
+					id: 'account-holder-cancel',
 
 					label: 'Cancel'
 				}));
@@ -287,7 +287,7 @@ var app = app || {};
 
 				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
 				{					
-					id: 'account-holder-form-submit',
+					id: 'account-holder-submit',
 
 					label: 'Done',
 
@@ -300,6 +300,8 @@ var app = app || {};
 
 							
 			// Update DOM
+
+				console.log(formElement);
 
 				this.$renderContext().empty();
 
@@ -322,6 +324,7 @@ var app = app || {};
 				});
 				
 				
+				/*
 				$('#account-holder-name').keyup(function(event) {
 
 					this.validateName(event, 'account-holder-name', 'Please enter your name', true);
@@ -334,18 +337,23 @@ var app = app || {};
 					this.validateEmail(event, 'account-holder-email', false);
 
 				}.bind(this));
+				*/
 
 				
-				$('#account-holder-form-cancel').click(function(event) {
+				$('#account-holder-cancel').click(function(event) { // cancel (blur hides click event so using mousedown)
+
+					console.log('cancel');
 
 					this.cancel(event);
 
 				}.bind(this));
 
 
-				$('#account-holder-form-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
+				$('#account-holder-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
 
-					this.submit(event);
+					console.log('submit');
+
+					this.submit(nEvent);
 
 				}.bind(this));
 		}

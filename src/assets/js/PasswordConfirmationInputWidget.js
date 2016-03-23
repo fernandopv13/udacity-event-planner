@@ -118,28 +118,30 @@ var app = app || {};
 			outerDiv.appendChild(innerDiv);
 			
 
+			var attributes = 
+			{
+				type: 'text',
+				
+				id: options.id,
+				
+				value: '',
+
+				'aria-required': options.required ? true : false,
+
+				'aria-labelledby': options.id + '-label',
+
+				role: 'textbox',
+
+				tabindex: 0
+			};
+
+			if (options.required) {attributes.required = true;}
+
 			innerDiv.appendChild(createElement( // input
 			{
 				element: 'input',			
 				
-				attributes:
-				{
-					type: 'text',
-					
-					id: options.id,
-					
-					value: '',
-
-					required: options.required ? true : false,
-
-					'aria-required': true,
-
-					'aria-labelledby': options.id + '-label',
-
-					role: 'textbox',
-
-					tabindex: 0
-				},
+				attributes,
 
 				dataset: {customValidator: options.validator ? options.validator : 'PasswordConfirmationInputWidget.prototype.validate'},
 				
@@ -194,17 +196,13 @@ var app = app || {};
 
 			pw = $('#' + HTMLInputElement_e.id.replace('-confirmation', '')).val(), // current password entry
 
-			pw2 = $(HTMLInputElement_e).val(); // confirmation
+			pw2 = $(HTMLInputElement_e).val(), // confirmation
 
-			var ret = pw === pw2;
+			ret = (pw === pw2 || pw === pw_org); // pw and confirmation match, or pw hasn't changed
+			
+			//console.log(ret); // debug
 
-			//console.log(ret);
-
-			ret = ret || pw === pw_org;
-
-			//console.log(ret);
-
-			return ret; // // pw and confirmation match, or pw hasn't changed
+			return ret;
 		};
 
 

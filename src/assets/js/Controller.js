@@ -169,7 +169,7 @@ var app = app || {};
 
 					else {
 					
-						throw new IllegalArgumentError('Account must be instance of Account')
+						throw new IllegalArgumentError('Expected instance of Account')
 					}
 				}
 				
@@ -179,7 +179,7 @@ var app = app || {};
 
 			/** Gets or sets the currently selected Event
 			*
-			* @param {Event} selectedAccount The selected event, or null
+			* @param {Event} selectedEvent The selected event, or null
 			*
 			* @return {Event} The selected event, or null
 			*
@@ -197,7 +197,7 @@ var app = app || {};
 
 					else {
 					
-						throw new IllegalArgumentError('Event must be instance of Event')
+						throw new IllegalArgumentError('Expected instance of Event')
 					}
 				}
 				
@@ -225,7 +225,7 @@ var app = app || {};
 
 					else {
 					
-						throw new IllegalArgumentError('Guest must be instance of Person')
+						throw new IllegalArgumentError('Expected instance of Person')
 					}
 				}
 				
@@ -438,7 +438,7 @@ var app = app || {};
 					window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
 
 				
-				// Create ViewUpdateHandlers and register as observers of controller
+				// Register (concrete) ViewUpdateHandlers and controller as mutual observers
 
 					[
 						new module.ViewCancelHandler(this),
@@ -458,6 +458,8 @@ var app = app || {};
 					].forEach(function(handler) {
 
 						this.registerObserver(handler);
+
+						handler.registerObserver(this);
 
 					}, this);
 
@@ -501,34 +503,58 @@ var app = app || {};
 			* @todo Clean up signatures to make more sense from calling functions
 			*/
 
-			this.notifyObservers = function(Model_m, int_id, View_v) {
+			this.notifyObservers = function() {
 				
-				if (View_v !== undefined) {
+				// Assume that main update() method has done all type checking, and takes care of correct signature, so no need for that here
 
-					_observers.forEach(function(observer) {
+				switch (arguments.length) {
 
-						observer.update(int_id, Model_m, View_v); // expected by ViewUpdateHandler
-					});
-				}
+					case 2:
 
-				else if (int_id !== undefined) {
+						if (typeof arguments[1] === 'number') { //console.log('notifyObservers(Model, int): Notifying Models of update from View');
 
-					_observers.forEach(function(observer) { // expected by Model
+							var args = arguments;
 
-						observer.update(Model_m, int_id);
-					});
-				}
+							_observers.forEach(function(observer) { // expected by View
 
-				else {
+								observer.update(args[0], args[1]); // Model, int
+							});
+						}
 
-					_observers.forEach(function(observer) { // expected by View
+						else if (arguments[1].isInstanceOf(module.View)) { //console.log('notifyObservers(Model, View): Notifying Views of update from ViewUpdateHandler or Model');
 
-						observer.update(Model_m);
-					});
+							// Notification may originate directly from a model, or from a ViewUpdateHandler
+
+							var args = arguments;
+
+							_observers.forEach(function(observer) { // expected by View
+
+								observer.update(args[0], args[1]); // Model, View
+							});
+						}
+
+						break;
+
+					case 3: //console.log('notifyObservers(int, Model, View): Notifying ViewUpdateHandlers of user action in View');
+
+						var args = arguments;
+
+						_observers.forEach(function(observer) { // expected by ViewUpdateHandler
+
+							observer.update(args[0], args[1], args[2]); // int, Model, View
+						});
+						
+						break;
+
+					default:
+
+						//console.log(arguments);
+
+						throw new IllegalArgumentError('Unexpected signature');
 				}
 			}
 
-			
+
 			/** Handles click events in navbar/dropdown */
 
 			this.onNavSelection = function(nEvent) {
@@ -581,14 +607,65 @@ var app = app || {};
 			*
 			* Called by public update() method, which also does error handling.
 			*
-			* @param {Model} model The Model that has changed state and therefore invoked the update.
+			* @param {Model} m The Model that has changed state and therefore invoked the update.
 			*
 			* @return {void}
 			*/
 
 			function _update(Model_m) {
 
-				this.notifyObservers(Model_m);
+				var View_v;
+
+				for(var prop in _views) { // get the View that is bound to the Model
+
+					if (_views[prop].modelClass() === Model_m.constructor) {
+
+						View_v = _views[prop];
+
+						break;
+					}
+				}
+
+				if (View_v) { // if there is a match, dispatch update
+
+					this.notifyObservers(Model_m, View_v);	
+				}
+
+				//else: fail silently (not all models are bound to a view, and that's OK)
+			}
+
+
+			/** Handles Model-directed responses to user action from ViewUpdateHandler
+			*
+			* Called by public update() method, which also does error handling.
+			*
+			* @param {Model} m The Model the targeted View is bound to, or null.
+			*
+			* @param {int} id The id of the Model targeted by the update.
+			*
+			* @return {void}
+			*/
+
+			function __update(Model_m, int_id) {
+
+				this.notifyObservers(Model_m, int_id);
+			}
+
+
+			/** Handles View-directed responses to user action from ViewUpdateHandler
+			*
+			* Called by public update() method, which also does error handling.
+			*
+			* @param {Model} m The Model the targeted View is bound to, or null.
+			*
+			* @param {View} v The View targeted by the update.
+			*
+			* @return {void}
+			*/
+
+			function ___update(Model_m, View_v) {
+
+				this.notifyObservers(Model_m, View_v);
 			}
 
 
@@ -603,59 +680,18 @@ var app = app || {};
 			* @param {int} UIAction The type of action invoked by the user in the UI. Supported action types are defined in module.View.UIAction.
 			*
 			* @return {void}
-			*
-			* @todo Get sign in to work using Strategy pattern, then clean out entire Switch statement with the old code
 			*/
 
-			function __update(View_v, Model_m, int_uiaction) {
+			function ____update(View_v, Model_m, int_uiAction) {
 
-				switch (int_uiaction) {
+				switch (int_uiAction) {
 
-					/*
-					case module.View.UIAction.CANCEL:
-
-						this.notifyObservers(Model_m, int_uiaction, View_v);
-
-						break;
-
-					case module.View.UIAction.CREATE:
-
-						this.notifyObservers(Model_m, int_uiaction, View_v);
-
-						break;
-
-					case module.View.UIAction.DELETE:
-
-						this.notifyObservers(Model_m, int_uiaction, View_v);
-
-						break;
-
-					case module.View.UIAction.NAVIGATE: // navigation to (sub)view requested
-
-						this.notifyObservers(Model_m, int_uiaction, View_v);
-
-						break;
-					
-					case module.View.UIAction.SELECT:
-
-						this.notifyObservers(Model_m, int_uiaction, View_v);
-
-						break;
-
-					case module.View.UIAction.SUBMIT: // update to Model submitted by form
-
-						this.notifyObservers(Model_m, int_uiaction, View_v);
-
-						break;
-
-					*/
-					
 					case module.View.UIAction.SIGNIN: // submission from sign in form
 
 						// Requires debugging before the code can switch over to the notification model (Strategy pattern):
 						// not sure, but I think the problem could have something to do with what gets passed in the call to onAccountSelected()
 
-						//this.notifyObservers(Model_m, int_uiaction, View_v);
+						//this.notifyObservers(Model_m, int_uiAction, View_v);
 
 						var accounts = module.Account.registry.getObjectList(), ret = false;
 
@@ -697,9 +733,11 @@ var app = app || {};
 					
 					default:
 
-						this.notifyObservers(Model_m, int_uiaction, View_v);
+						//console.log('Forwarding update of UIAction ' + int_uiAction + ' on ' + View_v.className()); // debug
 
-						//console.log('UI action ' + int_uiaction + ' not supported');
+						this.notifyObservers(int_uiAction, Model_m, View_v);
+
+						//console.log('UI action ' + int_uiAction + ' not supported');
 				}
 
 				// remove temporary Model passed in from View (to prepare for garbage collection)
@@ -713,34 +751,39 @@ var app = app || {};
 			}
 			
 
-			/** Receives and processes update notifications from either view (UI) or data model.
+			/** Handles update notifications from either of the Controllers collaborators
 			*
 			* Uses JS style 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked.
 			*
 			* Delegates response to private '_update(...)' functions. See these for supported method signatures.
 			*
-			* @param {Arguments} args An array like object containing whatever params the caller has passed on
+			* @param {Arguments} args An array like object containing whatever params the caller has passed on. This approach keeps the signature generic while providing the necessary flexibility.
 			*
 			* @return {void}
 			*
-			* @throws {IllegalArgumentError} If first parameter provided is neither an Model nor a View.
-			*
-			* @throws {IllegalArgumentError} If second parameter provided (when present) is neither an integer nor a native browser event.
+			* @throws {IllegalArgumentError} If supplied parameters do not comply with a supported method signature
 			*/
 
 			this.update = function() {
 
 				// Parse parameters to invoke appropriate 'polymorphic' response
+				// Do type checking upfront so function chain called from here can assume it has been handled
 
-				var args = arguments[0];
+				var args = arguments[0]; // 
 
 				switch (args.length) {
 
 					case 1: // state change notification from Model
 
-						if (args[0].isInstanceOf(module.Model)) { // first param is instance of Model
+						var Model_m = args[0];
 
-								_update.call(this, args[0]);
+						if (typeof Model_m !== 'undefined' && Model_m !== null && Model_m.isInstanceOf(module.Model)) { // single param that is instance of Model
+
+						//if (args[0].isInstanceOf(module.Model)) { // single param that is instance of Model
+
+								//console.log('Detected state change notification from Model'); //debug
+
+								_update.call(this, Model_m);
 						}
 
 						else {
@@ -750,26 +793,76 @@ var app = app || {};
 
 						break;
 
-					case 3: // user action notification from View
+					case 2: // response from ViewHandler to user action in View
 
-						if (args[0].isInstanceOf(module.View)) { // first param is instance of View
+						if (typeof args[1] === 'number') { // second param is a number (integer)
 
-							if (args[1] === null || args[1].isInstanceOf(module.Model)) { // second param is instance of Model, or null
+							var Model_m = args[0], int_id = args[1];
 
-								if (args[2] === parseInt(args[2])) { // third param is integer
+							if (typeof Model_m !== 'undefined' && Model_m.isInstanceOf(module.Model)) { // first param is instance of Model
 
-									__update.call(this, args[0], args[1], args[2]);
+								//console.log('Detected update to Model from ViewUpdateHandler');
+
+								__update.call(this, Model_m, int_id);
+							}
+
+							else {
+
+								throw new IllegalArgumentError('Expected instance of Model');
+							}
+						}
+
+						else {
+
+							var Model_m = args[0], View_v = args[1];
+
+							if (typeof Model_m !== 'undefined' && (Model_m === null || Model_m.isInstanceOf(module.Model))) { // first param is instance of Model, or null
+
+								if (typeof View_v !== 'undefined' && View_v.isInstanceOf(module.View)) { // send param is instance of View
+
+									//console.log('Detected update to View from ViewUpdateHandler');
+
+									___update.call(this, Model_m, View_v);
 								}
 
 								else {
 
-									throw new IllegalArgumentError('Expected integer');
+									throw new IllegalArgumentError('Expected instance of View');
 								}
 							}
 
 							else {
 
 								throw new IllegalArgumentError('Expected instance of Model');
+							}
+						}
+
+						break;
+
+					case 3: // user action notification from View
+
+						var View_v = args[0], Model_m = args[1], UIAction = args[2];
+
+						if (View_v.isInstanceOf(module.View)) { // first param is instance of View
+
+							if (Model_m === null || Model_m.isInstanceOf(module.Model)) { // second param is instance of Model, or null
+
+								if (typeof UIAction === 'number') { // third param is integer
+
+									//console.log('Detected user action notification from View'); // debug
+
+									____update.call(this, View_v, Model_m, UIAction);
+								}
+
+								else {
+
+									throw new IllegalArgumentError('Expected a number');
+								}
+							}
+
+							else {
+
+								throw new IllegalArgumentError('Expected instance of Model, or null');
 							}
 						}
 
@@ -782,18 +875,10 @@ var app = app || {};
 
 					default:
 
-						//throw new IllegalArgumentError('Method signature not supported');
+						throw new IllegalArgumentError('Unexpected method signature');
 				}
 			}
-		
-		/*----------------------------------------------------------------------------------------
-		* Other initialization (parameter parsing/constructor 'polymorphism')
-		*---------------------------------------------------------------------------------------*/
-			
-		// none so far
-		
 	};
-
 
 	/*----------------------------------------------------------------------------------------
 	Mix in default methods from implemented interfaces, unless overridden by class or ancestor

@@ -142,9 +142,9 @@ var app = app || {};
 
 				if ($(element).data && typeof $(element).data('customValidator') !== 'undefined') { // field has custom validator attribute
 
-					//var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, window); // resolve dot string into js reference (w/o resorting to eval()!)
+					var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, module); // resolve dot string into js reference (w/o resorting to eval()!)
 
-					var clss = module[$(element).data('customValidator')], fn = typeof clss !== 'undefined' ? clss.prototype.validate : null;
+					//var clss = module[$(element).data('customValidator')], fn = typeof clss !== 'undefined' ? clss.prototype.validate : null;
 
 					if (element.setCustomValidity && typeof fn === 'function') { // custom validator is a function
 
@@ -152,14 +152,14 @@ var app = app || {};
 
 						element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
 
-						//console.log(element.id + ': ' + element.checkValidity()); // debug
+						//console.log(element.id + ': ' + element.checkValidity() + ', ' + fn(element)); // debug
 					}
 				}
 			});
 
 			// update display of error messages
 
-			Materialize.updateTextFields();
+			Materialize.updateTextFields(); // implictly calls custom validators
 
 			return $(HTMLFormElement_f)[0].checkValidity();
 		}

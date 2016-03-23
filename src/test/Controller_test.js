@@ -35,15 +35,24 @@ describe('class Controller', function(){
 
 	describe('instance', function() {
 
-		var testController;
+		TestObserver = function() {
 
-		beforeEach(function(){
+			this.notification = null;
 
-			testController = new app.Controller();
-		});
+			this.isInstanceOf = function() {return true;}; // fool IObservable into accepting this a valid observer
 
-		
-		it('can initialize', function() {
+			this.update = function() {this.notification = arguments;};
+		};
+
+
+
+		var testController = new app.Controller(), testObserver = new TestObserver();
+
+		testController.init();
+
+		testController.registerObserver(testObserver);
+
+		xit('can initialize', function() {
 
 			app.init();
 
@@ -76,14 +85,13 @@ describe('class Controller', function(){
 			}
 		});
 
+		
 		xit('displays the current view being set and hides all others', function() {
-
-			
 		})
 
 
 
-		it('can get and set the selected (active) account', function() {
+		xit('can get and set the selected (active) account', function() {
 
 			var testAccount = new app.Account();
 
@@ -91,7 +99,7 @@ describe('class Controller', function(){
 		});
 
 
-		it('rejects attempt to set account that is not an Account', function() {
+		xit('rejects attempt to set account that is not an Account', function() {
 
 			try {
 
@@ -105,7 +113,7 @@ describe('class Controller', function(){
 		});
 
 
-		it('can get and set the selected (active) event', function() {
+		xit('can get and set the selected (active) event', function() {
 
 			var testEvent = new app.Event();
 
@@ -113,7 +121,7 @@ describe('class Controller', function(){
 		});
 
 
-		it('rejects attempt to set event that is not an Event', function() {
+		xit('rejects attempt to set event that is not an Event', function() {
 
 			try {
 
@@ -127,7 +135,7 @@ describe('class Controller', function(){
 		});
 
 
-		it('can get and set the selected (active) guest', function() {
+		xit('can get and set the selected (active) guest', function() {
 
 			var testGuest = new app.Person();
 
@@ -135,7 +143,7 @@ describe('class Controller', function(){
 		});
 
 
-		it('rejects attempt to set guest that is not a Guest', function() {
+		xit('rejects attempt to set guest that is not a Guest', function() {
 
 			try {
 
@@ -148,6 +156,81 @@ describe('class Controller', function(){
 			}
 		});
 
+
+		describe('using (async) communication protocol', function() {
+
+			beforeEach(function() {
+
+				testObserver.notification = null;
+			});
+
+
+			it('can notify its Views of an update from a Model', function() {
+
+				// input signature: update(Model)
+
+				// output signature: nofityObservers(Model, View)
+
+				testController.update([new app.Event()]);
+
+				expect(testObserver.notification.length).toEqual(2);
+
+				expect(testObserver.notification[0].constructor).toBe(app.Event);
+
+				expect(testObserver.notification[1].constructor).toBe(app.EventView);
+			});
+
+			
+			it('can notify its ViewUpdateHandlers of an update from a View', function() {
+
+				// input signature: update(View, Model, int)
+
+				// output signature: notifyObservers(int, Model, View)
+
+				testController.update([new app.EventView(), new app.Event(), 1]);
+
+				expect(testObserver.notification.length).toEqual(3);
+
+				expect(testObserver.notification[0]).toEqual(1);
+
+				expect(testObserver.notification[1].constructor).toBe(app.Event);
+
+				expect(testObserver.notification[2].constructor).toBe(app.EventView);
+			});
+
+
+			it('can notify its Models of an update from a ViewUpdateHandler', function() {
+
+				// input signature: update(Model, int)
+
+				// output signature: notifyObservers(Model, int)
+
+				testController.update([new app.Email('ada@weweq.gwegwe'), 1]);
+
+				expect(testObserver.notification.length).toEqual(2);
+
+				expect(testObserver.notification[0].constructor).toBe(app.Email);
+
+				expect(testObserver.notification[1]).toEqual(1);
+			});
+
+
+			it('can notify its Views of an update from a ViewUpdateHandler', function() {
+
+				// input signature: update(Model, View)
+
+				// output signature: notifyObservers(Model, View)
+
+				testController.update([new app.Event(), new app.EventView()]);
+
+				expect(testObserver.notification.length).toEqual(2);
+
+				expect(testObserver.notification[0].constructor).toBe(app.Event);
+
+				expect(testObserver.notification[1].constructor).toBe(app.EventView);
+			});
+		});
+			
 
 		// IInterfaceable testing
 

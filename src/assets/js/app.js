@@ -24,18 +24,23 @@
 
 var app = (function(self) {
 	
-	var _device = new app.Device();
+	var _device = new app.Device(),
 
-	var _registry = []; // top level collection of collections of data model objects managed by the app
-	
-	var _prefs = { // list of prefs, private so we can control access
+	_prefs = { // list of prefs, private so we can control access
 		
 		defaultEventCapacity: 50,
 
 		isLocalStorageAllowed: false,	
 	
 		localStoragePrefix: 'dk.ulrikgade.udacity.srwebdev.meetup-app.'
-	}
+	},
+
+	_ready = false, // set true at end of app initialization
+
+	_registry = []; // top level collection of collections of data model objects managed by the app
+	
+	
+	
 	
 	self.controller = new self.Controller();
 
@@ -114,6 +119,8 @@ var app = (function(self) {
 		}
 	}
 		
+	self.ready = function() {return _ready;}; // public getter for app's ready state
+
 	self.registry = { // allows serialization/deserialization of all the app's data in one fell swoop
 		
 		//ObjectRegistry class needs named class reference, so cannot be used with this anonymous module
@@ -186,7 +193,7 @@ var app = (function(self) {
 	}
 	
 	self.device = function() {return _device;};
-
+	
 	self.init = function() {
 		
 		// Hide progress indicator
@@ -217,8 +224,10 @@ var app = (function(self) {
 		//self.registry.onDeserialized();
 
 		self.controller.init();
+
+		_ready = true;
 	};
-	
+
 	return self;
 	
 })(app || {});

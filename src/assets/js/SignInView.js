@@ -84,6 +84,8 @@ var app = app || {};
 
 	module.SignInView.prototype.render = function() {
 
+		console.log('rendering SignInView'); // debug
+
 		var widgetFactory = app.UIWidgetFactory.instance();
 			
 		this.$renderContext().empty();
@@ -224,7 +226,11 @@ var app = app || {};
 				
 				classList: ['waves-effect', 'waves-light', 'btn'],
 
-				innerHTML: 'Sign In'
+				innerHTML: 'Sign In',
+
+				listeners: {submit: this.submit}
+
+				//debug: (function() {console.log('creating submit');})()
 			}));
 
 		
@@ -317,11 +323,13 @@ var app = app || {};
 			}.bind(this));
 
 
+			/*
 			$('#sign-in-submit').click(function(nEvent) {
 
 				this.submit(event);
 
 			}.bind(this));
+			*/
 
 
 		// call parent to perform common post-render task(s)
@@ -331,6 +339,8 @@ var app = app || {};
 
 
 	module.SignInView.prototype.submit = function(nEvent) {
+
+		console.log('submitting');
 
 		if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 
@@ -353,9 +363,11 @@ var app = app || {};
 	}
 
 
-	module.SignInView.prototype.update = function() {
+	/*module.SignInView.prototype.update = function() {
+
+		console.log('received update');
 
 		this.render();
-	}
+	}*/
 
 })(app);

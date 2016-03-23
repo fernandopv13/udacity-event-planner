@@ -89,6 +89,8 @@ var app = app || {};
 
 	module.EventView.prototype.render = function(Event_e) {
 
+		console.log('Rendering EventView'); // debug
+
 		var widgetFactory = app.UIWidgetFactory.instance();
 		
 		if (Event_e !== null) {

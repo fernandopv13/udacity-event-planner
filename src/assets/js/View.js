@@ -920,13 +920,18 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.prototype.update = function(Model_m) {
 			
-			if (Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) && Model_m.constructor === this.modelClass()) { // correct Model subtype
+			if (arguments.length === 1) { // caller signature has a single parameter
 
-				if (arguments.length === 1) { // correct method signature
+				if (Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) && Model_m.constructor === this.modelClass()) { // parameter is correct Model subtype
 
-					this.model(Model_m);
+					console.log('Received update from ' + Model_m.className());
 
-					this.render(Model_m);
+					if (arguments.length === 1) { // correct method signature
+
+							this.model(Model_m);
+
+							this.render(Model_m);
+					}
 				}
 			}
 		};

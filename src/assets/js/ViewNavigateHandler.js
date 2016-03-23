@@ -71,6 +71,8 @@ var app = app || {};
 
 	module.ViewNavigateHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
+		// console.log('Navigating to ' + View_v.className()); //debug
+
 		var ctrl = this.controller(), view, views = ctrl.views();
 
 		for (var prop in views) { // search for (existing) view matching the request
@@ -82,6 +84,8 @@ var app = app || {};
 		}
 
 		if (view) {
+
+			this.notifyObservers(Model_m, View_v);
 
 			ctrl.currentView(view, Model_m);
 		}

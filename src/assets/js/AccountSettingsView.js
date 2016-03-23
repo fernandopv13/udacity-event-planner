@@ -314,7 +314,7 @@ var app = app || {};
 				
 				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'CancelButtonWidget',  // cancel button
 				{					
-					id: 'account-settings-form-cancel',
+					id: 'account-settings-cancel',
 
 					label: 'Cancel'
 				}));
@@ -322,7 +322,7 @@ var app = app || {};
 
 				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
 				{					
-					id: 'account-settings-form-submit',
+					id: 'account-settings-submit',
 
 					label: 'Done',
 
@@ -341,6 +341,7 @@ var app = app || {};
 
 			// Initialize and (re)assign evnet handlers to form elements
 
+				/*
 				$('#account-settings-email, #account-settings-password, #account-settings-password-confirmation').on('input', function(nEvent) { // interactively validate email, password etc
 
 				if (nEvent.currentTarget.value.length > 3) { // allow people to get started before showing error message (we need at least 3 chars anyway)
@@ -349,6 +350,7 @@ var app = app || {};
 				}
 
 				}.bind(this));
+				*/
 				
 				
 				$('#account-settings-password').focus(function(nEvent) { // update and show password hints
@@ -383,7 +385,7 @@ var app = app || {};
 				});
 
 
-				$('#account-settings-cancel').click(function(nEvent) {
+				$('#account-settings-cancel').click(function(nEvent) { // cancel (blur hides click event so using mousedown)
 
 					this.cancel(nEvent);
 					
@@ -393,7 +395,7 @@ var app = app || {};
 				$('#account-settings-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
 
 					this.submit(nEvent);
-
+					
 				}.bind(this));
 		}
 
@@ -426,19 +428,19 @@ var app = app || {};
 
 			var account = new module.Account();
 
-			Account_a.email(new module.Email($('#account-settings-email').val()));
+			account.email(new module.Email($('#account-settings-email').val()));
 
-			Account_a.password(new module.Password($('#account-settings-password').val()));
+			account.password(new module.Password($('#account-settings-password').val()));
 
 			// leaving source.accountHolder undefined causes Account update() to skip it, leaving the original intact
 
-			Account_a.defaultCapacity(parseInt($('#account-settings-capacity').val()));
+			account.defaultCapacity(parseInt($('#account-settings-capacity').val()));
 
-			Account_a.defaultLocation($('#account-settings-location').val());
+			account.defaultLocation($('#account-settings-location').val());
 
-			Account_a.geoLocationAllowed($('#account-settings-geolocation').prop('checked'));
+			account.geoLocationAllowed($('#account-settings-geolocation').prop('checked'));
 
-			Account_a.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
+			account.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
 
 			
 			this.ssuper().prototype.submit.call(
