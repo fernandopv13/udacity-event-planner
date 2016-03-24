@@ -119,7 +119,7 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 	*
 	* @throws {IllegalArgumentError} If passed a class name parameter that is not a string (constructor)
 	*
-	* @throws {IllegalArgumentError} If passed a type paramater that is not a class7function (accessor function)
+	* @throws {IllegalArgumentError} If passed a type paramater that is not a class/function (accessor function)
 	*/
 	
 	function Accessor___(obj_prop, Function_type, str_className) {  // unified accessor with type checking for complex types (i.e. classes)
@@ -134,7 +134,7 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 
 					if (obj_val !== undefined) {
 
-						if (obj_val.constructor === acc_type || (obj_val.isInstanceOf && obj_val.isInstanceOf(acc_type))) {
+						if (obj_val === null || obj_val.constructor === acc_type || (obj_val.isInstanceOf && obj_val.isInstanceOf(acc_type))) {
 
 							obj_prop = obj_val;
 						}

@@ -80,12 +80,12 @@ var app = app || {};
 			if (views[prop].constructor === View_v.constructor) {
 
 				view = views[prop];
+
+				break;
 			}
 		}
 
 		if (view) {
-
-			this.notifyObservers(Model_m, View_v);
 
 			ctrl.currentView(view, Model_m);
 		}

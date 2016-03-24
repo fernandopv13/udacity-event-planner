@@ -73,7 +73,7 @@ var app = app || {};
 
 					if (View_v === null || View_v.isInstanceOf(module.View)) {
 
-						this.notifyObservers(Model_m); // first notify observers: forms won't update if they are the current view
+						this.update([Model_m, View_v]); // first notify observers: forms won't update if they are the current view
 						
 						for (var view in _views) {
 
@@ -251,6 +251,7 @@ var app = app || {};
 			* @param {Account} a The selected Account
 			*/
 
+			/*
 			function _onAccountSelected(Account_a) {
 
 				this.selectedEvent(null);
@@ -261,10 +262,17 @@ var app = app || {};
 
 				this.currentView(_views.eventListView, this.selectedAccount());
 			}
+			*/
 
 			this.onAccountSelected = function(Account_a) { // temporary adapter while transitioning to the Strategy pattern
 
-				return _onAccountSelected.call(this, Account_a);
+				this.selectedEvent(null);
+
+				this.selectedGuest(null);
+
+				this.selectedAccount(Account_a);
+
+				this.currentView(_views.eventListView, this.selectedAccount());
 			};
 
 
@@ -333,16 +341,20 @@ var app = app || {};
 			* @param {Event} a The selected Event
 			*/
 
+			/*
 			function _onEventSelected(Event_e) {
 
 				this.selectedGuest(null);
 
 				this.currentView(_views.eventView, this.selectedEvent(Event_e));
 			}
+			*/
 
 			this.onEventSelected = function(Event_e) { // temporary adapter while transitioning to the Strategy pattern
 
-				return _onEventSelected.call(this, Event_e);
+				this.selectedGuest(null);
+
+				this.currentView(_views.eventView, this.selectedEvent(Event_e));
 			};
 
 			
@@ -355,16 +367,18 @@ var app = app || {};
 			* @param {Person} a The selected guest
 			*/
 
+			/*
 			function _onGuestSelected(Person_g) {
 
 				this.selectedGuest(Person_g);
 
 				this.currentView(_views.guestView, this.selectedGuest());
 			}
+			*/
 
 			this.onGuestSelected = function(Person_g) { // temporary adapter while transitioning to the Strategy pattern
 
-				return _onGuestSelected.call(this, Person_g);
+				this.currentView(_views.guestView, this.selectedGuest(Person_g));
 			};
 
 
@@ -505,15 +519,17 @@ var app = app || {};
 
 			this.notifyObservers = function() {
 				
+				var args = arguments;
+
 				// Assume that main update() method has done all type checking, and takes care of correct signature, so no need for that here
+
+				//console.log(arguments);
 
 				switch (arguments.length) {
 
 					case 2:
 
-						if (typeof arguments[1] === 'number') { //console.log('notifyObservers(Model, int): Notifying Models of update from View');
-
-							var args = arguments;
+						if (typeof arguments[1] === 'number') { console.log('Notifying Models of update from View: (Model, int)');
 
 							_observers.forEach(function(observer) { // expected by View
 
@@ -521,13 +537,13 @@ var app = app || {};
 							});
 						}
 
-						else if (arguments[1].isInstanceOf(module.View)) { //console.log('notifyObservers(Model, View): Notifying Views of update from ViewUpdateHandler or Model');
+						else if (arguments[1].isInstanceOf(module.View)) { console.log('Notifying Views of update from ViewUpdateHandler or Model: (Model, View)');
 
 							// Notification may originate directly from a model, or from a ViewUpdateHandler
 
-							var args = arguments;
-
 							_observers.forEach(function(observer) { // expected by View
+
+								//console.log(observer);
 
 								observer.update(args[0], args[1]); // Model, View
 							});
@@ -535,11 +551,11 @@ var app = app || {};
 
 						break;
 
-					case 3: //console.log('notifyObservers(int, Model, View): Notifying ViewUpdateHandlers of user action in View');
-
-						var args = arguments;
+					case 3: console.log('Notifying ViewUpdateHandlers of user action in View : (int, Model, View)');
 
 						_observers.forEach(function(observer) { // expected by ViewUpdateHandler
+
+							//console.log([args[0], args[1], args[2]]); // debug
 
 							observer.update(args[0], args[1], args[2]); // int, Model, View
 						});
@@ -548,7 +564,7 @@ var app = app || {};
 
 					default:
 
-						//console.log(arguments);
+						console.log(arguments);
 
 						throw new IllegalArgumentError('Unexpected signature');
 				}
@@ -684,6 +700,9 @@ var app = app || {};
 
 			function ____update(View_v, Model_m, int_uiAction) {
 
+				this.notifyObservers(int_uiAction, Model_m, View_v);
+
+				/*
 				switch (int_uiAction) {
 
 					case module.View.UIAction.SIGNIN: // submission from sign in form
@@ -691,7 +710,7 @@ var app = app || {};
 						// Requires debugging before the code can switch over to the notification model (Strategy pattern):
 						// not sure, but I think the problem could have something to do with what gets passed in the call to onAccountSelected()
 
-						//this.notifyObservers(Model_m, int_uiAction, View_v);
+						//this.notifyObservers(int_uiAction, Model_m, View_v);
 
 						var accounts = module.Account.registry.getObjectList(), ret = false;
 
@@ -740,6 +759,8 @@ var app = app || {};
 						//console.log('UI action ' + int_uiAction + ' not supported');
 				}
 
+				*/
+
 				// remove temporary Model passed in from View (to prepare for garbage collection)
 
 				if (Model_m && Model_m.constructor && Model_m.constructor.registry) {
@@ -769,19 +790,21 @@ var app = app || {};
 				// Parse parameters to invoke appropriate 'polymorphic' response
 				// Do type checking upfront so function chain called from here can assume it has been handled
 
-				var args = arguments[0]; // 
+				//console.log(arguments);
+
+				var args = arguments[0], Model_m, View_v, int_id, UIAction; // 
 
 				switch (args.length) {
 
 					case 1: // state change notification from Model
 
-						var Model_m = args[0];
+						Model_m = args[0];
 
 						if (typeof Model_m !== 'undefined' && Model_m !== null && Model_m.isInstanceOf(module.Model)) { // single param that is instance of Model
 
 						//if (args[0].isInstanceOf(module.Model)) { // single param that is instance of Model
 
-								//console.log('Detected state change notification from Model'); //debug
+								console.log('Detected state change notification from Model'); //debug
 
 								_update.call(this, Model_m);
 						}
@@ -797,11 +820,11 @@ var app = app || {};
 
 						if (typeof args[1] === 'number') { // second param is a number (integer)
 
-							var Model_m = args[0], int_id = args[1];
+							Model_m = args[0]; int_id = args[1];
 
 							if (typeof Model_m !== 'undefined' && Model_m.isInstanceOf(module.Model)) { // first param is instance of Model
 
-								//console.log('Detected update to Model from ViewUpdateHandler');
+								console.log('Detected update to Model from ViewUpdateHandler');
 
 								__update.call(this, Model_m, int_id);
 							}
@@ -814,13 +837,13 @@ var app = app || {};
 
 						else {
 
-							var Model_m = args[0], View_v = args[1];
+							Model_m = args[0]; View_v = args[1];
 
 							if (typeof Model_m !== 'undefined' && (Model_m === null || Model_m.isInstanceOf(module.Model))) { // first param is instance of Model, or null
 
 								if (typeof View_v !== 'undefined' && View_v.isInstanceOf(module.View)) { // send param is instance of View
 
-									//console.log('Detected update to View from ViewUpdateHandler');
+									console.log('Detected update to View from ViewUpdateHandler');
 
 									___update.call(this, Model_m, View_v);
 								}
@@ -841,7 +864,7 @@ var app = app || {};
 
 					case 3: // user action notification from View
 
-						var View_v = args[0], Model_m = args[1], UIAction = args[2];
+						View_v = args[0]; Model_m = args[1]; UIAction = args[2];
 
 						if (View_v.isInstanceOf(module.View)) { // first param is instance of View
 
@@ -849,7 +872,7 @@ var app = app || {};
 
 								if (typeof UIAction === 'number') { // third param is integer
 
-									//console.log('Detected user action notification from View'); // debug
+									console.log('Detected user action notification from View'); // debug
 
 									____update.call(this, View_v, Model_m, UIAction);
 								}

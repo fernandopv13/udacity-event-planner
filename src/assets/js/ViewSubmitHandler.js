@@ -78,13 +78,13 @@ var app = app || {};
 
 				case module.Event:
 
-					ctrl.selectedAccount().addEvent(ctrl.newModel()); // add to event list
+					//ctrl.selectedAccount().addEvent(ctrl.newModel()); // add to event list
 
 					break;
 
 				case module.Person:
 
-					ctrl.selectedEvent().addGuest(ctrl.newModel()); // add to guest list
+					//ctrl.selectedEvent().addGuest(ctrl.newModel()); // add to guest list
 
 					break;
 			}

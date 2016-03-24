@@ -562,7 +562,7 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.prototype.onRender = function() {
 
-			throw new AbstractMethodError('onRender() must be implem by subclasses');
+			throw new AbstractMethodError('onRender() must be implemented by subclasses');
 		}
 		
 
@@ -918,19 +918,19 @@ var app = app || {}; // create a simple namespace for the module
 		* @throws {AbstractMethodError} If attempting to invoke directly on abstract class
 		*/
 
-		module.View.prototype.update = function(Model_m) {
+		module.View.prototype.update = function(Model_m, View_v) {
 			
-			if (arguments.length === 1) { // caller signature has a single parameter
+			if (arguments.length === 2) { //console.log('notification signature has expected no. of parameters');
 
-				if (Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) && Model_m.constructor === this.modelClass()) { // parameter is correct Model subtype
+				if (View_v && View_v.constructor && View_v.constructor === this.constructor) { //console.log('notification is directed at correct type of View');
 
-					console.log('Received update from ' + Model_m.className());
+					if (Model_m === null || Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) && Model_m.constructor === this.modelClass()) {console.log('model is expected type, or null');
 
-					if (arguments.length === 1) { // correct method signature
+						//console.log('received valid update notification'); // debug
 
-							this.model(Model_m);
+						this.model(Model_m);
 
-							this.render(Model_m);
+						this.render(Model_m);
 					}
 				}
 			}

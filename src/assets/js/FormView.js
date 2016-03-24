@@ -114,9 +114,17 @@ var app = app || {};
 
 	app.FormView.prototype.onRender = function(Model_m) {
 
-		this.hide();
+		this.hide(); // when rendering in the background, prevent first render from resulting in showing the view
 
-		app.View.prototype.update.call(this); // ssuper() does not work recursively, so call directly
+		if (this.elementOptions) { // do post-processing that require elements to be rendered to the DOM
+
+			for (var id in this.elementOptions) { // run through elements (by id) 
+
+				app.HTMLElement.instance().init(id, this.elementOptions[id]);
+			}
+
+			delete this.elementOptions; // free up temporary variable for garbage collection
+		}
 	}
 
 
@@ -149,11 +157,13 @@ var app = app || {};
 	* @return {void}
 	*/
 
-	app.FormView.prototype.update = function(Model_m) {
+	app.FormView.prototype.update = function(Model_m, View_v) {
+
+		//console.log([this.className(), arguments]);
 
 		if (!app.controller.currentView() || this.constructor !== app.controller.currentView().constructor) { // view is not in focus
 
-			app.View.prototype.update.call(this, Model_m); // ssuper() does not work recursively, so call directly
+			app.View.prototype.update.call(this, Model_m, View_v); // ssuper() does not work recursively, so call directly
 		}
 	}
 

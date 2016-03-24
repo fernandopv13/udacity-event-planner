@@ -141,7 +141,7 @@ var app = app || {};
 			{
 				element: 'input',			
 				
-				attributes,
+				attributes: attributes,
 
 				dataset: {customValidator: options.validator ? options.validator : 'PasswordConfirmationInputWidget.prototype.validate'},
 				

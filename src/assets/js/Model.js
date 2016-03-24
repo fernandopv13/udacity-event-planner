@@ -209,7 +209,7 @@ var app = app || {}; // create a simple namespace for the module
 
 		if (args.length === 2) {
 
-			if (args[0].isInstanceOf && args[0].isInstanceOf(module.Model) && args[1] === parseInt(args[1])) { //correct method signature
+			if (args[0] && args[0].isInstanceOf && args[0].isInstanceOf(module.Model) && args[1] === parseInt(args[1])) { //correct method signature
 
 				if (args[0].constructor === this.constructor) { // correct Model subtype
 

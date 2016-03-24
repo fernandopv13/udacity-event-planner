@@ -91,14 +91,17 @@ var app = app || {};
 
 			case module.Event:
 
+				/*
 				ctrl.newModel(Model_m); // store new model for future reference
 
 				ctrl.onEventSelected.call(ctrl, ctrl.newModel()); // open it in its FormView
 
 				break;
+				*/
 
 			case module.Person:
 
+				/*
 				var evt = ctrl.selectedEvent();
 
 				if (evt.guests().length < evt.capacity()) { // check if there is capacity before trying to add a new guest
@@ -113,6 +116,7 @@ var app = app || {};
 					 Materialize.toast('The event is full to capacity. Increase capacity or remove guests before adding more.', 4000)
 				}
 
+				*/
 				break;
 
 			default:
@@ -120,9 +124,9 @@ var app = app || {};
 				console.log(Model_m.className() + ' not supported');
 		}
 
-		ctrl.registerObserver(Model_m);
+		//ctrl.registerObserver(Model_m);
 
-		Model_m.registerObserver(ctrl);
+		//Model_m.registerObserver(ctrl);
 	};
 
 })(app);

@@ -84,24 +84,32 @@ var app = app || {};
 
 	module.SignInView.prototype.render = function() {
 
-		console.log('rendering SignInView'); // debug
+		var widgetFactory = app.UIWidgetFactory.instance(); // shortcut reference to widgetFactory
 
-		var widgetFactory = app.UIWidgetFactory.instance();
+		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 			
-		this.$renderContext().empty();
+		// Set up container div
+			
+			var containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			{
+				element: 'div',			
+				
+				classList: ['row']
+			});
 
+			
 		// Add logo
 
-			var containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align']
 			});
 
-			this.$renderContext().append(containerDiv);
+			containerDiv.appendChild(innerDiv);
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'img',
 
@@ -122,16 +130,7 @@ var app = app || {};
 
 		// Add heading and teaser
 			
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align']
-			});
-
-			this.$renderContext().append(containerDiv);
-
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'h4',
 
@@ -140,7 +139,7 @@ var app = app || {};
 				innerHTML: this.heading()
 			}));
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -151,7 +150,7 @@ var app = app || {};
 			}));
 
 		
-		// Setup up form and container div
+		// Setup form
 
 			var formElement = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // form
 			{
@@ -162,22 +161,12 @@ var app = app || {};
 				classList: ['col', 's12']
 			});
 
-			this.$renderContext().append(formElement);
+			containerDiv.appendChild(formElement);
 
-
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row']
-			});
-			
-			formElement.appendChild(containerDiv);
-		
 
 		// Add email field
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
+			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
 			{
 				width: 's12',
 
@@ -190,10 +179,27 @@ var app = app || {};
 				datasource: null
 			}));
 
+			this.elementOptions['sign-in-email'] =
+			{
+				listeners:
+				{
+					input:
+
+						function(nEvent) { // validate password
+
+							if (nEvent.currentTarget.value.length > 3) {
+
+								Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
+							}
+
+						}.bind(this)
+				}
+			}
+
 
 		// Add password field
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
+			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
 			{
 				width: 's12',
 
@@ -204,10 +210,41 @@ var app = app || {};
 				hintsprefix: 'sign-in-password-hints'
 			}));
 
+			this.elementOptions['sign-in-password'] = 
+			{
+				listeners:
+				{
+					focus: 
+
+						function(nEvent) { // update and show password hints
+
+							//Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validation, so no need for explicit call
+
+							$('#sign-in-password-hints').show('slow');
+
+							$('#sign-in-password-hints').removeClass('hidden');
+
+							$('#sign-in-password-hints').attr('aria-hidden', false); // doesn't seem to have any effect on screen reader
+
+						}.bind(this),
+
+
+						blur:
+
+							function(nEvent) { // hide password hints (global handler takes care of the rest)
+
+							$('#sign-in-password-hints').hide('slow');
+
+							$('#sign-in-password-hints').attr('aria-hidden', true);
+						}
+				}
+			}
+
+			
 
 		// Add sign-in button
 
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
@@ -215,10 +252,9 @@ var app = app || {};
 			});
 
 			
-			formElement.appendChild(containerDiv);
-
+			formElement.appendChild(innerDiv);
 			
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',  // button
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',  // button
 			{
 				element: 'a',
 				
@@ -226,26 +262,36 @@ var app = app || {};
 				
 				classList: ['waves-effect', 'waves-light', 'btn'],
 
-				innerHTML: 'Sign In',
-
-				listeners: {submit: this.submit}
-
-				//debug: (function() {console.log('creating submit');})()
+				innerHTML: 'Sign In'
 			}));
 
-		
-		// Add demo sign-in link
+			this.elementOptions['sign-in-submit'] =
+			{
+				listeners: 
+				{
+					mousedown:
 
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+						function(nEvent) { // submit (blur hides click event so using mousedown)
+
+							this.submit(nEvent);
+
+						}.bind(this)
+				}
+			}
+
+		
+		// Add (hidden) demo sign-in link
+
+			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align', 'hidden'] // // Udacity reviewer didn't like this idea, so hiding it
 			});
 
-			formElement.appendChild(containerDiv);
+			formElement.appendChild(innerDiv);
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -255,8 +301,7 @@ var app = app || {};
 				
 			}));
 
-			
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
 			{
 				element: 'a',
 				
@@ -264,14 +309,43 @@ var app = app || {};
 				
 				innerHTML: 'See our cool demo'
 			}));
-		
-		
 
-		// Initialize and (re)assign evnet handlers to form elements
+			this.elementOptions['sign-in-demo-submit'] =
+			{
+				listeners: 
+				{
+					mousedown:
+
+						function(nEvent) { // submit (blur hides click event so using mousedown)
+
+							$('#sign-in-email').val('demo@demo.demo');
+
+							$('#sign-in-password').val('DEMO5%demo');
+
+							this.submit(nEvent);
+
+						}.bind(this)
+				}
+			}
+
+
+		// Render to DOM
+
+			this.$renderContext().empty();
+
+			this.$renderContext().append(containerDiv);
+
+			//console.log(containerDiv);
+
+			//console.log(this.elementOptions);
+		
+		
+		// Initialize and (re)assign event handlers to form elements
 
 			$('#sign-in-email').attr('autofocus', true);
 
 
+			/*
 			$('#sign-in-email').on('input', function(nEvent) { // validate password
 
 				if (nEvent.currentTarget.value.length > 3) {
@@ -295,15 +369,6 @@ var app = app || {};
 			}.bind(this));
 
 
-			/*
-			$('#sign-in-password').on('input', function(nEvent) { // validate password
-
-				Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validation, so no need for explicit call
-
-			}.bind(this));
-			*/
-
-			
 			$('#sign-in-password').blur(function(nEvent) { // hide password hints (global handler takes care of the rest)
 
 				$('#sign-in-password-hints').hide('slow');
@@ -321,7 +386,7 @@ var app = app || {};
 				this.submit(nEvent);
 
 			}.bind(this));
-
+			*/
 
 			/*
 			$('#sign-in-submit').click(function(nEvent) {
@@ -334,13 +399,11 @@ var app = app || {};
 
 		// call parent to perform common post-render task(s)
 
-			this.ssuper().prototype.update.call(this);
+			this.ssuper().prototype.onRender.call(this);
 	};
 
 
 	module.SignInView.prototype.submit = function(nEvent) {
-
-		console.log('submitting');
 
 		if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
 

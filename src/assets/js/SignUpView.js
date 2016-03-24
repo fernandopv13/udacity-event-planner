@@ -463,9 +463,10 @@ var app = app || {};
 	}
 
 
+	/*
 	module.SignUpView.prototype.update = function() {
 
 		this.render();
 	}
-	
+	*/
 })(app);

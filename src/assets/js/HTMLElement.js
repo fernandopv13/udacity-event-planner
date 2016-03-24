@@ -105,12 +105,9 @@ var app = app || {};
 				
 				innerHTML: 'Hello world'
 
-				listeners:
-				{
-					click: function() {},
-
-					blur: function() {}
-				}
+				// Cannot pass in event handlers using this approach, as this would not support anonymous functions
+				// (named functions could be passed in as dot strings in element data, but that is too limiting):
+				// Use 'elementOptions' approach supported by View's render() and onRender() methods instead.
 			*/
 
 			if (typeof obj_options === 'undefined' || obj_options === {}) {
@@ -151,27 +148,57 @@ var app = app || {};
 				element.innerHTML = options.innerHTML;
 			}
 
-			if (options.listeners) {
-			
-				//console.log(options.listeners);
-
-				for (prop in options.listeners) {
-					
-					//element.addEventListener(prop, options.listeners[prop]); // maybe use jQuery here instead
-
-					//console.log('Attaching ' + prop + ' handler'); //debug
-
-					$(element).on(prop, options.listeners[prop]);
-				}
-			}
-
 			return element;
 		};
 
 		
-		/* Initializes element (required by UIWidget) */
+		/* Initializes element once rendered to the DOM (required by UIWidget)
+		*
+		* @param {String} id id of the element to initialize
+		*
+		* @param {Object} options JSON object with the options to use for initialization (see code for supported format)
+		*
+		* @return {void}
+		*
+		* @throws {IllegalArgumentError} If a parameter does not resolve to an expected value or type
+		*/
 
-		module.HTMLElement.prototype.init = function() {};
+		module.HTMLElement.prototype.init = function(str_id, obj_options) {
+
+			/* Example of supported JSON format for elementOptions:
+			{
+				listeners: 
+				{
+					mousedown: // handler may also be reference to named function
+
+						function(nEvent) { // submit (blur hides click event so using mousedown)
+
+							this.submit(nEvent);
+
+						}.bind(this)
+				}
+			}
+
+			*/
+			
+			if (obj_options.listeners) { // attach event listeners
+
+				var listeners = obj_options.listeners;
+
+				for (var event in listeners) {
+
+					if (typeof listeners[event] === 'function') {
+
+						$('#' + str_id).on(event, listeners[event]);
+					}
+
+					else {
+
+						throw new IllegalArgumentError('Expected function');
+					}
+				}
+			}
+		};
 
 
 	/*----------------------------------------------------------------------------------------

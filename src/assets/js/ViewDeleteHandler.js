@@ -70,6 +70,7 @@ var app = app || {};
 
 	module.ViewDeleteHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
+		/*
 		var ctrl = this.controller();
 
 		ctrl.removeObserver(Model_m);
@@ -102,6 +103,7 @@ var app = app || {};
 		}
 
 		window.history.back();
+		*/
 	};
 
 })(app);
