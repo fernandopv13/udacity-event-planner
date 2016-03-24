@@ -120,7 +120,22 @@ var app = app || {};
 
 			for (var id in this.elementOptions) { // run through elements (by id) 
 
-				app.HTMLElement.instance().init(id, this.elementOptions[id]);
+				console.log(id);
+
+				if (this.elementOptions[id].initializer) { // run any custom initializer
+
+					if (typeof this.elementOptions[id].initializer === 'function') {
+
+						this.elementOptions[id].initializer(id, this.elementOptions[id]);
+					}
+
+					else {
+
+						throw new IllegalArgumentError('Expected function');
+					}
+				}
+
+				app.HTMLElement.instance().init(id, this.elementOptions[id]); // do base init of element
 			}
 
 			delete this.elementOptions; // free up temporary variable for garbage collection

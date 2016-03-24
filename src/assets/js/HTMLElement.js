@@ -156,7 +156,7 @@ var app = app || {};
 		*
 		* @param {String} id id of the element to initialize
 		*
-		* @param {Object} options JSON object with the options to use for initialization (see code for supported format)
+		* @param {Object} options JSON object with the options to use for initialization (see source for supported format)
 		*
 		* @return {void}
 		*

@@ -91,7 +91,9 @@ var app = app || {};
 
 		console.log('Rendering EventView'); // debug
 
-		var widgetFactory = app.UIWidgetFactory.instance();
+		var widgetFactory = app.UIWidgetFactory.instance(); // shortcut reference to widgetFactory
+
+		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
 		if (Event_e !== null) {
 			
@@ -157,6 +159,14 @@ var app = app || {};
 					datalist: 'suggested-locations'
 				}));
 
+				this.elementOptions['event-location'] = 
+				{
+					listeners: {
+
+						focus: this.suggestLocations // suggest locations
+					}
+				}
+
 				
 			// Add start date and end date fields
 
@@ -188,6 +198,10 @@ var app = app || {};
 
 				}).children[0]); // extract from wrapper
 
+				this.elementOptions['event-start-date'] = 
+				{
+					initializer: module.DateInputWidget.prototype.init
+				}
 				
 				var endDate = widgetFactory.createProduct.call(widgetFactory,'DateInputWidget',
 				{
@@ -206,6 +220,11 @@ var app = app || {};
 					errormessage: 'Please enter end after start in format dd/mm/yyyy hh:mm'
 
 				}).children[0]; // extract from wrapper
+
+				this.elementOptions['event-end-date'] = 
+				{
+					initializer: module.DateInputWidget.prototype.init
+				}
 
 				endDate.children[0].classList.add('validate'); // 'validate' normally only comes with required field, so add seperately here
 
@@ -229,7 +248,15 @@ var app = app || {};
 					datalist: 'suggested-event-types'
 				}));
 
+				this.elementOptions['event-type'] = 
+				{
+					listeners: {
+
+						focus: this.suggestedEventTypes // suggest event types
+					}
+				}
 							
+			
 			// Add capacity field and edit guest list button
 
 				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'NumberInputWidget',
@@ -273,6 +300,20 @@ var app = app || {};
 					innerHTML: 'Edit guests'
 				}));
 
+				this.elementOptions['event-edit-guests-button'] = 
+				{
+					listeners: {
+
+						mousedown: 
+
+							function(nEvent) { // navigate to guest list
+
+								this.navigateToGuestList(nEvent);
+
+							}.bind(this)
+					}
+				};
+
 				outerDiv.appendChild(innerDiv);
 
 				
@@ -292,6 +333,14 @@ var app = app || {};
 
 					datalist: 'suggested-hosts'
 				}));
+
+				this.elementOptions['event-host'] = 
+				{
+					listeners: {
+
+						focus: this.suggestHosts // suggest hosts
+					}
+				};
 
 				
 				innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // IHost type selector
@@ -351,6 +400,19 @@ var app = app || {};
 					attributes: attributes
 				}));
 
+				this.elementOptions['event-host-type-organization'] = 
+				{
+					listeners: {
+
+						click: 
+
+							function(nEvent) { // reset host if host type changed
+
+								$('#event-host').val('');
+							}
+					}
+				};
+
 				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // org label
 				{
 					element: 'label',
@@ -387,6 +449,20 @@ var app = app || {};
 
 					attributes: attributes
 				}));
+
+
+				this.elementOptions['event-host-type-person'] = 
+				{
+					listeners: {
+
+						click: 
+
+							function(nEvent) { // reset host if host type changed
+
+								$('#event-host').val('');
+							}
+					}
+				};
 
 				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // person label
 				{
@@ -503,6 +579,20 @@ var app = app || {};
 					label: 'Cancel'
 				}));
 				
+				this.elementOptions['event-form-cancel'] = 
+				{
+					listeners: {
+
+						mousedown: 
+
+							function(nEvent) { // cancel edits
+
+								this.cancel(nEvent);
+
+							}.bind(this)
+					}
+				};
+
 
 				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
 				{					
@@ -512,6 +602,20 @@ var app = app || {};
 
 					icon: 'send'
 				}));
+
+				this.elementOptions['event-form-submit'] = 
+				{
+					listeners: {
+
+						mousedown: 
+
+							function(nEvent) { // cancel edits
+
+								this.submit(nEvent);
+
+							}.bind(this)
+					}
+				};
 
 				containerDiv.appendChild(outerDiv);
 
@@ -530,46 +634,58 @@ var app = app || {};
 				$('#event-name').attr('autofocus', true); // set initial focus on name
 				
 				
-				$('#event-location').focus(this.suggestLocations); // suggest locations
+				//$('#event-location').focus(this.suggestLocations); // suggest locations
 
 				
-				app.DateInputWidget.instance().init(); // generic initialization of bootstrap-datetime pickers
+				//app.DateInputWidget.instance().init(); // generic initialization of bootstrap-datetime pickers
 				
 
-				$('#event-type').focus(this.suggestedEventTypes); // suggest event types
+				//$('#event-type').focus(this.suggestedEventTypes); // suggest event types
 
 				
+				/*
 				$('#event-edit-guests-button').click(function(nEvent) { // edit guest list button
 
 					this.navigateToGuestList(nEvent);
 		
 				}.bind(this));
+				*/
 
 
-				$('#event-host').focus(this.suggestHosts); // suggest hosts
+				//$('#event-host').focus(this.suggestHosts); // suggest hosts
 
 				
+				/*
 				$('#event-host-type-organization, #event-host-type-person').click(function(nEvent) { // reset host if host type changed
 
 					$('#event-host').val('');
 				});
+				*/
 
 				// This causes rendering to fail on Android and iOS, so disabled for now:
 				//$('textarea#description').characterCounter(); // count characters in description
 
 				
+				/*
 				$('#event-form-cancel').click(function(nEvent) { // cancel edits
 
 					this.cancel(nEvent);
 
 				}.bind(this));
+				*/
 
 
+				/*
 				$('#event-form-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
 
 					this.submit(nEvent);
 
 				}.bind(this));
+				*/
+
+			// call parent to perform common post-render task(s)
+
+				this.ssuper().prototype.onRender.call(this);
 		}
 
 		else { // present default message

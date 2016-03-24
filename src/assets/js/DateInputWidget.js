@@ -221,10 +221,145 @@ var app = app || {};
 			return outerDiv;
 		};
 
+		/** Initializes datetime picker
+		*
+		* @param {String} id Id of the date picker to initialize
+		*
+		* @param {Object} options JSON object with the options to use for initialization (see HTMLElement init() source for supported format)
+		*
+		* @return {void}
+		*/
+
+		module.DateInputWidget.prototype.init = function(str_id, obj_options) {
+
+			var element = $('#' + str_id), val;
+
+			if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
+
+				|| !app.device().isMobile()) { // use custom widget (always prefer on lap/desktop)
+
+				
+				// Set bootstrap-datetimepicker widget options
+
+				$(element).datetimepicker({ // not sure if these are global, or specific to individual widgets
+
+					//debug: true,
+
+					focusOnShow: true, // give textbox focus when showing picker
+
+					ignoreReadonly: true,
+
+					locale: moment.locale('en'),
+
+					showClear: true
+				});
+
+
+				// Do some basic cleanup of the timepicker's styling
+
+				$(element).focus(function(nEvent) {
+
+					$('td').children('.btn').removeClass('btn'); // a bit crude, but should be OK for now
+				});
+
+				
+				// Enable direct (keyboard) editing in input box
+
+				if ($(element).data().DateTimePicker) { // DateTimePicker is defined, so we can ...
+
+					$(element).data().DateTimePicker.enable();  // enable editing in input field
+
+					$(element).data().DateTimePicker.options({keyBinds: null});  // remove all keyboard event handlers from picker
+
+					// later, maybe revisit if it would be useful to retain a subset of key events on the picker itself
+				}
+
+				
+				// Suppress native datetimepicker (by changing input type to 'text')
+
+				$(element).attr('type','text');
+
+
+				// Make sure any existing value(s) is/are presented, and nicely formatted
+			
+				val = $(element).val() || $(element).data().value;
+
+				if (val !== null) { // there is a date entry
+
+					if (typeof moment !== 'undefined') { // moment is available
+
+						if (moment(val).isValid()) { // entry is a valid date/moment
+
+							val = moment(val);
+
+							val.add(-val.toDate().getTimezoneOffset(), 'minutes'); // compensate for UTC and DST offset
+
+							$(element).val(val.format('MM/DD/YYYY h:mm A')); // insert reformatted date into UI
+						}
+					}
+
+					else { // no moment, so cobble 12h string together from individual date components
+
+						val = new Date(val);
+
+						val.setMinutes(val.getTimezoneOffset()) // compensate for UTC and DST offset
+
+						$(element).val(
+
+							val.getMonth()
+							
+							+ '/' + val.getDate()
+
+							+ '/' + val.getFullYear()
+
+							+ ' ' + (val.getHours() < 12 ? val.getHours() : val.getHours() - 12)
+
+							+ ':' + val.getMinutes()
+
+							+ ' ' + (val.getHours() < 13 ? 'AM': 'PM')
+						);
+					}
+				}
+
+
+				// Attach generic event handler(s)
+
+				$(element).on('dp.change', function(nEvent) {
+
+					Materialize.updateTextFields(nEvent.currentTarget);
+				});
+			}
+
+			else { // Use native widget
+
+				// Make sure any existing value(s) is/are presented, and nicely formatted
+
+				// This ought to be redundant since we already set the value at creation,
+				// but mobiles are very finicky about this, so keeping what works for now.
+
+				val = $(element).val() || $(element).data().value;
+
+				if (val !== '') { // there is a date entry
+
+					// native datetime-locals require an ISO 8601 string with no trailing 'Z'
+					// we also want to trim the seconds, or else some browsers will display them, some not
+
+					val = new Date(val);
+
+					$(element).val(val.toISOString().split('T')[0] + 'T' + val.getHours() + ':' + val.getMinutes());
+
+					// This currently fails in Firefox on Android: it formats the date using a comma separator, indicates
+					// that as a validation error and then blocks clearing this with setCustomValidity().
+					// Modernizr' formvalidation test aren't a reliable predicter of what works (produces both false
+					// positives and negatives), so can't use that. Oh well,...
+				}
+			}
+		};
+
 	
 		/** Initializes any and all datetime pickers on the pages using datetime-local inputs */
 
-		module.DateInputWidget.prototype.init = function(HTMLInputElement_e) {
+		module.DateInputWidget.prototype.initAll = function(HTMLInputElement_e) {
 
 			if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
 

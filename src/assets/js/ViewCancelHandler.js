@@ -73,12 +73,13 @@ var app = app || {};
 
 		var n = this.controller().newModel();
 
-		if (n) { // creation of new model cancelled
+		/*if (n) { // creation of new model cancelled
 
 			//n.constructor.registry.removeObject(n); // remove from registry
 
 			//this.controller().newModel(null); // reset reference
 		}
+		*/
 	};
 
 })(app);
