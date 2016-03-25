@@ -73,6 +73,8 @@ var app = app || {};
 
 					if (View_v === null || View_v.isInstanceOf(module.View)) {
 
+						//console.log('setting currentView to ' + View_v.className()); // debug
+
 						this.update([Model_m, View_v]); // first notify observers: forms won't update if they are the current view
 						
 						for (var view in _views) {
@@ -508,36 +510,42 @@ var app = app || {};
 
 			/** Notifies observes of change to the data model.
 			*
-			* Method realization required by IInterfaceable.
+			* Takes whatever params it is provided and passes them straight on to observers.
 			*
-			* @param {Model} n Reference to the Model object that caused the update
+			* Relies on caller to provide valid signature.
 			*
-			* @param {int} id Id of the Model object the update is intended for. Optional: only needed when passing on update from Model.
-			*
-			* @todo Clean up signatures to make more sense from calling functions
+			* (Method realization required by IInterfaceable.)
 			*/
 
 			this.notifyObservers = function() {
 				
-				var args = arguments;
-
 				// Assume that main update() method has done all type checking, and takes care of correct signature, so no need for that here
 
-				//console.log(arguments);
+				var args = arguments;
 
-				switch (arguments.length) {
+				switch (args.length) {
+
+					case 1: // not currently in use
+
+						_observers.forEach(function(observer) { // expected by ViewUpdateHandler
+
+							observer.update(args[0]);
+						});
+						
+						break;
 
 					case 2:
 
-						if (typeof arguments[1] === 'number') { console.log('Notifying Models of update from View: (Model, int)');
+						//if (typeof arguments[1] === 'number') { // console.log('Notifying Models of update from View: (Model, int)');
 
 							_observers.forEach(function(observer) { // expected by View
 
 								observer.update(args[0], args[1]); // Model, int
 							});
-						}
+						//}
 
-						else if (arguments[1].isInstanceOf(module.View)) { console.log('Notifying Views of update from ViewUpdateHandler or Model: (Model, View)');
+						/*
+						else if (arguments[1].isInstanceOf(module.View)) { // console.log('Notifying Views of update from ViewUpdateHandler or Model: (Model, View)');
 
 							// Notification may originate directly from a model, or from a ViewUpdateHandler
 
@@ -545,17 +553,16 @@ var app = app || {};
 
 								//console.log(observer);
 
-								observer.update(args[0], args[1]); // Model, View
+								observer.update(arguments[0], arguments[1]); // Model, View
 							});
 						}
+						*/
 
 						break;
 
-					case 3: console.log('Notifying ViewUpdateHandlers of user action in View : (int, Model, View)');
+					case 3: //console.log('Notifying ViewUpdateHandlers of user action in View : (int, Model, View)');
 
 						_observers.forEach(function(observer) { // expected by ViewUpdateHandler
-
-							//console.log([args[0], args[1], args[2]]); // debug
 
 							observer.update(args[0], args[1], args[2]); // int, Model, View
 						});
@@ -564,7 +571,7 @@ var app = app || {};
 
 					default:
 
-						console.log(arguments);
+						console.log(args);
 
 						throw new IllegalArgumentError('Unexpected signature');
 				}
@@ -625,29 +632,43 @@ var app = app || {};
 			*
 			* @param {Model} m The Model that has changed state and therefore invoked the update.
 			*
-			* @return {void}
+			* @return {Boolean} true if the update was carried out, otherwise false
 			*/
 
 			function _update(Model_m) {
 
-				var View_v;
+				if (arguments.length === 1) { // call has expected number of params
 
-				for(var prop in _views) { // get the View that is bound to the Model
+					//console.log('call has expected number of params'); // debug
 
-					if (_views[prop].modelClass() === Model_m.constructor) {
+					if (typeof Model_m !== 'undefined' && Model_m !== null && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model)) { // param is instance of Model
 
-						View_v = _views[prop];
+						var View_v;
 
-						break;
+						for(var prop in _views) { // get the View that is bound to the Model
+
+							if (_views[prop].modelClass() === Model_m.constructor) {
+
+								View_v = _views[prop];
+
+								break;
+							}
+						}
+
+						if (View_v) { // if there is a match, dispatch update to Views
+
+							console.log('Notifying Views of update from Model: Model, View'); //debug
+
+							this.notifyObservers(Model_m, View_v);	
+						}
+
+						//else: fail silently (not all models are bound to a view, and that's OK)
+
+						return true;
 					}
 				}
 
-				if (View_v) { // if there is a match, dispatch update
-
-					this.notifyObservers(Model_m, View_v);	
-				}
-
-				//else: fail silently (not all models are bound to a view, and that's OK)
+				return false; // default to false
 			}
 
 
@@ -659,12 +680,29 @@ var app = app || {};
 			*
 			* @param {int} id The id of the Model targeted by the update.
 			*
-			* @return {void}
+			* @return {Boolean} true if the update was carried out, otherwise false
 			*/
 
 			function __update(Model_m, int_id) {
 
-				this.notifyObservers(Model_m, int_id);
+				if (arguments.length === 2) { // call has expected number of params
+
+					//console.log('call has expected number of params'); // debug
+
+					if (typeof int_id === 'number') { // second param is a number (integer)
+
+						if (typeof Model_m !== 'undefined' && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model)) { // first param is instance of Model
+
+							console.log('Notifying Models of update from View(UpdateHandler): Model, int');
+
+							this.notifyObservers(Model_m, int_id);
+
+							return true;
+						}
+					}
+				}
+
+				return false; // default to false
 			}
 
 
@@ -676,12 +714,29 @@ var app = app || {};
 			*
 			* @param {View} v The View targeted by the update.
 			*
-			* @return {void}
+			* @return {Boolean} true if the update was carried out, otherwise false
 			*/
 
 			function ___update(Model_m, View_v) {
 
-				this.notifyObservers(Model_m, View_v);
+				if (arguments.length === 2) { // call has expected number of params
+
+					//console.log('call has expected number of params'); // debug
+
+					if (typeof View_v !== 'undefined' && View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { // second param is instance of View
+
+						if (Model_m === null || (typeof Model_m !== 'undefined' && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model))) { // first param is instance of Model, or null
+
+							console.log('Notifying Views of update from ViewUpdateHandler: Model, View');
+
+							this.notifyObservers(Model_m, View_v);
+
+							return true;
+						}
+					}
+				}
+
+				return false; // default to false
 			}
 
 
@@ -695,80 +750,45 @@ var app = app || {};
 			*
 			* @param {int} UIAction The type of action invoked by the user in the UI. Supported action types are defined in module.View.UIAction.
 			*
-			* @return {void}
+			* @return {Boolean} true if the update was carried out, otherwise false
 			*/
 
 			function ____update(View_v, Model_m, int_uiAction) {
 
-				this.notifyObservers(int_uiAction, Model_m, View_v);
+				if (arguments.length === 3) { // call has expected number of params
 
-				/*
-				switch (int_uiAction) {
+					//console.log('call has expected number of params'); // debug
 
-					case module.View.UIAction.SIGNIN: // submission from sign in form
+					if (typeof View_v === 'object' && View_v !== null && View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { // first param is instance of View
 
-						// Requires debugging before the code can switch over to the notification model (Strategy pattern):
-						// not sure, but I think the problem could have something to do with what gets passed in the call to onAccountSelected()
+						//console.log('first param is instance of View');
 
-						//this.notifyObservers(int_uiAction, Model_m, View_v);
+						if (typeof Model_m === 'object' && (Model_m === null || (Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model)))) { // second param is instance of Model, or null
 
-						var accounts = module.Account.registry.getObjectList(), ret = false;
+							//console.log('second param is instance of Model');
 
-						for (var ix in accounts) { // try to find a matching account
+							if (typeof int_uiAction === 'number') { // third param is number (integer)
 
-							if (accounts[ix].id() !== Model_m.id()) { // skip the temporary account passed from the sign in view
+								console.log('Notifying ViewUpdateHandlers of user action notification in View'); // debug
 
-								if (accounts[ix].email() && accounts[ix].email().address() === Model_m.email().address()) { // emails match
+								this.notifyObservers(int_uiAction, Model_m, View_v);
 
-									if (accounts[ix].password() && accounts[ix].password().password() === Model_m.password().password()) { // pw match
+								// Remove temporary Model passed in from View (to prepare for garbage collection)
 
-										ret = true;
+								if (Model_m && Model_m.constructor && Model_m.constructor.registry) {
 
-										break; // .. match found, so exit for loop
-									}
+									Model_m.constructor.registry.remove(Model_m);
 								}
+
+								Model_m = undefined;
+
+								return true;
 							}
 						}
-
-						if (ret) { // provided email and password match an account
-
-							_onAccountSelected.call(this, accounts[ix]);
-
-							void (new module.View()).renderNavigation('Meetup Planner'); // show navigation
-
-							Materialize.toast('Login successfull. Welcome back!', 4000);
-						}
-
-						else { // sign in failed
-
-							View_v.clear();
-
-							this.currentView(View_v, null);
-
-							Materialize.toast('No account matches this email and password. Please try again.', 5000);
-						}
-
-						break;
-					
-					default:
-
-						//console.log('Forwarding update of UIAction ' + int_uiAction + ' on ' + View_v.className()); // debug
-
-						this.notifyObservers(int_uiAction, Model_m, View_v);
-
-						//console.log('UI action ' + int_uiAction + ' not supported');
+					}
 				}
 
-				*/
-
-				// remove temporary Model passed in from View (to prepare for garbage collection)
-
-				if (Model_m && Model_m.constructor && Model_m.constructor.registry) {
-
-					Model_m.constructor.registry.remove(Model_m);
-				}
-
-				Model_m = undefined;
+				return false; // default to false
 			}
 			
 
@@ -787,6 +807,52 @@ var app = app || {};
 
 			this.update = function() {
 
+				// Using 'internal strategy pattern' to avoid unwieldy branching statement that doesn't scale,
+				// i.e. call every internal subfunction, passing in arguments received, until a match is found (or not),
+				// letting subfunctions decide whether to respond (in this case, subfunction signatures must be mutually exclusive).
+
+				var args = arguments[0], ret = false,
+
+				strategies = [_update, __update, ___update, ____update];
+
+				console.log(args); // debug
+
+				for (var i = 0, len = strategies.length; i < len; i++) { // using 'for' b/c forEach does not support break
+
+					switch (args.length) { // 'strategies' evaluate param count, so branch call
+
+						case 3:
+
+							ret = strategies[i].call(this, args[0], args[1], args[2]);
+
+							break;
+
+						case 2:
+
+							ret = strategies[i].call(this, args[0], args[1]);
+
+							break;
+
+						case 1:
+
+							ret = strategies[i].call(this, args[0]);
+
+							break;
+					}
+
+
+					if (ret) { // match found
+
+						break; // we only need a single match
+					}
+				}
+
+				if (!ret) { // no strategy matches provided params
+
+					throw new IllegalArgumentError('Unexpected method signature. See docs/source for supported signatures.');
+				}
+
+				/*
 				// Parse parameters to invoke appropriate 'polymorphic' response
 				// Do type checking upfront so function chain called from here can assume it has been handled
 
@@ -900,6 +966,7 @@ var app = app || {};
 
 						throw new IllegalArgumentError('Unexpected method signature');
 				}
+				*/
 			}
 	};
 

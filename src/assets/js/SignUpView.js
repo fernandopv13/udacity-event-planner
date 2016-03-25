@@ -100,8 +100,6 @@ var app = app || {};
 
 		var widgetFactory = app.UIWidgetFactory.instance();
 			
-		this.$renderContext().empty();
-
 		// Add logo
 
 			var containerDiv =  this.createElement( // div
@@ -110,8 +108,6 @@ var app = app || {};
 				
 				classList: ['row', 'center-align']
 			});
-
-			this.$renderContext().append(containerDiv);
 
 			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
@@ -134,16 +130,16 @@ var app = app || {};
 
 		// Add heading and teaser
 			
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align']
 			});
 
-			this.$renderContext().append(containerDiv);
+			containerDiv.appendChild(innerDiv);
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'h4',
 
@@ -152,14 +148,14 @@ var app = app || {};
 				innerHTML: this.heading()
 			}));
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 					element: 'p',
 
 					innerHTML: 'Please fill in the blanks and we\'ll get you going like 1-2-3.'
 			}));
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			inner.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 					element: 'p',
 
@@ -178,22 +174,22 @@ var app = app || {};
 				classList: ['col', 's12']
 			});
 
-			this.$renderContext().append(formElement);
+			containerDiv.appendChild(formElement);
 
 
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
 				classList: ['row']
 			});
 			
-			formElement.appendChild(containerDiv);
+			formElement.appendChild(innerDiv);
 		
 
 		// Add email field
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
 			{
 				width: 's12',
 
@@ -211,7 +207,7 @@ var app = app || {};
 
 		// Add password field
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
 			{
 				width: 's12',
 
@@ -227,7 +223,7 @@ var app = app || {};
 		
 		// Add password confirmation field
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordConfirmationInputWidget',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordConfirmationInputWidget',
 			{
 				width: 's12',
 
@@ -239,7 +235,7 @@ var app = app || {};
 
 		// Add optional extras instruction
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -252,7 +248,7 @@ var app = app || {};
 		
 		// Add account holder name field
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
 			{
 				width: 's12',
 
@@ -268,7 +264,7 @@ var app = app || {};
 
 		// Add birthday field
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'DateInputWidget',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'DateInputWidget',
 			{
 				width: 's12',
 
@@ -282,7 +278,7 @@ var app = app || {};
 
 		// Add job title field
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
 			{
 				width:'s12',
 
@@ -298,15 +294,12 @@ var app = app || {};
 
 		// Add sign-up button
 
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align']
 			});
-
-			
-			formElement.appendChild(containerDiv);
 
 			
 			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
@@ -323,16 +316,16 @@ var app = app || {};
 		
 		// Add demo sign-in link (disabled/hidden)
 
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align', 'hidden'] // Udacity reviewer didn't like this idea, so hiding it
 			});
 
-			formElement.appendChild(containerDiv);
+			formElement.appendChild(innerDiv);
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -343,7 +336,7 @@ var app = app || {};
 			}));
 
 			
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
 			{
 				element: 'a',
 				
@@ -353,6 +346,12 @@ var app = app || {};
 			}));
 		
 		
+			// Update DOM
+
+				this.$renderContext().empty();
+
+				this.$renderContext().append(containerDiv);
+
 
 		// Initialize and (re)assign evnet handlers to form elements
 

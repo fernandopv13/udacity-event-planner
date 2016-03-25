@@ -89,8 +89,6 @@ var app = app || {};
 
 	module.EventView.prototype.render = function(Event_e) {
 
-		console.log('Rendering EventView'); // debug
-
 		var widgetFactory = app.UIWidgetFactory.instance(); // shortcut reference to widgetFactory
 
 		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
@@ -141,7 +139,6 @@ var app = app || {};
 					datasource: Event_e.name() ? Event_e.name() : ''
 				}));
 
-				
 							
 			// Add location field
 

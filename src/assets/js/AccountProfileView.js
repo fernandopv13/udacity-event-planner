@@ -64,12 +64,16 @@ var app = app || {};
 	* @param {Account} The account from whose profile to present data in the form
 	*
 	* @return void
-	 */
+	*
+	* @todo Add suggestions to employer field
+	*/
 
 	module.AccountProfileView.prototype.render = function(Person_p) {
 
-		var widgetFactory = app.UIWidgetFactory.instance();
+		var widgetFactory = app.UIWidgetFactory.instance(); // shortcut reference to widgetFactory
 
+		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
+		
 		if (Person_p) { // account holder exists
 			
 			// Setup up form and container div
@@ -93,6 +97,7 @@ var app = app || {};
 				
 
 				formElement.appendChild(containerDiv);
+			
 			
 			// Add heading
 				
@@ -169,6 +174,32 @@ var app = app || {};
 							
 			// Add employer field
 
+				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory,'TextInputWidget',
+				{
+					id: 'account-holder-employer',
+
+					width: 's12',
+
+					label: 'Your Employer',
+
+					required: false,
+
+					datasource:  Person_p.employer() && Person_p.employer().name() ? Person_p.employer().name() : '',
+
+					datalist: 'suggested-employers'
+				}));
+
+				/*
+				this.elementOptions['account-holder-employer'] = 
+				{
+					listeners: {
+
+						focus: this.suggestedEventTypes // suggest event types
+					}
+				}*/
+
+
+				/*
 				var innerDiv =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
 				{
 					element: 'div',			
@@ -225,7 +256,8 @@ var app = app || {};
 							
 				outerDiv.appendChild(innerDiv);
 				
-				containerDiv.appendChild(outerDiv);			
+				containerDiv.appendChild(outerDiv);	
+				*/		
 
 			
 			// Add birthday field
@@ -319,6 +351,10 @@ var app = app || {};
 				this.$renderContext().empty();
 
 				this.$renderContext().append(formElement);
+
+			// Initialize post-render
+
+				this.init();
 			
 
 			// (Re)assign event handlers to form elements
