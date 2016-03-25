@@ -88,7 +88,7 @@ var app = app || {};
 
 				errormessage: 'Please enter number',
 
-				hintsprefix: 'test-password-hints',
+				//hintsprefix: 'test-password-hints', DEPRECATED
 
 				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to PasswordInputWidget.prototype.validate)
 			}
@@ -104,7 +104,7 @@ var app = app || {};
 				throw new IllegalArgumentError('Data source must be an instance of Password, or null');
 			}
 
-			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;
+			var options = obj_options, createElement = module.HTMLElement.instance().createProduct, hintsprefix = '-hints';
 
 			
 			var outerDiv = createElement( // outer div
@@ -186,7 +186,7 @@ var app = app || {};
 			{
 				element: 'div',
 
-				attributes: {id: options.hintsprefix, 'aria-hidden': true},
+				attributes: {id: options.id + hintsprefix, 'aria-hidden': true},
 				
 				classList: ['col', options.width, 'hidden']
 			});
@@ -198,7 +198,7 @@ var app = app || {};
 			{
 				element: 'p',
 
-				attributes: {id: options.hintsprefix + '-charcount'},
+				attributes: {id: options.id + hintsprefix + '-charcount'},
 
 				classList: ['password-validation-hint'],
 
@@ -221,7 +221,7 @@ var app = app || {};
 			{
 				element: 'p',
 
-				attributes: {id: options.hintsprefix + '-uppercase'},
+				attributes: {id: options.id + hintsprefix + '-uppercase'},
 
 				classList: ['password-validation-hint'],
 
@@ -244,7 +244,7 @@ var app = app || {};
 			{
 				element: 'p',
 
-				attributes: {id: options.hintsprefix + '-lowercase'},
+				attributes: {id: options.id + hintsprefix + '-lowercase'},
 
 				classList: ['password-validation-hint'],
 
@@ -267,7 +267,7 @@ var app = app || {};
 			{
 				element: 'p',
 
-				attributes: {id: options.hintsprefix + '-number'},
+				attributes: {id: options.id + hintsprefix + '-number'},
 
 				classList: ['password-validation-hint'],
 
@@ -290,7 +290,7 @@ var app = app || {};
 			{
 				element: 'p',
 
-				attributes: {id: options.hintsprefix + '-punctuation'},
+				attributes: {id: options.id + hintsprefix + '-punctuation'},
 
 				classList: ['password-validation-hint'],
 
@@ -313,7 +313,7 @@ var app = app || {};
 			{
 				element: 'p',
 
-				attributes: {id: options.hintsprefix + '-illegal'},
+				attributes: {id: options.id + hintsprefix + '-illegal'},
 
 				classList: ['password-validation-hint'],
 
@@ -337,7 +337,29 @@ var app = app || {};
 		
 		/** Initializes password field (required by UIWidget) */
 
-		module.PasswordInputWidget.prototype.init = function(HTMLInputElement_e) {};
+		module.PasswordInputWidget.prototype.init = function(View_v, str_id, obj_options) {
+
+			var hintsprefix = '-hints';
+
+			$('#' + str_id).on('focus', function(nEvent) { // show password hints
+
+				$('#' + str_id + hintsprefix).show('slow');
+
+				$('#' + str_id + hintsprefix).removeClass('hidden');
+
+				$('#' + str_id + hintsprefix).attr('aria-hidden', false); // doesn't seem to have any effect on screen reader
+
+			}.bind(View_v));
+
+
+			$('#' + str_id).on('blur', function(nEvent) { // hide password hints
+
+				$('#' + str_id + hintsprefix).hide('slow');
+
+				$('#' + str_id + hintsprefix).attr('aria-hidden', true);
+
+			}.bind(View_v));
+		};
 
 		
 		/** Event handler for interactive validation of password field.

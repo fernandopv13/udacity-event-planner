@@ -84,18 +84,21 @@ var app = app || {};
 
 	module.SignInView.prototype.render = function() {
 
-		var widgetFactory = app.UIWidgetFactory.instance(); // shortcut reference to widgetFactory
+		var widgetFactory = app.UIWidgetFactory.instance(), // shortcut reference to widgetFactory
+
+		container; // shorthand reference to inherited temporary container element
 
 		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 			
+		
 		// Set up container div
 			
-			var containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			container = this.containerElement(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
 				classList: ['row']
-			});
+			}));
 
 			
 		// Add logo
@@ -107,7 +110,7 @@ var app = app || {};
 				classList: ['row', 'center-align']
 			});
 
-			containerDiv.appendChild(innerDiv);
+			container.appendChild(innerDiv);
 
 			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
@@ -161,7 +164,7 @@ var app = app || {};
 				classList: ['col', 's12']
 			});
 
-			containerDiv.appendChild(formElement);
+			container.appendChild(formElement);
 
 
 		// Add email field
@@ -194,7 +197,7 @@ var app = app || {};
 
 						}.bind(this)
 				}
-			}
+			};
 
 
 		// Add password field
@@ -240,8 +243,7 @@ var app = app || {};
 				}
 			}
 
-			
-
+		
 		// Add sign-in button
 
 			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
@@ -320,79 +322,20 @@ var app = app || {};
 			}
 
 
-		// Render to DOM
+		// Render to DOM and initialize
 
-			this.$renderContext().empty();
+			this.ssuper().prototype.render.call(this);
 
-			this.$renderContext().append(containerDiv);
+			//this.$renderContext().empty();
 
-			//console.log(containerDiv);
-
-			//console.log(this.elementOptions);
+			//this.$renderContext().append(container);
 		
 		
-		// Initialize and (re)assign event handlers to form elements
+		// Do custom post-render initialization
+
+			//this.init(); // generic
 
 			$('#sign-in-email').attr('autofocus', true);
-
-
-			/*
-			$('#sign-in-email').on('input', function(nEvent) { // validate password
-
-				if (nEvent.currentTarget.value.length > 3) {
-
-					Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
-				}
-
-			}.bind(this));
-
-			
-			$('#sign-in-password').focus(function(nEvent) { // update and show password hints
-
-				//Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validation, so no need for explicit call
-
-				$('#sign-in-password-hints').show('slow');
-
-				$('#sign-in-password-hints').removeClass('hidden');
-
-				$('#sign-in-password-hints').attr('aria-hidden', false); // doesn't seem to have any effect on screen reader
-
-			}.bind(this));
-
-
-			$('#sign-in-password').blur(function(nEvent) { // hide password hints (global handler takes care of the rest)
-
-				$('#sign-in-password-hints').hide('slow');
-
-				$('#sign-in-password-hints').attr('aria-hidden', true);
-			});
-
-
-			$('#sign-in-demo-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
-
-				$('#sign-in-email').val('demo@demo.demo');
-
-				$('#sign-in-password').val('DEMO5%demo');
-
-				this.submit(nEvent);
-
-			}.bind(this));
-			*/
-
-			/*
-			$('#sign-in-submit').click(function(nEvent) {
-
-				this.submit(event);
-
-			}.bind(this));
-			*/
-
-
-		// call parent to perform common post-render task(s)
-
-			this.init();
-
-			//this.ssuper().prototype.onRender.call(this);
 	};
 
 

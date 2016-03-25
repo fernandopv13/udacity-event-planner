@@ -51,31 +51,31 @@ var app = app || {};
 
 				case 'EventListView':
 
-					module.controller.update([new module.EventListView(), module.Account.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
+					module.controller.update(new module.EventListView(), module.Account.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
 
 					break;
 
 				case 'EventView':
 
-					module.controller.update([new module.EventView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
+					module.controller.update(new module.EventView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
 
 					break;
 
 				case 'GuestListView':
 
-					module.controller.update([new module.GuestListView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
+					module.controller.update(new module.GuestListView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
 
 					break;
 
 				case 'PersonView':
 
-					module.controller.update([new module.PersonView(), module.Person.registry.getObjectById(id), module.View.UIAction.NAVIGATE]);
+					module.controller.update(new module.PersonView(), module.Person.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
 
 					break;
 
 				default: // includes AccountProfileView and AccountSettingsView
 
-					module.controller.update([new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, module.View.UIAction.NAVIGATE]);
+					module.controller.update(new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, module.View.UIAction.NAVIGATE);
 			}
 		}
 

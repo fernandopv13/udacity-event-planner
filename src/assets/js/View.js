@@ -62,6 +62,8 @@ var app = app || {}; // create a simple namespace for the module
 
 			_parentList = [module.IInterfaceable, module.IObservable, module.IObserver, module.View], // list of interfaces implemented by this class (by function reference)
 
+			_containerElement, // temporary container holding elements while generating View, gets rendered to $renderContext
+
 			_$renderContext = $('#' + str_elementId), // the HTML element the view will render itself into when updated (set in realizing classes)
 			
 			_super = (this.ssuper ? this.ssuper : Object); // reference to immediate parent class (by function) if provided by subclass, otherwise Object
@@ -132,9 +134,19 @@ var app = app || {}; // create a simple namespace for the module
 			* @throws {IllegalArgumentError} If trying to set the parentList array
 			*/
 
-			this.parentList = new module.Accessor(_parentList, true);
+			this.parentList = new module.Accessor(_parentList, false);
 
 			
+			/** Gets or sets temporary container used while generating the view
+			*
+			* @return {HTMLElement} container The container (e.g. a DIV or UL)
+			*
+			* @throws {IllegalArgumentError} If trying to set container that is not a instance of HTMLElement
+			*/
+			
+			this.containerElement = new module.Accessor(_containerElement, false, HTMLElement, 'HTMLElement');
+
+
 			/** Gets or sets the render context (i.e. the HTML element the View will render itself into)
 			*
 			* @param {String} elementId Id of the HTML element this View will render itself into.
@@ -397,6 +409,40 @@ var app = app || {}; // create a simple namespace for the module
 		}
 
 
+		/** Does various generic housekeeping after the View has rendered to the DOM
+		*
+		* @todo Consolidate with onLoad(): they serve the same purpose
+		*/
+
+		app.View.prototype.init = function() {
+
+			this.hide(); // when rendering in the background, prevent first render from resulting in showing the view
+
+			if (this.elementOptions) { // do post-processing that require elements to be rendered to the DOM
+
+				for (var id in this.elementOptions) { // run through elements (by id) 
+
+					//console.log(id); //debug
+
+					if (this.elementOptions[id].init) { // run any custom initializer
+
+						if (typeof this.elementOptions[id].init === 'function') {
+
+							this.elementOptions[id].init(this, id, this.elementOptions[id]);
+						}
+
+						else {
+
+							throw new IllegalArgumentError('Expected function');
+						}
+					}
+
+					app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
+				}
+
+				delete this.elementOptions; // free up temporary variable for garbage collection
+			}
+		}
 		
 		/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference)
 		*
@@ -415,16 +461,29 @@ var app = app || {}; // create a simple namespace for the module
 		};
 		
 		
-		/** Abstract method. Executes default shared behaviour for when a View has rendered itself.
+		/** Renders View to the DOM and then initializes it.
+		*
+		* Call from individual Views after building containerElement.
 		*
 		* @return {void}
 		*
-		* @throws {AbstractMethodError} If trying to invoke (abstract method)
+		* @throws {ReferenceError} If containerElement is empty
 		*/
 
-		module.View.prototype.onRender = function() {
+		module.View.prototype.render = function() {
 
-			throw new AbstractMethodError('onRender() must be implemented by subclasses');
+			//console.log(this.containerElement()); // debug
+
+			// Render to DOM
+
+				this.$renderContext().empty();
+
+				this.$renderContext().append(this.containerElement());
+		
+		
+			// Do generic post-render initialization
+
+				this.init();
 		}
 		
 
@@ -786,9 +845,9 @@ var app = app || {}; // create a simple namespace for the module
 
 				if (View_v && View_v.constructor && View_v.constructor === this.constructor) { //console.log('notification is directed at correct type of View');
 
-					if (Model_m === null || Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) && Model_m.constructor === this.modelClass()) {console.log('model is expected type, or null');
+					if (Model_m === null || Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) && Model_m.constructor === this.modelClass()) {
 
-						//console.log('received valid update notification'); // debug
+						console.log('Rendering ' + View_v.className()); // debug
 
 						this.model(Model_m);
 

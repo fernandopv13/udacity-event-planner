@@ -107,11 +107,12 @@ var app = app || {};
 	};
 
 
-	/** Does varies housekeeping after the View has rendered to the DOM
+	/** Does various housekeeping after the View has rendered to the DOM
 	*
 	* @todo Consolidate with onLoad(): they serve the same purpose
 	*/
 
+	/* DEPRECATED: Promoted to View.js
 	app.FormView.prototype.init = function() {
 
 		this.hide(); // when rendering in the background, prevent first render from resulting in showing the view
@@ -141,6 +142,7 @@ var app = app || {};
 			delete this.elementOptions; // free up temporary variable for garbage collection
 		}
 	}
+	*/
 
 
 	/** Does varies housekeeping after the View has lost focus in the app */

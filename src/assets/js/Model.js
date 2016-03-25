@@ -189,6 +189,8 @@ var app = app || {}; // create a simple namespace for the module
 		
 		// Notify observers (i.e. controller)
 
+		console.log('Updated ' + this.className() + ', notifying controller');
+
 		this.notifyObservers(this);
 	}
 
@@ -214,6 +216,8 @@ var app = app || {}; // create a simple namespace for the module
 				if (args[0].constructor === this.constructor) { // correct Model subtype
 
 					if (typeof args[1] === 'number' && parseInt(args[1]) === this.id()) { // correct id
+
+						console.log(args); // debug
 
 						return true;
 					}

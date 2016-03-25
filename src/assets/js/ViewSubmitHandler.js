@@ -72,7 +72,7 @@ var app = app || {};
 
 		var ctrl = this.controller();
 
-		if (ctrl.newModel()) { // new Model succesfully added to the account, insert into ecosystem
+		/*if (ctrl.newModel()) { // new Model succesfully added to the account, insert into ecosystem
 
 			switch (Model_m.constructor) {
 
@@ -91,7 +91,10 @@ var app = app || {};
 
 			ctrl.newModel(null); // reset and dereference temporary model
 		}
+		*/
 
+		console.log('notifying observers'); // debug
+		
 		ctrl.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits (later, uncouple from controller using Observer pattern (i.e. implement IObservable))
 
 		window.history.back(); // go one step back in browser history

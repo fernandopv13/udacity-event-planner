@@ -65,24 +65,24 @@ var app = app || {};
 
 	module.FrontPageView.prototype.render = function() {
 
-		var widgetFactory = app.UIWidgetFactory.instance();
-			
-		this.$renderContext().empty();
+		var widgetFactory = app.UIWidgetFactory.instance(), // shortcut reference to widgetFactory
 
+		container; // shorthand reference to inherited temporary container element
+
+		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
-		// Add heading
+		
+		// Set up container and add heading
 			
-			var containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
+			container = this.containerElement(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align']
-			});
-
-			this.$renderContext().append(containerDiv);
+			}));
 
 			
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			container.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'h4',
 
@@ -92,24 +92,24 @@ var app = app || {};
 		
 		// Add logo and teaser
 
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align']
 			});
 
-			this.$renderContext().append(containerDiv);
+			container.appendChild(innerDiv);
 
 			
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'img',
 
 				attributes: {src: 'assets/img/logo.png', alt: 'Logo'}
 			}));
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -119,17 +119,17 @@ var app = app || {};
 		
 		// Add sign-up button
 
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align']
 			});
 
-			this.$renderContext().append(containerDiv);
+			container.appendChild(innerDiv);
 
 			
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
 			{
 				element: 'a',
 				
@@ -140,20 +140,34 @@ var app = app || {};
 				innerHTML: 'Sign Up'
 			}));
 
+			this.elementOptions['front-page-sign-up'] =
+			{
+				listeners:
+				{
+					mousedown:
+
+						function(nEvent) { // go to sign-up view
+							
+							this.notifyObservers(new module.SignUpView(), null, module.View.UIAction.NAVIGATE);
+						
+						}.bind(this)
+				}
+			};
+
 
 		// Add sign-in link
 
-			containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
+			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align']
 			});
 
-			this.$renderContext().append(containerDiv);
+			container.appendChild(innerDiv);
 
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -162,7 +176,7 @@ var app = app || {};
 			}));
 
 			
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
 			{
 				element: 'a',
 				
@@ -170,9 +184,36 @@ var app = app || {};
 				
 				innerHTML: 'Sign In'
 			}));
-		
-		// (Re)assign event handlers to form elements
 
+			this.elementOptions['front-page-sign-in'] =
+			{
+				listeners:
+				{
+					mousedown:
+
+						function(nEvent) { // go to sign-in view
+							
+							this.notifyObservers(new module.SignInView(), null, module.View.UIAction.NAVIGATE);
+						
+						}.bind(this)
+				}
+			};
+
+		
+		// Render to DOM and initialize
+
+			this.ssuper().prototype.render.call(this);
+
+			//this.$renderContext().empty();
+
+			//this.$renderContext().append(container);
+		
+		
+		// Do post-render initialization
+
+			//this.init(); // generic
+
+			/*
 			$('#front-page-sign-up').click(function(event) { // go to sign-up view
 
 				this.notifyObservers(new module.SignUpView(), null, module.View.UIAction.NAVIGATE);
@@ -187,6 +228,7 @@ var app = app || {};
 				this.notifyObservers(new module.SignInView(), null, module.View.UIAction.NAVIGATE);
 
 			}.bind(this));
+			*/
 	};
 
 	module.FrontPageView.prototype.update = function() {

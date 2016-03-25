@@ -199,7 +199,7 @@ var app = app || {};
 				this.elementOptions['event-start-date'] = 
 				{
 					init: module.DateInputWidget.prototype.init
-				}
+				};
 				
 				
 				var endDate = widgetFactory.createProduct.call(widgetFactory,'DateInputWidget',

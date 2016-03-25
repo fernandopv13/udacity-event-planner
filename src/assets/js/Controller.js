@@ -73,7 +73,7 @@ var app = app || {};
 
 					if (View_v === null || View_v.isInstanceOf(module.View)) {
 
-						//console.log('setting currentView to ' + View_v.className()); // debug
+						console.log('setting currentView to ' + View_v.className()); // debug
 
 						this.update(Model_m, View_v); // first notify observers: forms won't update if they are the current view
 						
@@ -793,12 +793,10 @@ var app = app || {};
 			this.update = function() {
 
 				// Using 'internal strategy pattern' to avoid unwieldy branching statement that doesn't scale,
-				// i.e. call every internal subfunction, passing in arguments received, until a match is found (or not),
+				// i.e. call every private _update() subfunction, passing in arguments received, until a match is found (or not),
 				// letting subfunctions decide whether to respond (in this case, subfunction signatures must be mutually exclusive).
 
-				var args = arguments, ret = false,
-
-				strategies = [_update, __update, ___update, ____update];
+				var args = arguments, ret = false, strategies = [_update, __update, ___update, ____update];
 
 				console.log(args); // debug
 
@@ -825,133 +823,15 @@ var app = app || {};
 							break;
 					}
 
-
-					if (ret) { // match found
-
-						break; // we only need a single match
-					}
+					if (ret) {break;} // we only need a single match, so break when found
 				}
 
-				if (!ret) { // no strategy matches provided params
+				if (!ret) { // no 'strategy' matches provided params
+
+					console.log(args);
 
 					throw new IllegalArgumentError('Unexpected method signature. See docs/source for supported signatures.');
 				}
-
-				/*
-				// Parse parameters to invoke appropriate 'polymorphic' response
-				// Do type checking upfront so function chain called from here can assume it has been handled
-
-				//console.log(arguments);
-
-				var args = arguments[0], Model_m, View_v, int_id, UIAction; // 
-
-				switch (args.length) {
-
-					case 1: // state change notification from Model
-
-						Model_m = args[0];
-
-						if (typeof Model_m !== 'undefined' && Model_m !== null && Model_m.isInstanceOf(module.Model)) { // single param that is instance of Model
-
-						//if (args[0].isInstanceOf(module.Model)) { // single param that is instance of Model
-
-								console.log('Detected state change notification from Model'); //debug
-
-								_update.call(this, Model_m);
-						}
-
-						else {
-
-							throw new IllegalArgumentError('Expected instance of Model');
-						}
-
-						break;
-
-					case 2: // response from ViewHandler to user action in View
-
-						if (typeof args[1] === 'number') { // second param is a number (integer)
-
-							Model_m = args[0]; int_id = args[1];
-
-							if (typeof Model_m !== 'undefined' && Model_m.isInstanceOf(module.Model)) { // first param is instance of Model
-
-								console.log('Detected update to Model from ViewUpdateHandler');
-
-								__update.call(this, Model_m, int_id);
-							}
-
-							else {
-
-								throw new IllegalArgumentError('Expected instance of Model');
-							}
-						}
-
-						else {
-
-							Model_m = args[0]; View_v = args[1];
-
-							if (typeof Model_m !== 'undefined' && (Model_m === null || Model_m.isInstanceOf(module.Model))) { // first param is instance of Model, or null
-
-								if (typeof View_v !== 'undefined' && View_v.isInstanceOf(module.View)) { // send param is instance of View
-
-									console.log('Detected update to View from ViewUpdateHandler');
-
-									___update.call(this, Model_m, View_v);
-								}
-
-								else {
-
-									throw new IllegalArgumentError('Expected instance of View');
-								}
-							}
-
-							else {
-
-								throw new IllegalArgumentError('Expected instance of Model');
-							}
-						}
-
-						break;
-
-					case 3: // user action notification from View
-
-						View_v = args[0]; Model_m = args[1]; UIAction = args[2];
-
-						if (View_v.isInstanceOf(module.View)) { // first param is instance of View
-
-							if (Model_m === null || Model_m.isInstanceOf(module.Model)) { // second param is instance of Model, or null
-
-								if (typeof UIAction === 'number') { // third param is integer
-
-									console.log('Detected user action notification from View'); // debug
-
-									____update.call(this, View_v, Model_m, UIAction);
-								}
-
-								else {
-
-									throw new IllegalArgumentError('Expected a number');
-								}
-							}
-
-							else {
-
-								throw new IllegalArgumentError('Expected instance of Model, or null');
-							}
-						}
-
-						else {
-
-							throw new IllegalArgumentError('Expected instance of View');
-						}
-
-						break;
-
-					default:
-
-						throw new IllegalArgumentError('Unexpected method signature');
-				}
-				*/
 			}
 	};
 

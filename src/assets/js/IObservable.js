@@ -53,6 +53,8 @@ var app = app || {}; // create a simple namespace for the module
 
 		var args = arguments;
 
+		//console.log(args); // debug
+
 		switch (args.length) {
 
 			case 0:
@@ -110,6 +112,8 @@ var app = app || {}; // create a simple namespace for the module
 				break;
 
 			default:
+
+				//console.log('falling back on default'); // debug
 
 				this.observers().forEach(function(observer) {
 

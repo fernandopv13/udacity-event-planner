@@ -189,7 +189,7 @@ var app = app || {};
 
 					if (typeof listeners[event] === 'function') {
 
-						$('#' + str_elementId).on(event, listeners[event]);
+						$('#' + str_elementId).on(event, listeners[event].bind(View_v));
 					}
 
 					else {

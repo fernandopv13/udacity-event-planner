@@ -109,7 +109,7 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 	*
 	* @param {Object} property The property to create an accessor for
 	*
-	* @param {Function} type Class (by function reference) required by the property
+	* @param {Function} type Class (by function reference) required by the property (derived classes are also acceptable)
 	*
 	* @param {String} className The name of the class required by the accessor
 	*
@@ -120,6 +120,8 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 	* @throws {IllegalArgumentError} If passed a class name parameter that is not a string (constructor)
 	*
 	* @throws {IllegalArgumentError} If passed a type paramater that is not a class/function (accessor function)
+	*
+	* @todo Create more detailed unit tests for this
 	*/
 	
 	function Accessor___(obj_prop, Function_type, str_className) {  // unified accessor with type checking for complex types (i.e. classes)
@@ -134,7 +136,18 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 
 					if (obj_val !== undefined) {
 
-						if (obj_val === null || obj_val.constructor === acc_type || (obj_val.isInstanceOf && obj_val.isInstanceOf(acc_type))) {
+						if
+						( // acceptable values
+
+							obj_val === null // null (i.e. object reset)
+
+							|| obj_val.constructor === acc_type // same type
+
+							|| obj_val instanceof acc_type // derived type (native)
+
+							|| (obj_val.isInstanceOf && obj_val.isInstanceOf(acc_type)) // derived type (custom)
+							
+						) {
 
 							obj_prop = obj_val;
 						}

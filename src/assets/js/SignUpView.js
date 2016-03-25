@@ -98,18 +98,34 @@ var app = app || {};
 
 	module.SignUpView.prototype.render = function() {
 
-		var widgetFactory = app.UIWidgetFactory.instance();
-			
-		// Add logo
+		var widgetFactory = app.UIWidgetFactory.instance(), // shortcut reference to widgetFactory
 
-			var containerDiv =  this.createElement( // div
+		container; // shorthand reference to inherited temporary container element
+
+		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
+		
+
+		// Add container
+
+			container = this.containerElement(this.createElement( // container
+			{
+				element: 'div',			
+				
+				classList: ['row']
+			}));
+
+			var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
 			{
 				element: 'div',			
 				
 				classList: ['row', 'center-align']
 			});
 
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			container.appendChild(innerDiv);
+
+		// Add logo
+
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // logo
 			{
 				element: 'img',
 
@@ -130,15 +146,6 @@ var app = app || {};
 
 		// Add heading and teaser
 			
-			var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align']
-			});
-
-			containerDiv.appendChild(innerDiv);
-
 			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'h4',
@@ -155,7 +162,7 @@ var app = app || {};
 					innerHTML: 'Please fill in the blanks and we\'ll get you going like 1-2-3.'
 			}));
 
-			inner.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 					element: 'p',
 
@@ -163,33 +170,23 @@ var app = app || {};
 			}));
 
 
-		// Setup up form and container div
+		// Setup up form
 
-			var formElement = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // form
+			var formElement = widgetFactory.createProduct.call(widgetFactory, 'FormWidget',
 			{
-				element: 'form',			
-				
-				attributes: {autocomplete: 'off', id: 'sign-up-form'},//, novalidate: false},
-				
-				classList: ['col', 's12']
+				id: 'sign-up-form-form',
+
+				autocomplete: 'off',
+
+				novalidate: true
 			});
 
-			containerDiv.appendChild(formElement);
+			container.appendChild(formElement);
 
-
-			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row']
-			});
-			
-			formElement.appendChild(innerDiv);
 		
-
 		// Add email field
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
+			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
 			{
 				width: 's12',
 
@@ -207,7 +204,7 @@ var app = app || {};
 
 		// Add password field
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
+			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
 			{
 				width: 's12',
 
@@ -215,15 +212,20 @@ var app = app || {};
 
 				label: 'Password',
 
-				datasource: null,
+				datasource: null//,
 
-				hintsprefix: 'sign-up-password-hints'
+				//hintsprefix: 'sign-up-password-hints'
 			}));
+
+			this.elementOptions['sign-up-password'] = 
+			{
+				init: module.PasswordInputWidget.prototype.init
+			}
 
 		
 		// Add password confirmation field
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordConfirmationInputWidget',
+			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordConfirmationInputWidget',
 			{
 				width: 's12',
 
@@ -235,7 +237,7 @@ var app = app || {};
 
 		// Add optional extras instruction
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
 			{
 				element: 'p',
 
@@ -248,7 +250,7 @@ var app = app || {};
 		
 		// Add account holder name field
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
 			{
 				width: 's12',
 
@@ -264,7 +266,7 @@ var app = app || {};
 
 		// Add birthday field
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'DateInputWidget',
+			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'DateInputWidget',
 			{
 				width: 's12',
 
@@ -275,10 +277,15 @@ var app = app || {};
 				required: false
 			}))
 
+			this.elementOptions['sign-up-birthday'] = 
+			{
+				init: module.DateInputWidget.prototype.init
+			};
+
 
 		// Add job title field
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
 			{
 				width:'s12',
 
@@ -301,8 +308,10 @@ var app = app || {};
 				classList: ['row', 'center-align']
 			});
 
+			formElement.appendChild(innerDiv);
+
 			
-			containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
+			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
 			{
 				element: 'a',
 				
@@ -313,7 +322,15 @@ var app = app || {};
 				innerHTML: 'Sign Up'
 			}));
 
-		
+			this.elementOptions['sign-up-submit'] =
+			{
+				listeners:
+				{
+					mousedown: this.submit
+				}
+			}
+
+
 		// Add demo sign-in link (disabled/hidden)
 
 			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
@@ -344,48 +361,27 @@ var app = app || {};
 				
 				innerHTML: 'See our (still very) cool demo!'
 			}));
+
+			this.elementOptions['sign-up-open-demo'] =
+			{
+				listeners:
+				{
+					mousedown: this.openDemo
+				}
+			}
 		
 		
-			// Update DOM
+		// Render to DOM and initialize
 
-				this.$renderContext().empty();
-
-				this.$renderContext().append(containerDiv);
+			this.ssuper().prototype.render.call(this);
 
 
-		// Initialize and (re)assign evnet handlers to form elements
+		// Do custom post-render initialization
 
 			$('#sign-up-email').attr('autofocus', true);
 
 
-			$('#sign-up-email, #sign-up-password, #sign-up-password-confirmation').on('input', function(nEvent) { // interactively validate email, password etc
-
-				if (nEvent.currentTarget.value.length > 3) { // allow people to get started before showing error message (we need at least 3 chars anyway)
-
-					Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
-				}
-
-			}.bind(this));
-
-			
-			$('#sign-up-password').focus(function(nEvent) { // update and show password hints
-
-				app.PasswordInputWidget.instance().validate(nEvent.currentTarget, 'sign-up-password-hints');
-
-				$('#sign-up-password-hints').show('slow');
-
-				$('#sign-up-password-hints').removeClass('hidden');
-
-				$('#sign-up-password-hints').attr('aria-hidden', false); // doesn't seem to have any effect on screen reader
-
-			}.bind(this));
-
-
 			$('#sign-up-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
-
-				$('#sign-up-password-hints').hide('slow');
-
-				$('#sign-up-password-hints').attr('aria-hidden', true);
 
 				if ($(nEvent.currentTarget).val().length > 0 // pw is not empty
 
@@ -398,23 +394,6 @@ var app = app || {};
 						$('#sign-up-password-confirmation-parent').show('slow');
 				}
 			});
-
-
-			app.DateInputWidget.instance().init();
-			
-			
-			$('#sign-up-open-demo').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
-
-				this.openDemo(nEvent);
-
-			}.bind(this));
-
-
-			$('#sign-up-submit').click(function(nEvent) {
-
-				this.submit(nEvent);
-
-			}.bind(this));
 
 
 		// call parent to perform common post-render task(s)
@@ -457,6 +436,8 @@ var app = app || {};
 
 			return true;
 		}
+
+		Materialize.toast('Some info seems to be missing. Please try again', 4000);
 
 		return false;
 	}
