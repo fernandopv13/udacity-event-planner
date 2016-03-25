@@ -68,187 +68,201 @@ var app = app || {};
 
 	module.PersonView.prototype.render = function(Person_p) {
 
-		var widgetFactory = app.UIWidgetFactory.instance();
+		var container; // shorthand reference to inherited temporary container element
+
+		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
+		
 
 		if (Person_p !== null) {
 			
-			// Setup up form and container div
+			// Setup container
 
-				var formElement =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-				{
-					element: 'form',			
-					
-					attributes: {autocomplete: 'off', novalidate: true},
-					
-					classList: ['col', 's12']
-				});
+				container = this.containerElement(this.createWidget(
 
+					'HTMLElement',
 
-				var containerDiv =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				});
-				
+					{
+						element: 'div',			
+						
+						classList: ['row']
+					}
+				));
 
-				formElement.appendChild(containerDiv);
-			
 
 			// Add heading
 				
-				containerDiv.appendChild(this.createHeading('s12', this.heading()));
+				container.appendChild(this.createWidget(
+
+					'HTMLElement',
+
+					{
+						element: 'h4',
+
+						attributes: {role: 'heading'},
+
+						innerHTML: this.heading()
+					}
+				));
+
+
+			// Add form
+
+				var formElement = this.createWidget(
+
+					'FormWidget',
+
+					{
+						id: 'guest-form',
+
+						autocomplete: 'off',
+
+						novalidate: true
+					}
+				);
+
+				container.appendChild(formElement);
 
 				
 			// Add hidden person id field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',{
+				formElement.appendChild(this.createWidget(
 
-					element: 'input',
+					'HTMLElement',
 
-					attributes: {id: 'guest-id', type: 'hidden', value: Person_p.id()}
-				}));
+					{
+
+						element: 'input',
+
+						attributes: {id: 'guest-id', type: 'hidden', value: Person_p.id()}
+					}
+				));
 
 			
 			// Add guest name field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
-				{
-					width: 's12',
+				formElement.appendChild(this.createWidget(
 
-					id: 'guest-name',
+					'TextInputWidget',
 
-					label: 'Guest Name',
+					{
+						width: 's12',
 
-					required: true,
+						id: 'guest-name',
 
-					datasource: Person_p.name() || null
-				}));
+						label: 'Guest Name',
+
+						required: true,
+
+						datasource: Person_p.name() || null
+					}
+				));
 			
 			
 			// Add email field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
-				{
-					width: 's12',
+				formElement.appendChild(this.createWidget(
 
-					id: 'guest-email',
+					'EmailInputWidget',
 
-					label: 'Email',
+					{
+						width: 's12',
 
-					required: true,
+						id: 'guest-email',
 
-					datasource: Person_p.email() || null
-				}));
+						label: 'Email',
+
+						required: true,
+
+						datasource: Person_p.email() || null
+					}
+				));
 
 			
 			// Add job title field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
-				{
-					width: 's12',
+				formElement.appendChild(this.createWidget(
 
-					id: 'guest-jobtitle',
+					'TextInputWidget',
 
-					label: 'Job Title',
+					{
+						width: 's12',
 
-					required: false,
+						id: 'guest-jobtitle',
 
-					datasource: Person_p.jobTitle() || null
-				}));
+						label: 'Job Title',
+
+						required: false,
+
+						datasource: Person_p.jobTitle() || null
+					}
+				));
 				
 
 			// Add employer field
 
-				var innerDiv =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				
-				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // input
-				{
-					element: 'input',			
-					
-					attributes:
+				formElement.appendChild(this.createWidget(
+
+					'TextInputWidget',
+
 					{
-						type: 'text',
-						
 						id: 'guest-employer',
 						
-						value: Person_p.employer() && Person_p.employer().name() ? Person_p.employer().name() : '',
-						
-						list: 'suggested-employers',
+						width: 's12',
 
-						'aria-labelledby': 'guest-employer-label',
+						label: 'Employer',
 
-						role: 'text'
+						required: false,
+
+						datasource: Person_p.employer() && Person_p.employer().name() ? Person_p.employer().name() : '',
+
+						datalist: 'suggested-employers'
 					}
-				}));
-				
-				
-				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'guest-employer', id: 'guest-employer-label'},
-					
-					classList: Person_p.employer() && Person_p.employer().name() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter employer'},
-					
-					innerHTML: 'Employer'
-				}));
-				
-				
-				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // data list
-				{	
-					element: 'datalist',			
-					
-					attributes: {id: 'suggested-employers'}
-				}));
-				
-				
-				var outerDiv =  widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				));
+
+				this.elementOptions['guest-employer'] = 
 				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				outerDiv.appendChild(innerDiv);
-				
-				containerDiv.appendChild(outerDiv);			
+					listeners: {
+
+						focus: this.suggestEmployers // suggest employers
+					}
+				};
 
 
 			// Add birthday field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'DateInputWidget',
+				formElement.appendChild(this.createWidget(
+
+					'DateInputWidget',
+
+					{
+						width: 's12',
+
+						id: 'guest-birthday',
+
+						label: 'Birthday',
+
+						required: false,
+
+						datasource: Person_p.birthday() || null
+					}
+				));
+
+				this.elementOptions['guest-birthday'] = 
 				{
-					width: 's12',
-
-					id: 'guest-birthday',
-
-					label: 'Birthday',
-
-					required: false,
-
-					datasource: Person_p.birthday() || null
-				}));
+					init: module.DateInputWidget.prototype.init
+				};
 				
 			
 			// Add requirement indicator (asterisk) explanation
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				var outerDiv = this.createWidget('HTMLElement', // outer div
 				{
 					element: 'div',			
 					
 					classList: ['row']
 				});
 				
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+				outerDiv.appendChild(this.createWidget('HTMLElement',
 				{
 					element: 'p',
 					
@@ -257,14 +271,12 @@ var app = app || {};
 					innerHTML: '* indicates a required field'
 				}));
 
-				containerDiv.appendChild(outerDiv);
-
-				//containerDiv.appendChild(this.createRequiredFieldExplanation());
+				formElement.appendChild(outerDiv);
 
 							
 			// Add submit and cancel buttons
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				outerDiv = this.createWidget('HTMLElement', // outer div
 				{
 					element: 'div',			
 					
@@ -272,15 +284,20 @@ var app = app || {};
 				});
 				
 				
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'CancelButtonWidget',  // cancel button
+				outerDiv.appendChild(this.createWidget('CancelButtonWidget',  // cancel button
 				{					
 					id: 'guest-form-cancel',
 
 					label: 'Cancel'
 				}));
+
+				this.elementOptions['guest-form-cancel'] =
+				{
+					init: module.CancelButtonWidget.prototype.init
+				}
 				
 
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
+				outerDiv.appendChild(this.createWidget('SubmitButtonWidget',  // submit button
 				{					
 					id: 'guest-form-submit',
 
@@ -289,77 +306,29 @@ var app = app || {};
 					icon: 'send'
 				}));
 
-				containerDiv.appendChild(outerDiv);
+				this.elementOptions['guest-form-submit'] =
+				{
+					init: module.SubmitButtonWidget.prototype.init
+				}
 
-				//containerDiv.appendChild(this.createSubmitCancelButtons('guest-form'))
-				
+				formElement.appendChild(outerDiv);
 			
-			// Update DOM
 
-				this.$renderContext().empty();
+			// Render to DOM and initialize
 
-				this.$renderContext().append(formElement);
+				this.ssuper().prototype.render.call(this);
+			
 
+			// Do custom post-render initialization
 
-			// Initialize and (re)assign event handlers to form elements
-
-				$('#guest-name').attr('autofocus', true)
-
-				$('#guest-birthday.datepicker').pickadate({
-					
-					//closeOnSelect: true, // bug: ineffective
-					
-					closeOnClear: true,
-					
-					onSet: function() {this.close()},
-					
-					selectMonths: true, // Creates a dropdown to control month
-					
-					selectYears: 15 // Creates a dropdown of 15 years to control year
-				});
-
-				
-				//$('#guest-location').focus(this.suggestLocations);
-
-				
-				/*
-				$('#guest-name').keyup(function(nEvent) {
-
-					Materialize.updateTextFields(nEvent.currentTarget);
-
-				}.bind(this));
-				
-
-				$('#guest-email').keyup(function(nEvent) {
-
-					app.EmailInputWidget.instance().validate(nEvent.currentTarget);
-
-				}.bind(this));
-				*/
-
-
-				$('#guest-employer').focus(this.suggestEmployers);
-
-
-				$('#guest-form-cancel').click(function(event) {
-
-					this.cancel(event);
-
-				}.bind(this));
-
-
-				$('#guest-form-submit').mousedown(function(event) { // submit (blur hides click event so using mousedown)
-
-					this.submit(event);
-
-				}.bind(this));
+				$('#guest-name').attr('autofocus', true);
 		}
 
 		else { // present default message
 
 			this.$renderContext().empty();
 
-			this.$renderContext().append(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+			this.$renderContext().append(this.createWidget('HTMLElement',
 			{
 				element: 'p',
 
@@ -426,6 +395,8 @@ var app = app || {};
 			
 			return true;
 		}
+
+		Materialize.toast('Some info seems to be missing. Please try again.', 4000);
 
 		return false;
 	};

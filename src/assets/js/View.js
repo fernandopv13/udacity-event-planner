@@ -238,7 +238,8 @@ var app = app || {}; // create a simple namespace for the module
 		* @return {HTMLElement} HTML element
 		*/
 
-		module.View.prototype.createElement = function(obj_specs) {
+		/* DEPRECATED
+		module.View.prototype.createElement = function(obj_options) {
 
 			// Sample JSON specification object using all currently supported features:
 			//
@@ -280,47 +281,48 @@ var app = app || {}; // create a simple namespace for the module
 			//	}
 
 
-			var element = document.createElement(obj_specs.element), prop;
+			var element = document.createElement(obj_options.element), prop;
 						
-			if (obj_specs.attributes) {
+			if (obj_options.attributes) {
 			
-				for (prop in obj_specs.attributes) {
+				for (prop in obj_options.attributes) {
 					
-					element.setAttribute(prop, obj_specs.attributes[prop]);
+					element.setAttribute(prop, obj_options.attributes[prop]);
 				}
 			}
 			
-			if (obj_specs.classList) {
+			if (obj_options.classList) {
 				
-				obj_specs.classList.forEach(function(str_class) {
+				obj_options.classList.forEach(function(str_class) {
 					
 					element.classList.add(str_class);
 				});
 			}
 			
-			if (obj_specs.dataset) {
+			if (obj_options.dataset) {
 			
-				for (prop in obj_specs.dataset) {
+				for (prop in obj_options.dataset) {
 					
-					element.dataset[prop] = obj_specs.dataset[prop];
+					element.dataset[prop] = obj_options.dataset[prop];
 				}
 			}
 			
-			if (obj_specs.innerHTML) {
+			if (obj_options.innerHTML) {
 				
-				element.innerHTML = obj_specs.innerHTML;
+				element.innerHTML = obj_options.innerHTML;
 			}
 
-			if (obj_specs.listeners) {
+			if (obj_options.listeners) {
 			
-				for (prop in obj_specs.listeners) {
+				for (prop in obj_options.listeners) {
 					
-					element.addEventListener(prop, obj_specs.listeners[prop]);
+					element.addEventListener(prop, obj_options.listeners[prop]);
 				}
 			}
 
 			return element;
 		};
+		*/
 		
 
 		/** Factory method for creating the main heading in forms
@@ -330,29 +332,40 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.prototype.createHeading = function (str_width, str_heading) {
 
-			var outerDiv =  this.createElement( // outer div
+			var outerDiv =  this.createWidget(
+
+			'HTMLElement', // outer div
+
 			{
 				element: 'div',			
 				
 				classList: ['row']
 			});
 
-			var innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
-				
-				classList: ['col', str_width]
-			});
+			var innerDiv =  this.createWidget(
 
-			innerDiv.appendChild(this.createElement({
+				'HTMLElement', // inner div
 
-				element: 'h4',
+				{
+					element: 'div',			
+					
+					classList: ['col', str_width]
+				}
+			);
 
-				attributes: {role: 'heading'},
+			innerDiv.appendChild(this.createWidget(
 
-				innerHTML: str_heading
+				'HTMLElement',
 
-			}));
+				{
+
+					element: 'h4',
+
+					attributes: {role: 'heading'},
+
+					innerHTML: str_heading
+				}
+			));
 
 			outerDiv.appendChild(innerDiv);
 			
@@ -367,25 +380,49 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.prototype.createRequiredFieldExplanation = function () {
 
-			var outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',			
-				
-				classList: ['row']
-			});
-			
-			outerDiv.appendChild(this.createElement({
-			
-				element: 'p',
-				
-				classList: ['required-indicator'],
+			var outerDiv =  this.createWidget(
+
+				'HTMLElement', // outer div
+
+				{
+					element: 'div',			
 					
-				innerHTML: '* indicates a required field'
-			}));
+					classList: ['row']
+				}
+			);
+			
+			outerDiv.appendChild(this.createWidget(
+
+				'HTMLElement',
+
+				{
+			
+					element: 'p',
+					
+					classList: ['required-indicator'],
+						
+					innerHTML: '* indicates a required field'
+				}
+			));
 						
 			
 			return outerDiv;
 		}
+
+
+		/** Provides shorthand notation for (somewhat unwieldy) calls to UIWidgetFactory */
+
+		module.View.prototype.createWidget = function(str_type, obj_options) {
+
+			return module.UIWidgetFactory.instance().createProduct.call(
+
+				module.UIWidgetFactory.instance(),
+
+				str_type,
+
+				obj_options
+			)
+		};
 
 
 		/** Utility for hiding view in the UI on demand.
@@ -442,7 +479,9 @@ var app = app || {}; // create a simple namespace for the module
 
 				delete this.elementOptions; // free up temporary variable for garbage collection
 			}
-		}
+		};
+
+
 		
 		/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference)
 		*
@@ -472,13 +511,15 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.prototype.render = function() {
 
-			//console.log(this.containerElement()); // debug
-
 			// Render to DOM
 
 				this.$renderContext().empty();
 
 				this.$renderContext().append(this.containerElement());
+
+			//  Free up containerElement for garbage collection
+
+				this.containerElement(null);
 		
 		
 			// Do generic post-render initialization
@@ -543,12 +584,16 @@ var app = app || {}; // create a simple namespace for the module
 
 				// Using 
 
-				var containerDiv = this.createElement(
-				{
-					element: 'div',
+				var containerDiv = this.createWidget(
 
-					classList: ['navbar-fixed']
-				});
+					'HTMLElement',
+
+						{
+							element: 'div',
+
+							classList: ['navbar-fixed']
+						}
+					);
 
 			
 			// 'More' dropdown
@@ -556,14 +601,18 @@ var app = app || {}; // create a simple namespace for the module
 				// Trying to follow the example here for acccesibility of the dropdown:
 				// https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms/How_to_build_custom_form_widgets#The_role_attribute
 
-				var ULElement = this.createElement(
-				{
-					element: 'ul',
+				var ULElement = this.createWidget(
 
-					attributes: {id: 'nav-dropdown', role: 'menu'},
+					'HTMLElement',
 
-					classList: ['dropdown-content']
-				});
+					{
+						element: 'ul',
+
+						attributes: {id: 'nav-dropdown', role: 'menu'},
+
+						classList: ['dropdown-content']
+					}
+				);
 
 				containerDiv.appendChild(ULElement);
 
@@ -571,16 +620,20 @@ var app = app || {}; // create a simple namespace for the module
 
 				menuItems.forEach(function(item) { //dropdown menu items
 
-					anchorElement = this.createElement(
-					{
-						element: 'a',
+					anchorElement = this.createWidget(
 
-						attributes: {href: item.href, title: item.text},
+						'HTMLElement',
 
-						innerHTML: item.text
-					});
+						{
+							element: 'a',
 
-					listElement = this.createElement({element: 'li', attributes: {role: 'menuitem'}});
+							attributes: {href: item.href, title: item.text},
+
+							innerHTML: item.text
+						}
+					);
+
+					listElement = this.createWidget('HTMLElement',{element: 'li', attributes: {role: 'menuitem'}});
 
 					listElement.appendChild(anchorElement);
 
@@ -591,16 +644,20 @@ var app = app || {}; // create a simple namespace for the module
 
 			// Main nav
 
-				var navContainer =  this.createElement(
-				{
-					element: 'nav',
+				var navContainer =  this.createWidget(
 
-					attributes: {role:'navigation'}
-				}); 
+					'HTMLElement',
+
+					{
+						element: 'nav',
+
+						attributes: {role:'navigation'}
+					}
+				); 
 
 				containerDiv.appendChild(navContainer);
 
-				var divElement = this.createElement( // top nav
+				var divElement = this.createWidget('HTMLElement', // top nav
 				{
 					element: 'div',
 
@@ -609,18 +666,22 @@ var app = app || {}; // create a simple namespace for the module
 
 				navContainer.appendChild(divElement);
 
-				divElement.appendChild(this.createElement(
-				{
-					element: 'a',
+				divElement.appendChild(this.createWidget(
 
-					attributes: {href: '#!'},
+					'HTMLElement',
 
-					classList: ['brand-logo'],
+					{
+						element: 'a',
 
-					innerHTML: str_logotype
-				}));
+						attributes: {href: '#!'},
 
-				var iconElement = this.createElement( // 'hamburger' menu (icon)
+						classList: ['brand-logo'],
+
+						innerHTML: str_logotype
+					}
+				));
+
+				var iconElement = this.createWidget('HTMLElement', // 'hamburger' menu (icon)
 				{
 					element: 'i',
 
@@ -629,50 +690,66 @@ var app = app || {}; // create a simple namespace for the module
 					innerHTML: 'menu'
 				});
 
-				anchorElement = this.createElement(
-				{
-					element: 'a',
+				anchorElement = this.createWidget(
 
-					attributes: {href: '#'},
+					'HTMLElement',
 
-					classList: ['button-collapse'],
+					{
+						element: 'a',
 
-					dataset: {activates: 'nav-side'}
-				});
+						attributes: {href: '#'},
+
+						classList: ['button-collapse'],
+
+						dataset: {activates: 'nav-side'}
+					}
+				);
 
 				anchorElement.appendChild(iconElement);
 
 				divElement.appendChild(anchorElement);
 
 
-				ULElement = this.createElement( // 'more' menu (desktop)
-				{
-					element: 'ul',
+				ULElement = this.createWidget(
 
-					classList: ['right', 'hide-on-med-and-down']
-				});
+				'HTMLElement', // 'more' menu (desktop)
 
-				listElement = this.createElement({element: 'li'});
+					{
+						element: 'ul',
 
-				iconElement = this.createElement(
-				{
-					element: 'i',
+						classList: ['right', 'hide-on-med-and-down']
+					}
+				);
 
-					classList: ['material-icons', 'left'],
+				listElement = this.createWidget('HTMLElement',{element: 'li'});
 
-					innerHTML: 'more_vert'
-				});
+				iconElement = this.createWidget(
 
-				anchorElement = this.createElement(
-				{
-					element: 'a',
+					'HTMLElement',
 
-					attributes: {href: '#!', id: 'nav-dropdown-button'},
+					{
+						element: 'i',
 
-					classList: ['dropdown-button'],
+						classList: ['material-icons', 'left'],
 
-					dataset: {activates: 'nav-dropdown'}
-				});
+						innerHTML: 'more_vert'
+					}
+				);
+
+				anchorElement = this.createWidget(
+
+					'HTMLElement',
+
+					{
+						element: 'a',
+
+						attributes: {href: '#!', id: 'nav-dropdown-button'},
+
+						classList: ['dropdown-button'],
+
+						dataset: {activates: 'nav-dropdown'}
+					}
+				);
 
 				anchorElement.appendChild(iconElement);
 
@@ -683,28 +760,39 @@ var app = app || {}; // create a simple namespace for the module
 				divElement.appendChild(ULElement);
 
 
-				ULElement = this.createElement( // delete icon
-				{
-					element: 'ul',
+				ULElement = this.createWidget(
 
-					classList: ['right', 'hidden']
-				});
+					'HTMLElement', // delete icon
 
-				iconElement = this.createElement(
-				{
-					element: 'i',
+					{
+						element: 'ul',
 
-					classList: ['material-icons', 'left', 'modal-trigger'],
+						classList: ['right', 'hidden']
+					}
+				);
 
-					innerHTML: 'delete'
-				});
+				iconElement = this.createWidget(
 
-				listElement = this.createElement(
-				{
-					element: 'li',
+					'HTMLElement',
+					{
+						element: 'i',
 
-					attributes: {id: 'nav-delete-icon'}
-				});
+						classList: ['material-icons', 'left', 'modal-trigger'],
+
+						innerHTML: 'delete'
+					}
+				);
+
+				listElement = this.createWidget(
+
+					'HTMLElement',
+
+					{
+						element: 'li',
+
+						attributes: {id: 'nav-delete-icon'}
+					}
+				);
 
 				listElement.appendChild(iconElement);
 
@@ -715,38 +803,50 @@ var app = app || {}; // create a simple namespace for the module
 	 		
 	 		// Side nav ('drawer')
 				
-				ULElement = this.createElement(
-				{
-					element: 'ul',
+				ULElement = this.createWidget(
 
-					attributes: {id: 'nav-side', role: 'menu'},
+					'HTMLElement',
 
-					classList: ['side-nav']
-				});
+					{
+						element: 'ul',
+
+						attributes: {id: 'nav-side', role: 'menu'},
+
+						classList: ['side-nav']
+					}
+				);
 
 				menuItems.forEach(function(item) {
 
-					listElement = this.createElement({element: 'li'});
+					listElement = this.createWidget('HTMLElement',{element: 'li'});
 
-					anchorElement = this.createElement(
-					{
-						element: 'a',
+					anchorElement = this.createWidget(
 
-						attributes: {href: item.href, role:'menuitem'},
+						'HTMLElement',
 
-						innerHTML: item.text
-					});
+						{
+							element: 'a',
+
+							attributes: {href: item.href, role:'menuitem'},
+
+							innerHTML: item.text
+						}
+					);
 
 					if (item.icon) {
 
-						anchorElement.appendChild(this.createElement(
-						{
-							element: 'i',
+						anchorElement.appendChild(this.createWidget(
 
-							classList: ['material-icons', 'left'],
+							'HTMLElement',
 
-							innerHTML: item.icon
-						}));
+							{
+								element: 'i',
+
+								classList: ['material-icons', 'left'],
+
+								innerHTML: item.icon
+							}
+						));
 					}
 
 					listElement.appendChild(anchorElement);
@@ -784,7 +884,6 @@ var app = app || {}; // create a simple namespace for the module
 				});
 
 				*/
-
 
 				$('#nav-delete-icon').hide();
 

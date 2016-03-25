@@ -189,7 +189,7 @@ var app = app || {}; // create a simple namespace for the module
 		
 		// Notify observers (i.e. controller)
 
-		console.log('Updated ' + this.className() + ', notifying controller');
+		//console.log('Updated ' + this.className() + ', notifying controller'); // debug
 
 		this.notifyObservers(this);
 	}
@@ -217,7 +217,7 @@ var app = app || {}; // create a simple namespace for the module
 
 					if (typeof args[1] === 'number' && parseInt(args[1]) === this.id()) { // correct id
 
-						console.log(args); // debug
+						//console.log(args); // debug
 
 						return true;
 					}

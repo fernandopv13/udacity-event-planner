@@ -107,44 +107,6 @@ var app = app || {};
 	};
 
 
-	/** Does various housekeeping after the View has rendered to the DOM
-	*
-	* @todo Consolidate with onLoad(): they serve the same purpose
-	*/
-
-	/* DEPRECATED: Promoted to View.js
-	app.FormView.prototype.init = function() {
-
-		this.hide(); // when rendering in the background, prevent first render from resulting in showing the view
-
-		if (this.elementOptions) { // do post-processing that require elements to be rendered to the DOM
-
-			for (var id in this.elementOptions) { // run through elements (by id) 
-
-				console.log(id);
-
-				if (this.elementOptions[id].init) { // run any custom initializer
-
-					if (typeof this.elementOptions[id].init === 'function') {
-
-						this.elementOptions[id].init(this, id, this.elementOptions[id]);
-					}
-
-					else {
-
-						throw new IllegalArgumentError('Expected function');
-					}
-				}
-
-				app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
-			}
-
-			delete this.elementOptions; // free up temporary variable for garbage collection
-		}
-	}
-	*/
-
-
 	/** Does varies housekeeping after the View has lost focus in the app */
 
 	app.FormView.prototype.onUnLoad = function(nEvent) {

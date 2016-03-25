@@ -65,80 +65,106 @@ var app = app || {};
 
 	module.FrontPageView.prototype.render = function() {
 
-		var widgetFactory = app.UIWidgetFactory.instance(), // shortcut reference to widgetFactory
-
-		container; // shorthand reference to inherited temporary container element
+		var container; // shorthand reference to inherited temporary container element
 
 		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
 		
 		// Set up container and add heading
 			
-			container = this.containerElement(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'div',			
+			container = this.containerElement(this.createWidget(
+
+				'HTMLElement',
 				
-				classList: ['row', 'center-align']
-			}));
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align']
+				}
+			));
 
 			
-			container.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'h4',
+			container.appendChild(this.createWidget(
 
-				innerHTML: this.heading()
-			}));
+				'HTMLElement',
+
+				{
+					element: 'h4',
+
+					innerHTML: this.heading()
+				}
+			));
 
 		
 		// Add logo and teaser
 
-			var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
+			var innerDiv = this.createWidget(
+
+				'HTMLElement', // div
 				
-				classList: ['row', 'center-align']
-			});
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align']
+				}
+			);
 
 			container.appendChild(innerDiv);
 
 			
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'img',
+			innerDiv.appendChild(this.createWidget(
 
-				attributes: {src: 'assets/img/logo.png', alt: 'Logo'}
-			}));
+				'HTMLElement',
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'p',
+				{
+					element: 'img',
 
-				innerHTML: 'The awesomest place for all your event planning'
-			}));
+					attributes: {src: 'assets/img/logo.png', alt: 'Logo'}
+				}
+			));
+
+			innerDiv.appendChild(this.createWidget(
+
+				'HTMLElement',
+
+				{
+					element: 'p',
+
+					innerHTML: 'The awesomest place for all your event planning'
+				}
+			));
 
 		
 		// Add sign-up button
 
-			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align']
-			});
+			innerDiv = this.createWidget(
+
+				'HTMLElement', // div
+
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align']
+				}
+			);
 
 			container.appendChild(innerDiv);
 
 			
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
-			{
-				element: 'a',
-				
-				attributes: {id: 'front-page-sign-up', role: 'button'},
-				
-				classList: ['waves-effect', 'waves-light', 'btn', 'right-align'],
+			innerDiv.appendChild(this.createWidget(
 
-				innerHTML: 'Sign Up'
-			}));
+				'HTMLElement', // button
+
+				{
+					element: 'a',
+					
+					attributes: {id: 'front-page-sign-up', role: 'button'},
+					
+					classList: ['waves-effect', 'waves-light', 'btn', 'right-align'],
+
+					innerHTML: 'Sign Up'
+				}
+			));
 
 			this.elementOptions['front-page-sign-up'] =
 			{
@@ -157,33 +183,45 @@ var app = app || {};
 
 		// Add sign-in link
 
-			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align']
-			});
+			innerDiv = this.createWidget(
+
+				'HTMLElement', // div
+
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align']
+				}
+			);
 
 			container.appendChild(innerDiv);
 
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'p',
+			innerDiv.appendChild(this.createWidget(
 
-				innerHTML: 'or'
-				
-			}));
+				'HTMLElement',
+
+				{
+					element: 'p',
+
+					innerHTML: 'or'
+					
+				}
+			));
 
 			
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
-			{
-				element: 'a',
-				
-				attributes: {id: 'front-page-sign-in', role: 'button'},
-				
-				innerHTML: 'Sign In'
-			}));
+			innerDiv.appendChild(this.createWidget(
+
+				'HTMLElement', // link
+
+				{
+					element: 'a',
+					
+					attributes: {id: 'front-page-sign-in', role: 'button'},
+					
+					innerHTML: 'Sign In'
+				}
+			));
 
 			this.elementOptions['front-page-sign-in'] =
 			{
@@ -203,32 +241,6 @@ var app = app || {};
 		// Render to DOM and initialize
 
 			this.ssuper().prototype.render.call(this);
-
-			//this.$renderContext().empty();
-
-			//this.$renderContext().append(container);
-		
-		
-		// Do post-render initialization
-
-			//this.init(); // generic
-
-			/*
-			$('#front-page-sign-up').click(function(event) { // go to sign-up view
-
-				this.notifyObservers(new module.SignUpView(), null, module.View.UIAction.NAVIGATE);
-
-				//Materialize.toast('Sign up is not implemented in this demo. Sorry.', 4000)
-
-			}.bind(this));
-
-
-			$('#front-page-sign-in').click(function(event) { // go to sign-up view
-
-				this.notifyObservers(new module.SignInView(), null, module.View.UIAction.NAVIGATE);
-
-			}.bind(this));
-			*/
 	};
 
 	module.FrontPageView.prototype.update = function() {

@@ -68,141 +68,194 @@ var app = app || {};
 
 	module.EventListView.prototype.render = function(Account_a) {
 		
-		function renderListItem(Event_e, self) { // list item generator
+		var container; // shorthand reference to inherited temporary container element
 
-			var listElmnt = self.createElement({ // li
-
-				element: 'li',
-
-				attributes: {id: 'event-list-id-' + Event_e.id(), role: 'listitem'},
-
-				classList: ['collection-item']
-			});
-
-
-			var divElmnt = self.createElement({ // div
-
-				element: 'div',
-
-				innerHTML: (Event_e.name() ? Event_e.name() : 'Unnamed event') + ' (' + Event_e.guests().length + ')',
-
-				listeners:
-				{
-					click: function(e) {self.onClick(e, Event_e);}
-				}
-			});
-
-						
-			var anchorElmnt = self.createElement({ // anchor
-
-				element: 'a',
-
-				attributes: {href: '#!'},
-
-				classList: ['secondary-content']
-
-			});
-
+		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
+		
+ 		
+ 		// List item builder
 			
-			anchorElmnt.appendChild(self.createElement({ // icon
+			function renderListItem(Event_e, self) {
 
-				element: 'i',
+				var listElmnt = self.createWidget( // li
 
-				classList: ['material-icons'],
+					'HTMLElement',
 
-				innerHTML: 'chevron_right'
-			}));
-			
-						
-			listElmnt.appendChild(divElmnt);
-			
-			divElmnt.appendChild(anchorElmnt);
-			
-			
-			return listElmnt;
-		}
+					{
+						element: 'li',
 
-		var UlElement = this.createElement({
+						attributes: {id: 'event-list-id-' + Event_e.id(), role: 'listitem'},
 
-			element: 'ul',
+						classList: ['collection-item']
+					}
+				);
 
-			attributes: {role: 'list'},
+				var divElmnt = self.createWidget(
 
-			classList: ['collection', 'with-header']
-		});
+					'HTMLElement', // div
 
+					{
+						element: 'div',
 
-		UlElement.appendChild(this.createElement({
+						innerHTML: (Event_e.name() ? Event_e.name() : 'Unnamed event') + ' (' + Event_e.guests().length + ')',
 
-			element: 'h4',
+						listeners:
+						{
+							click: function(e) {self.onClick(e, Event_e);}
+						}
+				});
 
-			classList: ['collection-header'],
+							
+				var anchorElmnt = self.createWidget( // anchor
 
-			attributes: {role: 'heading'},
+					'HTMLElement',
 
-			innerHTML: this.heading()
-		}));
+					{
+						element: 'a',
+
+						attributes: {href: '#!'},
+
+						classList: ['secondary-content']
+					}
+				);
 
 				
-		if (Account_a !== null) { // we have an account
+				anchorElmnt.appendChild(self.createWidget( // icon
 
-			var events = Account_a.events() // generate list items
-			
-			for (var prop in events) {
+					'HTMLElement',
 
-				UlElement.appendChild(renderListItem(events[prop], this));
+					{
+						element: 'i',
+
+						classList: ['material-icons'],
+
+						innerHTML: 'chevron_right'
+					}
+				));
+				
+							
+				listElmnt.appendChild(divElmnt);
+				
+				divElmnt.appendChild(anchorElmnt);
+				
+				
+				return listElmnt;
 			}
-		}
 
-		else {
+		
+		// Add list element
 
-			var outerDiv =  this.createElement( // outer div
-			{
-				element: 'div',
+			container = this.containerElement(this.createWidget(
 
-				classList: ['collection-item', 'row']
-			});
-			
-			UlElement.appendChild(outerDiv);
-
-			
-			var innerDiv =  this.createElement( // inner div
-			{
-				element: 'div',			
+				'HTMLElement', // div
 				
-				classList: ['col', 's12'],
+				{
+					element: 'ul',
 
-				innerHTML: 'No events have been added to this account yet.'
-			});
+					attributes: {role: 'list'},
 
-			outerDiv.appendChild(innerDiv);
-		}
+					classList: ['collection', 'with-header']
+				}
+			));
+
+
+		// Add heading
+
+			container.appendChild(this.createWidget(
+
+				'HTMLElement',
+
+				{
+					element: 'h4',
+
+					classList: ['collection-header'],
+
+					attributes: {role: 'heading'},
+
+					innerHTML: this.heading()
+				}
+			));
+
 		
-		// Update DOM
-
-		this.$renderContext().empty();
-
-		this.$renderContext().append(UlElement);
+		// Build list, or default message		
 		
-		this.$renderContext().append(app.UIWidgetFactory.instance().createProduct('FloatingActionButtonWidget',
-		{
-			id: 'event-list-add',
+			if (Account_a !== null) { // we have an account
 
-			icon: 'add',
+				var events = Account_a.events() // generate list items
+				
+				for (var prop in events) {
 
-			color: 'red',
+					container.appendChild(renderListItem(events[prop], this));
+				}
+			}
 
-			label: 'Add event'
-		}));
+			else {
+
+				var outerDiv = this.createWidget(
+
+					'HTMLElement', // outer div
+
+					{
+						element: 'div',			
+						
+						classList: ['row']
+					}
+				);
+
+				
+				container.appendChild(outerDiv);
+
+				var innerDiv = this.createWidget(
+
+					'HTMLElement', // inner div
+					
+					{
+						element: 'div',			
+						
+						classList: ['col', 's12'],
+
+						innerHTML: 'No events have been added to this account yet.'
+					}
+				);
+				
+				outerDiv.appendChild(innerDiv);
+			}
+			
 		
+		// Add floating 'Add' button
 
-		// Attach event handlers (other than for list item click)
+			container.appendChild(app.UIWidgetFactory.instance().createProduct(
 
-		$('#event-list-add, #event-list-add-event').click(function(event) {
+				'FloatingActionButtonWidget',
 
-			this.notifyObservers(this, new module.Event('New Event'), module.View.UIAction.CREATE);
+				{
+					id: 'event-list-add',
 
-		}.bind(this));
+					icon: 'add',
+
+					color: 'red',
+
+					label: 'Add event'
+				}
+			));
+
+			this.elementOptions['event-list-add'] =
+			{
+				listeners: 
+				{
+					mousedown:
+
+						function(nEvent) {
+
+							this.notifyObservers(this, new module.Event('New Event'), module.View.UIAction.CREATE);
+
+						}.bind(this)
+				}
+			};
+
+		// Render to DOM and initialize
+
+			this.ssuper().prototype.render.call(this);
 	};
 
 })(app);

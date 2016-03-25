@@ -89,44 +89,78 @@ var app = app || {};
 
 	module.EventView.prototype.render = function(Event_e) {
 
-		var widgetFactory = app.UIWidgetFactory.instance(); // shortcut reference to widgetFactory
-
+		var container; // shorthand reference to inherited temporary container element
+		
 		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
+		
 		
 		if (Event_e !== null) {
 			
-			// Setup up form and container div
-
-				var formElement = widgetFactory.createProduct.call(widgetFactory, 'FormWidget',
-				{
-					id: 'event-form',
-
-					autocomplete: 'off',
-
-					novalidate: true
-				});
-
-				var containerDiv = formElement.firstChild;
-
+			// Set up container div
 			
+				container = this.containerElement(this.createWidget(
+
+					'HTMLElement', // div
+
+					{
+						element: 'div',			
+						
+						classList: ['row']
+					}
+				));
+
+
 			// Add heading
 				
-				containerDiv.appendChild(this.createHeading('s12', this.heading()));
+				container.appendChild(this.createWidget(
+
+					'HTMLElement',
+
+					{
+						element: 'h4',
+
+						attributes: {role: 'heading'},
+
+						innerHTML: this.heading()
+					}
+				));
 				
 
+			// Add form
+
+				var formElement = this.createWidget(
+
+					'FormWidget',
+
+					{
+						id: 'event-form',
+
+						autocomplete: 'off',
+
+						novalidate: true
+					}
+				);
+
+				container.appendChild(formElement);
+
+			
 			// Add hidden event id field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-				{
-					element: 'input',
+				formElement.appendChild(this.createWidget(
 
-					attributes: {id: 'event-id', type: 'hidden', value: Event_e.id()}
-				}));
+					'HTMLElement',
+
+					{
+						element: 'input',
+
+						attributes: {id: 'event-id', type: 'hidden', value: Event_e.id()}
+					}
+				));
 
 			
 			// Add event name field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
+				formElement.appendChild(this.createWidget('TextInputWidget',
 				{
 					width: 's12',
 
@@ -142,20 +176,24 @@ var app = app || {};
 							
 			// Add location field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory,'TextInputWidget',
-				{
-					id: 'event-location',
-					
-					width: 's12',
+				formElement.appendChild(this.createWidget(
 
-					label: 'Location',
+					'TextInputWidget',
 
-					required: false,
+					{
+						id: 'event-location',
+						
+						width: 's12',
 
-					datasource: Event_e.location() ? Event_e.location() : '',
+						label: 'Location',
 
-					datalist: 'suggested-locations'
-				}));
+						required: false,
+
+						datasource: Event_e.location() ? Event_e.location() : '',
+
+						datalist: 'suggested-locations'
+					}
+				));
 
 				this.elementOptions['event-location'] = 
 				{
@@ -168,33 +206,42 @@ var app = app || {};
 				
 			// Add start date and end date fields
 
-				var outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
+				var outerDiv = this.createWidget(
 
-				containerDiv.appendChild(outerDiv); // Add to container
+					'HTMLElement',
+
+					{
+						element: 'div',
+						
+						classList: ['row']
+					}
+				);
+
+				formElement.appendChild(outerDiv); // Add to container
 
 
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory,'DateInputWidget',
-				{
-					id: 'event-start-date',
+				outerDiv.appendChild(this.createWidget(
 
-					width: 's6',
+					'DateInputWidget',
 
-					label: 'Starts',
+					{
+						id: 'event-start-date',
 
-					required: true,
+						width: 's6',
 
-					datasource: Event_e.start(),
+						label: 'Starts',
 
-					//errormessage: '...',
+						required: true,
 
-					validator: 'EventView.prototype.validateStartDate'
+						datasource: Event_e.start(),
 
-				}).children[0]); // extract from wrapper
+						//errormessage: '...',
+
+						validator: 'EventView.prototype.validateStartDate'
+
+					}
+
+				).children[0]); // extract from wrapper
 
 				this.elementOptions['event-start-date'] = 
 				{
@@ -202,23 +249,27 @@ var app = app || {};
 				};
 				
 				
-				var endDate = widgetFactory.createProduct.call(widgetFactory,'DateInputWidget',
-				{
-					id: 'event-end-date',
+				var endDate = this.createWidget(
 
-					width: 's6',
+					'DateInputWidget',
 
-					label: 'Ends',
+					{
+						id: 'event-end-date',
 
-					required: false,
+						width: 's6',
 
-					datasource: Event_e.end(),
+						label: 'Ends',
 
-					validator: 'EventView.prototype.validateEndDate',
+						required: false,
 
-					errormessage: 'Please enter end after start in format dd/mm/yyyy hh:mm'
+						datasource: Event_e.end(),
 
-				}).children[0]; // extract from wrapper
+						validator: 'EventView.prototype.validateEndDate',
+
+						errormessage: 'Please enter end after start in format dd/mm/yyyy hh:mm'
+
+					}
+				).children[0]; // extract from wrapper
 				
 				this.elementOptions['event-end-date'] = 
 				{
@@ -227,26 +278,28 @@ var app = app || {};
 
 				endDate.children[0].classList.add('validate'); // 'validate' normally only comes with required field, so add seperately here
 
-
 				outerDiv.appendChild(endDate);
 
 				
 			// Add event type field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory,'TextInputWidget',
-				{
-					id: 'event-type',
+				formElement.appendChild(this.createWidget(
 
-					width: 's12',
+					'TextInputWidget',
+					{
+						id: 'event-type',
 
-					label: 'Event Type',
+						width: 's12',
 
-					required: false,
+						label: 'Event Type',
 
-					datasource: Event_e.type() || '',
+						required: false,
 
-					datalist: 'suggested-event-types'
-				}));
+						datasource: Event_e.type() || '',
+
+						datalist: 'suggested-event-types'
+					}
+				));
 
 				this.elementOptions['event-type'] = 
 				{
@@ -259,46 +312,58 @@ var app = app || {};
 			
 			// Add capacity field and edit guest list button
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'NumberInputWidget',
-				{
-					id: 'event-capacity',
+				outerDiv = this.createWidget(
 
-					width: 's6',
+					'NumberInputWidget',
 
-					label: 'Capacity',
+					{
+						id: 'event-capacity',
 
-					required: false,
+						width: 's6',
 
-					datasource: Event_e.capacity() ? Event_e.capacity() : 0,
+						label: 'Capacity',
 
-					min: 0,
+						required: false,
 
-					step: 1,
+						datasource: Event_e.capacity() ? Event_e.capacity() : 0,
 
-					errormessage: 'Please enter capacity (0 or greater)'
-				});
+						min: 0,
 
-				containerDiv.appendChild(outerDiv);
+						step: 1,
+
+						errormessage: 'Please enter capacity (0 or greater)'
+					}
+				);
+
+				formElement.appendChild(outerDiv);
 				
 
-				var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
-				{
-					element: 'div',
+				var innerDiv = this.createWidget(
 
-					classList: ['col', 's6']
-				});
+					'HTMLElement', // inner div
+
+					{
+						element: 'div',
+
+						classList: ['col', 's6']
+					}
+				);
 
 
-				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
-				{
-					element: 'a',
+				innerDiv.appendChild(this.createWidget(
 
-					attributes: {id: 'event-edit-guests-button', role: 'button', tabindex: 0},
-					
-					classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+					'HTMLElement', // button
 
-					innerHTML: 'Edit guests'
-				}));
+					{
+						element: 'a',
+
+						attributes: {id: 'event-edit-guests-button', role: 'button', tabindex: 0},
+						
+						classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+
+						innerHTML: 'Edit guests'
+					}
+				));
 
 				this.elementOptions['event-edit-guests-button'] = 
 				{
@@ -319,20 +384,24 @@ var app = app || {};
 				
 			// Add host field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
-				{
-					id: 'event-host',
+				formElement.appendChild(this.createWidget(
 
-					width: 's12',
+					'TextInputWidget',
 
-					label: 'Host',
+					{
+						id: 'event-host',
 
-					required: false,
+						width: 's12',
 
-					datasource: Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : '',
+						label: 'Host',
 
-					datalist: 'suggested-hosts'
-				}));
+						required: false,
+
+						datasource: Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : '',
+
+						datalist: 'suggested-hosts'
+					}
+				));
 
 				this.elementOptions['event-host'] = 
 				{
@@ -343,39 +412,50 @@ var app = app || {};
 				};
 
 				
-				innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // IHost type selector
-				{
-					element: 'div',
+				innerDiv = this.createWidget(
 
-					classList: ['radioset-container','input-field', 'col', 's12']
-				});
+					'HTMLElement', // IHost type selector
+					{
+						element: 'div',
 
-				containerDiv.appendChild(innerDiv);
+						classList: ['radioset-container','input-field', 'col', 's12']
+					}
+				);
+
+				formElement.appendChild(innerDiv);
 
 				
-				var fieldsetElement = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // fieldset
-				{
-					element: 'fieldset',
+				var fieldsetElement = this.createWidget(
 
-					attributes:
+					'HTMLElement', // fieldset
+
 					{
-						id: 'event-host-type'
-					},
-					
-					classList: ['materialize-textarea'],
+						element: 'fieldset',
 
-					innerHTML: Event_e.description()
-				});
+						attributes:
+						{
+							id: 'event-host-type'
+						},
+						
+						classList: ['materialize-textarea'],
+
+						innerHTML: Event_e.description()
+					}
+				);
 
 				innerDiv.appendChild(fieldsetElement);
 
 				
-				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // legend
-				{
-					element: 'legend',
+				fieldsetElement.appendChild(this.createWidget(
 
-					innerHTML: 'Host type'
-				}));
+					'HTMLElement', // legend
+
+					{
+						element: 'legend',
+
+						innerHTML: 'Host type'
+					}
+				));
 				
 				
 				var attributes = 
@@ -393,12 +473,16 @@ var app = app || {};
 
 				if ((!Event_e.host() || !Event_e.host().isInstanceOf(module.Person))) {attributes.checked = true;} // default to org
 
-				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // org radio
-				{
-					element: 'input',
+				fieldsetElement.appendChild(this.createWidget(
 
-					attributes: attributes
-				}));
+					'HTMLElement', // org radio
+
+					{
+						element: 'input',
+
+						attributes: attributes
+					}
+				));
 
 				this.elementOptions['event-host-type-organization'] = 
 				{
@@ -413,19 +497,23 @@ var app = app || {};
 					}
 				};
 
-				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // org label
-				{
-					element: 'label',
+				fieldsetElement.appendChild(this.createWidget(
 
-					attributes:
+					'HTMLElement', // org label
+
 					{
-						id: 'event-host-type-organization-label',
+						element: 'label',
 
-						for: 'event-host-type-organization'
-					},
+						attributes:
+						{
+							id: 'event-host-type-organization-label',
 
-					innerHTML: 'Organization'
-				}));
+							for: 'event-host-type-organization'
+						},
+
+						innerHTML: 'Organization'
+					}
+				));
 
 								
 				attributes = 
@@ -443,12 +531,16 @@ var app = app || {};
 
 				if ((Event_e.host() && Event_e.host().isInstanceOf(module.Person))) {attributes.checked = true;}
 
-				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // person radio
-				{
-					element: 'input',
+				fieldsetElement.appendChild(this.createWidget(
 
-					attributes: attributes
-				}));
+					'HTMLElement', // person radio
+
+					{
+						element: 'input',
+
+						attributes: attributes
+					}
+				));
 
 
 				this.elementOptions['event-host-type-person'] = 
@@ -464,93 +556,113 @@ var app = app || {};
 					}
 				};
 
-				fieldsetElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // person label
-				{
-					element: 'label',
+				fieldsetElement.appendChild(this.createWidget(
 
-					attributes:
+					'HTMLElement', // person label
+
 					{
-						id: 'event-host-type-person-label',
+						element: 'label',
 
-						for: 'event-host-type-person'
-					},
+						attributes:
+						{
+							id: 'event-host-type-person-label',
 
-					innerHTML: 'Person'
-				}));
+							for: 'event-host-type-person'
+						},
+
+						innerHTML: 'Person'
+					}
+				));
 
 				
 			// Add description field
 				
-				innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
+				innerDiv = this.createWidget(
 
-				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // input
-				{
-					element: 'textarea',			
-					
-					attributes:
+					'HTMLElement', // inner div
+
 					{
-						id: 'event-description',
+						element: 'div',			
 						
-						length: 120,
+						classList: ['input-field', 'col', 's12']
+					}
+				);
+				
+				
+				innerDiv.appendChild(this.createWidget(
+
+					'HTMLElement', // input
+
+					{
+						element: 'textarea',			
 						
-						maxlength: 120,
+						attributes:
+						{
+							id: 'event-description',
+							
+							length: 120,
+							
+							maxlength: 120,
 
-						'aria-labelledby': 'event-description-label',
+							'aria-labelledby': 'event-description-label',
 
-						role: 'textbox',
+							role: 'textbox',
 
-						'aria-multiline': true
-					},
-					
-					classList: ['materialize-textarea'],
+							'aria-multiline': true
+						},
+						
+						classList: ['materialize-textarea'],
 
-					innerHTML: Event_e.description()
-				}));
+						innerHTML: Event_e.description()
+					}
+				));
 				
 				
-				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // label
-				{	
-					element: 'label',			
-					
-					attributes:	{for: 'event-description', id: 'event-description-label'},
-					
-					classList: Event_e.description() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter description'},
-					
-					innerHTML: 'Description'
-				}));
+				innerDiv.appendChild(this.createWidget(
+
+					'HTMLElement', // label
+
+					{	
+						element: 'label',			
+						
+						attributes:	{for: 'event-description', id: 'event-description-label'},
+						
+						classList: Event_e.description() ? ['form-label', 'active'] : ['form-label'],
+						
+						dataset: {error: 'Please enter description'},
+						
+						innerHTML: 'Description'
+					}
+				));
 				
 				
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
+				outerDiv = this.createWidget(
+
+					'HTMLElement', // outer div
+
+					{
+						element: 'div',
+						
+						classList: ['row']
+					}
+				);
 				
 							
 				outerDiv.appendChild(innerDiv);
 				
-				containerDiv.appendChild(outerDiv);
+				formElement.appendChild(outerDiv);
 				
 
 			// Add requirement indicator (asterisk) explanation
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
+				outerDiv = this.createWidget('HTMLElement', // outer div
 				{
 					element: 'div',			
 					
 					classList: ['row']
 				});
 				
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
+				outerDiv.appendChild(this.createWidget('HTMLElement',
 				{
 					element: 'p',
 					
@@ -559,116 +671,68 @@ var app = app || {};
 					innerHTML: '* indicates a required field'
 				}));
 
-				containerDiv.appendChild(outerDiv);
+				formElement.appendChild(outerDiv);
 
 					
 			// Add submit and cancel buttons
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row', 'form-submit']
-				});
-				
-				
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'CancelButtonWidget',  // cancel button
-				{					
-					id: 'event-form-cancel',
+				outerDiv = this.createWidget(
 
-					label: 'Cancel'
-				}));
+					'HTMLElement', // outer div
+
+					{
+						element: 'div',			
+						
+						classList: ['row', 'form-submit']
+					}
+				);
+				
+				
+				outerDiv.appendChild(this.createWidget(
+
+					'CancelButtonWidget',  // cancel button
+
+					{					
+						id: 'event-form-cancel',
+
+						label: 'Cancel'
+					}
+				));
 				
 				this.elementOptions['event-form-cancel'] =
 				{
 					init: module.CancelButtonWidget.prototype.init
 				}
 
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
-				{					
-					id: 'event-form-submit',
+				outerDiv.appendChild(this.createWidget(
 
-					label: 'Done',
+					'SubmitButtonWidget',  // submit button
 
-					icon: 'send'
-				}));
+					{					
+						id: 'event-form-submit',
+
+						label: 'Done',
+
+						icon: 'send'
+					}
+				));
 
 				this.elementOptions['event-form-submit'] =
 				{
 					init: module.SubmitButtonWidget.prototype.init
 				}
 
-				containerDiv.appendChild(outerDiv);
+				formElement.appendChild(outerDiv);
 
 			
-			// Update DOM
+			// Render to DOM and initialize
 
-				this.$renderContext().empty();
+				this.ssuper().prototype.render.call(this);
 
-				this.$renderContext().append(formElement);
+			
+			// Do custom post-render initialization
 
-			// Initialize post-render
-
-				//H5F.setup(document.getElementById("event-form")); // hook up H5F polyfill to form; setCustomValidity support seems erratic
-
-				
 				$('#event-name').attr('autofocus', true); // set initial focus on name
-				
-				
-				//$('#event-location').focus(this.suggestLocations); // suggest locations
-
-				
-				//app.DateInputWidget.instance().init(); // generic initialization of bootstrap-datetime pickers
-				
-
-				//$('#event-type').focus(this.suggestedEventTypes); // suggest event types
-
-				
-				/*
-				$('#event-edit-guests-button').click(function(nEvent) { // edit guest list button
-
-					this.navigateToGuestList(nEvent);
-		
-				}.bind(this));
-				*/
-
-
-				//$('#event-host').focus(this.suggestHosts); // suggest hosts
-
-				
-				/*
-				$('#event-host-type-organization, #event-host-type-person').click(function(nEvent) { // reset host if host type changed
-
-					$('#event-host').val('');
-				});
-				*/
-
-				// This causes rendering to fail on Android and iOS, so disabled for now:
-				//$('textarea#description').characterCounter(); // count characters in description
-
-				
-				/*
-				$('#event-form-cancel').click(function(nEvent) { // cancel edits
-
-					this.cancel(nEvent);
-
-				}.bind(this));
-				*/
-
-
-				/*
-				$('#event-form-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
-
-					this.submit(nEvent);
-
-				}.bind(this));
-				*/
-
-			// call parent to perform common post-render task(s)
-
-				this.init();
-
-				//this.ssuper().prototype.init.call(this);
 		}
 
 		else { // present default message

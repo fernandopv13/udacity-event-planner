@@ -103,11 +103,17 @@ var app = app || {};
 					error: 'Please try again'
 				},
 				
-				innerHTML: 'Hello world'
+				innerHTML: 'Hello world',
 
-				// Cannot pass in event handlers using this approach, as this would not support anonymous functions
-				// (named functions could be passed in as dot strings in element data, but that is too limiting):
-				// Use 'elementOptions' approach supported by View's render() and onRender() methods instead.
+				listeners:
+				{
+					click: function() {},
+			
+					blur: function() {}
+				}
+
+				// Cannot pass in anonymous functions as event handlers using this approach, but named functions
+				// will work. Use 'elementOptions' approach for anonymous functions.
 			*/
 
 			if (typeof obj_options === 'undefined' || obj_options === {}) {
@@ -148,6 +154,15 @@ var app = app || {};
 				element.innerHTML = options.innerHTML;
 			}
 
+
+			if (options.listeners) {
+			
+				for (prop in options.listeners) {
+					
+					element.addEventListener(prop, options.listeners[prop]);
+				}
+			}
+
 			return element;
 		};
 
@@ -178,7 +193,6 @@ var app = app || {};
 						}.bind(this)
 				}
 			}
-
 			*/
 			
 			if (obj_elementOptions.listeners) { // attach event listeners

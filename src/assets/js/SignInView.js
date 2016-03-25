@@ -84,188 +84,184 @@ var app = app || {};
 
 	module.SignInView.prototype.render = function() {
 
-		var widgetFactory = app.UIWidgetFactory.instance(), // shortcut reference to widgetFactory
-
-		container; // shorthand reference to inherited temporary container element
+		var container; // shorthand reference to inherited temporary container element
 
 		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 			
 		
 		// Set up container div
 			
-			container = this.containerElement(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row']
-			}));
+			container = this.containerElement(this.createWidget(
+
+				'HTMLElement', // div
+
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				}
+			));
 
 			
 		// Add logo
 
-			var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align']
-			});
+			var innerDiv = this.createWidget(
+
+				'HTMLElement', // div
+
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align']
+				}
+			);
 
 			container.appendChild(innerDiv);
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'img',
+			innerDiv.appendChild(this.createWidget(
 
-				attributes:
+				'HTMLElement',
+
 				{
-					src: 'assets/img/logo.png',
+					element: 'img',
 
-					width: '117px',
+					attributes:
+					{
+						src: 'assets/img/logo.png',
 
-					height: '100px',
+						width: '117px',
 
-					alt: 'Logo',
+						height: '100px',
 
-					style: 'margin-top:20px;'
+						alt: 'Logo',
+
+						style: 'margin-top:20px;'
+					}
 				}
-			}));
+			));
 
 
 		// Add heading and teaser
 			
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'h4',
+			innerDiv.appendChild(this.createWidget(
 
-				attributes: {role: 'heading'},
+				'HTMLElement',
 
-				innerHTML: this.heading()
-			}));
+				{
+					element: 'h4',
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'p',
+					attributes: {role: 'heading'},
 
-				classList: ['center-align'],
+					innerHTML: this.heading()
+				}
+			));
 
-				innerHTML: 'You\'re back. Awesome!'
-				
-			}));
+			innerDiv.appendChild(this.createWidget(
+
+				'HTMLElement',
+
+				{
+					element: 'p',
+
+					classList: ['center-align'],
+
+					innerHTML: 'You\'re back. Awesome!'
+					
+				}
+			));
 
 		
 		// Setup form
 
-			var formElement = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // form
-			{
-				element: 'form',			
-				
-				attributes: {autocomplete: 'off', id: 'sign-in-form'},//, novalidate: false},
-				
-				classList: ['col', 's12']
-			});
+			var formElement = this.createWidget(
+
+				'HTMLElement', // form
+
+				{
+					element: 'form',			
+					
+					attributes: {autocomplete: 'off', id: 'sign-in-form'},//, novalidate: false},
+					
+					classList: ['col', 's12']
+				}
+			);
 
 			container.appendChild(formElement);
 
 
 		// Add email field
 
-			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
-			{
-				width: 's12',
+			formElement.appendChild(this.createWidget(
 
-				id: 'sign-in-email',
+				'EmailInputWidget',
 
-				label: 'Email',
-
-				required: true,
-
-				datasource: null
-			}));
-
-			this.elementOptions['sign-in-email'] =
-			{
-				listeners:
 				{
-					input:
+					width: 's12',
 
-						function(nEvent) { // validate password
+					id: 'sign-in-email',
 
-							if (nEvent.currentTarget.value.length > 3) {
+					label: 'Email',
 
-								Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
-							}
+					required: true,
 
-						}.bind(this)
+					datasource: null
 				}
-			};
+			));
 
 
 		// Add password field
 
-			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
-			{
-				width: 's12',
+			formElement.appendChild(this.createWidget(
 
-				id: 'sign-in-password',
+				'PasswordInputWidget',
 
-				label: 'Confirm Password',
+				{
+					width: 's12',
 
-				hintsprefix: 'sign-in-password-hints'
-			}));
+					id: 'sign-in-password',
+
+					label: 'Confirm Password',
+
+					hintsprefix: 'sign-in-password-hints'
+				}
+			));
 
 			this.elementOptions['sign-in-password'] = 
 			{
-				listeners:
-				{
-					focus: 
-
-						function(nEvent) { // update and show password hints
-
-							//Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validation, so no need for explicit call
-
-							$('#sign-in-password-hints').show('slow');
-
-							$('#sign-in-password-hints').removeClass('hidden');
-
-							$('#sign-in-password-hints').attr('aria-hidden', false); // doesn't seem to have any effect on screen reader
-
-						}.bind(this),
-
-
-						blur:
-
-							function(nEvent) { // hide password hints (global handler takes care of the rest)
-
-							$('#sign-in-password-hints').hide('slow');
-
-							$('#sign-in-password-hints').attr('aria-hidden', true);
-						}
-				}
+				init: module.PasswordInputWidget.prototype.init
 			}
 
 		
 		// Add sign-in button
 
-			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align']
-			});
+			innerDiv = this.createWidget(
+
+				'HTMLElement', // div
+
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align']
+				}
+			);
 
 			
 			formElement.appendChild(innerDiv);
 			
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',  // button
-			{
-				element: 'a',
-				
-				attributes: {id: 'sign-in-submit', role: 'button', tabindex: 0},
-				
-				classList: ['waves-effect', 'waves-light', 'btn'],
+			innerDiv.appendChild(this.createWidget(
 
-				innerHTML: 'Sign In'
-			}));
+				'HTMLElement',  // button
+
+				{
+					element: 'a',
+					
+					attributes: {id: 'sign-in-submit', role: 'button', tabindex: 0},
+					
+					classList: ['waves-effect', 'waves-light', 'btn'],
+
+					innerHTML: 'Sign In'
+				}
+			));
 
 			this.elementOptions['sign-in-submit'] =
 			{
@@ -275,26 +271,34 @@ var app = app || {};
 		
 		// Add (hidden) demo sign-in link
 
-			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align', 'hidden'] // // Udacity reviewer didn't like this idea, so hiding it
-			});
+			innerDiv = this.createWidget(
+
+				'HTMLElement', // div
+
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align', 'hidden'] // // Udacity reviewer didn't like this idea, so hiding it
+				}
+			);
 
 			formElement.appendChild(innerDiv);
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'p',
+			innerDiv.appendChild(this.createWidget(
 
-				classList: ['center-align'],
+				'HTMLElement',
 
-				innerHTML: 'or'
-				
-			}));
+				{
+					element: 'p',
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
+					classList: ['center-align'],
+
+					innerHTML: 'or'
+					
+				}
+			));
+
+			innerDiv.appendChild(this.createWidget('HTMLElement', // link
 			{
 				element: 'a',
 				
@@ -319,21 +323,15 @@ var app = app || {};
 
 						}.bind(this)
 				}
-			}
+			};
 
 
 		// Render to DOM and initialize
 
 			this.ssuper().prototype.render.call(this);
-
-			//this.$renderContext().empty();
-
-			//this.$renderContext().append(container);
 		
 		
 		// Do custom post-render initialization
-
-			//this.init(); // generic
 
 			$('#sign-in-email').attr('autofocus', true);
 	};
@@ -360,13 +358,5 @@ var app = app || {};
 
 		return false;
 	}
-
-
-	/*module.SignInView.prototype.update = function() {
-
-		console.log('received update');
-
-		this.render();
-	}*/
 
 })(app);

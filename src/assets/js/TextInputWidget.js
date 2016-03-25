@@ -196,8 +196,7 @@ var app = app || {};
 			}
 
 			
-			return outerDiv;
-			
+			return outerDiv;			
 		};
 		
 		

@@ -69,255 +69,308 @@ var app = app || {};
 
 	module.AccountSettingsView.prototype.render = function(Account_a) {
 
-		var widgetFactory = app.UIWidgetFactory.instance();
-			
+		var container; // shorthand reference to inherited temporary container element
+
+		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
+		
+
 		if (Account_a) {
 			
-			// Setup up form and container div
+			// Setup container div
 
-				var formElement = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // form
-				{
-					element: 'form',			
-					
-					attributes: {autocomplete: 'off', id: 'account-settings-form', novalidate: false},
-					
-					classList: ['col', 's12']
-				});
+				container = this.containerElement(this.createWidget( // container
 
+					'HTMLElement',
 
-				var containerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				});
-				
+					{
+						element: 'div',			
+						
+						classList: ['row']
+					}
+				));
 
-				formElement.appendChild(containerDiv);
 			
-
 			// Add heading
 				
-				containerDiv.appendChild(this.createHeading('s12', this.heading()));
+				container.appendChild(this.createWidget(
+
+					'HTMLElement',
+
+					{
+						element: 'h4',
+
+						attributes: {role: 'heading'},
+
+						innerHTML: this.heading()
+					}
+				));
+
+
+			// Add form
+
+				var formElement = this.createWidget(
+
+					'FormWidget',
+
+					{
+						id: 'account-settings-form',
+
+						autocomplete: 'off',
+
+						novalidate: false
+					}
+				);
+
+				container.appendChild(formElement);
 
 
 			// Add hidden account id field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-				{
-					element: 'input',
+				formElement.appendChild(this.createWidget(
 
-					attributes: {id: 'account-settings-id', type: 'hidden', value: Account_a.id()}
-				}));
+					'HTMLElement',
+
+					{
+						element: 'input',
+
+						attributes: {id: 'account-settings-id', type: 'hidden', value: Account_a.id()}
+					}
+				));
 
 			
 			// Add email field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
-				{
-					width: 's12',
+				formElement.appendChild(this.createWidget(
 
-					id: 'account-settings-email',
+					'EmailInputWidget',
 
-					label: 'Email',
+					{
+						width: 's12',
 
-					required: true,
+						id: 'account-settings-email',
 
-					datasource: Account_a.email()
-				}));
+						label: 'Email',
+
+						required: true,
+
+						datasource: Account_a.email()
+					}
+				));
 
 
 			// Add password field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
+				formElement.appendChild(this.createWidget(
+
+					'PasswordInputWidget',
+
+					{
+						width: 's12',
+
+						id: 'account-settings-password',
+
+						label: 'Password',
+
+						hintsprefix: 'account-settings-password-hints',
+
+						datasource: Account_a.password() || null
+					}
+				));
+
+				this.elementOptions['account-settings-password'] = 
 				{
-					width: 's12',
-
-					id: 'account-settings-password',
-
-					label: 'Password',
-
-					hintsprefix: 'account-settings-password-hints',
-
-					datasource: Account_a.password() || null
-				}));
+					init: module.PasswordInputWidget.prototype.init
+				}
 
 
 			// Add password confirmation field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordConfirmationInputWidget',
-				{
-					width: 's12',
+				formElement.appendChild(this.createWidget(
 
-					id: 'account-settings-password-confirmation'
-				}));
+					'PasswordConfirmationInputWidget',
+
+					{
+						width: 's12',
+
+						id: 'account-settings-password-confirmation'
+					}
+				));
 
 				
 			// Add default event capacity field
 
-				containerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'NumberInputWidget',
-				{
-					width: 's12',
+				formElement.appendChild(this.createWidget(
 
-					id: 'account-settings-capacity',
+					'NumberInputWidget',
+				
+					{
+						width: 's12',
 
-					label: 'Default Event Capacity',
+						id: 'account-settings-capacity',
 
-					required: true,
+						label: 'Default Event Capacity',
 
-					datasource: Account_a.defaultCapacity() ? Account_a.defaultCapacity() : 0,
+						required: true,
 
-					min: 0,
+						datasource: Account_a.defaultCapacity() ? Account_a.defaultCapacity() : 0,
 
-					step: 1,
+						min: 0,
 
-					errormessage: 'Please enter capacity (0 or greater)'
-				}));
+						step: 1,
+
+						errormessage: 'Please enter capacity (0 or greater)'
+					}
+				));
 				
 
 			// Add default location field
 
-				var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', //input
-				{
-					element: 'input',			
-					
-					attributes:
+				formElement.appendChild(this.createWidget(
+
+					'TextInputWidget',
+
 					{
-						type: 'text',
-						
 						id: 'account-settings-location',
 						
-						value: Account_a.defaultLocation() ? Account_a.defaultLocation(): '',
+						width: 's12',
 
-						role: 'textbox'
+						label: 'Default Location',
+
+						required: false,
+
+						datasource: Account_a.defaultLocation() ? Account_a.defaultLocation(): ''//,
+
+						//datalist: 'suggested-locations'
 					}
-				}));
-				
-				
-				innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-settings-location'},
-					
-					classList: ['active'], //Account_a.defaultLocation() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter default location'},
-					
-					innerHTML: 'Default Location'
-				}));
-				
-				
-				var outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				
-				outerDiv.appendChild(innerDiv);
+				));
 
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'InputDescriptionWidget',
-				{
-					datasource: 'Entering a default location (e.g. a city and/or street name) helps the app suggest relevant venues when you plan a new event.',
+				/*
+				formElement.appendChild(this.createWidget(
 
-					divider: false
-				}));
+					'InputDescriptionWidget',
 
-				containerDiv.appendChild(outerDiv);
+					{
+						datasource: 'Entering a default location (e.g. a city and/or street name) helps the app suggest relevant venues when you plan a new event.',
+
+						divider: false
+					}
+				));
+				*/
 
 
 			// Add local storage permission field
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'SwitchInputWidget',
-				{
-					width: 's7',
+				var outerDiv = this.createWidget(
 
-					id: 'account-settings-localstorage',
+					'SwitchInputWidget',
 
-					label: 'Allow local storage',
+					{
+						width: 's7',
 
-					datasource: Account_a.localStorageAllowed()
-				});
+						id: 'account-settings-localstorage',
 
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'InputDescriptionWidget',
-				{
-					datasource: 'Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.',
+						label: 'Allow local storage',
 
-					divider: false
-				}));
+						datasource: Account_a.localStorageAllowed()
+					}
+				);
 
-				containerDiv.appendChild(outerDiv);
+				outerDiv.appendChild(this.createWidget(
+
+					'InputDescriptionWidget',
+
+					{
+						datasource: 'Allowing local storage will enable you to work with your events on this device even when you do not have an internet connection.',
+
+						divider: false
+					}
+				));
+
+				formElement.appendChild(outerDiv);
 
 			
 			// Add geolocation permission field
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'SwitchInputWidget',
-				{
-					width: 's7',
+				outerDiv = this.createWidget(
 
-					id: 'account-settings-geolocation',
+					'SwitchInputWidget',
 
-					label: 'Allow local geolocation',
+					{
+						width: 's7',
 
-					datasource: Account_a.geoLocationAllowed()
-				});
+						id: 'account-settings-geolocation',
+
+						label: 'Allow local geolocation',
+
+						datasource: Account_a.geoLocationAllowed()
+					}
+				);
 				
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'InputDescriptionWidget',
-				{
-					datasource: 'Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device.',
+				outerDiv.appendChild(this.createWidget(
 
-					divider: false
-				}));
+					'InputDescriptionWidget',
+					{
+						datasource: 'Allowing geolocation will enable to the app to suggest event venues and other useful information based on the location of this device.',
 
-				containerDiv.appendChild(outerDiv);
+						divider: false
+					}
+				));
+
+				formElement.appendChild(outerDiv);
 
 			
 			// Add requirement indicator (asterisk) explanation
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				});
-				
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-				{
-					element: 'p',
-					
-					classList: ['required-indicator'],
-						
-					innerHTML: '* indicates a required field'
-				}));
+				outerDiv = this.createWidget(
 
-				containerDiv.appendChild(outerDiv);
+					'HTMLElement', // outer div
+					{
+						element: 'div',			
+						
+						classList: ['row']
+					}
+				);
+				
+				outerDiv.appendChild(this.createWidget(
+
+					'HTMLElement',
+
+					{
+						element: 'p',
+						
+						classList: ['required-indicator'],
+							
+						innerHTML: '* indicates a required field'
+					}
+				));
+
+				formElement.appendChild(outerDiv);
 
 							
 			// Add submit and cancel buttons
 
-				outerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // outer div
-				{
-					element: 'div',			
-					
-					classList: ['row', 'form-submit']
-				});
-				
-				
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'CancelButtonWidget',  // cancel button
-				{					
-					id: 'account-settings-cancel',
+				outerDiv = this.createWidget(
 
-					label: 'Cancel'
-				}));
+					'HTMLElement', // outer div
+
+					{
+						element: 'div',			
+						
+						classList: ['row', 'form-submit']
+					}
+				);
+				
+				
+				outerDiv.appendChild(this.createWidget(
+
+					'CancelButtonWidget',  // cancel button
+
+					{					
+						id: 'account-settings-cancel',
+
+						label: 'Cancel'
+					}
+				));
 
 				this.elementOptions['account-settings-cancel'] =
 				{
@@ -325,31 +378,41 @@ var app = app || {};
 				}
 				
 
-				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
-				{					
-					id: 'account-settings-submit',
+				outerDiv.appendChild(this.createWidget(
 
-					label: 'Done',
+					'SubmitButtonWidget',  // submit button
 
-					icon: 'send'
-				}));
+					{					
+						id: 'account-settings-submit',
+
+						label: 'Done',
+
+						icon: 'send'
+					}
+				));
 
 				this.elementOptions['account-settings-submit'] =
 				{
 					init: module.SubmitButtonWidget.prototype.init
 				}
 
-				containerDiv.appendChild(outerDiv);
+				formElement.appendChild(outerDiv);
 
 				
+			// Render to DOM and initialize
+
+				console.log(container);
+
+				this.ssuper().prototype.render.call(this);
+
 			// Update DOM
 
-				this.$renderContext().empty();
+				//this.$renderContext().empty();
 
-				this.$renderContext().append(formElement);
+				//this.$renderContext().append(formElement);
 
 
-			// Initialize and (re)assign evnet handlers to form elements
+			// Do custom post-render initialization
 
 				/*
 				$('#account-settings-email, #account-settings-password, #account-settings-password-confirmation').on('input', function(nEvent) { // interactively validate email, password etc
@@ -363,9 +426,10 @@ var app = app || {};
 				*/
 				
 				
+				/*
 				$('#account-settings-password').focus(function(nEvent) { // update and show password hints
 
-					app.PasswordInputWidget.instance().validate(nEvent.currentTarget, '#account-settings-password-hints');
+					//app.PasswordInputWidget.instance().validate(nEvent.currentTarget, '#account-settings-password-hints');
 
 					$('#account-settings-password-hints').show('slow');
 
@@ -374,13 +438,14 @@ var app = app || {};
 					$('#account-settings-password-hints').attr('aria-hidden', false); // doesn't seem to have any effect on screen reader
 
 				}.bind(this));
+				*/
 
 
 				$('#account-settings-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
 
-					$('#account-settings-password-hints').hide('slow');
+					//$('#account-settings-password-hints').hide('slow');
 
-					$('#account-settings-password-hints').attr('aria-hidden', true);
+					//$('#account-settings-password-hints').attr('aria-hidden', true);
 
 					if ($(nEvent.currentTarget).val().length > 0 // pw is not empty
 

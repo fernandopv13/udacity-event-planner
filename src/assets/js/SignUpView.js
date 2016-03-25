@@ -98,124 +98,154 @@ var app = app || {};
 
 	module.SignUpView.prototype.render = function() {
 
-		var widgetFactory = app.UIWidgetFactory.instance(), // shortcut reference to widgetFactory
-
-		container; // shorthand reference to inherited temporary container element
+		var container; // shorthand reference to inherited temporary container element
 
 		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
 
 		// Add container
 
-			container = this.containerElement(this.createElement( // container
-			{
-				element: 'div',			
-				
-				classList: ['row']
-			}));
+			container = this.containerElement(this.createWidget( // container
 
-			var innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // inner div
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align']
-			});
+				'HTMLElement',
+
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				}
+			));
+
+			var innerDiv = this.createWidget(
+
+				'HTMLElement', // inner div
+
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align']
+				}
+			);
 
 			container.appendChild(innerDiv);
 
 		// Add logo
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // logo
-			{
-				element: 'img',
+			innerDiv.appendChild(this.createWidget(
 
-				attributes:
+				'HTMLElement', // logo
+
 				{
-					src: 'assets/img/logo.png',
+					element: 'img',
 
-					width: '117px',
+					attributes:
+					{
+						src: 'assets/img/logo.png',
 
-					height: '100px',
+						width: '117px',
 
-					alt: 'Logo',
+						height: '100px',
 
-					style: 'margin-top:20px;'
+						alt: 'Logo',
+
+						style: 'margin-top:20px;'
+					}
 				}
-			}));
+			));
 
 
 		// Add heading and teaser
 			
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'h4',
+			innerDiv.appendChild(this.createWidget(
 
-				attributes: {role: 'heading'},
+				'HTMLElement',
 
-				innerHTML: this.heading()
-			}));
+				{
+					element: 'h4',
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
+					attributes: {role: 'heading'},
+
+					innerHTML: this.heading()
+				}
+			));
+
+			innerDiv.appendChild(this.createWidget(
+
+				'HTMLElement',
+
+				{
 					element: 'p',
 
 					innerHTML: 'Please fill in the blanks and we\'ll get you going like 1-2-3.'
-			}));
+				}
+			));
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-					element: 'p',
+			innerDiv.appendChild(this.createWidget(
 
-					innerHTML: '(Don\'t sweat the details, you can always change them later.)'
-			}));
+				'HTMLElement',
+
+				{
+						element: 'p',
+
+						innerHTML: '(Don\'t sweat the details, you can always change them later.)'
+				}
+			));
 
 
 		// Setup up form
 
-			var formElement = widgetFactory.createProduct.call(widgetFactory, 'FormWidget',
-			{
-				id: 'sign-up-form-form',
+			var formElement = this.createWidget(
 
-				autocomplete: 'off',
+				'FormWidget',
 
-				novalidate: true
-			});
+				{
+					id: 'sign-up-form-form',
+
+					autocomplete: 'off',
+
+					novalidate: true
+				}
+			);
 
 			container.appendChild(formElement);
 
 		
 		// Add email field
 
-			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'EmailInputWidget',
-			{
-				width: 's12',
+			formElement.appendChild(this.createWidget(
 
-				id: 'sign-up-email',
+				'EmailInputWidget',
 
-				label: 'Email',
+				{
+					width: 's12',
 
-				required: true,
+					id: 'sign-up-email',
 
-				datasource: null,
+					label: 'Email',
 
-				errormessage: 'Please enter email'
-			}));
+					required: true,
+
+					datasource: null
+				}
+			));
 
 
 		// Add password field
 
-			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordInputWidget',
-			{
-				width: 's12',
+			formElement.appendChild(this.createWidget(
 
-				id: 'sign-up-password',
+				'PasswordInputWidget',
 
-				label: 'Password',
+				{
+					width: 's12',
 
-				datasource: null//,
+					id: 'sign-up-password',
 
-				//hintsprefix: 'sign-up-password-hints'
-			}));
+					label: 'Password',
+
+					datasource: null
+				}
+			));
 
 			this.elementOptions['sign-up-password'] = 
 			{
@@ -225,57 +255,73 @@ var app = app || {};
 		
 		// Add password confirmation field
 
-			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'PasswordConfirmationInputWidget',
-			{
-				width: 's12',
+			formElement.appendChild(this.createWidget(
 
-				id: 'sign-up-password-confirmation',
+				'PasswordConfirmationInputWidget',
 
-				label: 'Confirm Password'
-			}));
+				{
+					width: 's12',
+
+					id: 'sign-up-password-confirmation',
+
+					label: 'Confirm Password'
+				}
+			));
 
 
 		// Add optional extras instruction
 
-			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'p',
+			formElement.appendChild(this.createWidget(
 
-				classList: ['center-align'],
+				'HTMLElement',
 
-				innerHTML: 'Some optional extras:'
-				
-			}));
+				{
+					element: 'p',
+
+					classList: ['center-align'],
+
+					innerHTML: 'Some optional extras:'
+					
+				}
+			));
 
 		
 		// Add account holder name field
 
-			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
-			{
-				width: 's12',
+			formElement.appendChild(this.createWidget(
 
-				id: 'sign-up-name',
+				'TextInputWidget',
 
-				label: 'Your Name',
+				{
+					width: 's12',
 
-				required: false,
+					id: 'sign-up-name',
 
-				datasource: null
-			}));
+					label: 'Your Name',
+
+					required: false,
+
+					datasource: null
+				}
+			));
 
 
 		// Add birthday field
 
-			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'DateInputWidget',
-			{
-				width: 's12',
+			formElement.appendChild(this.createWidget(
 
-				id: 'sign-up-birthday',
+				'DateInputWidget',
 
-				label: 'Your Birthday',
+				{
+					width: 's12',
 
-				required: false
-			}))
+					id: 'sign-up-birthday',
+
+					label: 'Your Birthday',
+
+					required: false
+				}
+			));
 
 			this.elementOptions['sign-up-birthday'] = 
 			{
@@ -285,42 +331,54 @@ var app = app || {};
 
 		// Add job title field
 
-			formElement.appendChild(widgetFactory.createProduct.call(widgetFactory, 'TextInputWidget',
-			{
-				width:'s12',
+			formElement.appendChild(this.createWidget(
 
-				id: 'sign-up-jobtitle',
+				'TextInputWidget',
 
-				label: 'Your Job Title',
+				{
+					width:'s12',
 
-				datasource: null,
+					id: 'sign-up-jobtitle',
 
-				required: false
-			}));
+					label: 'Your Job Title',
+
+					datasource: null,
+
+					required: false
+				}
+			));
 
 
 		// Add sign-up button
 
-			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align']
-			});
+			innerDiv = this.createWidget(
+
+				'HTMLElement',
+
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align']
+				}
+			);
 
 			formElement.appendChild(innerDiv);
 
 			
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // button
-			{
-				element: 'a',
-				
-				attributes: {id: 'sign-up-submit', role: 'button', tabindex: 0},
-				
-				classList: ['waves-effect', 'waves-light', 'btn'],
+			innerDiv.appendChild(this.createWidget(
 
-				innerHTML: 'Sign Up'
-			}));
+				'HTMLElement', // button
+
+				{
+					element: 'a',
+					
+					attributes: {id: 'sign-up-submit', role: 'button', tabindex: 0},
+					
+					classList: ['waves-effect', 'waves-light', 'btn'],
+
+					innerHTML: 'Sign Up'
+				}
+			));
 
 			this.elementOptions['sign-up-submit'] =
 			{
@@ -333,34 +391,46 @@ var app = app || {};
 
 		// Add demo sign-in link (disabled/hidden)
 
-			innerDiv = widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // div
-			{
-				element: 'div',			
-				
-				classList: ['row', 'center-align', 'hidden'] // Udacity reviewer didn't like this idea, so hiding it
-			});
+			innerDiv = this.createWidget(
+
+				'HTMLElement', // div
+
+				{
+					element: 'div',			
+					
+					classList: ['row', 'center-align', 'hidden'] // Udacity reviewer didn't like this idea, so hiding it
+				}
+			);
 
 			formElement.appendChild(innerDiv);
 
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement',
-			{
-				element: 'p',
+			innerDiv.appendChild(this.createWidget(
 
-				classList: ['center-align'],
+				'HTMLElement',
 
-				innerHTML: 'or'
-				
-			}));
+				{
+					element: 'p',
+
+					classList: ['center-align'],
+
+					innerHTML: 'or'
+					
+				}
+			));
 
 			
-			innerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'HTMLElement', // link
-			{
-				element: 'a',
-				
-				attributes: {id: 'sign-up-open-demo', role: 'button', tabindex:0},
-				
-				innerHTML: 'See our (still very) cool demo!'
-			}));
+			innerDiv.appendChild(this.createWidget(
+
+			'HTMLElement', // link
+
+				{
+					element: 'a',
+					
+					attributes: {id: 'sign-up-open-demo', role: 'button', tabindex:0},
+					
+					innerHTML: 'See our (still very) cool demo!'
+				}
+			));
 
 			this.elementOptions['sign-up-open-demo'] =
 			{
@@ -442,11 +512,4 @@ var app = app || {};
 		return false;
 	}
 
-
-	/*
-	module.SignUpView.prototype.update = function() {
-
-		this.render();
-	}
-	*/
 })(app);
