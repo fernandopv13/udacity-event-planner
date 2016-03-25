@@ -267,16 +267,7 @@ var app = app || {};
 
 			this.elementOptions['sign-in-submit'] =
 			{
-				listeners: 
-				{
-					mousedown:
-
-						function(nEvent) { // submit (blur hides click event so using mousedown)
-
-							this.submit(nEvent);
-
-						}.bind(this)
-				}
+				init: module.SubmitButtonWidget.prototype.init
 			}
 
 		
@@ -314,9 +305,9 @@ var app = app || {};
 			{
 				listeners: 
 				{
-					mousedown:
+					mousedown: 
 
-						function(nEvent) { // submit (blur hides click event so using mousedown)
+						function(nEvent) { // blur hides click event so using mousedown
 
 							$('#sign-in-email').val('demo@demo.demo');
 
@@ -399,7 +390,9 @@ var app = app || {};
 
 		// call parent to perform common post-render task(s)
 
-			this.ssuper().prototype.onRender.call(this);
+			this.init();
+
+			//this.ssuper().prototype.onRender.call(this);
 	};
 
 

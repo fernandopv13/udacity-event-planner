@@ -230,7 +230,7 @@ var app = app || {};
 		* @return {void}
 		*/
 
-		module.DateInputWidget.prototype.init = function(str_id, obj_options) {
+		module.DateInputWidget.prototype.init = function(View_v, str_id, obj_options) {
 
 			var element = $('#' + str_id), val;
 

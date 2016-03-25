@@ -113,9 +113,47 @@ var app = app || {};
 		};
 
 		
-		/* Initializes element (required by UIWidget) */
+		/* Initializes widget after it has been rendeed to the DOM.
+		*
+		* Attaches generic click (mousedown) event handler. Expects View to support submit() instance method.
+		*
+		* @param {View} v The calling View where the widget resided
+		*
+		* @param {String} id The element's id
+		*
+		* @param {Object} options JSON object holding the options for the element (if any)
+		*
+		* @return {void}
+		*
+		* @throws {ReferenceError} If View does not have a 'submit' property
+		*
+		* @throws {IllegalArgumentError} If 'submit' property of View is not a function
+		*/
 
-		module.SubmitButtonWidget.prototype.init = function() {};
+		module.SubmitButtonWidget.prototype.init = function(View_v, str_elementId, obj_elementOptions) {
+
+			// Attach generic event handler
+
+			var fn = View_v.submit;
+
+			if (typeof fn !== 'undefined') {
+
+				if (typeof fn === 'function') {
+
+					$('#' + str_elementId).on('mousedown', fn.bind(View_v));
+				}
+
+				else {
+
+					throw new IllegalArgumentError('submit must be a function')
+				}
+			}
+
+			else {
+
+				throw new ReferenceError('View must support "submit()"" instance method');
+			}
+		};
 
 
 	/*----------------------------------------------------------------------------------------

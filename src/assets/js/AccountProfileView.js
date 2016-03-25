@@ -243,6 +243,11 @@ var app = app || {};
 					datasource: Person_p.birthday() || null
 				}));
 
+				this.elementOptions['account-holder-birthday'] = 
+				{
+					init: module.DateInputWidget.prototype.init
+				}
+
 			
 			// Add requirement indicator (asterisk) explanation
 
@@ -284,7 +289,12 @@ var app = app || {};
 					label: 'Cancel'
 				}));
 				
+				this.elementOptions['account-holder-cancel'] =
+				{
+					init: module.CancelButtonWidget.prototype.init
+				}
 
+				
 				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
 				{					
 					id: 'account-holder-submit',
@@ -294,14 +304,17 @@ var app = app || {};
 					icon: 'send'
 				}));
 
+				this.elementOptions['account-holder-submit'] =
+				{
+					init: module.SubmitButtonWidget.prototype.init
+				}
+
 				containerDiv.appendChild(outerDiv);
 
 				//containerDiv.appendChild(this.createSubmitCancelButtons('account-holder-form'));
 
 							
 			// Update DOM
-
-				console.log(formElement);
 
 				this.$renderContext().empty();
 
@@ -310,6 +323,7 @@ var app = app || {};
 
 			// (Re)assign event handlers to form elements
 
+				/*
 				$('#account-holder-birthday.datepicker').pickadate({
 					
 					//closeOnSelect: true, // bug: ineffective
@@ -322,6 +336,7 @@ var app = app || {};
 					
 					selectYears: 15 // Creates a dropdown of 15 years to control year
 				});
+				*/
 				
 				
 				/*
@@ -340,6 +355,7 @@ var app = app || {};
 				*/
 
 				
+				/*
 				$('#account-holder-cancel').click(function(event) { // cancel (blur hides click event so using mousedown)
 
 					console.log('cancel');
@@ -356,6 +372,8 @@ var app = app || {};
 					this.submit(nEvent);
 
 				}.bind(this));
+
+				*/
 		}
 
 		else { // present default message

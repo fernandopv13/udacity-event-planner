@@ -163,9 +163,9 @@ var app = app || {};
 		* @throws {IllegalArgumentError} If a parameter does not resolve to an expected value or type
 		*/
 
-		module.HTMLElement.prototype.init = function(str_id, obj_options) {
+		module.HTMLElement.prototype.init = function(View_v, str_elementId, obj_elementOptions) {
 
-			/* Example of supported JSON format for elementOptions:
+			/* Example of currently supported JSON format for elementOptions:
 			{
 				listeners: 
 				{
@@ -181,15 +181,15 @@ var app = app || {};
 
 			*/
 			
-			if (obj_options.listeners) { // attach event listeners
+			if (obj_elementOptions.listeners) { // attach event listeners
 
-				var listeners = obj_options.listeners;
+				var listeners = obj_elementOptions.listeners;
 
 				for (var event in listeners) {
 
 					if (typeof listeners[event] === 'function') {
 
-						$('#' + str_id).on(event, listeners[event]);
+						$('#' + str_elementId).on(event, listeners[event]);
 					}
 
 					else {

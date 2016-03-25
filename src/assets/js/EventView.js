@@ -141,6 +141,7 @@ var app = app || {};
 					datasource: Event_e.name() ? Event_e.name() : ''
 				}));
 
+				
 							
 			// Add location field
 
@@ -200,8 +201,9 @@ var app = app || {};
 
 				this.elementOptions['event-start-date'] = 
 				{
-					initializer: module.DateInputWidget.prototype.init
+					init: module.DateInputWidget.prototype.init
 				}
+				
 				
 				var endDate = widgetFactory.createProduct.call(widgetFactory,'DateInputWidget',
 				{
@@ -220,13 +222,14 @@ var app = app || {};
 					errormessage: 'Please enter end after start in format dd/mm/yyyy hh:mm'
 
 				}).children[0]; // extract from wrapper
-
+				
 				this.elementOptions['event-end-date'] = 
 				{
-					initializer: module.DateInputWidget.prototype.init
+					init: module.DateInputWidget.prototype.init
 				}
 
 				endDate.children[0].classList.add('validate'); // 'validate' normally only comes with required field, so add seperately here
+
 
 				outerDiv.appendChild(endDate);
 
@@ -579,20 +582,10 @@ var app = app || {};
 					label: 'Cancel'
 				}));
 				
-				this.elementOptions['event-form-cancel'] = 
+				this.elementOptions['event-form-cancel'] =
 				{
-					listeners: {
-
-						mousedown: 
-
-							function(nEvent) { // cancel edits
-
-								this.cancel(nEvent);
-
-							}.bind(this)
-					}
-				};
-
+					init: module.CancelButtonWidget.prototype.init
+				}
 
 				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
 				{					
@@ -603,19 +596,10 @@ var app = app || {};
 					icon: 'send'
 				}));
 
-				this.elementOptions['event-form-submit'] = 
+				this.elementOptions['event-form-submit'] =
 				{
-					listeners: {
-
-						mousedown: 
-
-							function(nEvent) { // cancel edits
-
-								this.submit(nEvent);
-
-							}.bind(this)
-					}
-				};
+					init: module.SubmitButtonWidget.prototype.init
+				}
 
 				containerDiv.appendChild(outerDiv);
 
@@ -685,7 +669,9 @@ var app = app || {};
 
 			// call parent to perform common post-render task(s)
 
-				this.ssuper().prototype.onRender.call(this);
+				this.init();
+
+				//this.ssuper().prototype.init.call(this);
 		}
 
 		else { // present default message

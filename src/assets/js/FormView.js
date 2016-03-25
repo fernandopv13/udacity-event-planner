@@ -112,7 +112,7 @@ var app = app || {};
 	* @todo Consolidate with onLoad(): they serve the same purpose
 	*/
 
-	app.FormView.prototype.onRender = function(Model_m) {
+	app.FormView.prototype.init = function() {
 
 		this.hide(); // when rendering in the background, prevent first render from resulting in showing the view
 
@@ -122,11 +122,11 @@ var app = app || {};
 
 				console.log(id);
 
-				if (this.elementOptions[id].initializer) { // run any custom initializer
+				if (this.elementOptions[id].init) { // run any custom initializer
 
-					if (typeof this.elementOptions[id].initializer === 'function') {
+					if (typeof this.elementOptions[id].init === 'function') {
 
-						this.elementOptions[id].initializer(id, this.elementOptions[id]);
+						this.elementOptions[id].init(this, id, this.elementOptions[id]);
 					}
 
 					else {
@@ -135,7 +135,7 @@ var app = app || {};
 					}
 				}
 
-				app.HTMLElement.instance().init(id, this.elementOptions[id]); // do base init of element
+				app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
 			}
 
 			delete this.elementOptions; // free up temporary variable for garbage collection

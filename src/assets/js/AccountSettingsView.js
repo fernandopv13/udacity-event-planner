@@ -318,6 +318,11 @@ var app = app || {};
 
 					label: 'Cancel'
 				}));
+
+				this.elementOptions['account-settings-cancel'] =
+				{
+					init: module.CancelButtonWidget.prototype.init
+				}
 				
 
 				outerDiv.appendChild(widgetFactory.createProduct.call(widgetFactory, 'SubmitButtonWidget',  // submit button
@@ -328,6 +333,11 @@ var app = app || {};
 
 					icon: 'send'
 				}));
+
+				this.elementOptions['account-settings-submit'] =
+				{
+					init: module.SubmitButtonWidget.prototype.init
+				}
 
 				containerDiv.appendChild(outerDiv);
 
@@ -385,6 +395,7 @@ var app = app || {};
 				});
 
 
+				/*
 				$('#account-settings-cancel').click(function(nEvent) { // cancel (blur hides click event so using mousedown)
 
 					this.cancel(nEvent);
@@ -397,6 +408,7 @@ var app = app || {};
 					this.submit(nEvent);
 					
 				}.bind(this));
+				*/
 		}
 
 		else { // present default message
