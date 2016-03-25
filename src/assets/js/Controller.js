@@ -75,7 +75,7 @@ var app = app || {};
 
 						//console.log('setting currentView to ' + View_v.className()); // debug
 
-						this.update([Model_m, View_v]); // first notify observers: forms won't update if they are the current view
+						this.update(Model_m, View_v); // first notify observers: forms won't update if they are the current view
 						
 						for (var view in _views) {
 
@@ -512,22 +512,23 @@ var app = app || {};
 			*
 			* Takes whatever params it is provided and passes them straight on to observers.
 			*
-			* Relies on caller to provide valid signature.
+			* Relies on caller to provide valid signature (param count and types).
 			*
-			* (Method realization required by IInterfaceable.)
+			* (Method realization required by IObservable.)
+			*
+			* @todo This is so generic, maybe try to elevate it to default method in Observable
 			*/
 
+			/*DEPRECATED: Now uses default method in IObservable
 			this.notifyObservers = function() {
 				
-				// Assume that main update() method has done all type checking, and takes care of correct signature, so no need for that here
-
 				var args = arguments;
 
 				switch (args.length) {
 
 					case 1: // not currently in use
 
-						_observers.forEach(function(observer) { // expected by ViewUpdateHandler
+						_observers.forEach(function(observer) {
 
 							observer.update(args[0]);
 						});
@@ -536,35 +537,18 @@ var app = app || {};
 
 					case 2:
 
-						//if (typeof arguments[1] === 'number') { // console.log('Notifying Models of update from View: (Model, int)');
+						_observers.forEach(function(observer) {
 
-							_observers.forEach(function(observer) { // expected by View
-
-								observer.update(args[0], args[1]); // Model, int
-							});
-						//}
-
-						/*
-						else if (arguments[1].isInstanceOf(module.View)) { // console.log('Notifying Views of update from ViewUpdateHandler or Model: (Model, View)');
-
-							// Notification may originate directly from a model, or from a ViewUpdateHandler
-
-							_observers.forEach(function(observer) { // expected by View
-
-								//console.log(observer);
-
-								observer.update(arguments[0], arguments[1]); // Model, View
-							});
-						}
-						*/
+							observer.update(args[0], args[1]);
+						});
 
 						break;
 
-					case 3: //console.log('Notifying ViewUpdateHandlers of user action in View : (int, Model, View)');
+					case 3:
 
-						_observers.forEach(function(observer) { // expected by ViewUpdateHandler
+						_observers.forEach(function(observer) {
 
-							observer.update(args[0], args[1], args[2]); // int, Model, View
+							observer.update(args[0], args[1], args[2]);
 						});
 						
 						break;
@@ -576,6 +560,7 @@ var app = app || {};
 						throw new IllegalArgumentError('Unexpected signature');
 				}
 			}
+			*/
 
 
 			/** Handles click events in navbar/dropdown */
@@ -811,7 +796,7 @@ var app = app || {};
 				// i.e. call every internal subfunction, passing in arguments received, until a match is found (or not),
 				// letting subfunctions decide whether to respond (in this case, subfunction signatures must be mutually exclusive).
 
-				var args = arguments[0], ret = false,
+				var args = arguments, ret = false,
 
 				strategies = [_update, __update, ___update, ____update];
 

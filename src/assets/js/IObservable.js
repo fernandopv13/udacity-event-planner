@@ -45,19 +45,78 @@ var app = app || {}; // create a simple namespace for the module
 	* @param Method is agnostic about invoking signature: It simply passes on whichever parameters it receives.
 	*
 	* @return void
+	*
+	* @todo Find more generic way of supporting different number of params
 	*/
 
 	module.IObservable.prototype.default_notifyObservers = function() {
 
 		var args = arguments;
 
-		//var observers = typeof this.observers === 'function' ? this.observers() : this.observers;
+		switch (args.length) {
 
-		this.observers().forEach(function(observer) {
+			case 0:
 
-			observer.update(args);
+				this.observers().forEach(function(observer) {
 
-		});
+					observer.update();
+				});
+				
+				break;
+
+			case 1:
+
+				this.observers().forEach(function(observer) {
+
+					observer.update(args[0]);
+				});
+				
+				break;
+
+			case 2:
+
+				this.observers().forEach(function(observer) {
+
+					observer.update(args[0], args[1]);
+				});
+
+				break;
+
+			case 3:
+
+				this.observers().forEach(function(observer) {
+
+					observer.update(args[0], args[1], args[2]);
+				});
+				
+				break;
+
+			case 4:
+
+				this.observers().forEach(function(observer) {
+
+					observer.update(args[0], args[1], args[2], args[3]);
+				});
+				
+				break;
+
+			case 5:
+
+				this.observers().forEach(function(observer) {
+
+					observer.update(args[0], args[1], args[2], args[3], args[4]);
+				});
+				
+				break;
+
+			default:
+
+				this.observers().forEach(function(observer) {
+
+					observer.update(args);
+
+				});
+		}
 	};
 
 
