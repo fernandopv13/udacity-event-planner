@@ -47,7 +47,7 @@ var app = app || {};
 
 			id = parseInt(PopStateEvent_e.state.id);
 
-			switch (className) {
+			switch (className) { // Hijacking the MVC protocol to simulate an update from a view
 
 				case 'EventListView':
 
@@ -94,6 +94,8 @@ var app = app || {};
 		if (history.pushState) {
 
 			var className = View_v.className(), id = View_v.model() ? View_v.model().id() : null;
+
+			//console.log(className);
 
 			try {// needs to be run off a server to work
 

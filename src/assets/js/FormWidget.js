@@ -104,6 +104,7 @@ var app = app || {};
 			});
 
 
+			/*
 			var containerDiv = createElement(
 			{
 				element: 'div',			
@@ -112,6 +113,7 @@ var app = app || {};
 			});
 			
 			formElement.appendChild(containerDiv);
+			*/
 
 
 			return formElement;

@@ -739,12 +739,16 @@ var app = app || {};
 
 			this.$renderContext().empty();
 
-			this.$renderContext().append(this.createElement(
-			{
-				element: 'p',
+			this.$renderContext().append(this.createWidget(
 
-				innerHTML: 'No event selected. Please select or create an event in order to edit details.'
-			}));
+				'HTMLElement',
+
+				{
+					element: 'p',
+
+					innerHTML: 'No event selected. Please select or create an event in order to edit details.'
+				}
+			));
 		}
 	};
 

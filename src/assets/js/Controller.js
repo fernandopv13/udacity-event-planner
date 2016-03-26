@@ -73,7 +73,7 @@ var app = app || {};
 
 					if (View_v === null || View_v.isInstanceOf(module.View)) {
 
-						console.log('setting currentView to ' + View_v.className()); // debug
+						//console.log('setting currentView to ' + View_v.className()); // debug
 
 						this.update(Model_m, View_v); // first notify observers: forms won't update if they are the current view
 						
@@ -253,19 +253,6 @@ var app = app || {};
 			* @param {Account} a The selected Account
 			*/
 
-			/*
-			function _onAccountSelected(Account_a) {
-
-				this.selectedEvent(null);
-
-				this.selectedGuest(null);
-
-				this.selectedAccount(Account_a);
-
-				this.currentView(_views.eventListView, this.selectedAccount());
-			}
-			*/
-
 			this.onAccountSelected = function(Account_a) { // temporary adapter while transitioning to the Strategy pattern
 
 				this.selectedEvent(null);
@@ -343,15 +330,6 @@ var app = app || {};
 			* @param {Event} a The selected Event
 			*/
 
-			/*
-			function _onEventSelected(Event_e) {
-
-				this.selectedGuest(null);
-
-				this.currentView(_views.eventView, this.selectedEvent(Event_e));
-			}
-			*/
-
 			this.onEventSelected = function(Event_e) { // temporary adapter while transitioning to the Strategy pattern
 
 				this.selectedGuest(null);
@@ -360,24 +338,6 @@ var app = app || {};
 			};
 
 			
-			/** Does the work required when a guest has been selected,
-			*
-			* including storing a reference to it as the selected guest,
-			*
-			* and displaying the Guest to the user.
-			*
-			* @param {Person} a The selected guest
-			*/
-
-			/*
-			function _onGuestSelected(Person_g) {
-
-				this.selectedGuest(Person_g);
-
-				this.currentView(_views.guestView, this.selectedGuest());
-			}
-			*/
-
 			this.onGuestSelected = function(Person_g) { // temporary adapter while transitioning to the Strategy pattern
 
 				this.currentView(_views.guestView, this.selectedGuest(Person_g));
@@ -508,61 +468,7 @@ var app = app || {};
 			};
 
 
-			/** Notifies observes of change to the data model.
-			*
-			* Takes whatever params it is provided and passes them straight on to observers.
-			*
-			* Relies on caller to provide valid signature (param count and types).
-			*
-			* (Method realization required by IObservable.)
-			*
-			* @todo This is so generic, maybe try to elevate it to default method in Observable
-			*/
-
-			/*DEPRECATED: Now uses default method in IObservable
-			this.notifyObservers = function() {
-				
-				var args = arguments;
-
-				switch (args.length) {
-
-					case 1: // not currently in use
-
-						_observers.forEach(function(observer) {
-
-							observer.update(args[0]);
-						});
-						
-						break;
-
-					case 2:
-
-						_observers.forEach(function(observer) {
-
-							observer.update(args[0], args[1]);
-						});
-
-						break;
-
-					case 3:
-
-						_observers.forEach(function(observer) {
-
-							observer.update(args[0], args[1], args[2]);
-						});
-						
-						break;
-
-					default:
-
-						console.log(args);
-
-						throw new IllegalArgumentError('Unexpected signature');
-				}
-			}
-			*/
-
-
+			
 			/** Handles click events in navbar/dropdown */
 
 			this.onNavSelection = function(nEvent) {
@@ -580,6 +486,11 @@ var app = app || {};
 						break;
 
 					case 'Profile':
+
+						if (typeof this.selectedAccount().accountHolder() === 'undefined') {
+
+							void this.selectedAccount().accountHolder(new module.Person());
+						}
 
 						this.currentView(_views.accountProfileView, this.selectedAccount().accountHolder());
 						
@@ -642,7 +553,9 @@ var app = app || {};
 
 						if (View_v) { // if there is a match, dispatch update to Views
 
-							console.log('Notifying Views of update from Model: Model, View'); //debug
+							//console.log('Notifying Views of update from Model: Model, View'); //debug
+
+							//console.log([Model_m, View_v]);
 
 							this.notifyObservers(Model_m, View_v);	
 						}
@@ -678,7 +591,7 @@ var app = app || {};
 
 						if (typeof Model_m !== 'undefined' && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model)) { // first param is instance of Model
 
-							console.log('Notifying Models of update from View(UpdateHandler): Model, int');
+							//console.log('Notifying Models of update from View(UpdateHandler): Model, int');
 
 							this.notifyObservers(Model_m, int_id);
 
@@ -712,7 +625,9 @@ var app = app || {};
 
 						if (Model_m === null || (typeof Model_m !== 'undefined' && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model))) { // first param is instance of Model, or null
 
-							console.log('Notifying Views of update from ViewUpdateHandler: Model, View');
+							//console.log('Notifying Views of update from ViewUpdateHandler: Model, View');
+
+							//console.log(arguments);
 
 							this.notifyObservers(Model_m, View_v);
 
@@ -742,30 +657,15 @@ var app = app || {};
 
 				if (arguments.length === 3) { // call has expected number of params
 
-					//console.log('call has expected number of params'); // debug
-
 					if (typeof View_v === 'object' && View_v !== null && View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { // first param is instance of View
-
-						//console.log('first param is instance of View');
 
 						if (typeof Model_m === 'object' && (Model_m === null || (Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model)))) { // second param is instance of Model, or null
 
-							//console.log('second param is instance of Model');
-
 							if (typeof int_uiAction === 'number') { // third param is number (integer)
 
-								console.log('Notifying ViewUpdateHandlers of user action notification in View'); // debug
+								//console.log('Notifying ViewUpdateHandlers of user action notification in View'); // debug
 
 								this.notifyObservers(int_uiAction, Model_m, View_v);
-
-								// Remove temporary Model passed in from View (to prepare for garbage collection)
-
-								if (Model_m && Model_m.constructor && Model_m.constructor.registry) {
-
-									Model_m.constructor.registry.remove(Model_m);
-								}
-
-								Model_m = undefined;
 
 								return true;
 							}
@@ -798,7 +698,7 @@ var app = app || {};
 
 				var args = arguments, ret = false, strategies = [_update, __update, ___update, ____update];
 
-				console.log(args); // debug
+				//console.log(args); // debug
 
 				for (var i = 0, len = strategies.length; i < len; i++) { // using 'for' b/c forEach does not support break
 

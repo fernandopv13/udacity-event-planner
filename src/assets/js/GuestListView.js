@@ -70,285 +70,286 @@ var app = app || {};
 
 		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
-
 		// List item builder
 
 			function renderListItem(Person_g, self) { // list item generator
-				
-				var listElmnt = self.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'li',
-
-						attributes: {id: 'guest-list-id-' + Person_g.id(), role: 'listitem'},
-
-						classList: ['collection-item', 'avatar'],
-
-						listeners:
-						{
-							click: function(e) {self.onClick(e, Person_g);}
-						}
-					}
-				);
-
-							
-				if (Person_g.imgUrl()) { // use existing image
-
-					listElmnt.appendChild(self.createWidget(
-
-						'HTMLElement',
-
-						{
-
-							element: 'img',
-
-							attributes:
-							{
-								src: Person_g.imgUrl(),
-
-								alt: Person_g.name()
-							},
-
-							classList: ['circle']
-						}
-					));
-				}
-
-				else { // use generic avatar
-
-					listElmnt.appendChild(self.createWidget(
-
-						'HTMLElement',
-
-						{
-
-							element: 'i',
-
-							classList: ['circle', 'material-icons'],
-
-							innerHTML: 'account_circle'
-						}
-					));
-				}
-
-
-				listElmnt.appendChild(self.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'span',
-
-						innerHTML: Person_g.name() ? Person_g.name() : ''
-					}
-				));
-
-							
-				listElmnt.appendChild(self.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'p',
-
-						innerHTML: Person_g.email() && Person_g.email().address() ? Person_g.email().address() : ''
-					}
-				));
-
-				
-				var anchorElmnt = self.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'a',
-
-						attributes: {href: '#!'},
-
-						classList: ['secondary-content']
-					}
-				);
-
-
-				anchorElmnt.appendChild(self.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'i',
-
-						classList: ['material-icons'],
-
-						innerHTML: 'chevron_right'
-					}
-				));
-
-				listElmnt.appendChild(anchorElmnt);
-				
-				
-				return listElmnt;
-			}
-
-		
-		// Setup container div
-
-			container = this.containerElement(this.createWidget(
-
-					'HTMLElement', // div
-
-					{
-						element: 'div',			
-						
-						classList: ['row']
-					}
-			));
-
-		
-		// Add secondary nav ('back' arrow above list)
-
-			var navElement =  this.createWidget( // div
-
-				'HTMLElement', 
-
-				{
-					element: 'div',
-
-					attributes: {id: 'secondary-nav', role: 'navigation'},
-					
-					classList: ['secondary-nav']
-				}
-			);
-
-			this.elementOptions['secondary-nav'] =
-			{
-				listeners: 
-				{
-					mousedown:
-
-						function(nEvent) {
-
-							window.history.back();
-
-							$('#secondary-nav').off();
-
-						}.bind(this)
-				}
-			};
-
-			container.appendChild(navElement);
-
-
-			navElement.appendChild(this.createWidget( // icon
+			
+			var listElmnt = self.createWidget(
 
 				'HTMLElement',
 
 				{
-					element: 'i',
+					element: 'li',
 
-					classList: ['material-icons', 'left'],
+					attributes: {id: 'guest-list-id-' + Person_g.id(), role: 'listitem'},
 
-					innerHTML: 'arrow_back'
+					classList: ['collection-item', 'avatar'],
+
+					listeners:
+					{
+						click: function(e) {self.onClick(e, Person_g);}
+					}
 				}
-			));
+			);
+
+						
+			if (Person_g.imgUrl()) { // use existing image
+
+				listElmnt.appendChild(self.createWidget(
+
+					'HTMLElement',
+
+					{
+
+						element: 'img',
+
+						attributes:
+						{
+							src: Person_g.imgUrl(),
+
+							alt: Person_g.name()
+						},
+
+						classList: ['circle']
+					}
+				));
+			}
+
+			else { // use generic avatar
+
+				listElmnt.appendChild(self.createWidget(
+
+					'HTMLElement',
+
+					{
+
+						element: 'i',
+
+						classList: ['circle', 'material-icons'],
+
+						innerHTML: 'account_circle'
+					}
+				));
+			}
 
 
-			navElement.appendChild(this.createWidget( // label
+			listElmnt.appendChild(self.createWidget(
 
 				'HTMLElement',
 
 				{
 					element: 'span',
 
-					innerHTML: this.model().name()
+					innerHTML: Person_g.name() ? Person_g.name() : ''
 				}
 			));
 
-		
-		// Add list element		
-
-			var UlElement = this.createWidget(
+						
+			listElmnt.appendChild(self.createWidget(
 
 				'HTMLElement',
 
 				{
-					element: 'ul',
+					element: 'p',
 
-					attributes: {role: 'list'},
+					innerHTML: Person_g.email() && Person_g.email().address() ? Person_g.email().address() : ''
+				}
+			));
 
-					classList: ['collection', 'with-header']
+			
+			var anchorElmnt = self.createWidget(
+
+				'HTMLElement',
+
+				{
+					element: 'a',
+
+					attributes: {href: '#!'},
+
+					classList: ['secondary-content']
 				}
 			);
 
-			container.appendChild(UlElement);
 
-			
-		// Add heading
-
-			UlElement.appendChild(this.createWidget(
+			anchorElmnt.appendChild(self.createWidget(
 
 				'HTMLElement',
 
 				{
-					element: 'h4',
+					element: 'i',
 
-					attributes: {role: 'heading'},
+					classList: ['material-icons'],
 
-					classList: ['collection-header'],
-
-					innerHTML: this.heading()
+					innerHTML: 'chevron_right'
 				}
 			));
 
-		
-		// Build list, or default message
-					
-			if (Event_e !== null && Event_e.guests().length > 0) { // list
+			listElmnt.appendChild(anchorElmnt);
+			
+			
+			return listElmnt;
+		}
 
+		
+		if (Event_e !== null && Event_e.guests().length > 0) { // list
+
+		
+			// Setup container div
+
+				container = this.containerElement(this.createWidget(
+
+						'HTMLElement', // div
+
+						{
+							element: 'div',			
+							
+							classList: ['row']
+						}
+				));
+
+			
+			// Add secondary nav ('back' arrow above list)
+
+				var navElement =  this.createWidget( // div
+
+					'HTMLElement', 
+
+					{
+						element: 'div',
+
+						attributes: {id: 'secondary-nav', role: 'navigation'},
+						
+						classList: ['secondary-nav']
+					}
+				);
+
+				this.elementOptions['secondary-nav'] =
+				{
+					listeners: 
+					{
+						mousedown:
+
+							function(nEvent) {
+
+								window.history.back();
+
+								$('#secondary-nav').off();
+
+							}.bind(this)
+					}
+				};
+
+				container.appendChild(navElement);
+
+
+				navElement.appendChild(this.createWidget( // icon
+
+					'HTMLElement',
+
+					{
+						element: 'i',
+
+						classList: ['material-icons', 'left'],
+
+						innerHTML: 'arrow_back'
+					}
+				));
+
+
+				navElement.appendChild(this.createWidget( // label
+
+					'HTMLElement',
+
+					{
+						element: 'span',
+
+						innerHTML: this.model().name()
+					}
+				));
+
+			
+			// Add list element		
+
+				var UlElement = this.createWidget(
+
+					'HTMLElement',
+
+					{
+						element: 'ul',
+
+						attributes: {role: 'list'},
+
+						classList: ['collection', 'with-header']
+					}
+				);
+
+				container.appendChild(UlElement);
+
+				
+			// Add heading
+
+				UlElement.appendChild(this.createWidget(
+
+					'HTMLElement',
+
+					{
+						element: 'h4',
+
+						attributes: {role: 'heading'},
+
+						classList: ['collection-header'],
+
+						innerHTML: this.heading()
+					}
+				));
+
+			
+			// Build list
+						
 				Event_e.guests().forEach(function(guest) { // generate list items
 
 					UlElement.appendChild(renderListItem(guest, this));
 
 				}, this);
-			}
 
-			else { // default
 
-				var outerDiv =  this.createWidget(
+			// Render to DOM and initialize
 
-					'HTMLElement', // outer div
+				this.ssuper().prototype.render.call(this);
+		}
 
-					{
-						element: 'div',
+		else { // default
 
-						classList: ['collection-item', 'row']
-					}
-				);
-				
-				UlElement.appendChild(outerDiv);
+			this.$renderContext().empty();
 
-				
-				var innerDiv =  this.createWidget(
+			this.$renderContext().append(this.createWidget(
 
-					'HTMLElement', // inner div
+				'HTMLElement', // outer div
 
-					{
-						element: 'div',			
-						
-						classList: ['col', 's12'],
+				{
+					element: 'div',
 
-						innerHTML: 'No guests have been added to this event yet.'
-					}
-				);
+					classList: ['collection-item', 'row']
+				}
+			));
+			
+			this.$renderContext().append(this.createWidget(
 
-				outerDiv.appendChild(innerDiv);
-			}
+				'HTMLElement', // inner div
 
+				{
+					element: 'div',			
+					
+					classList: ['col', 's12'],
+
+					innerHTML: 'No guests have been added to this event yet.'
+				}
+			));
+		}
 
 		// Add floating 'Add' button
 
-			container.appendChild(app.UIWidgetFactory.instance().createProduct(
+			this.$renderContext().append(this.createWidget(
 
 				'FloatingActionButtonWidget',
 
@@ -363,23 +364,11 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['guest-list-add'] =
-			{
-				listeners: 
-				{
-					mousedown:
+			$('#guest-list-add').on('mousedown', function(nEvent) {
 
-						function(nEvent) {
+				this.notifyObservers(this, new module.Person('New Guest'), module.View.UIAction.CREATE);
 
-							this.notifyObservers(this, new module.Person('New Guest'), module.View.UIAction.CREATE);
-
-						}.bind(this)
-				}
-			};
-
-		// Render to DOM and initialize
-
-			this.ssuper().prototype.render.call(this);
+			}.bind(this));
 	};
 	
 })(app);

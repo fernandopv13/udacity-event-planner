@@ -175,6 +175,22 @@ var app = app || {};
 
 			var formElement = this.createWidget(
 
+				'FormWidget',
+
+				{
+					id: 'sign-in-form',
+
+					autocomplete: 'off',
+
+					novalidate: true
+				}
+			);
+
+			container.appendChild(formElement);
+
+			/*
+			var formElement = this.createWidget(
+
 				'HTMLElement', // form
 
 				{
@@ -185,6 +201,7 @@ var app = app || {};
 					classList: ['col', 's12']
 				}
 			);
+			*/
 
 			container.appendChild(formElement);
 

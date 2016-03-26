@@ -143,88 +143,90 @@ var app = app || {};
 			}
 
 		
-		// Add list element
+ 		if (Account_a !== null) { // we have an account
 
-			container = this.containerElement(this.createWidget(
+ 		// Add list element
 
-				'HTMLElement', // div
-				
-				{
-					element: 'ul',
+				container = this.containerElement(this.createWidget(
 
-					attributes: {role: 'list'},
+					'HTMLElement', // div
+					
+					{
+						element: 'ul',
 
-					classList: ['collection', 'with-header']
-				}
-			));
+						attributes: {role: 'list'},
+
+						classList: ['collection', 'with-header']
+					}
+				));
 
 
-		// Add heading
+			// Add heading
 
-			container.appendChild(this.createWidget(
+				container.appendChild(this.createWidget(
 
-				'HTMLElement',
+					'HTMLElement',
 
-				{
-					element: 'h4',
+					{
+						element: 'h4',
 
-					classList: ['collection-header'],
+						classList: ['collection-header'],
 
-					attributes: {role: 'heading'},
+						attributes: {role: 'heading'},
 
-					innerHTML: this.heading()
-				}
-			));
+						innerHTML: this.heading()
+					}
+				));
 
-		
-		// Build list, or default message		
-		
-			if (Account_a !== null) { // we have an account
-
+			
+			// Build list
+			
 				var events = Account_a.events() // generate list items
-				
+					
 				for (var prop in events) {
 
 					container.appendChild(renderListItem(events[prop], this));
 				}
-			}
-
-			else {
-
-				var outerDiv = this.createWidget(
-
-					'HTMLElement', // outer div
-
-					{
-						element: 'div',			
-						
-						classList: ['row']
-					}
-				);
-
-				
-				container.appendChild(outerDiv);
-
-				var innerDiv = this.createWidget(
-
-					'HTMLElement', // inner div
-					
-					{
-						element: 'div',			
-						
-						classList: ['col', 's12'],
-
-						innerHTML: 'No events have been added to this account yet.'
-					}
-				);
-				
-				outerDiv.appendChild(innerDiv);
-			}
+		
 			
+			// Render to DOM and initialize
+
+				this.ssuper().prototype.render.call(this);
+		}
+
+		else { // default
+
+			this.$renderContext().empty();
+
+			this.$renderContext().append(this.createWidget(
+
+				'HTMLElement', // outer div
+
+				{
+					element: 'div',			
+					
+					classList: ['row']
+				}
+			));
+
+			this.$renderContext().append(this.createWidget(
+
+				'HTMLElement', // inner div
+				
+				{
+					element: 'div',			
+					
+					classList: ['col', 's12'],
+
+					innerHTML: 'No events have been added to this account yet.'
+				}
+			));
+		}
+
 		
 		// Add floating 'Add' button
 
-			container.appendChild(app.UIWidgetFactory.instance().createProduct(
+			this.$renderContext().append(this.createWidget(
 
 				'FloatingActionButtonWidget',
 
@@ -239,23 +241,11 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['event-list-add'] =
-			{
-				listeners: 
-				{
-					mousedown:
+			$('#event-list-add').on('mousedown', function(nEvent) {
 
-						function(nEvent) {
+				this.notifyObservers(this, new module.Event('New Event'), module.View.UIAction.CREATE);
 
-							this.notifyObservers(this, new module.Event('New Event'), module.View.UIAction.CREATE);
-
-						}.bind(this)
-				}
-			};
-
-		// Render to DOM and initialize
-
-			this.ssuper().prototype.render.call(this);
+			}.bind(this));
 	};
 
 })(app);

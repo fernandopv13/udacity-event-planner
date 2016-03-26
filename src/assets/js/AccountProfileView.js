@@ -125,14 +125,9 @@ var app = app || {};
 				container.appendChild(formElement);
 
 			
-			// Add heading
-				
-				//container.appendChild(this.createHeading('s12', this.heading()));
-
-				
 			// Add hidden person id field
 
-				container.appendChild(this.createWidget(
+				formElement.appendChild(this.createWidget(
 
 					'HTMLElement',
 
@@ -146,7 +141,7 @@ var app = app || {};
 			
 			// Add account holder name field
 
-				container.appendChild(this.createWidget(
+				formElement.appendChild(this.createWidget(
 
 					'TextInputWidget',
 
@@ -194,12 +189,12 @@ var app = app || {};
 					}
 				));
 
-				container.appendChild(outerDiv);
+				formElement.appendChild(outerDiv);
 
 
 			// Add job title field
 
-				container.appendChild(this.createWidget(
+				formElement.appendChild(this.createWidget(
 
 					'TextInputWidget',
 					{
@@ -218,7 +213,7 @@ var app = app || {};
 							
 			// Add employer field
 
-				container.appendChild(this.createWidget(
+				formElement.appendChild(this.createWidget(
 
 					'TextInputWidget',
 
@@ -236,81 +231,11 @@ var app = app || {};
 						datalist: 'suggested-employers'
 					}
 				));
-
-				/*
-				this.elementOptions['account-holder-employer'] = 
-				{
-					listeners: {
-
-						focus: this.suggestedEventTypes // suggest event types
-					}
-				}*/
-
-
-				/*
-				var innerDiv =  this.createWidget('HTMLElement', // inner div
-				{
-					element: 'div',			
-					
-					classList: ['input-field', 'col', 's12']
-				});
-				
-				
-				innerDiv.appendChild(this.createWidget('HTMLElement', // input
-				{
-					element: 'input',			
-					
-					attributes:
-					{
-						type: 'text',
-						
-						id: 'account-holder-employer',
-						
-						value: Person_p.employer() && Person_p.employer().name() ? Person_p.employer().name() : '',
-						
-						list: 'suggested-employers'
-					}
-				}));
-				
-				
-				innerDiv.appendChild(this.createWidget('HTMLElement', // label
-				{	
-					element: 'label',			
-					
-					attributes: {for: 'account-holder-employer'},
-					
-					classList: Person_p.employer() && Person_p.employer().name() ? ['form-label', 'active'] : ['form-label'],
-					
-					dataset: {error: 'Please enter your employer'},
-					
-					innerHTML: 'Your Employer'
-				}));
-				
-				
-				innerDiv.appendChild(this.createWidget('HTMLElement', // data list
-				{	
-					element: 'datalist',			
-					
-					attributes: {id: 'suggested-employers'}
-				}));
-				
-				
-				outerDiv =  this.createWidget('HTMLElement', // outer div
-				{
-					element: 'div',
-					
-					classList: ['row']
-				});
-							
-				outerDiv.appendChild(innerDiv);
-				
-				container.appendChild(outerDiv);	
-				*/		
-
+			
 			
 			// Add birthday field
 
-				container.appendChild(this.createWidget(
+				formElement.appendChild(this.createWidget(
 
 					'DateInputWidget',
 
@@ -358,7 +283,7 @@ var app = app || {};
 					}
 				));
 
-				container.appendChild(outerDiv);
+				formElement.appendChild(outerDiv);
 
 				//container.appendChild(this.createRequiredFieldExplanation());
 
@@ -412,80 +337,12 @@ var app = app || {};
 					init: module.SubmitButtonWidget.prototype.init
 				}
 
-				container.appendChild(outerDiv);
+				formElement.appendChild(outerDiv);
 
-				//container.appendChild(this.createSubmitCancelButtons('account-holder-form'));
-
+			
 			// Render to DOM and initialize
 
 				this.ssuper().prototype.render.call(this);
-
-
-			/*
-			// Update DOM
-
-				this.$renderContext().empty();
-
-				this.$renderContext().append(formElement);
-
-			// Initialize post-render
-
-				this.init();
-			*/
-
-			// (Re)assign event handlers to form elements
-
-				/*
-				$('#account-holder-birthday.datepicker').pickadate({
-					
-					//closeOnSelect: true, // bug: ineffective
-					
-					closeOnClear: true,
-					
-					onSet: function() {this.close()},
-					
-					selectMonths: true, // Creates a dropdown to control month
-					
-					selectYears: 15 // Creates a dropdown of 15 years to control year
-				});
-				*/
-				
-				
-				/*
-				$('#account-holder-name').keyup(function(event) {
-
-					this.validateName(event, 'account-holder-name', 'Please enter your name', true);
-
-				}.bind(this));
-
-
-				$('#account-holder-email').keyup(function(event) {
-
-					this.validateEmail(event, 'account-holder-email', false);
-
-				}.bind(this));
-				*/
-
-				
-				/*
-				$('#account-holder-cancel').click(function(event) { // cancel (blur hides click event so using mousedown)
-
-					console.log('cancel');
-
-					this.cancel(event);
-
-				}.bind(this));
-
-
-				$('#account-holder-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
-
-					console.log('submit');
-
-					this.submit(nEvent);
-
-				}.bind(this));
-
-				*/
 		}
 
 		else { // present default message
@@ -525,8 +382,6 @@ var app = app || {};
 
 			person.birthday($('#account-holder-birthday').val() !== '' ? new Date($('#account-holder-birthday').val()) : null);
 			
-			//this.notifyObservers(person, parseInt($('#account-holder-id').val()));
-
 			this.ssuper().prototype.submit.call(
 
 				this,
@@ -535,6 +390,8 @@ var app = app || {};
 			
 			return true;
 		}
+
+		Materialize.toast('Some info seems to be missing. Please try again', 4000);
 
 		return false;
 	};

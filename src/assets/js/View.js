@@ -227,104 +227,6 @@ var app = app || {}; // create a simple namespace for the module
 		}
 
 		
-		/** Factory method for creating HTML element based on specs provided in JSON object.
-		*
-		* Relied on by other factory methods for consistent, basic element creation.
-		*
-		* (So, if some aspect of element creation fails, only this method will need to change.)
-		*
-		* @param {Object} JSON object literal containing specs of element to be created. Se comments in code for an example.
-		*
-		* @return {HTMLElement} HTML element
-		*/
-
-		/* DEPRECATED
-		module.View.prototype.createElement = function(obj_options) {
-
-			// Sample JSON specification object using all currently supported features:
-			//
-			//{
-			//	element: 'input', // the type of element required
-
-			//	attributes: // an arbitrary collection of name-value pairs
-			//	{
-			//		type: 'text',
-			//
-			//		id: 'demo-element',
-			//
-			//		required: true
-			//	},
-			//
-			//	classList: // an arbitrary list of strings
-			//	[
-			//		'row',
-			//
-			//		'col',
-			//
-			//		's12'
-			//	],
-			//
-			//	dataset: // an arbitrary collection of name-value pairs
-			//	{
-			//		success: 'You made it!',
-			//
-			//		error: 'Please try again'
-			//	},
-			//	
-			//	innerHTML: 'Hello world',
-			//
-			//	listeners:
-			//	{
-			//		click: function() {},
-			//
-			//		blur: function() {}
-			//	}
-
-
-			var element = document.createElement(obj_options.element), prop;
-						
-			if (obj_options.attributes) {
-			
-				for (prop in obj_options.attributes) {
-					
-					element.setAttribute(prop, obj_options.attributes[prop]);
-				}
-			}
-			
-			if (obj_options.classList) {
-				
-				obj_options.classList.forEach(function(str_class) {
-					
-					element.classList.add(str_class);
-				});
-			}
-			
-			if (obj_options.dataset) {
-			
-				for (prop in obj_options.dataset) {
-					
-					element.dataset[prop] = obj_options.dataset[prop];
-				}
-			}
-			
-			if (obj_options.innerHTML) {
-				
-				element.innerHTML = obj_options.innerHTML;
-			}
-
-			if (obj_options.listeners) {
-			
-				for (prop in obj_options.listeners) {
-					
-					element.addEventListener(prop, obj_options.listeners[prop]);
-				}
-			}
-
-			return element;
-		};
-		*/
-		
-
 		/** Factory method for creating the main heading in forms
 		*
 		* @return {HTMLDivElement} DIV element
@@ -893,17 +795,16 @@ var app = app || {}; // create a simple namespace for the module
 				$('.button-collapse').sideNav(); // 'hamburger' menu
 
 				
-				$('#nav-dropdown, #nav-side').click(function(event) { // navigation selection
+				$('#nav-dropdown, #nav-side').click(function(nEvent) { // navigation selection
 
 					$('.button-collapse').sideNav('hide');
 
-					module.controller.onNavSelection(event);					
+					module.controller.onNavSelection(nEvent);					
 				});
 
 			
 			return containerDiv;
 		}
-
 
 
 		/** Utility for showing view in the UI on demand.
@@ -946,7 +847,7 @@ var app = app || {}; // create a simple namespace for the module
 
 					if (Model_m === null || Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) && Model_m.constructor === this.modelClass()) {
 
-						console.log('Rendering ' + View_v.className()); // debug
+						//console.log('Rendering ' + View_v.className()); // debug
 
 						this.model(Model_m);
 

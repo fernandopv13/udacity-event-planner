@@ -205,7 +205,7 @@ var app = app || {}; // create a simple namespace for the module
 	*
 	*/
 
-	module.Model.prototype.update = function() {
+	module.Model.prototype.update = function(Model_m, int_id) {
 
 		var args = arguments[0];
 

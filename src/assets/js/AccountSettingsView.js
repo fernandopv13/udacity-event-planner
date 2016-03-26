@@ -78,7 +78,7 @@ var app = app || {};
 			
 			// Setup container div
 
-				container = this.containerElement(this.createWidget( // container
+				container = this.containerElement(this.createWidget(
 
 					'HTMLElement',
 
@@ -401,51 +401,12 @@ var app = app || {};
 				
 			// Render to DOM and initialize
 
-				console.log(container);
-
 				this.ssuper().prototype.render.call(this);
 
-			// Update DOM
-
-				//this.$renderContext().empty();
-
-				//this.$renderContext().append(formElement);
-
-
+			
 			// Do custom post-render initialization
 
-				/*
-				$('#account-settings-email, #account-settings-password, #account-settings-password-confirmation').on('input', function(nEvent) { // interactively validate email, password etc
-
-				if (nEvent.currentTarget.value.length > 3) { // allow people to get started before showing error message (we need at least 3 chars anyway)
-
-					Materialize.updateTextFields(nEvent.currentTarget); // implicitly calls custom validator
-				}
-
-				}.bind(this));
-				*/
-				
-				
-				/*
-				$('#account-settings-password').focus(function(nEvent) { // update and show password hints
-
-					//app.PasswordInputWidget.instance().validate(nEvent.currentTarget, '#account-settings-password-hints');
-
-					$('#account-settings-password-hints').show('slow');
-
-					$('#account-settings-password-hints').removeClass('hidden');
-
-					$('#account-settings-password-hints').attr('aria-hidden', false); // doesn't seem to have any effect on screen reader
-
-				}.bind(this));
-				*/
-
-
 				$('#account-settings-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
-
-					//$('#account-settings-password-hints').hide('slow');
-
-					//$('#account-settings-password-hints').attr('aria-hidden', true);
 
 					if ($(nEvent.currentTarget).val().length > 0 // pw is not empty
 
@@ -458,22 +419,6 @@ var app = app || {};
 							$('#account-settings-password-confirmation-parent').show('slow');
 					}
 				});
-
-
-				/*
-				$('#account-settings-cancel').click(function(nEvent) { // cancel (blur hides click event so using mousedown)
-
-					this.cancel(nEvent);
-					
-				}.bind(this));
-
-
-				$('#account-settings-submit').mousedown(function(nEvent) { // submit (blur hides click event so using mousedown)
-
-					this.submit(nEvent);
-					
-				}.bind(this));
-				*/
 		}
 
 		else { // present default message
@@ -518,7 +463,6 @@ var app = app || {};
 			account.geoLocationAllowed($('#account-settings-geolocation').prop('checked'));
 
 			account.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
-
 			
 			this.ssuper().prototype.submit.call(
 

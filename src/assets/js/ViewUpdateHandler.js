@@ -175,7 +175,7 @@ var app = app || {};
 
 					if (View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { // third param is instance of View
 
-						console.log('Executing UIAction ' + int_UIAction + ' on ' + View_v.className());
+						//console.log('Executing UIAction ' + int_UIAction + ' on ' + View_v.className());
 
 						this.execute(int_UIAction, Model_m, View_v); // UIAction and call signature are a match, so respond
 					}
