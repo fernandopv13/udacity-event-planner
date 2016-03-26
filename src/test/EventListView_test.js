@@ -9,53 +9,64 @@
 
 describe('class EventListView', function(){
 	
-	xit('implements the IObservable interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IObservable)).toBe(true);
-	});
-
-
-	xit('implements the IObserver interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IObserver)).toBe(true);
-	});
-
-
-	xit('implements the IViewable interface', function() {
-		
-			expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IViewable)).toBe(true);
-	});
+	var testElement, testView;
 	
+	beforeAll(function(){
+		
+		testView = app.controller.views()['eventListView'];
 
-	it('can be instantiated', function() {
-
-		expect((new app.EventListView()).constructor).toBe(app.EventListView);
+		testElement = testView.$renderContext();
 	});
 
 
+	// Test generic View features
+
+		it('implements the IObservable interface', function() {
+			
+				expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IObservable)).toBe(true);
+		});
+
+
+		it('implements the IObserver interface', function() {
+			
+				expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IObserver)).toBe(true);
+		});
+
+
+		it('inherits from ListView', function() {
+
+				expect((new app.EventListView()) instanceof app.ListView).toBe(true);
+		})
+
+
+		it('can be instantiated', function() {
+
+			expect((new app.EventListView()).constructor).toBe(app.EventListView);
+		});
+
+
+	/*
 	describe('EventListView instance', function() {
 
 		var testAccount, testView;
 
 		beforeEach(function(){
 
-			testAccount = new app.Account(new app.Email('some@server.domain'), new app.Password('ABCD!efgh4'));
+			testAccount = app.data.accounts[0]; // new app.Account(new app.Email('some@server.domain'), new app.Password('ABCD!efgh4'));
 
 			testView = new app.EventListView('event-list', 'Event List View Test');
 		});
 
 		
-		it('can render itself into the DOM', function() {
+		xit('can render itself into the DOM', function() {
 
-			var $list = $('#event-list');
+			testElement.empty();
 
-			$list.empty();
-
-			expect($list.children().first().is('ul')).toBe(false);
+			expect(testElement.children().length).toBe(0);
 
 			testView.render(testAccount);
 
-			expect($list.children().first().is('ul')).toBe(true); // a u-list was rendered to the DOM
+			expect(testElement.children().first().is('ul')).toBe(true); // a u-list was rendered to the DOM
 		});
 
 
@@ -69,4 +80,5 @@ describe('class EventListView', function(){
 
 		});
 	});
+	*/
 });

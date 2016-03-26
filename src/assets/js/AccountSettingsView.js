@@ -210,7 +210,7 @@ var app = app || {};
 
 						label: 'Default Event Capacity',
 
-						required: true,
+						required: false,
 
 						datasource: Account_a.defaultCapacity() ? Account_a.defaultCapacity() : 0,
 
@@ -300,7 +300,7 @@ var app = app || {};
 
 						id: 'account-settings-geolocation',
 
-						label: 'Allow local geolocation',
+						label: 'Allow geolocation',
 
 						datasource: Account_a.geoLocationAllowed()
 					}

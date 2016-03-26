@@ -20,6 +20,8 @@ var app = app || {};
 
 	module.SignUpView = function(str_elementId, str_heading) {
 
+		//SignUpView
+
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
 		*---------------------------------------------------------------------------------------*/
@@ -199,7 +201,7 @@ var app = app || {};
 				'FormWidget',
 
 				{
-					id: 'sign-up-form-form',
+					id: 'sign-up-form',
 
 					autocomplete: 'off',
 
@@ -510,6 +512,12 @@ var app = app || {};
 		Materialize.toast('Some info seems to be missing. Please try again', 4000);
 
 		return false;
+	}
+
+
+	module.SignUpView.prototype.update = function(Model_m) {
+
+		this.render(Model_m);
 	}
 
 })(app);

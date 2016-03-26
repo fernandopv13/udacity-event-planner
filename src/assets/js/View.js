@@ -207,7 +207,9 @@ var app = app || {}; // create a simple namespace for the module
 
 			SELECT: 5,
 
-			SUBMIT: 6
+			SUBMIT: 6,
+
+			TEST: 7
 		}
 
 
@@ -219,15 +221,14 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.prototype.cancel = function() {
 
-			window.history.back(); // return to previous view
-
 			this.notifyObservers(this, this.model(), module.View.UIAction.CANCEL);
 
 			// for now, simply discard any entries made by user to an existing view
 		}
 
 		
-		/** Factory method for creating the main heading in forms
+		/* DEPRECATED: Reove and see what breaks
+		* Factory method for creating the main heading in forms
 		*
 		* @return {HTMLDivElement} DIV element
 		*/
@@ -275,7 +276,8 @@ var app = app || {}; // create a simple namespace for the module
 		}
 
 
-		/** Factory method for creating required field explanations for forms
+		/*  DEPRECATED: Reove and see what breaks
+		* Factory method for creating required field explanations for forms
 		*
 		* @return {HTMLDivElement} DIV element
 		*/
@@ -312,7 +314,10 @@ var app = app || {}; // create a simple namespace for the module
 		}
 
 
-		/** Provides shorthand notation for (somewhat unwieldy) calls to UIWidgetFactory */
+		/* Generic UIWidget factory method.
+		*
+		* Provides shorthand notation for (somewhat unwieldy) calls to UIWidgetFactory
+		*/
 
 		module.View.prototype.createWidget = function(str_type, obj_options) {
 
@@ -327,9 +332,7 @@ var app = app || {}; // create a simple namespace for the module
 		};
 
 
-		/** Utility for hiding view in the UI on demand.
-		*
-		* Uses jQuery.hide().
+		/** Utility for hiding view in the UI on demand. Uses jQuery.hide().
 		*
 		* @param Same as jQuery.hide()
 		*
@@ -384,7 +387,6 @@ var app = app || {}; // create a simple namespace for the module
 		};
 
 
-		
 		/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference)
 		*
 		* (See IInterfaceable for further documentation.)
@@ -396,12 +398,13 @@ var app = app || {}; // create a simple namespace for the module
 		};
 
 
-		module.View.prototype.onLoad = function(nEvent) {
+		module.View.prototype.onUnLoad = function(nEvent) {
 
 			return; // dummy method to make sure it's always available
 		};
+
 		
-		
+
 		/** Renders View to the DOM and then initializes it.
 		*
 		* Call from individual Views after building containerElement.
@@ -429,13 +432,7 @@ var app = app || {}; // create a simple namespace for the module
 				this.init();
 		}
 		
-
-		module.View.prototype.onUnLoad = function(nEvent) {
-
-			return; // dummy method to make sure it's always available
-		};
-
-
+		
 		/** Utility for dynamically rendering main navigation directly to the DOM
 		*
 		* (so we can hide it until we need it).

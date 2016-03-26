@@ -16,7 +16,7 @@ describe('class Controller', function(){
 
 
 	it('implements the IObservable interface', function() {
-		
+	
 			expect(app.IInterfaceable.isImplementationOf(app.Controller, app.IObservable)).toBe(true);
 	});
 
@@ -35,24 +35,22 @@ describe('class Controller', function(){
 
 	describe('instance', function() {
 
-		TestObserver = function() {
+		function TestObserver() {this.notification = null;};
 
-			this.notification = null;
+		TestObserver.prototype.isInstanceOf = function() {return true;};
 
-			this.isInstanceOf = function() {return true;}; // fool IObservable into accepting this a valid observer
+		TestObserver.prototype.update = function() {this.notification = arguments;};
 
-			this.update = function() {this.notification = arguments;};
-		};
+		void app.IInterfaceable.mixInto(app.IObserver, TestObserver);
 
-
-
+		
 		var testController = new app.Controller(), testObserver = new TestObserver();
 
 		testController.init();
 
 		testController.registerObserver(testObserver);
 
-		xit('can initialize', function() {
+		it('can initialize', function() {
 
 			app.init();
 
@@ -64,100 +62,101 @@ describe('class Controller', function(){
 		});
 
 
-		xit('can get and set the current (visible) view', function() {
+		// Accessor testing
 
-			var testView = new app.EventView();
+			xit('can get and set the current (visible) view', function() {
 
-			expect(testController.selectedEvent(testView)).toBe(testView);
-		});
+				var testView = new app.FrontPageView();
 
-
-		xit('rejects attempt to set view that is not a View instance', function() {
-
-			try {
-
-				testController.selectedEvent('not an Event');
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
-
-		
-		xit('displays the current view being set and hides all others', function() {
-		})
+				expect(testController.currentView(testView, null)).toBe(testView);
+			});
 
 
+			xit('rejects attempt to set view that is not a View instance', function() {
 
-		xit('can get and set the selected (active) account', function() {
+				try {
 
-			var testAccount = new app.Account();
+					testController.currentView('not a View');
+				}
 
-			expect(testController.selectedAccount(testAccount)).toBe(testAccount);
-		});
+				catch(e) {
 
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
 
-		xit('rejects attempt to set account that is not an Account', function() {
-
-			try {
-
-				testController.selectedAccount('not an Account');
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
+			
+			xit('displays the current view being set and hides all others', function() {
+			})
 
 
-		xit('can get and set the selected (active) event', function() {
+			it('can get and set the selected (active) account', function() {
 
-			var testEvent = new app.Event();
+				var testAccount = new app.Account();
 
-			expect(testController.selectedEvent(testEvent)).toBe(testEvent);
-		});
-
-
-		xit('rejects attempt to set event that is not an Event', function() {
-
-			try {
-
-				testController.selectedEvent('not an Event');
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
+				expect(testController.selectedAccount(testAccount)).toBe(testAccount);
+			});
 
 
-		xit('can get and set the selected (active) guest', function() {
+			it('rejects attempt to set account that is not an Account', function() {
 
-			var testGuest = new app.Person();
+				try {
 
-			expect(testController.selectedGuest(testGuest)).toBe(testGuest);
-		});
+					testController.selectedAccount('not an Account');
+				}
 
+				catch(e) {
 
-		xit('rejects attempt to set guest that is not a Guest', function() {
-
-			try {
-
-				testController.selectedGuest('not a Person');
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
 
 
-		describe('using (async) communication protocol', function() {
+			it('can get and set the selected (active) event', function() {
+
+				var testEvent = new app.Event();
+
+				expect(testController.selectedEvent(testEvent)).toBe(testEvent);
+			});
+
+
+			it('rejects attempt to set event that is not an Event', function() {
+
+				try {
+
+					testController.selectedEvent('not an Event');
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
+
+			it('can get and set the selected (active) guest', function() {
+
+				var testGuest = new app.Person();
+
+				expect(testController.selectedGuest(testGuest)).toBe(testGuest);
+			});
+
+
+			it('rejects attempt to set guest that is not a Guest', function() {
+
+				try {
+
+					testController.selectedGuest('not a Person');
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
+
+		describe('communication protocol', function() {
 
 			beforeEach(function() {
 
@@ -165,13 +164,15 @@ describe('class Controller', function(){
 			});
 
 
-			it('can notify its Views of an update from a Model', function() {
+			xit('can notify its Views of an update from a Model', function() {
 
 				// input signature: update(Model)
 
 				// output signature: nofityObservers(Model, View)
 
-				testController.update([new app.Event()]);
+				testController.views()['eventView'].render(new app.Event());
+
+				testController.update(new app.Event());
 
 				expect(testObserver.notification.length).toEqual(2);
 
@@ -181,13 +182,13 @@ describe('class Controller', function(){
 			});
 
 			
-			it('can notify its ViewUpdateHandlers of an update from a View', function() {
+			xit('can notify its ViewUpdateHandlers of an update from a View', function() {
 
 				// input signature: update(View, Model, int)
 
 				// output signature: notifyObservers(int, Model, View)
 
-				testController.update([new app.EventView(), new app.Event(), 1]);
+				testController.update(new app.EventView(), new app.Event(), 7);
 
 				expect(testObserver.notification.length).toEqual(3);
 
@@ -199,13 +200,13 @@ describe('class Controller', function(){
 			});
 
 
-			it('can notify its Models of an update from a ViewUpdateHandler', function() {
+			xit('can notify its Models of an update from a ViewUpdateHandler', function() {
 
 				// input signature: update(Model, int)
 
 				// output signature: notifyObservers(Model, int)
 
-				testController.update([new app.Email('ada@weweq.gwegwe'), 1]);
+				testController.update(new app.Email('ada@weweq.gwegwe'), 7);
 
 				expect(testObserver.notification.length).toEqual(2);
 
@@ -215,13 +216,13 @@ describe('class Controller', function(){
 			});
 
 
-			it('can notify its Views of an update from a ViewUpdateHandler', function() {
+			xit('can notify its Views of an update from a ViewUpdateHandler', function() {
 
 				// input signature: update(Model, View)
 
 				// output signature: notifyObservers(Model, View)
 
-				testController.update([new app.Event(), new app.EventView()]);
+				testController.update(new app.Event(), new app.EventView());
 
 				expect(testObserver.notification.length).toEqual(2);
 
@@ -234,7 +235,7 @@ describe('class Controller', function(){
 
 		// IInterfaceable testing
 
-		it('can tell if it is an implementation of a custom app interface', function() {
+		xit('can tell if it is an implementation of a custom app interface', function() {
 
 			expect(testController.isInstanceOf(app.IObservable)).toBe(true);
 
@@ -242,6 +243,5 @@ describe('class Controller', function(){
 
 			expect(testController.isInstanceOf(Array)).toBe(false);
 		});
-
 	});
 });

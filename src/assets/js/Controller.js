@@ -89,7 +89,7 @@ var app = app || {};
 
 						_currentView.show('slow'); // show current view
 
-						_currentView.onLoad(); // have current view init itself
+						//_currentView.onLoad(); // have current view init itself
 
 						
 						_router.onViewChange(View_v); // update browser history

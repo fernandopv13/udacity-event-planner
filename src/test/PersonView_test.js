@@ -1,6 +1,6 @@
 'use strict';
 
-/* Jasmine.js test suite for EventView class in Meetup Event Planner app.
+/* Jasmine.js test suite for PersoNview class in Meetup Event Planner app.
 *
 * These tests combine unit tests of the class itself and integration tests of the UI it represents.
 * The suite is therefore dependent on the other, non-View classes of tha app performning correctly,
@@ -8,7 +8,7 @@
 *
 */
 
-describe('Class EventView', function(){
+describe('Class PersonView', function(){
 	
 	/* This code only works if testsuite and app are both loaded from the same server.
 	*  Localhost is also OK, but file:// throws CORS related security error
@@ -25,16 +25,16 @@ describe('Class EventView', function(){
 		setTimeout(function() {
 
 			testDoc = testWindow.document;
-			
+		
 			testApp = testWindow.app;
 
-			testView = testApp.controller.views()['eventView'];
+			testView = testApp.controller.views()['guestView'];
 
 			testElement = testView.$renderContext();
 
 			done();
 
-		}, 500); // wait for page to load		
+		}, 500); // wait for page to load
 	});
 	
 	
@@ -42,7 +42,7 @@ describe('Class EventView', function(){
 
 		it('inherits from FormView', function() {
 
-			expect((new app.EventView()) instanceof app.FormView).toBe(true);
+			expect((new app.PersonView()) instanceof app.FormView).toBe(true);
 		});
 
 
@@ -54,7 +54,7 @@ describe('Class EventView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.render(new app.Event());
+			testView.render(new app.Person());
 
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -68,7 +68,7 @@ describe('Class EventView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update(new app.Event(), new app.EventView());
+			testView.update(new app.Event(), new app.PersonView());
 			
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -76,7 +76,7 @@ describe('Class EventView', function(){
 
 		it('is hidden by default after rendering', function() {
 			
-			testView.render(new app.Event());
+			testView.render(new app.Person());
 
 			expect(testElement.hasClass('hidden')).toBe(true);
 		});
@@ -84,7 +84,7 @@ describe('Class EventView', function(){
 
 		it('can show and hide itself', function(done) {
 			
-			testView.render(new app.Event());
+			testView.render(new app.Person());
 
 			testView.show(5);
 
@@ -106,8 +106,8 @@ describe('Class EventView', function(){
 
 			}, 25);
 		});
+		
 
-	
 	// Test presence of UI widgets
 
 		xit('displays the main navigation', function() {
@@ -118,106 +118,67 @@ describe('Class EventView', function(){
 
 		it('displays a main heading', function() {
 			
-			expect(testElement.children().find('h4').length).toBe(1);
+			expect($(testElement).find('h4').length).toBe(1);
 		});
 
 
 		it('displays a required name field', function() {
 			
-			var el = $(testElement).find('#event-name');
+			var el = testWindow.$('#guest-name');
 
 			expect(el.length).toBe(1);
 
 			expect(el.attr('type')).toBe('text');
 
 			expect(el.attr('required')).toBe('required');
-
 		});
 
 
-		it('displays an optional location field', function() {
+		it('displays a required email input field', function() {
 			
-			var el = $(testElement).find('#event-location');
+			var el = testWindow.$('input[type=email]');
 
 			expect(el.length).toBe(1);
-
-			expect(el.attr('type')).toBe('text');
-
-			expect(el.attr('required')).not.toBeDefined();
-		});
-
-
-		it('displays a required start date field', function() {
-			
-			var el = $(testElement).find('#event-start-date');
-
-			expect(el.length).toBe(1);
-
-			//expect(el.attr('type')).toBe('text');
-
-			expect(el.data('customValidator')).toBe('EventView.prototype.validateStartDate');
 
 			expect(el.attr('required')).toBe('required');
+
+			expect(el.data('customValidator')).toBe('EmailInputWidget.prototype.validate');
 		});
 
 
-		it('displays an optional end date field', function() {
+		it('displays an optional job title field', function() {
 			
-			var el = $(testElement).find('#event-end-date');
+			var el = testWindow.$('#guest-jobtitle');
+
+			expect(el.length).toBe(1);
+
+			expect(el.attr('type')).toBe('text');
+
+			expect(el.attr('required')).not.toBeDefined();
+		});
+
+
+		it('displays an optional employer field', function() {
+			
+			var el = testWindow.$('#guest-employer');
+
+			expect(el.length).toBe(1);
+
+			expect(el.attr('type')).toBe('text');
+
+			expect(el.attr('required')).not.toBeDefined();
+		});
+
+
+		it('displays an optional birthday field', function() {
+			
+			var el = testWindow.$('#guest-birthday');
 
 			expect(el.length).toBe(1);
 
 			//expect(el.attr('type')).toBe('text');
 
-			expect(el.data('customValidator')).toBe('EventView.prototype.validateEndDate');
-
-			expect(el.attr('required')).not.toBeDefined();
-		});
-
-
-		it('displays an optional event type field', function() {
-			
-			var el = $(testElement).find('#event-type');
-
-			expect(el.length).toBe(1);
-
-			expect(el.attr('type')).toBe('text');
-
-			expect(el.attr('required')).not.toBeDefined();
-		});
-
-
-		it('displays an optional capacity field', function() {
-			
-			var el = $(testElement).find('#event-capacity');
-
-			expect(el.length).toBe(1);
-
-			expect(el.attr('type')).toBe('number');
-
-			expect(el.attr('required')).not.toBeDefined();
-		});
-
-
-		it('displays an optional host field', function() {
-			
-			var el = $(testElement).find('#event-host');
-
-			expect(el.length).toBe(1);
-
-			expect(el.attr('type')).toBe('text');
-
-			expect(el.attr('required')).not.toBeDefined();
-		});
-
-		
-		it('displays an optional description field', function() {
-			
-			var el = $(testElement).find('#event-description');
-
-			expect(el.length).toBe(1);
-
-			expect(el.is('textarea')).toBe(true);
+			expect(el.data('customValidator')).toBe('DateInputWidget.prototype.validate');
 
 			expect(el.attr('required')).not.toBeDefined();
 		});
@@ -225,7 +186,7 @@ describe('Class EventView', function(){
 
 		it('displays a "Cancel" link', function() {
 			
-			var el = testElement.children().find('#event-form-cancel');
+			var el = testWindow.$('#guest-form-cancel');
 
 			expect($(el).is('a')).toBe(true);
 
@@ -237,7 +198,7 @@ describe('Class EventView', function(){
 
 		it('displays a "Done" button', function() {
 			
-			var el = $(testElement).find('#event-form-submit');
+			var el = testWindow.$('#guest-form-submit');
 
 			expect($(el).is('a')).toBe(true);
 
@@ -251,11 +212,11 @@ describe('Class EventView', function(){
 
 		it('will not submit the form if there are validation errors in any fields', function() {
 			
-			testWindow.$('#event-name').val('');
+			testWindow.$('#guest-name').val('');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(false);
+			expect(app.FormWidget.instance().validate(testWindow.$('#guest-form'))).toBe(false);
 
-			testWindow.$('#event-form-submit').trigger('mousedown');
+			testWindow.$('#guest-form-submit').trigger('mousedown');
 
 			expect(testApp.controller.currentView()).not.toBeDefined();
 		});
@@ -263,15 +224,13 @@ describe('Class EventView', function(){
 
 		xit('submits form when the "Done" button is activated if all fields valididate', function() {
 			
-			testWindow.$('#event-name').val('a name');
+			testWindow.$('#guest-name').val('a name');
 
-			testWindow.$('#event-start-date').val('05/13/2011');
+			testWindow.$('#guest-email').val('fa@wqrq.qwwq');
 
-			testWindow.$('#event-end-date').val('05/14/2011');
-
-			expect(app.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(true);
+			expect(app.FormWidget.instance().validate(testWindow.$('#guest-form'))).toBe(true);
 			
-			testWindow.$('#event-form-submit').trigger('mousedown');
+			testWindow.$('#guest-form-submit').trigger('mousedown');
 
 			expect(testApp.controller.currentView().constructor).toBe(testApp.EventListView);
 		});

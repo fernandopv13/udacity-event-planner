@@ -188,24 +188,7 @@ var app = app || {};
 
 			container.appendChild(formElement);
 
-			/*
-			var formElement = this.createWidget(
-
-				'HTMLElement', // form
-
-				{
-					element: 'form',			
-					
-					attributes: {autocomplete: 'off', id: 'sign-in-form'},//, novalidate: false},
-					
-					classList: ['col', 's12']
-				}
-			);
-			*/
-
-			container.appendChild(formElement);
-
-
+			
 		// Add email field
 
 			formElement.appendChild(this.createWidget(
@@ -374,6 +357,12 @@ var app = app || {};
 		}
 
 		return false;
+	}
+
+
+	module.SignInView.prototype.update = function(Model_m) {
+
+		this.render(Model_m);
 	}
 
 })(app);

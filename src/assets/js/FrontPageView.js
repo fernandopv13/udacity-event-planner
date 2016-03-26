@@ -19,6 +19,8 @@ var app = app || {};
 
 	module.FrontPageView = function(str_elementId, str_heading) {
 
+		//FrontPageView
+
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
 		*---------------------------------------------------------------------------------------*/
@@ -63,7 +65,7 @@ var app = app || {};
 	* @return void
 	*/
 
-	module.FrontPageView.prototype.render = function() {
+	module.FrontPageView.prototype.render = function(Model_m) {
 
 		var container; // shorthand reference to inherited temporary container element
 
@@ -243,9 +245,10 @@ var app = app || {};
 			this.ssuper().prototype.render.call(this);
 	};
 
-	module.FrontPageView.prototype.update = function() {
+	
+	module.FrontPageView.prototype.update = function(Model_m) {
 
-		this.render();
+		this.render(Model_m);
 	}
 
 })(app);

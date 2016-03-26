@@ -80,6 +80,8 @@ var app = app || {};
 			//this.controller().newModel(null); // reset reference
 		}
 		*/
+
+		window.history.back(); // return to previous view
 	};
 
 })(app);
