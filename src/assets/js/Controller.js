@@ -487,12 +487,12 @@ var app = app || {};
 
 					case 'Profile':
 
-						if (typeof this.selectedAccount().accountHolder() === 'undefined') {
+						this.currentView(
 
-							void this.selectedAccount().accountHolder(new module.Person());
-						}
+							_views.accountProfileView,
 
-						this.currentView(_views.accountProfileView, this.selectedAccount().accountHolder());
+							this.selectedAccount().accountHolder() || this.selectedAccount().accountHolder(new module.Person())
+						);
 						
 						break;
 
@@ -657,11 +657,11 @@ var app = app || {};
 
 				if (arguments.length === 3) { // call has expected number of params
 
-					if (typeof View_v === 'object' && View_v !== null && View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { // first param is instance of View
+					if (typeof View_v === 'object' && View_v !== null && View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { //console.log('first param is instance of View');
 
-						if (typeof Model_m === 'object' && (Model_m === null || (Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model)))) { // second param is instance of Model, or null
+						if (typeof Model_m === 'object' && (Model_m === null || (Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model)))) { //console.log('second param is instance of Model, or null');
 
-							if (typeof int_uiAction === 'number') { // third param is number (integer)
+							if (typeof int_uiAction === 'number') { //console.log('third param is number (integer)');
 
 								//console.log('Notifying ViewUpdateHandlers of user action notification in View'); // debug
 

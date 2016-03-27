@@ -1,101 +1,106 @@
 var app = app || {};
 
-app.data = {
-	
-	organizations:
-	[
-		new app.Organization('ACME'),
-		
-		new app.Organization('BigBig'),
-		
-		new app.Organization('Pops')
-	],
+(function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	people:
-	[
-		new app.Person('Peter Paulson'),
+	module.data = {
 		
-		new app.Person('Paul Peterson'),
+		organizations:
+		[
+			new module.Organization('ACME'),
+			
+			new module.Organization('BigBig'),
+			
+			new module.Organization('Pops')
+		],
+
+		people:
+		[
+			new module.Person('Peter Paulson'),
+			
+			new module.Person('Paul Peterson'),
+			
+			new module.Person('Mary Nogales')
+		],
+
+		events:
+		[
+			new module.Event('Web site launch party'),
+			
+			new module.Event('Welcome reception for Peter'),
+			
+			new module.Event('Friday bar'),
+
+			new module.Event('Diwali'),
+			
+			new module.Event('Stag night for Andrea'),
+			
+			new module.Event('Sunday lunch at moms')
+		],
 		
-		new app.Person('Mary Nogales')
-	],
-
-	events:
-	[
-		new app.Event('Web site launch party'),
+		emails:
+		[
+			new module.Email('peter@server.domain'),
+			
+			new module.Email('paul@server.domain'),
+			
+			new module.Email('mary@server.domain')
+		],
 		
-		new app.Event('Welcome reception for Peter'),
-		
-		new app.Event('Friday bar'),
+		accounts:
+		[
+			new module.Account(new module.Email('demo@demo.demo'), new module.Password('DEMO5%demo')),
+			
+			new module.Account(new module.Email('lisa@server.domain'), new module.Password('aBc!12345')),
+			
+			new module.Account(new module.Email('john@server.domain'), new module.Password('abCd1234!'))
+		]
+	};
 
-		new app.Event('Diwali'),
-		
-		new app.Event('Stag night for Andrea'),
-		
-		new app.Event('Sunday lunch at moms')
-	],
-	
-	emails:
-	[
-		new app.Email('peter@server.domain'),
-		
-		new app.Email('paul@server.domain'),
-		
-		new app.Email('mary@server.domain')
-	],
-	
-	accounts:
-	[
-		new app.Account(new app.Email('demo@demo.demo'), new app.Password('DEMO5%demo')),
-		
-		new app.Account(new app.Email('lisa@server.domain'), new app.Password('aBc!12345')),
-		
-		new app.Account(new app.Email('john@server.domain'), new app.Password('abCd1234!'))
-	]
-};
+	module.data.people[1].imgUrl('assets/img/male-avatar-2.jpg');
+	module.data.people[2].imgUrl('assets/img/female-avatar-1.jpg');
 
-app.data.people[1].imgUrl('assets/img/male-avatar-2.jpg');
-app.data.people[2].imgUrl('assets/img/female-avatar-1.jpg');
+	module.data.people[0].employer(module.data.organizations[0]);
+	module.data.people[1].employer(module.data.organizations[1]);
+	module.data.people[2].employer(module.data.organizations[2]);
 
-app.data.people[0].employer(app.data.organizations[0]);
-app.data.people[1].employer(app.data.organizations[1]);
-app.data.people[2].employer(app.data.organizations[2]);
+	module.data.people[0].email(module.data.emails[0]);
+	module.data.people[1].email(module.data.emails[1]);
+	module.data.people[2].email(module.data.emails[2]);
 
-app.data.people[0].email(app.data.emails[0]);
-app.data.people[1].email(app.data.emails[1]);
-app.data.people[2].email(app.data.emails[2]);
+	module.data.events[0].host(module.data.organizations[0]);
+	module.data.events[1].host(module.data.organizations[1]);
+	module.data.events[2].host(module.data.organizations[2]);
 
-app.data.events[0].host(app.data.organizations[0]);
-app.data.events[1].host(app.data.organizations[1]);
-app.data.events[2].host(app.data.organizations[2]);
+	module.data.events[0].start(new Date(1400000000000));
+	module.data.events[0].end(new   Date(1400005000000));
+	module.data.events[0].capacity(100);
+	module.data.events[0].addGuest(module.data.people[0]);
+	module.data.events[0].addGuest(module.data.people[1]);
+	module.data.events[0].addGuest(module.data.people[2]);
 
-app.data.events[0].start(new Date(1400000000000));
-app.data.events[0].end(new   Date(1400005000000));
-app.data.events[0].capacity(100);
-app.data.events[0].addGuest(app.data.people[0]);
-app.data.events[0].addGuest(app.data.people[1]);
-app.data.events[0].addGuest(app.data.people[2]);
+	module.data.events[1].start(new Date(1400000000000));
+	module.data.events[1].end(new   Date(1400005000000));
+	module.data.events[1].capacity(100);
+	module.data.events[1].addGuest(module.data.people[0]);
+	module.data.events[1].addGuest(module.data.people[1]);
+	module.data.events[1].addGuest(module.data.people[2]);
 
-app.data.events[1].start(new Date(1400000000000));
-app.data.events[1].end(new   Date(1400005000000));
-app.data.events[1].capacity(100);
-app.data.events[1].addGuest(app.data.people[0]);
-app.data.events[1].addGuest(app.data.people[1]);
-app.data.events[1].addGuest(app.data.people[2]);
+	module.data.events[2].start(new Date(1400000000000));
+	module.data.events[2].end(new   Date(1400005000000));
+	module.data.events[2].capacity(100);
+	module.data.events[2].addGuest(module.data.people[0]);
+	module.data.events[2].addGuest(module.data.people[1]);
+	module.data.events[2].addGuest(module.data.people[2]);
 
-app.data.events[2].start(new Date(1400000000000));
-app.data.events[2].end(new   Date(1400005000000));
-app.data.events[2].capacity(100);
-app.data.events[2].addGuest(app.data.people[0]);
-app.data.events[2].addGuest(app.data.people[1]);
-app.data.events[2].addGuest(app.data.people[2]);
+	module.data.accounts[0].addEvent(module.data.events[0]);
+	module.data.accounts[0].addEvent(module.data.events[1]);
+	module.data.accounts[0].addEvent(module.data.events[2]);
+	module.data.accounts[0].addEvent(module.data.events[3]);
+	module.data.accounts[0].addEvent(module.data.events[4]);
+	module.data.accounts[0].addEvent(module.data.events[5]);
 
-app.data.accounts[0].addEvent(app.data.events[0]);
-app.data.accounts[0].addEvent(app.data.events[1]);
-app.data.accounts[0].addEvent(app.data.events[2]);
-app.data.accounts[0].addEvent(app.data.events[3]);
-app.data.accounts[0].addEvent(app.data.events[4]);
-app.data.accounts[0].addEvent(app.data.events[5]);
+	void module.data.accounts[0].accountHolder(module.data.people[0]);
+	void module.data.accounts[0].geoLocationAllowed(true);
+	void module.data.accounts[0].localStorageAllowed(true);
 
-void app.data.accounts[0].geoLocationAllowed(true);
-void app.data.accounts[0].localStorageAllowed(true);
+})(app);

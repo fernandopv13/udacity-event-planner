@@ -14,7 +14,7 @@ describe('Class SignUpView', function(){
 	*  Localhost is also OK, but file:// throws CORS related security error
 	*/
 	
-	var testApp, testDoc, testElement, testView, testWindow;
+	var testAccount, testApp, testDoc, testElement, testView, testWindow;
 	
 	beforeAll(function(done){
 		
@@ -23,6 +23,8 @@ describe('Class SignUpView', function(){
 		//testWindow = window.open('../../dist/index.html'); // test on production version of app
 		
 		setTimeout(function() {
+
+			testWindow.app.controller.views()['frontPageView'].hide(5);
 
 			testDoc = testWindow.document;
 			
@@ -39,13 +41,33 @@ describe('Class SignUpView', function(){
 	});
 	
 	
-	// Test generic View features
+	// Test generic class features
 
-		it('inherits from View', function() {
+		it('inherits from FormView', function() {
 
-			expect((new app.SignUpView()) instanceof app.View).toBe(true);
+			expect((new app.SignUpView()) instanceof app.FormView).toBe(true);
 		});
 
+		
+		it('implements the IObservable interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.SignUpView, app.IObservable)).toBe(true);
+		});
+
+
+		it('implements the IObserver interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.SignUpView, app.IObserver)).toBe(true);
+		});
+
+
+		it('can be instantiated', function() {
+
+			expect((new app.SignUpView()).constructor).toBe(app.SignUpView);
+		});
+
+	
+	// Test generic View features
 
 		it('can render itself to the DOM', function() {
 			
@@ -235,17 +257,47 @@ describe('Class SignUpView', function(){
 
 		it('signs in when the "Sign In" button is activated if all form fields valididate', function() {
 			
-			testWindow.$('#sign-up-email').val('demo@demo.demo');
+			
+			testWindow.$('#sign-up-email').val('fas@fqw.wqqw');
 
-			testWindow.$('#sign-up-password').val('DEMO5%demo');
+			testWindow.$('#sign-up-password').val('fasASAS1231!');
 
-			testWindow.$('#sign-up-password-confirmation').val('DEMO5%demo');
+			testWindow.$('#sign-up-password-confirmation').val('fasASAS1231!');
 
+			testWindow.$('#sign-up-name').val('Nosuko-san');
+
+			testWindow.$('#sign-up-birthday').val('05/22/1970');
+
+			testWindow.$('#sign-up-jobtitle').val('Samurai');
+
+
+			
 			expect(app.FormWidget.instance().validate(testWindow.$('#sign-up-form'))).toBe(true);
 			
 			testWindow.$('#sign-up-submit').trigger('mousedown');
 
+			
 			expect(testApp.controller.currentView().constructor).toBe(testApp.EventListView);
+			
+			
+			testAccount = testApp.controller.selectedAccount();
+
+			expect(testAccount).toBeDefined();
+
+			expect(testAccount.constructor).toBe(testApp.Account);
+
+			expect(testAccount.email().address()).toBe('fas@fqw.wqqw');
+
+			expect(testAccount.password().password()).toBe('fasASAS1231!');
+
+			expect(testAccount.accountHolder().name()).toBe('Nosuko-san');
+
+			expect(testAccount.accountHolder().jobTitle()).toBe('Samurai');
+
+			expect(testAccount.accountHolder().birthday().valueOf()).toBe(12175200000);
+
+
+			
 		});
 
 

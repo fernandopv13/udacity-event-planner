@@ -134,7 +134,7 @@ var app = app || {};
 					{
 						element: 'input',
 
-						attributes: {id: 'account-holder-id', type: 'hidden', value: Person_p.id()}
+						attributes: {id: 'account-profile-id', type: 'hidden', value: Person_p.id()}
 					}
 				));
 
@@ -148,7 +148,7 @@ var app = app || {};
 					{
 						width: 's12',
 
-						id: 'account-holder-name',
+						id: 'account-profile-name',
 
 						label: 'Your Name',
 
@@ -167,7 +167,7 @@ var app = app || {};
 					{
 						width: 's12',
 
-						id: 'account-holder-email',
+						id: 'account-profile-email',
 
 						label: 'Your Email',
 
@@ -200,7 +200,7 @@ var app = app || {};
 					{
 						width: 's12',
 
-						id: 'account-holder-jobtitle',
+						id: 'account-profile-jobtitle',
 
 						label: 'Your Job Title',
 
@@ -218,7 +218,7 @@ var app = app || {};
 					'TextInputWidget',
 
 					{
-						id: 'account-holder-employer',
+						id: 'account-profile-employer',
 
 						width: 's12',
 
@@ -242,7 +242,7 @@ var app = app || {};
 					{
 						width: 's12',
 
-						id: 'account-holder-birthday',
+						id: 'account-profile-birthday',
 
 						label: 'Your Birthday',
 
@@ -252,7 +252,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-holder-birthday'] = 
+				this.elementOptions['account-profile-birthday'] = 
 				{
 					init: module.DateInputWidget.prototype.init
 				}
@@ -307,13 +307,13 @@ var app = app || {};
 					'CancelButtonWidget',  // cancel button
 
 					{					
-						id: 'account-holder-cancel',
+						id: 'account-profile-cancel',
 
 						label: 'Cancel'
 					}
 				));
 				
-				this.elementOptions['account-holder-cancel'] =
+				this.elementOptions['account-profile-cancel'] =
 				{
 					init: module.CancelButtonWidget.prototype.init
 				}
@@ -324,7 +324,7 @@ var app = app || {};
 					'SubmitButtonWidget',  // submit button
 
 					{					
-						id: 'account-holder-submit',
+						id: 'account-profile-submit',
 
 						label: 'Done',
 
@@ -332,7 +332,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-holder-submit'] =
+				this.elementOptions['account-profile-submit'] =
 				{
 					init: module.SubmitButtonWidget.prototype.init
 				}
@@ -372,21 +372,22 @@ var app = app || {};
 
 			// Nofity observers by passing them a new Person with the data from the form
 
-			var person = new module.Person($('#account-holder-name').val());
+			var person = new module.Person($('#account-profile-name').val());
 
-			person.jobTitle($('#account-holder-jobtitle').val());
+			person.jobTitle($('#account-profile-jobtitle').val());
 
-			person.email($('#account-holder-email').val() !== '' ? new module.Email($('#account-holder-email').val()) : null);
+			person.email($('#account-profile-email').val() !== '' ? new module.Email($('#account-profile-email').val()) : null);
 			
-			person.employer($('#account-holder-employer').val() !== '' ? new module.Organization($('#account-holder-employer').val()) : null); //hack
+			person.employer($('#account-profile-employer').val() !== '' ? new module.Organization($('#account-profile-employer').val()) : null); //hack
 
-			person.birthday($('#account-holder-birthday').val() !== '' ? new Date($('#account-holder-birthday').val()) : null);
+			person.birthday($('#account-profile-birthday').val() !== '' ? new Date($('#account-profile-birthday').val()) : null);
 			
 			this.ssuper().prototype.submit.call(
 
 				this,
 				
-				person);
+				person
+			);
 			
 			return true;
 		}

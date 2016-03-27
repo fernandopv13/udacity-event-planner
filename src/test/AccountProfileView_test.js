@@ -7,14 +7,13 @@
 * and should only by run after these have been tested individually.
 *
 */
-
 describe('Class AccountProfileView', function(){
 	
 	/* This code only works if testsuite and app are both loaded from the same server.
 	*  Localhost is also OK, but file:// throws CORS related security error
 	*/
 	
-	var testApp, testDoc, testElement, testView, testWindow;
+	var testAccount, testApp, testDoc, testElement, testPerson, testView, testWindow;
 	
 	beforeAll(function(done){
 		
@@ -24,19 +23,55 @@ describe('Class AccountProfileView', function(){
 
 		setTimeout(function() {
 
+			testWindow.app.controller.views()['frontPageView'].hide(5);
+
 			testDoc = testWindow.document;
 		
 			testApp = testWindow.app;
 
+			testAccount = testApp.data.accounts[0];
+
+			void testApp.controller.selectedAccount(testAccount);
+
 			testView = testApp.controller.views()['accountProfileView'];
 
 			testElement = testView.$renderContext();
+
+			testPerson = testAccount.accountHolder() || testAccount.accountHolder(new testApp.Person());
+
+			void testView.model(testPerson);
 
 			done();
 
 		}, 500); // wait for page to load
 	});
 	
+	
+	// Test generic class features
+
+		it('inherits from FormView', function() {
+
+			expect((new app.AccountProfileView()) instanceof app.FormView).toBe(true);
+		});
+
+		
+		it('implements the IObservable interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.AccountProfileView, app.IObservable)).toBe(true);
+		});
+
+
+		it('implements the IObserver interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.AccountProfileView, app.IObserver)).toBe(true);
+		});
+
+
+		it('can be instantiated', function() {
+
+			expect((new app.AccountProfileView()).constructor).toBe(app.AccountProfileView);
+		});
+
 	
 	// Test generic View features
 
@@ -54,7 +89,7 @@ describe('Class AccountProfileView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.render(new app.Person());
+			testView.render(testPerson);
 
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -76,7 +111,7 @@ describe('Class AccountProfileView', function(){
 
 		it('is hidden by default after rendering', function() {
 			
-			testView.render(new app.Person());
+			testView.render(testPerson);
 
 			expect(testElement.hasClass('hidden')).toBe(true);
 		});
@@ -84,7 +119,7 @@ describe('Class AccountProfileView', function(){
 
 		it('can show and hide itself', function(done) {
 			
-			testView.render(new app.Person());
+			testView.render(testPerson);
 
 			testView.show(5);
 
@@ -124,7 +159,7 @@ describe('Class AccountProfileView', function(){
 
 		it('displays a required name field', function() {
 			
-			var el = testWindow.$('#account-holder-name');
+			var el = testWindow.$('#account-profile-name');
 
 			expect(el.length).toBe(1);
 
@@ -148,7 +183,7 @@ describe('Class AccountProfileView', function(){
 
 		it('displays an optional job title field', function() {
 			
-			var el = testWindow.$('#account-holder-jobtitle');
+			var el = testWindow.$('#account-profile-jobtitle');
 
 			expect(el.length).toBe(1);
 
@@ -160,7 +195,7 @@ describe('Class AccountProfileView', function(){
 
 		it('displays an optional employer field', function() {
 			
-			var el = testWindow.$('#account-holder-employer');
+			var el = testWindow.$('#account-profile-employer');
 
 			expect(el.length).toBe(1);
 
@@ -172,7 +207,7 @@ describe('Class AccountProfileView', function(){
 
 		it('displays an optional birthday field', function() {
 			
-			var el = testWindow.$('#account-holder-birthday');
+			var el = testWindow.$('#account-profile-birthday');
 
 			expect(el.length).toBe(1);
 
@@ -186,7 +221,7 @@ describe('Class AccountProfileView', function(){
 
 		it('displays a "Cancel" link', function() {
 			
-			var el = testWindow.$('#account-holder-cancel');
+			var el = testWindow.$('#account-profile-cancel');
 
 			expect($(el).is('a')).toBe(true);
 
@@ -198,7 +233,7 @@ describe('Class AccountProfileView', function(){
 
 		it('displays a "Done" button', function() {
 			
-			var el = testWindow.$('#account-holder-submit');
+			var el = testWindow.$('#account-profile-submit');
 
 			expect($(el).is('a')).toBe(true);
 
@@ -210,14 +245,13 @@ describe('Class AccountProfileView', function(){
 
 	// Test UI behaviours
 
-		/*
 		it('will not submit the form if there are validation errors in any fields', function() {
 			
-			testWindow.$('#account-holder-name').val('');
+			testWindow.$('#account-profile-name').val('');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#account-holder-form'))).toBe(false);
+			expect(app.FormWidget.instance().validate(testWindow.$('#account-profile-form'))).toBe(false);
 
-			testWindow.$('#account-holder-form-submit').trigger('mousedown');
+			testWindow.$('#account-profile-form-submit').trigger('mousedown');
 
 			expect(testApp.controller.currentView()).not.toBeDefined();
 		});
@@ -225,18 +259,49 @@ describe('Class AccountProfileView', function(){
 
 		it('submits form when the "Done" button is activated if all fields valididate', function() {
 			
-			testWindow.$('#account-holder-name').val('a name');
+			void testView.model().name('');
 
-			testWindow.$('#account-holder-email').val('fa@wqrq.qwwq');
+			void testView.model().email(null);
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#account-holder-form'))).toBe(true);
+			void testView.model().jobTitle('');
+
+			void testView.model().employer(null);
+
+			void testView.model().birthday(null);
+
+		
+			testWindow.$('#account-profile-name').val('Luke');
+
+			testWindow.$('#account-profile-email').val('fa@wqrq.qwwq');
+
+			testWindow.$('#account-profile-jobtitle').val('Jedi Master');
+
+			testWindow.$('#account-profile-employer').val('Galaxy Inc.');
+
+			testWindow.$('#account-profile-birthday').val('05/22/2263');
+
 			
-			testWindow.$('#account-holder-form-submit').trigger('mousedown');
+			expect(app.FormWidget.instance().validate(testWindow.$('#account-profile-form'))).toBe(true);
+			
+			testWindow.$('#account-profile-submit').trigger('mousedown');
 
-			//expect(testApp.controller.currentView().constructor).toBe(testApp.EventListView);
+			
+			expect(testView.model().name()).toBe('Luke');
+
+			expect(testView.model().email().address()).toBe('fa@wqrq.qwwq');
+
+			expect(testView.model().jobTitle()).toBe('Jedi Master');
+
+			expect(testView.model().employer().name()).toBe('Galaxy Inc.');
+
+			expect(testView.model().birthday().valueOf()).toBe(9258357600000);
 		});
-		*/
 
+
+		xit('discards entries and navigates out of form if "Cancel" button is activated', function() {
+
+
+		});
 
 	afterAll(function() {
 

@@ -14,7 +14,7 @@ describe('Class EventView', function(){
 	*  Localhost is also OK, but file:// throws CORS related security error
 	*/
 	
-	var testApp, testDoc, testElement, testView, testWindow;
+	var testApp, testDoc, testElement, testEvent, testView, testWindow;
 	
 	beforeAll(function(done){
 		
@@ -24,13 +24,23 @@ describe('Class EventView', function(){
 
 		setTimeout(function() {
 
+			testWindow.app.controller.views()['frontPageView'].hide(5);
+
 			testDoc = testWindow.document;
 			
 			testApp = testWindow.app;
 
+			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
+
 			testView = testApp.controller.views()['eventView'];
 
 			testElement = testView.$renderContext();
+
+			testEvent = testApp.data.events[0];
+
+			void testApp.controller.selectedEvent(testApp.data.events[0]);
+
+			void testView.model(testEvent);
 
 			done();
 
@@ -38,13 +48,33 @@ describe('Class EventView', function(){
 	});
 	
 	
-	// Test generic View features
+	// Test generic class features
 
 		it('inherits from FormView', function() {
 
 			expect((new app.EventView()) instanceof app.FormView).toBe(true);
 		});
 
+		
+		it('implements the IObservable interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.EventView, app.IObservable)).toBe(true);
+		});
+
+
+		it('implements the IObserver interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.EventView, app.IObserver)).toBe(true);
+		});
+
+
+		it('can be instantiated', function() {
+
+			expect((new app.EventView()).constructor).toBe(app.EventView);
+		});
+
+	
+	// Test generic View features
 
 		it('can render itself to the DOM', function() {
 			
@@ -54,7 +84,7 @@ describe('Class EventView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.render(new app.Event());
+			testView.render(testEvent);
 
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -76,7 +106,7 @@ describe('Class EventView', function(){
 
 		it('is hidden by default after rendering', function() {
 			
-			testView.render(new app.Event());
+			testView.render(testEvent);
 
 			expect(testElement.hasClass('hidden')).toBe(true);
 		});
@@ -84,7 +114,7 @@ describe('Class EventView', function(){
 
 		it('can show and hide itself', function(done) {
 			
-			testView.render(new app.Event());
+			testView.render(testEvent);
 
 			testView.show(5);
 
@@ -261,20 +291,70 @@ describe('Class EventView', function(){
 		});
 
 
-		xit('submits form when the "Done" button is activated if all fields valididate', function() {
+		it('submits form when the "Done" button is activated if all fields valididate', function() {
 			
-			testWindow.$('#event-name').val('a name');
+			void testView.model().name('');
 
-			testWindow.$('#event-start-date').val('05/13/2011');
+			void testView.model().location('');
 
-			testWindow.$('#event-end-date').val('05/14/2011');
+			void testView.model().start(null);
+
+			void testView.model().end(null);
+
+			void testView.model().type('');
+
+			void testView.model().capacity(0);
+
+			void testView.model().host(null);
+
+			void testView.model().description('');
+
+			
+
+			testWindow.$('#event-name').val('Darth Wader');
+
+			testWindow.$('#event-location').val('Death Star');
+
+			testWindow.$('#event-start-date').val('05/13/2250');
+
+			testWindow.$('#event-end-date').val('05/14/2250');
+
+			testWindow.$('#event-type').val('Attack Launch Day');
+
+			testWindow.$('#event-capacity').val('10000');
+
+			testWindow.$('#event-host').val('Sith Lord');
+
+			testWindow.$('#event-description').val('Death to the rebels!');
+
+
 
 			expect(app.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(true);
 			
 			testWindow.$('#event-form-submit').trigger('mousedown');
 
-			expect(testApp.controller.currentView().constructor).toBe(testApp.EventListView);
+
+			expect(testView.model().name()).toBe('Darth Wader');
+
+			expect(testView.model().location()).toBe('Death Star');
+
+			expect(testView.model().start().valueOf()).toBe(8847352800000);
+
+			expect(testView.model().end().valueOf()).toBe(8847439200000);
+
+			expect(testView.model().type()).toBe('Attack Launch Day');
+
+			expect(testView.model().host().hostName()).toBe('Sith Lord');
+
+			expect(testView.model().description()).toBe('Death to the rebels!');
 		});
+
+
+		xit('discards entries and navigates out of form if "Cancel" button is activated', function() {
+
+
+		});
+
 
 
 	afterAll(function() {

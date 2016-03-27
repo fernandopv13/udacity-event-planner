@@ -85,7 +85,7 @@ var app = app || {};
 
 				void (new module.View()).renderNavigation('Meetup Planner'); // show navigation
 
-				Materialize.toast('Success, your account is ready for you to enjoy.', 4000);
+				Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
 
 				break;
 

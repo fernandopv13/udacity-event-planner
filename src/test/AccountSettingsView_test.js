@@ -14,7 +14,7 @@ describe('Class AccountSettingsView', function(){
 	*  Localhost is also OK, but file:// throws CORS related security error
 	*/
 	
-	var testApp, testDoc, testElement, testView, testWindow;
+	var testAccount, testApp, testDoc, testElement, testView, testWindow;
 	
 	beforeAll(function(done){
 		
@@ -24,6 +24,8 @@ describe('Class AccountSettingsView', function(){
 		
 		setTimeout(function() {
 
+			testWindow.app.controller.views()['frontPageView'].hide(5);
+
 			testDoc = testWindow.document;
 			
 			testApp = testWindow.app;
@@ -32,12 +34,44 @@ describe('Class AccountSettingsView', function(){
 
 			testElement = testView.$renderContext();
 
+			testAccount = testApp.data.accounts[0];
+
+			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
+
+			void testView.model(testAccount);
+
 			done();
 
 		}, 500); // wait for page to load
 		
 	});
 	
+	
+	// Test generic class features
+
+		it('inherits from FormView', function() {
+
+			expect((new app.AccountSettingsView()) instanceof app.FormView).toBe(true);
+		});
+
+		
+		it('implements the IObservable interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.AccountSettingsView, app.IObservable)).toBe(true);
+		});
+
+
+		it('implements the IObserver interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.AccountSettingsView, app.IObserver)).toBe(true);
+		});
+
+
+		it('can be instantiated', function() {
+
+			expect((new app.AccountSettingsView()).constructor).toBe(app.AccountSettingsView);
+		});
+
 	
 	// Test generic View features
 
@@ -55,7 +89,7 @@ describe('Class AccountSettingsView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.render(new app.Account());
+			testView.render(testAccount);
 
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -77,7 +111,7 @@ describe('Class AccountSettingsView', function(){
 
 		it('is hidden by default after rendering', function() {
 			
-			testView.render(new app.Account());
+			testView.render(testAccount);
 
 			expect(testElement.hasClass('hidden')).toBe(true);
 		});
@@ -220,17 +254,58 @@ describe('Class AccountSettingsView', function(){
 		});
 
 
-		xit('submits form when the "Done" button is activated if all fields valididate', function() {
+		it('submits form when the "Done" button is activated if all fields valididate', function() {
 			
+			void testView.model().email().address('');
+
+			void testView.model().password().password(null);
+
+			void testView.model().defaultCapacity(0);
+
+			void testView.model().defaultLocation('');
+
+			void testView.model().geoLocationAllowed(false);
+
+			void testView.model().localStorageAllowed(false);
+			
+
 			testWindow.$('#account-settings-email').val('fas@fqw.wqqw');
 
 			testWindow.$('#account-settings-password').val('fasASAS1231!');
 
+			testWindow.$('#account-settings-password-confirmation').val('fasASAS1231!');
+
+			testWindow.$('#account-settings-capacity').val(50);
+
+			testWindow.$('#account-settings-location').val('Milky Way');
+
+			testWindow.$('#account-settings-geolocation').val(true);
+
+			testWindow.$('#account-settings-localstorage').val(true);
+
+			
 			expect(app.FormWidget.instance().validate(testWindow.$('#account-settings-form'))).toBe(true);
 			
 			testWindow.$('#account-settings-submit').trigger('mousedown');
 
-			//expect(testApp.controller.currentView().constructor).toBe(testApp.EventListView);
+			
+			expect(testView.model().email().address()).toBe('fas@fqw.wqqw');
+
+			expect(testView.model().password().password()).toBe('fasASAS1231!');
+
+			expect(testView.model().defaultCapacity()).toBe(50);
+
+			expect(testView.model().defaultLocation()).toBe('Milky Way');
+
+			expect(testView.model().geoLocationAllowed()).toBe(true);
+
+			expect(testView.model().localStorageAllowed()).toBe(true);
+		});
+
+
+		xit('discards entries and navigates out of form if "Cancel" button is activated', function() {
+
+
 		});
 
 	afterAll(function() {

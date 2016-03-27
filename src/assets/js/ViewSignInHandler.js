@@ -73,7 +73,7 @@ var app = app || {};
 
 	module.ViewSignInHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		var ctrl = this.controller(), accounts = module.Account.registry.getObjectList(), ret = false;
+		var ctrl = this.controller(), accounts = module.Account.registry.getObjectList(), account = null;
 
 		for (var ix in accounts) { // try to find a matching account
 
@@ -83,21 +83,26 @@ var app = app || {};
 
 					if (accounts[ix].password() && accounts[ix].password().password() === Model_m.password().password()) { // pw match
 
-						ret = true;
+						account = accounts[ix];
 
-						break; // .. match found, so exit for loop
+						break; // .. match found, so exit loop
 					}
 				}
 			}
 		}
 
-		if (ret) { // provided email and password match an account
+		if (account !== null) { // provided email and password match an account
 
-			ctrl.onAccountSelected.call(ctrl, accounts[ix]);
+			ctrl.onAccountSelected.call(ctrl, account);
 
 			void (new module.View()).renderNavigation('Meetup Planner'); // show navigation
 
-			Materialize.toast('Login successfull. Welcome back!', 4000);
+			Materialize.toast(
+
+				'Login successfull. Welcome back!',
+
+				app.prefs.defaultToastDelay()
+			);
 		}
 
 		else { // sign in failed
@@ -106,7 +111,12 @@ var app = app || {};
 
 			ctrl.currentView(View_v, null);
 
-			Materialize.toast('No account matches this email and password. Please try again.', 5000);
+			Materialize.toast(
+
+				'No account matches this email and password. Please try again.',
+
+				app.prefs.defaultToastDelay()
+			);
 		}
 	};
 

@@ -14,7 +14,7 @@ describe('Class PersonView', function(){
 	*  Localhost is also OK, but file:// throws CORS related security error
 	*/
 	
-	var testApp, testDoc, testElement, testView, testWindow;
+	var testApp, testDoc, testElement, testPerson, testView, testWindow;
 	
 	beforeAll(function(done){
 		
@@ -24,13 +24,25 @@ describe('Class PersonView', function(){
 
 		setTimeout(function() {
 
+			testWindow.app.controller.views()['frontPageView'].hide(5);
+
 			testDoc = testWindow.document;
 		
 			testApp = testWindow.app;
 
+			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
+
 			testView = testApp.controller.views()['guestView'];
 
 			testElement = testView.$renderContext();
+
+			void testApp.controller.selectedEvent(testApp.data.events[0]);
+
+			testPerson = testApp.data.people[0];
+
+			void testApp.controller.selectedGuest(testPerson);
+
+			void testView.model(testPerson);
 
 			done();
 
@@ -38,13 +50,33 @@ describe('Class PersonView', function(){
 	});
 	
 	
-	// Test generic View features
+	// Test generic class features
 
 		it('inherits from FormView', function() {
 
 			expect((new app.PersonView()) instanceof app.FormView).toBe(true);
 		});
 
+		
+		it('implements the IObservable interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.PersonView, app.IObservable)).toBe(true);
+		});
+
+
+		it('implements the IObserver interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.PersonView, app.IObserver)).toBe(true);
+		});
+
+
+		it('can be instantiated', function() {
+
+			expect((new app.PersonView()).constructor).toBe(app.PersonView);
+		});
+
+	
+	// Test generic View features
 
 		it('can render itself to the DOM', function() {
 			
@@ -54,7 +86,7 @@ describe('Class PersonView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.render(new app.Person());
+			testView.render(testPerson);
 
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -76,7 +108,7 @@ describe('Class PersonView', function(){
 
 		it('is hidden by default after rendering', function() {
 			
-			testView.render(new app.Person());
+			testView.render(testPerson);
 
 			expect(testElement.hasClass('hidden')).toBe(true);
 		});
@@ -84,7 +116,7 @@ describe('Class PersonView', function(){
 
 		it('can show and hide itself', function(done) {
 			
-			testView.render(new app.Person());
+			testView.render(testPerson);
 
 			testView.show(5);
 
@@ -222,17 +254,50 @@ describe('Class PersonView', function(){
 		});
 
 
-		xit('submits form when the "Done" button is activated if all fields valididate', function() {
+		it('submits form when the "Done" button is activated if all fields valididate', function() {
 			
-			testWindow.$('#guest-name').val('a name');
+			void testView.model().name('');
+
+			void testView.model().email(null);
+
+			void testView.model().jobTitle('');
+
+			void testView.model().employer(null);
+
+			void testView.model().birthday(null);
+
+
+			testWindow.$('#guest-name').val('Luke');
 
 			testWindow.$('#guest-email').val('fa@wqrq.qwwq');
+
+			testWindow.$('#guest-jobtitle').val('Jedi Master');
+
+			testWindow.$('#guest-employer').val('Galaxy Inc.');
+
+			testWindow.$('#guest-birthday').val('05/22/2263');
+
 
 			expect(app.FormWidget.instance().validate(testWindow.$('#guest-form'))).toBe(true);
 			
 			testWindow.$('#guest-form-submit').trigger('mousedown');
+			
 
-			expect(testApp.controller.currentView().constructor).toBe(testApp.EventListView);
+			expect(testView.model().name()).toBe('Luke');
+
+			expect(testView.model().email().address()).toBe('fa@wqrq.qwwq');
+
+			expect(testView.model().jobTitle()).toBe('Jedi Master');
+
+			expect(testView.model().employer().name()).toBe('Galaxy Inc.');
+
+			expect(testView.model().birthday().valueOf()).toBe(9258357600000);
+		});
+
+
+		xit('discards entries and navigates out of form if "Cancel" button is activated', function() {
+
+
 		});
 
 

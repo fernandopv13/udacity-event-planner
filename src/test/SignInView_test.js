@@ -24,6 +24,8 @@ describe('Class SignInView', function(){
 
 		setTimeout(function() {
 
+			testWindow.app.controller.views()['frontPageView'].hide(5);
+
 			testDoc = testWindow.document;
 		
 			testApp = testWindow.app;
@@ -38,13 +40,33 @@ describe('Class SignInView', function(){
 	});
 
 	
-	// Test generic View features
+	// Test generic class features
 
-		it('inherits from View', function() {
+		it('inherits from FormView', function() {
 
-			expect((new app.SignInView()) instanceof app.View).toBe(true);
+			expect((new app.SignInView()) instanceof app.FormView).toBe(true);
 		});
 
+		
+		it('implements the IObservable interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.SignInView, app.IObservable)).toBe(true);
+		});
+
+
+		it('implements the IObserver interface', function() {
+			
+			expect(app.IInterfaceable.isImplementationOf(app.SignInView, app.IObserver)).toBe(true);
+		});
+
+
+		it('can be instantiated', function() {
+
+			expect((new app.SignInView()).constructor).toBe(app.SignInView);
+		});
+
+
+	// Test generic View features
 
 		it('can render itself to the DOM', function() {
 			

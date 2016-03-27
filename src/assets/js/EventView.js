@@ -815,9 +815,7 @@ var app = app || {};
 					})(),
 
 					parseInt($('#event-capacity').val())
-				),
-
-				module.View.UIAction.SUBMIT
+				)
 			);
 
 			return true;

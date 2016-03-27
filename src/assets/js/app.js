@@ -30,6 +30,8 @@ var app = (function(self) {
 		
 		defaultEventCapacity: 50,
 
+		defaultToastDelay: 4000, // in ms
+
 		isLocalStorageAllowed: false,	
 	
 		localStoragePrefix: 'dk.ulrikgade.udacity.srwebdev.meetup-app.'
@@ -71,6 +73,14 @@ var app = (function(self) {
 		},
 
 
+		/** Gets default delay (in ms) before hiding 'toast' messages */
+
+		defaultToastDelay: function() {
+
+				return _prefs.defaultToastDelay;
+			},
+
+		
 		/** Gets or sets permission to store data locally */
 		
 		isLocalStorageAllowed: function(bool_isAllowed) {

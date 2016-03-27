@@ -81,23 +81,23 @@ var app = app || {};
 		* @throws {IllegalArgumentError} If attempting to set account holder not of class Person
 		*/
 		
-		this.accountHolder = function (obj_person) {
+		this.accountHolder = function (Person_p) {
 			
 			if (arguments.length !== 0) { // normal setter
 				
-				if (obj_person === null || obj_person ==='') { // reset account holder
+				if (Person_p === null || Person_p ==='') { // reset account holder
 
 					_accountHolder = null;
 				}
 
-				else if (obj_person.constructor === module.Person) { // normal setter
+				else if (Person_p.constructor === module.Person) { // normal setter
 					
-					_accountHolder = obj_person;
+					_accountHolder = Person_p;
 				}
 				
-				else if (obj_person._className === 'Person' && typeof obj_person._id !== 'undefined') { // setting unresolved object reference when called from readObject()
+				else if (Person_p._className === 'Person' && typeof Person_p._id !== 'undefined') { // setting unresolved object reference when called from readObject()
 					
-					_accountHolder = obj_person;
+					_accountHolder = Person_p;
 				}
 				
 				else {

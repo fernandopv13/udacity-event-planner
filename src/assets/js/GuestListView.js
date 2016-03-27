@@ -263,7 +263,7 @@ var app = app || {};
 					{
 						element: 'span',
 
-						innerHTML: this.model().name()
+						innerHTML: this.model() ? this.model().name() : ''
 					}
 				));
 

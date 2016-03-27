@@ -202,24 +202,23 @@ var app = app || {}; // create a simple namespace for the app
 		
 		/** Gets or sets the host
 		*
-		* @param {IHost} host The person or organization hosting the event
+		* @param {IHost} host The person or organization hosting the event, or null
 		*
 		* @return {IHost} The person or organization hosting the event
 		*/
 		
-		this.host = function(Ihost_host) {
+		this.host = function(IHost_h) {
 			
 			if (arguments.length !== 0) {
 				
-				if (typeof Ihost_host.hostName === 'function') { // verify that we have an instance of a class that implements iHost
+				if (IHost_h === null || typeof IHost_h.hostName === 'function') { // verify that we have an instance of a class that implements iHost
 					
-					_host = Ihost_host;
+					_host = IHost_h;
 				}
 				
-				else if (['Person', 'Organization'].indexOf(Ihost_host._className) > -1 && typeof Ihost_host._id !== 'undefined') { // setting unresolved object reference when called from readObject()
-				//else if (Ihost_host.isInstanceOf && Ihost_host.isInstanceOf(module.IHost) && typeof Ihost_host._id !== 'undefined') { // setting unresolved object reference when called from readObject()
+				else if (['Person', 'Organization'].indexOf(IHost_h._className) > -1 && typeof IHost_h._id !== 'undefined') { // setting unresolved object reference when called from readObject()
 				
-					_host = Ihost_host;
+					_host = IHost_h;
 				}
 				
 				else {

@@ -509,7 +509,7 @@ var app = app || {};
 			return true;
 		}
 
-		Materialize.toast('Some info seems to be missing. Please try again', 4000);
+		Materialize.toast('Some info seems to be missing. Please try again', module.prefs.defaultToastDelay());
 
 		return false;
 	}

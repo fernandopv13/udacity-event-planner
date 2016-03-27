@@ -1,6 +1,6 @@
 'use strict';
 
-/* Jasmine.js test suite for EventListView class in Meetup Event Planner app.
+/* Jasmine.js test suite for GuestListView class in Meetup Event Planner app.
 *
 * These tests combine unit tests of the class itself and integration tests of the UI it represents.
 * The suite is therefore dependent on the other, non-View classes of tha app performning correctly,
@@ -8,16 +8,16 @@
 *
 */
 
-describe('class EventListView', function(){
+describe('class GuestListView', function(){
 	
 	/* This code only works if testsuite and app are both loaded from the same server.
 	*  Localhost is also OK, but file:// throws CORS related security error
 	*/
 	
-	var testAccount, testApp, testDoc, testElement, testView, testWindow;
+	var testApp, testDoc, testElement, testEvent, testView, testWindow;
 	
 	beforeAll(function(done){
-
+		
 		testWindow = window.open('../index.html'); // test on development version of app
 
 		//testWindow = window.open('../../dist/index.html'); // test on production version of app
@@ -30,11 +30,11 @@ describe('class EventListView', function(){
 			
 			testApp = testWindow.app;
 
-			testView = testApp.controller.views()['eventListView'];
+			testView = testApp.controller.views()['guestListView'];
 
 			testElement = testView.$renderContext();
 
-			testAccount = testApp.data.accounts[0];
+			testEvent = testApp.data.events[0];
 
 			done();
 
@@ -46,25 +46,25 @@ describe('class EventListView', function(){
 
 		it('inherits from ListView', function() {
 
-			expect((new app.EventListView()) instanceof app.ListView).toBe(true);
+			expect((new app.GuestListView()) instanceof app.ListView).toBe(true);
 		})
 
 
 		it('implements the IObservable interface', function() {
 			
-			expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IObservable)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.GuestListView, app.IObservable)).toBe(true);
 		});
 
 
 		it('implements the IObserver interface', function() {
 			
-			expect(app.IInterfaceable.isImplementationOf(app.EventListView, app.IObserver)).toBe(true);
+			expect(app.IInterfaceable.isImplementationOf(app.GuestListView, app.IObserver)).toBe(true);
 		});
 
 
 		it('can be instantiated', function() {
 
-			expect((new app.EventListView()).constructor).toBe(app.EventListView);
+			expect((new app.GuestListView()).constructor).toBe(app.GuestListView);
 		});
 
 	
@@ -76,7 +76,7 @@ describe('class EventListView', function(){
 
 			expect(testElement.children().length).toBe(0);
 
-			testView.render(testAccount);
+			testView.render(testEvent);
 
 			expect(testElement.children().length).toBeGreaterThan(0);
 		});
@@ -90,7 +90,7 @@ describe('class EventListView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update(new app.Event(), new app.EventView());
+			testView.update(testEvent, new app.EventView());
 			
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -98,7 +98,7 @@ describe('class EventListView', function(){
 
 		it('is hidden by default after rendering', function() {
 			
-			testView.render(testAccount);
+			testView.render(testEvent);
 
 			expect(testElement.hasClass('hidden')).toBe(true);
 		});
@@ -106,7 +106,7 @@ describe('class EventListView', function(){
 
 		it('can show and hide itself', function(done) {
 			
-			testView.render(testAccount);
+			testView.render(testEvent);
 
 			testView.show(5);
 
@@ -160,19 +160,19 @@ describe('class EventListView', function(){
 	
 	// Test UI behaviours
 
-		it('navigates to event view for item in list when it is activated', function() {
+		it('navigates to person view for item in list when it is activated', function() {
 			
 			expect(testApp.controller.currentView()).not.toBeDefined();
 
-			testElement.find('.collection-item').first().find('div').trigger('click');
+			testElement.find('.collection-item').first().trigger('click');
 
-			expect(testApp.controller.currentView().constructor).toBe(testApp.EventView);
+			expect(testApp.controller.currentView().constructor).toBe(testApp.PersonView);
 		});
 
 
-		xit('navigates to event view for new item when the main floating action button is activated', function(done) {
+		xit('navigates to person view for new item when the main floating action button is activated', function(done) {
 			
-			testView.render(testAccount);
+			testView.render(testEvent);
 
 			testView.show(5);
 
@@ -188,8 +188,6 @@ describe('class EventListView', function(){
 
 			}, 25);
 		});
-
-			
 
 	afterAll(function() {
 
