@@ -74,34 +74,36 @@ var app = app || {};
 
 		var ctrl = this.controller();
 
-		ctrl.removeObserver(Model_m);
+		void Model_m.constructor.registry.removeObject(Model_m); // remove from registry
 
-		switch (Model_m.constructor) { // may need to branch on View type in stead to deal with account settings/profile
+		void ctrl.removeObserver(Model_m); // remove from observers
 
-			case module.Event: // remove event completely from app
+		switch (Model_m.constructor) { // do type specfic cleanup and notification
 
-				var evtName = Model_m.name();
+			case module.Account:
 
-				module.Event.registry.removeObject(Model_m);
-
-				ctrl.selectedAccount().removeEvent(Model_m);
-
-				//ctrl.currentView().model(undefined);
-
-				Model_m = undefined;
-
-				Materialize.toast(evtName + ' was deleted', module.prefs.defaultToastDelay());
+				// do something
 
 				break;
 
-			case module.Person: // remove person (guest) from this event, but keep in account
+			case module.Event:
 
-				ctrl.selectedEvent().removeGuest(Model_m);
+				ctrl.selectedAccount().removeEvent(Model_m); // remove from account
+
+				Materialize.toast(Model_m.name() + ' was deleted', module.prefs.defaultToastDelay());
+
+				break;
+
+			case module.Person:
+
+				ctrl.selectedEvent().removeGuest(Model_m); 
 
 				Materialize.toast(Model_m.name() + ' was taken off the guest list', module.prefs.defaultToastDelay());
 
 				break;
 		}
+
+		void ctrl.newModel(null); // remove reference to model if it was just created (this may be redundant)
 
 		window.history.back();
 	};

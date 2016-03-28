@@ -60,7 +60,9 @@ var app = app || {};
 
 	/** Handles 'create' user action in a View on behalf of a Controller.
 	*
-	* Takes a new Model of the requested type and opens it in its detail (form) view for editing.
+	* Creates a new Model of the requested type and opens it in its detail (form) view for editing.
+	*
+	* Fully registers object in app up-front; relies on generic delete for reversal.
 	*
 	* @param {int} UIAction An integer representing the user action to respond to
 	*
@@ -69,11 +71,15 @@ var app = app || {};
 	* @param {View} v The View spawning the notification
 	*
 	* @return {void}
+	*
+	* @todo Consolidate bolerplate actions in a single location
+	*
+	* @todo Increase coverage to account creation
 	*/
 
 	module.ViewCreateHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		console.log('Creating new ' + Model_m.className()); // debug
+		//console.log('Creating new ' + Model_m.className()); // debug
 
 		var ctrl = this.controller();
 
@@ -81,6 +87,7 @@ var app = app || {};
 
 			case module.Account:
 
+				/*
 				void ctrl.selectedAccount(Model_m); // set new model as selected
 
 				ctrl.registerObserver(Model_m); // register model and controller as mutual observers
@@ -94,16 +101,19 @@ var app = app || {};
 				Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
 
 				break;
+				*/
 
 			case module.Event: // these steps seem mostly ripe for generalization
 
 				Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
 
-				Model_m = ctrl.newModel(new module.Event()); // create new model and store for future reference
+				Model_m = ctrl.newModel(new module.Event()); // replace with new Event and store for future reference
 
-				void ctrl.selectedEvent(Model_m); // set new model as selected
+				void ctrl.selectedAccount().addEvent(Model_m) // add new event to account
 
-				ctrl.registerObserver(Model_m); // register model and controller as mutual observers
+				void ctrl.selectedEvent(Model_m); // set new event as selected
+
+				ctrl.registerObserver(Model_m); // register new event and controller as mutual observers
 
 				Model_m.registerObserver(ctrl);
 
@@ -121,11 +131,13 @@ var app = app || {};
 
 					Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
 
-					Model_m = ctrl.newModel(new module.Person()); // create new model and store for future reference
+					Model_m = ctrl.newModel(new module.Person()); // replace with new Person and store for future reference
 
-					void ctrl.selectedGuest(Model_m); // set new model as selected
+					void ctrl.selectedEvent().addGuest(Model_m) // add new person (guest) to event
 
-					ctrl.registerObserver(Model_m); // register model and controller as mutual observers
+					void ctrl.selectedGuest(Model_m); // set new person as selected
+
+					ctrl.registerObserver(Model_m); // register person and controller as mutual observers
 
 					Model_m.registerObserver(ctrl);
 
@@ -136,7 +148,12 @@ var app = app || {};
 				
 				else { // inform user of capacity constraint
 
-					 Materialize.toast('The event is full to capacity. Increase capacity or remove guests before adding more.', 4000)
+					 Materialize.toast(
+
+					 	'The event is full. Please increase capacity or remove guests before adding more.',
+
+					 	app.prefs.defaultToastDelay()
+					)
 				}
 
 				break;

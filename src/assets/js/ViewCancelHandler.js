@@ -67,22 +67,47 @@ var app = app || {};
 	* @param {View} v The View spawning the notification
 	*
 	* @return {void}
+	*
+	* @todo This has hte making of a generic delete handler, look into it
 	*/
 
 	module.ViewCancelHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		var newModel = this.controller().newModel();
+		/*
+		var ctrl = this.controller(), newModel = ctrl.newModel();
 
 		if (newModel !== null) { // creation of new model cancelled
 
 			newModel.constructor.registry.removeObject(newModel); // remove from registry
 
-			this.controller.removeObserver(newModel); // remove from observer list
+			ctrl.newModel(null); // reset newModel reference
 
-			this.controller().newModel(null); // reset reference
+			//ctrl.removeObserver(newModel); // remove from observer list
+
+			switch (newModel.constructor) { // remove from data model
+
+				case module.Account:
+
+					// remove from app?
+
+					break;
+
+				case module.Event:
+
+					///void ctrl.selectedAccount().removeEvent(newModel);
+
+					break;
+
+				case module.Person:
+
+					//void ctrl.selectedEvent().removeGuest(newModel);
+
+					break;
+			}
 
 			newModel = undefined; // free up for garbage collection
 		}
+		*/
 
 		window.history.back(); // return to previous view
 	};

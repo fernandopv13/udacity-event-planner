@@ -265,62 +265,6 @@ var app = app || {};
 			};
 
 
-			/** Handles click on floating 'plus' action button in list views
-			*
-			* Takes a new Model of the requested type and opens it in its detail (form) view for editing.
-			*
-			* If submitted succesfully, it will be added in its place in the account's object model.
-			*
-			* If cancelled, the Model is removed and all references to it deleted or reset.
-			*
-			* @param {Model} tmp The new Model object being created
-			*
-			* @return {void}
-			*/
-
-			/*function _onCreateModel(Model_m) {
-
-				switch(Model_m.constructor) {
-
-					case module.Event:
-
-						_newModel = Model_m; // store new model for future reference
-
-						_onEventSelected.call(this, _newModel); // open it in its FormView
-
-						break;
-
-					case module.Person:
-
-						var evt = this.selectedEvent();
-
-						if (evt.guests().length < evt.capacity()) { // check if there is capacity before trying to add a new guest
-
-							_newModel = Model_m; // store new model for future reference
-
-							_onGuestSelected.call(this, _newModel); // open it in its FormView
-						}
-						
-						else { // inform user of capacity constraint
-
-							 Materialize.toast('The event is full to capacity. Increase capacity or remove guests before adding more.', 4000)
-						}
-
-						break;
-
-					default:
-
-						//console.log('not supported')
-				}
-
-				this.registerObserver(Model_m);
-
-				Model_m.registerObserver(this);
-			}
-			*/
-
-
-
 			/** Does the work required when an event has been selected,
 			*
 			* including storing a reference to it as the selected event,
@@ -468,49 +412,6 @@ var app = app || {};
 
 
 			
-			/** Handles click events in navbar/dropdown */
-
-			/*
-			this.onNavSelection = function(nEvent) {
-
-				switch (event.target.href.split('!')[1]) { // parse the URL partial after #!
-
-					case 'Search':
-
-						break;
-
-					case 'Settings':
-
-						this.currentView(_views.accountSettingsView, this.selectedAccount());
-
-						break;
-
-					case 'Profile':
-
-						this.currentView(
-
-							_views.accountProfileView,
-
-							this.selectedAccount().accountHolder() || this.selectedAccount().accountHolder(new module.Person())
-						);
-						
-						break;
-
-					case 'About':
-
-						break;
-
-					case 'Sign Out':
-
-						break;
-
-					default:
-
-						console.log('Navigation selection not supported');
-				}
-			}*/
-
-
 			/** Passes history onpopstate events on to router */
 
 			this.onPopState = function(nEvent) {
