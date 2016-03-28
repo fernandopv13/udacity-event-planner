@@ -80,7 +80,7 @@ var app = app || {};
 
 			module.View.prototype.hide.call(this, obj_speed); // ssuper() refers to FormView, so call parent manually or enter infinite loop
 
-		$('#nav-delete-icon').hide(1); // make sure delete icon is hidden by default; re-show in views that need it
+		//$('#nav-delete-icon').hide(5); // not working; hides in newly rendered forms(!?!?)
 	}
 
 

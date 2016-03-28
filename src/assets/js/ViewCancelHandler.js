@@ -71,15 +71,18 @@ var app = app || {};
 
 	module.ViewCancelHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		var n = this.controller().newModel();
+		var newModel = this.controller().newModel();
 
-		/*if (n) { // creation of new model cancelled
+		if (newModel !== null) { // creation of new model cancelled
 
-			//n.constructor.registry.removeObject(n); // remove from registry
+			newModel.constructor.registry.removeObject(newModel); // remove from registry
 
-			//this.controller().newModel(null); // reset reference
+			this.controller.removeObserver(newModel); // remove from observer list
+
+			this.controller().newModel(null); // reset reference
+
+			newModel = undefined; // free up for garbage collection
 		}
-		*/
 
 		window.history.back(); // return to previous view
 	};

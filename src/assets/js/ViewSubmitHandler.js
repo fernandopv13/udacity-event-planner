@@ -72,26 +72,26 @@ var app = app || {};
 
 		var ctrl = this.controller();
 
-		/*if (ctrl.newModel()) { // new Model succesfully added to the account, insert into ecosystem
+		if (ctrl.newModel()) { // new Model succesfully added to the account, insert into ecosystem
 
 			switch (Model_m.constructor) {
 
 				case module.Event:
 
-					//ctrl.selectedAccount().addEvent(ctrl.newModel()); // add to event list
+					void ctrl.selectedAccount().addEvent(Model_m); // add to event list
 
 					break;
 
 				case module.Person:
 
-					//ctrl.selectedEvent().addGuest(ctrl.newModel()); // add to guest list
+					void ctrl.selectedEvent().addGuest(Model_m); // add to guest list
 
 					break;
 			}
 
 			ctrl.newModel(null); // reset and dereference temporary model
 		}
-		*/
+		
 
 		this.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits
 

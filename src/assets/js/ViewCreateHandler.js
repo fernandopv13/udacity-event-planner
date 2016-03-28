@@ -73,40 +73,65 @@ var app = app || {};
 
 	module.ViewCreateHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
+		console.log('Creating new ' + Model_m.className()); // debug
+
 		var ctrl = this.controller();
 
 		switch (Model_m.constructor) {
 
 			case module.Account:
 
-				ctrl.selectedAccount(Model_m); // set new account to current
+				void ctrl.selectedAccount(Model_m); // set new model as selected
 
-				ctrl.onAccountSelected.call(ctrl, Model_m); // open its (empty) event list
+				ctrl.registerObserver(Model_m); // register model and controller as mutual observers
+
+				Model_m.registerObserver(ctrl);
+
+				this.notifyObservers(Model_m, new module.EventListView()); // render/refresh the view in the background
+
+				ctrl.onAccountSelected.call(ctrl, Model_m); //show the view
 
 				Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
 
 				break;
 
-			case module.Event:
+			case module.Event: // these steps seem mostly ripe for generalization
 
-				/*
-				ctrl.newModel(Model_m); // store new model for future reference
+				Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
 
-				ctrl.onEventSelected.call(ctrl, ctrl.newModel()); // open it in its FormView
+				Model_m = ctrl.newModel(new module.Event()); // create new model and store for future reference
+
+				void ctrl.selectedEvent(Model_m); // set new model as selected
+
+				ctrl.registerObserver(Model_m); // register model and controller as mutual observers
+
+				Model_m.registerObserver(ctrl);
+
+				this.notifyObservers(Model_m, new module.EventView()); // render/refresh the view in the background
+
+				ctrl.onEventSelected.call(ctrl, Model_m); // show the view
 
 				break;
-				*/
 
 			case module.Person:
 
-				/*
 				var evt = ctrl.selectedEvent();
 
 				if (evt.guests().length < evt.capacity()) { // check if there is capacity before trying to add a new guest
 
-					ctrl.newModel(Model_m); // store new model for future reference
+					Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
 
-					ctrl.onGuestSelected.call(ctrl, ctrl.newModel()); // open it in its FormView
+					Model_m = ctrl.newModel(new module.Person()); // create new model and store for future reference
+
+					void ctrl.selectedGuest(Model_m); // set new model as selected
+
+					ctrl.registerObserver(Model_m); // register model and controller as mutual observers
+
+					Model_m.registerObserver(ctrl);
+
+					this.notifyObservers(Model_m, new module.PersonView()); // render/refresh the view in the background
+
+					ctrl.onGuestSelected.call(ctrl, Model_m); // show the view
 				}
 				
 				else { // inform user of capacity constraint
@@ -114,17 +139,12 @@ var app = app || {};
 					 Materialize.toast('The event is full to capacity. Increase capacity or remove guests before adding more.', 4000)
 				}
 
-				*/
 				break;
 
 			default:
 
 				console.log(Model_m.className() + ' not supported');
 		}
-
-		//ctrl.registerObserver(Model_m);
-
-		//Model_m.registerObserver(ctrl);
 	};
 
 })(app);
