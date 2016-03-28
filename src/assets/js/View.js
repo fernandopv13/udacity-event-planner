@@ -371,28 +371,98 @@ var app = app || {}; // create a simple namespace for the module
 
 			this.hide(); // when rendering in the background, prevent first render from resulting in showing the view
 
-			if (this.elementOptions) { // do post-processing that require elements to be rendered to the DOM
+			// Initialize UIWidgets
 
-				for (var id in this.elementOptions) { // run through elements (by id) 
+				if (this.elementOptions) { // do post-processing that require elements to be rendered to the DOM
 
-					if (this.elementOptions[id].init) { // run any custom initializer
+					for (var id in this.elementOptions) { // run through elements (by id) 
 
-						if (typeof this.elementOptions[id].init === 'function') {
+						if (this.elementOptions[id].init) { // run any custom initializer
 
-							//console.log(id); //debug
+							if (typeof this.elementOptions[id].init === 'function') {
 
-							this.elementOptions[id].init(this, id, this.elementOptions[id]);
+								//console.log(id); //debug
+
+								this.elementOptions[id].init(this, id, this.elementOptions[id]);
+							}
+
+							else {
+
+								throw new IllegalArgumentError('Expected function');
+							}
 						}
 
-						else {
+						app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
+					}
+				}
 
-							throw new IllegalArgumentError('Expected function');
-						}
+
+			// Display nav bar (in most cases)
+
+				var exclusions = [module.FrontPageView, module.SignInView, module.SignUpView];
+
+				if (exclusions.indexOf(this.constructor) < 0) { // view not excluded from having nav bar
+
+					if ($('#nav-main').length === 0) { // nav bar not already in DOM
+
+						$('body').prepend(this.createWidget( // build nav bar
+						
+							'NavigationWidget',
+
+							{
+								id: 'nav-main',
+
+								logotype: 'Meetup Planner',
+
+								menuItems: // list of menu items, in order of presentation
+								[
+									{
+										text: 'Account Settings', // link text
+
+										href: '#!Settings', // link URL
+
+										icon: 'settings' // Google Material Design icon name (optional)
+									},
+
+									{
+										text: 'Account Profile',
+
+										href: '#!Profile',
+
+										icon: 'account_circle'
+									},
+
+									{
+										text: 'About',
+
+										href: '#!About',
+
+										icon: 'info'
+									},
+
+									{
+										text: 'Sign Out',
+
+										href: '#!Sign Out',
+
+										icon: 'power_settings_new'
+									}
+								]
+							}
+						));
+
+						module.NavigationWidget.instance().init(this, 'nav-main', {}); // initialize in DOM
 					}
 
-					app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
+					else if ($('#nav-main').hasClass('hidden')) { // nav bar in DOM, but hidden, so show
+
+						$('#nav-main').removeClass('hidden');
+
+						$('#nav-main').show();
+
+						// later, also remove aria-hidden attribute, if present
+					}
 				}
-			}
 		};
 
 
@@ -448,6 +518,7 @@ var app = app || {}; // create a simple namespace for the module
 		* @todo Make navigation (more) accessible e.g. to screen readers
 		*/
 
+		/*
 		module.View.prototype.renderNavigation = function(str_logotype) {
 
 			var menuItems = 
@@ -768,25 +839,24 @@ var app = app || {}; // create a simple namespace for the module
 			
 			// Initialize
 
-				/* UNCOMMENT AFTER DEBUGGING
-				$('.dropdown-button').dropdown( // Materialize dropdown needs this call when created dynamically
-				{
-					inDuration: 300,
-					
-					outDuration: 225,
-					
-					constrain_width: false, // Does not change width of dropdown to that of the activator
-					
-					hover: true, // Activate on hover
-					
-					gutter: 0, // Spacing from edge
-					
-					belowOrigin: false, // Displays dropdown below the button
-					
-					alignment: 'left' // Displays dropdown with edge aligned to the left of button
-				});
+				// UNCOMMENT AFTER DEBUGGING
+				//$('.dropdown-button').dropdown( // Materialize dropdown needs this call when created dynamically
+				//{
+				//	inDuration: 300,
+				//	
+				//	outDuration: 225,
+				//	
+				//	constrain_width: false, // Does not change width of dropdown to that of the activator
+				//	
+				//	hover: true, // Activate on hover
+				//	
+				//	gutter: 0, // Spacing from edge
+				//	
+				//	belowOrigin: false, // Displays dropdown below the button
+				//	
+				//	alignment: 'left' // Displays dropdown with edge aligned to the left of button
+				//});
 
-				*/
 
 				$('#nav-delete-icon').hide();
 
@@ -806,6 +876,7 @@ var app = app || {}; // create a simple namespace for the module
 			
 			return containerDiv;
 		}
+		*/
 
 
 		/** Utility for showing view in the UI on demand.

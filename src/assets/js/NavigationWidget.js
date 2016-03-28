@@ -111,48 +111,6 @@ var app = app || {};
 			}
 			*/
 
-			obj_options = 
-			{
-				id: 'nav-main',
-
-				logotype: 'Meetup Planner',
-
-				menuItems: // list of menu items, in order of presentation
-				[
-					{
-						text: 'Account Settings', // link text
-
-						href: '#!Settings', // link URL
-
-						icon: 'settings' // Google Material Design icon name (optional)
-					},
-
-					{
-						text: 'Account Profile',
-
-						href: '#!Profile',
-
-						icon: 'account_circle'
-					},
-
-					{
-						text: 'About',
-
-						href: '#!About',
-
-						icon: 'info'
-					},
-
-					{
-						text: 'Sign Out',
-
-						href: '#!Sign Out',
-
-						icon: 'power_settings_new'
-					}
-				]
-			}
-
 			if (typeof obj_options === 'undefined' || obj_options === {}) {
 
 				throw new ReferenceError('Options not specified');
@@ -410,10 +368,10 @@ var app = app || {};
 
 			var element = $('#' + str_id);
 
+			
 			// Initialize Materialize dropdown menu
 
-				/* UNCOMMENT AFTER DEBUGGING
-				$('.dropdown-button').dropdown( // Materialize dropdown needs this call when created dynamically
+				$(element).find('.dropdown-button').dropdown( // Materialize dropdown needs this call when created dynamically
 				{
 					inDuration: 300,
 					
@@ -430,9 +388,8 @@ var app = app || {};
 					alignment: 'left' // Displays dropdown with edge aligned to the left of button
 				});
 
-				*/
-
-			// Attach event handlers
+			
+			// Attach other event handlers
 
 				$(element).find('#nav-delete-icon').hide(); // delete icon: only needed on FormViews, let them show it
 				

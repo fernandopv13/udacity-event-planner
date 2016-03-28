@@ -78,19 +78,18 @@ var app = app || {};
 
 	app.FormView.prototype.init = function() {
 
-		//console.log('Initializing ' + this.className()); // debug
+		// Call parent to perform common post-render task(s)
 
-		// call parent to perform common post-render task(s)
-
-			app.View.prototype.init.call(this); // ssuper() does not work recursively, so call parent manually
+			app.View.prototype.init.call(this); // ssuper() refers to FormView, so call parent manually or enter infinite loop
 
 
-		// Make sure Matiralize labels and field are formatted correctly
+		// Make sure Materialize fields and labels are formatted correctly
 
 			//Materialize.updateTextFields();
 
-		// show Delete icon in navbar
 		
+		// Display delete icon/button
+			
 			$('#nav-delete-icon').show('slow');
 
 		
