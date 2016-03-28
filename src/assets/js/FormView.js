@@ -25,6 +25,8 @@ var app = app || {};
 
 	app.FormView = function(Function_modelClass, str_elementId, str_heading) {
 
+		//FormView
+
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
 		*---------------------------------------------------------------------------------------*/
@@ -74,12 +76,22 @@ var app = app || {};
 
 	/** Initializes event handlers and other functionality after the View has been unhidden */
 
-	app.FormView.prototype.onLoad = function(nEvent) {
+	app.FormView.prototype.init = function() {
 
-		Materialize.updateTextFields(); // make sure labels are set correctly
+		//console.log('Initializing ' + this.className()); // debug
 
+		// call parent to perform common post-render task(s)
+
+			app.View.prototype.init.call(this); // ssuper() does not work recursively, so call parent manually
+
+
+		// Make sure Matiralize labels and field are formatted correctly
+
+			//Materialize.updateTextFields();
+
+		// show Delete icon in navbar
 		
-		$('#nav-delete-icon').show('slow'); // show delete icon in navbar
+			$('#nav-delete-icon').show('slow');
 
 		
 		// Set up modal for delete confirmation

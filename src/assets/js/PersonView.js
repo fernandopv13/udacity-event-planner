@@ -312,29 +312,29 @@ var app = app || {};
 				}
 
 				formElement.appendChild(outerDiv);
-			
-
-			// Render to DOM and initialize
-
-				this.ssuper().prototype.render.call(this);
-			
-
-			// Do custom post-render initialization
-
-				$('#guest-name').attr('autofocus', true);
 		}
 
 		else { // present default message
 
-			this.$renderContext().empty();
-
-			this.$renderContext().append(this.createWidget('HTMLElement',
+			container.appendChild(this.createWidget('HTMLElement',
 			{
 				element: 'p',
 
 				innerHTML: 'No guest selected. Please select or create a guest in order to edit details.'
 			}));
 		}
+
+
+		// Render to DOM and initialize
+
+			this.ssuper().prototype.render.call(this);
+		
+
+		// Do post-render initialization
+
+			this.init();
+
+			$('#guest-name').attr('autofocus', true);
 	};
 
 

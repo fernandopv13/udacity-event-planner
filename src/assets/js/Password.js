@@ -247,18 +247,18 @@ var app = app || {}; // create a simple namespace for the app
 	* @throws {IllegalArgumentError} If any of the data provided by the source does not fit the validation criteria of the target, as managed by accessors.
 	*/
 
-	module.Password.prototype.update = function(Password_password, int_objId) {
+	module.Password.prototype.update = function(Password_p, int_id) {
 
-		if (this.ssuper().prototype.update.call(this, arguments)) { // check whether to respond to this notification
+		if (this.ssuper().prototype.update.call(this, Password_p, int_id)) { // check whether to respond to this notification
 
 			// Update using accessors (for validation)
 		
-			this.password(Password_password.password());
+			this.password(Password_p.password());
 		
 			
 			// Do some housekeeping (calls method in parent class, i.e. Model)
 
-			this.ssuper().prototype.onUpdate.call(this, Password_password);
+			this.ssuper().prototype.onUpdate.call(this, Password_p);
 
 			
 			return true;

@@ -725,21 +725,12 @@ var app = app || {};
 				formElement.appendChild(outerDiv);
 
 			
-			// Render to DOM and initialize
-
-				this.ssuper().prototype.render.call(this);
-
-			
-			// Do custom post-render initialization
-
-				$('#event-name').attr('autofocus', true); // set initial focus on name
+		$('#event-name').attr('autofocus', true); // set initial focus on name
 		}
 
 		else { // present default message
 
-			this.$renderContext().empty();
-
-			this.$renderContext().append(this.createWidget(
+			container = this.containerElement(this.createWidget(
 
 				'HTMLElement',
 
@@ -750,6 +741,17 @@ var app = app || {};
 				}
 			));
 		}
+
+		// Render to DOM
+
+			this.ssuper().prototype.render.call(this);
+
+		
+		// Do post-render initialization
+
+			this.init(); // call init up parent class chain
+
+			delete this.elementOptions; // free up temporary variable for garbage collection after (parent) inits are done
 	};
 
 

@@ -397,41 +397,42 @@ var app = app || {};
 				}
 
 				formElement.appendChild(outerDiv);
-
-				
-			// Render to DOM and initialize
-
-				this.ssuper().prototype.render.call(this);
-
-			
-			// Do custom post-render initialization
-
-				$('#account-settings-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
-
-					if ($(nEvent.currentTarget).val().length > 0 // pw is not empty
-
-						&& $(nEvent.currentTarget).val() !== $(nEvent.currentTarget).data('value') // pw is 'dirty'
-
-						&&  $(nEvent.currentTarget).checkValidity()) { // pw is valid
-
-							$('#account-settings-password-confirmation-parent').removeClass('hidden');
-
-							$('#account-settings-password-confirmation-parent').show('slow');
-					}
-				});
 		}
 
 		else { // present default message
 
-			this.$renderContext().empty();
-
-			this.$renderContext().append(this.createElement(
+			container.appendChild(this.createElement(
 			{
 				element: 'p',
 
 				innerHTML: 'No account selected. Please select or create a account in order to edit details.'
 			}));
 		}
+
+		
+		// Render to DOM
+
+			this.ssuper().prototype.render.call(this);
+
+		
+		// Do post-render initialization
+
+			this.init();
+
+		
+			$('#account-settings-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
+
+				if ($(nEvent.currentTarget).val().length > 0 // pw is not empty
+
+					&& $(nEvent.currentTarget).val() !== $(nEvent.currentTarget).data('value') // pw is 'dirty'
+
+					&&  $(nEvent.currentTarget).checkValidity()) { // pw is valid
+
+						$('#account-settings-password-confirmation-parent').removeClass('hidden');
+
+						$('#account-settings-password-confirmation-parent').show('slow');
+				}
+			});
 	};
 
 

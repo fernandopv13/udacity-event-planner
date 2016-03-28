@@ -144,7 +144,16 @@ var app = app || {}; // create a simple namespace for the module
 			* @throws {IllegalArgumentError} If trying to set container that is not a instance of HTMLElement
 			*/
 			
-			this.containerElement = new module.Accessor(_containerElement, false, HTMLElement, 'HTMLElement');
+			this.containerElement = new module.Accessor(
+
+				_containerElement,
+
+				false,
+
+				typeof HTMLElement === 'function' ? HTMLElement : Object, // IE11 workaround: typeof HTMLElement is 'object', not type in IE11
+
+				 'HTMLElement'
+			);
 
 
 			/** Gets or sets the render context (i.e. the HTML element the View will render itself into)
@@ -358,17 +367,19 @@ var app = app || {}; // create a simple namespace for the module
 
 		app.View.prototype.init = function() {
 
+			console.log('Initializing ' + this.className()); // debug
+
 			this.hide(); // when rendering in the background, prevent first render from resulting in showing the view
 
 			if (this.elementOptions) { // do post-processing that require elements to be rendered to the DOM
 
 				for (var id in this.elementOptions) { // run through elements (by id) 
 
-					//console.log(id); //debug
-
 					if (this.elementOptions[id].init) { // run any custom initializer
 
 						if (typeof this.elementOptions[id].init === 'function') {
+
+							//console.log(id); //debug
 
 							this.elementOptions[id].init(this, id, this.elementOptions[id]);
 						}
@@ -381,8 +392,6 @@ var app = app || {}; // create a simple namespace for the module
 
 					app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
 				}
-
-				delete this.elementOptions; // free up temporary variable for garbage collection
 			}
 		};
 
@@ -425,11 +434,8 @@ var app = app || {}; // create a simple namespace for the module
 			//  Free up containerElement for garbage collection
 
 				this.containerElement(null);
-		
-		
-			// Do generic post-render initialization
 
-				this.init();
+			//console.log('Rendered ' + this.className() + ' to DOM'); // debug
 		}
 		
 		
@@ -480,8 +486,6 @@ var app = app || {}; // create a simple namespace for the module
 			]
 
 			// Main container
-
-				// Using 
 
 				var containerDiv = this.createWidget(
 
@@ -844,7 +848,7 @@ var app = app || {}; // create a simple namespace for the module
 
 					if (Model_m === null || Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) && Model_m.constructor === this.modelClass()) {
 
-						//console.log('Rendering ' + View_v.className()); // debug
+						console.log('Received update to ' + View_v.className()); // debug
 
 						this.model(Model_m);
 

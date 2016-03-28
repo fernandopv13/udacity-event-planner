@@ -36,7 +36,7 @@ describe('Class FrontPageView', function(){
 
 			done();
 
-		}, 500); // wait for page to load
+		}, 2000); // wait for page to load
 	});
 	
 	
@@ -90,25 +90,33 @@ describe('Class FrontPageView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update();
+			testView.update(null, new testApp.FrontPageView());
 
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
 
 
-		it('can show and hide itself', function() {
+		it('can show and hide itself', function(done) {
 			
-			testView.show();
+			testView.show(5);
 
 			expect(testElement.hasClass('hidden')).toBe(false);
 
 			expect(testElement.css('display')).toBe('block');
 
-			testView.hide();
+			testView.hide(5);
 
 			expect(testElement.hasClass('hidden')).toBe(true);
 
 			expect(testElement.css('display')).toBe('none');
+
+			testView.show(5);
+
+			setTimeout(function() {
+				
+				done();
+
+			}, 1000);
 		});
 
 	

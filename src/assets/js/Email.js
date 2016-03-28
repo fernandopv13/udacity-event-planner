@@ -280,9 +280,9 @@ var app = app || {}; // create a simple namespace for the app
 	* @throws {IllegalArgumentError} If any of the data provided by the source does not fit the validation criteria of the target, as managed by accessors.
 	*/
 
-	module.Email.prototype.update = function(Email_e, int_objId) {
+	module.Email.prototype.update = function(Email_e, int_id) {
 
-		if (this.ssuper().prototype.update.call(this, arguments)) { // check whether to respond to this notification
+		if (this.ssuper().prototype.update.call(this, Email_e, int_id)) { // check whether to respond to this notification
 
 			// Update using accessors (for validation)
 

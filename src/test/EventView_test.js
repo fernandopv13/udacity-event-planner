@@ -44,7 +44,7 @@ describe('Class EventView', function(){
 
 			done();
 
-		}, 500); // wait for page to load		
+		}, 2000); // wait for page to load		
 	});
 	
 	
@@ -90,15 +90,15 @@ describe('Class EventView', function(){
 		});
 		
 
-		xit('responds to an update() call by rendering itself to the DOM', function() {
+		it('responds to an update() call by rendering itself to the DOM', function() {
 			
-			// just testing that something is rendered to its div, check details individually
+			// Just testing that something is rendered to its div, check details individually
 
 			testView.$renderContext().empty();
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update(new app.Event(), new app.EventView());
+			testView.update(testEvent, new testApp.EventView());
 			
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -134,7 +134,7 @@ describe('Class EventView', function(){
 				
 				done();
 
-			}, 25);
+			}, 1000);
 		});
 
 	

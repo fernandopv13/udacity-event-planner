@@ -51,9 +51,11 @@ var app = app || {}; // create a simple namespace for the module
 
 	module.IObservable.prototype.default_notifyObservers = function() {
 
+		//console.log(this);
+
 		var args = arguments;
 
-		//console.log(args); // debug
+		console.log(args); // debug
 
 		switch (args.length) {
 

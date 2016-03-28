@@ -43,7 +43,7 @@ describe('Class AccountProfileView', function(){
 
 			done();
 
-		}, 500); // wait for page to load
+		}, 2000); // wait for page to load
 	});
 	
 	
@@ -103,7 +103,9 @@ describe('Class AccountProfileView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update(new app.Event(), new app.AccountProfileView());
+			testView.update(testAccount, new testApp.AccountProfileView());
+
+			console.log(testView.$renderContext());
 			
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -139,7 +141,7 @@ describe('Class AccountProfileView', function(){
 				
 				done();
 
-			}, 25);
+			}, 1000);
 		});
 		
 

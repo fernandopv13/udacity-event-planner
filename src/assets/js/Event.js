@@ -638,7 +638,9 @@ var app = app || {}; // create a simple namespace for the app
 
 	module.Event.prototype.update = function(Event_e, int_id) {
 
-		if (this.ssuper().prototype.update.call(this, arguments)) { // check whether to respond to this notification
+		if (this.ssuper().prototype.update.call(this, Event_e, int_id)) { // check whether to respond to this notification
+
+			//console.log(JSON.stringify(Event_e)); // debug
 
 			// Update using accessors (for validation)
 

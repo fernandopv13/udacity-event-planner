@@ -93,11 +93,7 @@ var app = app || {};
 		}
 		*/
 
-		//console.log('notifying observers'); // debug
-		
-		//console.log(Model_m.className());
-
-		ctrl.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits (later, uncouple from controller using Observer pattern (i.e. implement IObservable))
+		this.notifyObservers(Model_m, View_v.model().id()); // update new model with any user edits
 
 		window.history.back(); // go one step back in browser history
 	};

@@ -11,6 +11,14 @@ var app = app || {};
 
 	/** @classdesc Abstract base class for the abstract factory method pattern used to create and manage UIwidgets.
 	*
+	* Classes are intended to be used as singletons so as not to duplicate the DOM for each HTML element created.
+	*
+	* Instance methods therefore cannot rely on their 'this' context but must be supplied the HTML element that needs processing.
+	*
+	* Something similar might be achieved using e.g. static methods, but that would make it impossible to
+	*
+	* take advantage of inheritance. Hence this 'hierarchy of singletons' approach.
+	*
 	* @abstract
 	*
 	* @constructor

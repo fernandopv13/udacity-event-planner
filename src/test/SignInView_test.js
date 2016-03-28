@@ -90,7 +90,7 @@ describe('Class SignInView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update();
+			testView.update(null, new testApp.SignInView);
 			
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});

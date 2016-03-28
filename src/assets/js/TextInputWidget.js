@@ -200,9 +200,11 @@ var app = app || {};
 		};
 		
 		
-		/** Initializes password field (required by UIWidget) */
+		/*DEPRECATED: Handled by InputWidget
 
-		module.TextInputWidget.prototype.init = function(HTMLInputElement_e) {};
+		Initializes password field (required by UIWidget) */
+
+		//module.TextInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
 		/** Event handler for interactive validation text input field.

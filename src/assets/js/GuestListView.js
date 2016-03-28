@@ -311,18 +311,11 @@ var app = app || {};
 					UlElement.appendChild(renderListItem(guest, this));
 
 				}, this);
-
-
-			// Render to DOM and initialize
-
-				this.ssuper().prototype.render.call(this);
 		}
 
 		else { // default
 
-			this.$renderContext().empty();
-
-			this.$renderContext().append(this.createWidget(
+			container.appendChild(this.createWidget(
 
 				'HTMLElement', // outer div
 
@@ -333,7 +326,7 @@ var app = app || {};
 				}
 			));
 			
-			this.$renderContext().append(this.createWidget(
+			container.appendChild(this.createWidget(
 
 				'HTMLElement', // inner div
 
@@ -349,7 +342,7 @@ var app = app || {};
 
 		// Add floating 'Add' button
 
-			this.$renderContext().append(this.createWidget(
+			container.appendChild(this.createWidget(
 
 				'FloatingActionButtonWidget',
 
@@ -364,11 +357,29 @@ var app = app || {};
 				}
 			));
 
-			$('#guest-list-add').on('mousedown', function(nEvent) {
+			this.elementOptions['guest-list-add'] = 
+			{
+				listeners:
+				{
+					mousedown:
+					
+						function(nEvent) {
 
-				this.notifyObservers(this, new module.Person('New Guest'), module.View.UIAction.CREATE);
+							this.notifyObservers(this, new module.Person('New Guest'), module.View.UIAction.CREATE);
 
-			}.bind(this));
+						}.bind(this)
+				}
+			}
+
+
+		// Render to DOM and initialize
+
+			this.ssuper().prototype.render.call(this);
+			
+
+		// Do post-render initialization
+
+			this.init();
 	};
 	
 })(app);

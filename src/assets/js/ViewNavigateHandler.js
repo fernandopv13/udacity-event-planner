@@ -87,7 +87,9 @@ var app = app || {};
 
 		if (view) {
 
-			ctrl.currentView(view, Model_m);
+			this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
+
+			ctrl.currentView(view, Model_m); // show the view
 		}
 
 		View_v = undefined; // try to speed up garbage collection of temporary helper object

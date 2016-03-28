@@ -598,7 +598,7 @@ var app = app || {};
 
 	module.Account.prototype.update = function(Account_a, int_id) {
 
-		if (this.ssuper().prototype.update.call(this, arguments)) { // check whether to respond to this notification
+		if (this.ssuper().prototype.update.call(this, Account_a, int_id)) { // check whether to respond to this notification
 
 			// Update using accessors (for validation)
 

@@ -93,9 +93,9 @@ var app = app || {};
 
 		if (account !== null) { // provided email and password match an account
 
-			ctrl.onAccountSelected.call(ctrl, account);
+			this.notifyObservers(account, new module.EventListView()); // render/refresh the view in the background
 
-			void (new module.View()).renderNavigation('Meetup Planner'); // show navigation
+			ctrl.onAccountSelected.call(ctrl, account); // set account and show view
 
 			Materialize.toast(
 

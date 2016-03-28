@@ -38,7 +38,7 @@ describe('class GuestListView', function(){
 
 			done();
 
-		}, 500); // wait for page to load		
+		}, 2000); // wait for page to load		
 	});
 
 
@@ -126,7 +126,7 @@ describe('class GuestListView', function(){
 				
 				done();
 
-			}, 25);
+			}, 1000);
 		});
 
 

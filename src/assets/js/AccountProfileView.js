@@ -70,8 +70,8 @@ var app = app || {};
 
 	module.AccountProfileView.prototype.render = function(Person_p) {
 
-		var widgetFactory = app.UIWidgetFactory.instance(); // shortcut reference to widgetFactory
-
+		var container; // shorthand reference to inherited temporary container element
+		
 		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
 		
@@ -79,7 +79,7 @@ var app = app || {};
 			
 			// Set up container div
 			
-				var container = this.containerElement(this.createWidget(
+				container = this.containerElement(this.createWidget(
 
 					'HTMLElement', // div
 
@@ -338,24 +338,26 @@ var app = app || {};
 				}
 
 				formElement.appendChild(outerDiv);
-
-			
-			// Render to DOM and initialize
-
-				this.ssuper().prototype.render.call(this);
 		}
 
 		else { // present default message
 
-			this.$renderContext().empty();
-
-			this.$renderContext().append(this.createWidget('HTMLElement',
+			container.appendChild(this.createWidget('HTMLElement',
 			{
 				element: 'p',
 
 				innerHTML: 'No profile selected. Please select or create a profile in order to edit details.'
 			}));
 		}
+
+			
+		// Render to DOM and initialize
+
+			this.ssuper().prototype.render.call(this);
+
+		// Do post-render initialization
+
+			this.init();
 	};
 
 

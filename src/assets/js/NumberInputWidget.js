@@ -197,9 +197,10 @@ var app = app || {};
 		};
 
 		
-		/** Initializes email field (required by UIWidget) */
+		/*DEPRECATED: Handled by InputWidget
+		 Initializes email field (required by UIWidget) */
 
-		module.NumberInputWidget.prototype.init = function(HTMLInputElement_e) {};
+		//module.NumberInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
 		/** Event handler for interactive validation of number field

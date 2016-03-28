@@ -200,7 +200,7 @@ var app = app || {};
 
 				attributes: {id: options.id + hintsprefix + '-charcount'},
 
-				classList: ['password-validation-hint'],
+				classList: ['password-validation-hint', 'hidden'], // hide by default, until input receives focus
 
 				innerHTML: 'Must be at least 8 characters long'
 			});

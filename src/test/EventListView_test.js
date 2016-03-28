@@ -38,7 +38,7 @@ describe('class EventListView', function(){
 
 			done();
 
-		}, 500); // wait for page to load		
+		}, 2000); // wait for page to load		
 	});
 
 
@@ -82,16 +82,16 @@ describe('class EventListView', function(){
 		});
 
 
-		xit('responds to an update() call by rendering itself to the DOM', function() {
+		it('responds to an update() call by rendering itself to the DOM', function() {
 			
-			// just testing that something is rendered to its div, check details individually
+			// Just testing that something is rendered to its div, check details individually
 
 			testView.$renderContext().empty();
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update(new app.Event(), new app.EventView());
-			
+			testView.update(new testApp.Account(), new testApp.EventListView());
+
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
 
@@ -126,7 +126,7 @@ describe('class EventListView', function(){
 				
 				done();
 
-			}, 25);
+			}, 1000);
 		});
 
 

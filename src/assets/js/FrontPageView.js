@@ -240,15 +240,15 @@ var app = app || {};
 			};
 
 		
-		// Render to DOM and initialize
+		// Render to DOM
 
 			this.ssuper().prototype.render.call(this);
+
+		// Do post-render initialization
+
+			this.init(); // call init up parent class chain
+
+			delete this.elementOptions; // free up temporary variable for garbage collection after (parent) inits are done
 	};
-
-	
-	module.FrontPageView.prototype.update = function(Model_m) {
-
-		this.render(Model_m);
-	}
 
 })(app);

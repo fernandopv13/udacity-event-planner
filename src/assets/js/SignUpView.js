@@ -386,7 +386,7 @@ var app = app || {};
 			{
 				listeners:
 				{
-					mousedown: this.submit
+					mousedown: app.SignUpView.prototype.submit.bind(this)
 				}
 			}
 
@@ -438,19 +438,24 @@ var app = app || {};
 			{
 				listeners:
 				{
-					mousedown: this.openDemo
+					mousedown: this.openDemo.bind(this)
 				}
 			}
 		
 		
-		// Render to DOM and initialize
+		// Render to DOM
 
 			this.ssuper().prototype.render.call(this);
 
 
-		// Do custom post-render initialization
+		// Do post-render initialization
 
-			$('#sign-up-email').attr('autofocus', true);
+			this.init(); // call init up parent class chain
+
+			delete this.elementOptions; // free up temporary variable for garbage collection after (parent) inits are done
+			
+			
+			$('#sign-up-email').attr('autofocus', true); // set focus on email
 
 
 			$('#sign-up-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
@@ -466,11 +471,6 @@ var app = app || {};
 						$('#sign-up-password-confirmation-parent').show('slow');
 				}
 			});
-
-
-		// call parent to perform common post-render task(s)
-
-			this.ssuper().prototype.update.call(this);
 	};
 
 
@@ -504,20 +504,18 @@ var app = app || {};
 			
 			// Dispatch submission using function in parent class
 
+			console.log(this);
+
 			this.ssuper().prototype.submit.call(this, account, module.View.UIAction.CREATE);
 
 			return true;
 		}
 
+		//else
+
 		Materialize.toast('Some info seems to be missing. Please try again', module.prefs.defaultToastDelay());
 
 		return false;
-	}
-
-
-	module.SignUpView.prototype.update = function(Model_m) {
-
-		this.render(Model_m);
 	}
 
 })(app);

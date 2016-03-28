@@ -36,7 +36,7 @@ describe('Class SignUpView', function(){
 
 			done();
 
-		}, 500); // wait for page to load
+		}, 2000); // wait for page to load//500
 		
 	});
 	
@@ -91,7 +91,7 @@ describe('Class SignUpView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update();
+			testView.update(null, new testApp.SignUpView);
 			
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -125,7 +125,7 @@ describe('Class SignUpView', function(){
 				
 				done();
 
-			}, 25);
+			}, 1000);//25
 		});
 
 	
@@ -295,9 +295,6 @@ describe('Class SignUpView', function(){
 			expect(testAccount.accountHolder().jobTitle()).toBe('Samurai');
 
 			expect(testAccount.accountHolder().birthday().valueOf()).toBe(12175200000);
-
-
-			
 		});
 
 

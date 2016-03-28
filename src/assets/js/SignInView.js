@@ -36,7 +36,7 @@ var app = app || {};
 		
 		module.FormView.call(this, null, str_elementId, str_heading);
 		
-
+		
 		/*----------------------------------------------------------------------------------------
 		* Other initialization
 		*---------------------------------------------------------------------------------------*/
@@ -68,12 +68,13 @@ var app = app || {};
 	}
 
 
-	/** Makes sure password hints are hidden by default */
+	/* Makes sure password hints are hidden by default */
 
+	/*
 	module.SignInView.prototype.onLoad = function() {
 
-		$('#sign-in-password-hints').hide('fast');
-	}
+		//$('#sign-in-password-hints').hide('fast');
+	}*/
 
 
 
@@ -265,15 +266,15 @@ var app = app || {};
 
 			this.elementOptions['sign-in-submit'] =
 			{
-				init: module.SubmitButtonWidget.prototype.init
+				init: module.SubmitButtonWidget.prototype.init.bind(this)
 			}
 
 		
 		// Add (hidden) demo sign-in link
 
-			innerDiv = this.createWidget(
+			innerDiv = this.createWidget( // div
 
-				'HTMLElement', // div
+				'HTMLElement',
 
 				{
 					element: 'div',			
@@ -298,14 +299,17 @@ var app = app || {};
 				}
 			));
 
-			innerDiv.appendChild(this.createWidget('HTMLElement', // link
-			{
-				element: 'a',
-				
-				attributes: {id: 'sign-in-demo-submit', role: 'button', tabindex:0},
-				
-				innerHTML: 'See our cool demo'
-			}));
+			innerDiv.appendChild(this.createWidget( // link
+
+				'HTMLElement',
+
+				{
+					element: 'a',
+					
+					attributes: {id: 'sign-in-demo-submit', role: 'button', tabindex:0},
+					
+					innerHTML: 'See our cool demo'
+				}));
 
 			this.elementOptions['sign-in-demo-submit'] =
 			{
@@ -326,14 +330,18 @@ var app = app || {};
 			};
 
 
-		// Render to DOM and initialize
+		// Render to DOM
 
 			this.ssuper().prototype.render.call(this);
 		
 		
-		// Do custom post-render initialization
+		// Do post-render initialization
 
-			$('#sign-in-email').attr('autofocus', true);
+			this.init(); // call init up parent class chain
+
+			delete this.elementOptions; // free up temporary variable for garbage collection after (parent) inits are done
+			
+			$('#sign-in-email').attr('autofocus', true); // set focus on email field
 	};
 
 
@@ -357,12 +365,6 @@ var app = app || {};
 		}
 
 		return false;
-	}
-
-
-	module.SignInView.prototype.update = function(Model_m) {
-
-		this.render(Model_m);
 	}
 
 })(app);

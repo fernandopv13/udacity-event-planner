@@ -178,12 +178,10 @@ var app = app || {};
 		};
 
 		
-		/** Initializes password field (required by UIWidget) */
+		/*DEPRECATED: Handled by InputWidget
+		Initializes password field (required by UIWidget) */
 
-		module.PasswordConfirmationInputWidget.prototype.init = function(View_v, str_id, obj_options) {
-
-			
-		};
+		//module.PasswordConfirmationInputWidget.prototype.init = function(View_v, str_id, obj_options) {};
 
 		
 		/** Event handler for interactive validation of password confirmation field.

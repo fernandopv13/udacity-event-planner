@@ -73,9 +73,9 @@ var app = app || {};
 
 					if (View_v === null || View_v.isInstanceOf(module.View)) {
 
-						//console.log('setting currentView to ' + View_v.className()); // debug
+						console.log('Setting current view to ' + View_v.className()); // debug
 
-						this.update(Model_m, View_v); // first notify observers: forms won't update if they are the current view
+						//this.update(Model_m, View_v); // first notify observers: forms won't update if they are the current view
 						
 						for (var view in _views) {
 
@@ -447,8 +447,7 @@ var app = app || {};
 					_views.frontPageView.render();
 
 					_views.frontPageView.show();
-
-				};
+			};
 
 			
 			/** Returns true if class implements the interface passed in (by function reference).

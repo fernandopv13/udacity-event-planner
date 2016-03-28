@@ -239,9 +239,10 @@ var app = app || {};
 		};
 
 		
-		/** Initializes password field (required by UIWidget) */
+		/*DEPRECATED: Handled by InputWidget
+		Initializes password field (required by UIWidget) */
 
-		module.SwitchInputWidget.prototype.init = function(HTMLInputElement_e) {};
+		//module.SwitchInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
 		/** Event handler for interactive validation of switch (checkbox) field.

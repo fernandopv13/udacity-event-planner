@@ -42,7 +42,7 @@ describe('Class AccountSettingsView', function(){
 
 			done();
 
-		}, 500); // wait for page to load
+		}, 2000); // wait for page to load
 		
 	});
 	
@@ -95,7 +95,7 @@ describe('Class AccountSettingsView', function(){
 		});
 		
 
-		xit('responds to an update() call by rendering itself to the DOM', function() {
+		it('responds to an update() call by rendering itself to the DOM', function() {
 			
 			// Just testing that something is rendered to its div, check details individually
 
@@ -103,7 +103,7 @@ describe('Class AccountSettingsView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update(new app.Account());
+			testView.update(testAccount, new testApp.AccountSettingsView());
 			
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
@@ -137,7 +137,7 @@ describe('Class AccountSettingsView', function(){
 				
 				done();
 
-			}, 25);
+			}, 1000);
 		});
 
 	

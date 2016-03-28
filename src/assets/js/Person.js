@@ -439,7 +439,7 @@ var app = app || {}; // create a simple namespace for the app
 
 	module.Person.prototype.update = function(Person_p, int_id) {
 
-		if (this.ssuper().prototype.update.call(this, arguments)) { // check whether to respond to this notification
+		if (this.ssuper().prototype.update.call(this, Person_p, int_id)) { // check whether to respond to this notification
 
 			// Update using accessors for validation
 

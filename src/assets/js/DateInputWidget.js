@@ -58,9 +58,12 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-		/** Factory method for creating date picker fields for forms
+		/** Factory method for creating date picker fields for forms.
 		*
-		* Uses a slightly customized version of Eonasdan's bootstrap-datetimepicker:
+		* See comments in source for detailed design considerations and attributions.
+		*/
+		
+		/* Uses a slightly customized version of Eonasdan's bootstrap-datetimepicker:
 		* https://github.com/Eonasdan/bootstrap-datetimepicker
 		* http://eonasdan.github.io/bootstrap-datetimepicker/
 		*
@@ -221,7 +224,10 @@ var app = app || {};
 			return outerDiv;
 		};
 
+		
 		/** Initializes datetime picker
+		*
+		* @param {View} v The View the picker belongs to
 		*
 		* @param {String} id Id of the date picker to initialize
 		*

@@ -71,19 +71,23 @@ var app = app || {};
 
 	module.ViewSelectHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		var ctrl = this.controller();
+		var ctrl = this.controller(), view;
 
 		switch (View_v.constructor) {
 
 			case module.EventListView: // selection made in event list
 
-				ctrl.onEventSelected.call(ctrl, Model_m);
+				this.notifyObservers(Model_m, new module.EventView()); // render/refresh the view in the background
+
+				ctrl.onEventSelected.call(ctrl, Model_m); // show the view
 
 				break;
 
 			case module.GuestListView: // selection made in guest list
 
-				ctrl.onGuestSelected.call(ctrl, Model_m);
+				this.notifyObservers(Model_m, new module.PersonView()); // render/refresh the view in the background
+				
+				ctrl.onGuestSelected.call(ctrl, Model_m); // show the view
 
 				break;
 		}

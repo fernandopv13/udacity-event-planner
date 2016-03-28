@@ -207,17 +207,17 @@ var app = app || {}; // create a simple namespace for the module
 
 	module.Model.prototype.update = function(Model_m, int_id) {
 
-		var args = arguments[0];
+		var args = arguments;
 
 		if (args.length === 2) {
 
-			if (args[0] && args[0].isInstanceOf && args[0].isInstanceOf(module.Model) && args[1] === parseInt(args[1])) { //correct method signature
+			if (args[0] && args[0].isInstanceOf && args[0].isInstanceOf(module.Model) && args[1] === parseInt(args[1])) { //console.log('correct method signature');
 
-				if (args[0].constructor === this.constructor) { // correct Model subtype
+				if (args[0].constructor === this.constructor) { //console.log('correct Model subtype');
 
-					if (typeof args[1] === 'number' && parseInt(args[1]) === this.id()) { // correct id
+					if (typeof args[1] === 'number' && parseInt(args[1]) === this.id()) { //console.log('correct id');
 
-						//console.log(args); // debug
+						console.log('Received update to ' + this.className() + ' ' + this.id()); // debug
 
 						return true;
 					}

@@ -105,7 +105,7 @@ var app = app || {};
 			var createElement = module.HTMLElement.instance().createProduct;
 
 						
-			var outerDiv =  createElement( // outer div
+			var outerDiv = createElement( // outer div
 			{
 				element: 'div',
 				
@@ -114,7 +114,7 @@ var app = app || {};
 
 			
 
-			var innerDiv =  createElement( // inner div
+			var innerDiv = createElement( // inner div
 			{
 				element: 'div',			
 				
@@ -184,9 +184,10 @@ var app = app || {};
 		};
 
 		
-		/** Initializes email field (required by UIWidget) */
+		/*DEPRECATED: Handled by InputWidget
+		 Initializes email field (required by UIWidget) */
 
-		module.EmailInputWidget.prototype.init = function(HTMLInputElement_e) {};
+		//module.EmailInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
 		/** Event handler for interactive validation of email field

@@ -145,7 +145,7 @@ var app = app || {};
 		
  		if (Account_a !== null) { // we have an account
 
- 		// Add list element
+ 			// Add list element
 
 				container = this.containerElement(this.createWidget(
 
@@ -187,18 +187,11 @@ var app = app || {};
 
 					container.appendChild(renderListItem(events[prop], this));
 				}
-		
-			
-			// Render to DOM and initialize
-
-				this.ssuper().prototype.render.call(this);
 		}
 
 		else { // default
 
-			this.$renderContext().empty();
-
-			this.$renderContext().append(this.createWidget(
+			container = this.containerElement(this.createWidget(
 
 				'HTMLElement', // outer div
 
@@ -209,7 +202,7 @@ var app = app || {};
 				}
 			));
 
-			this.$renderContext().append(this.createWidget(
+			container.appendChild(this.createWidget(
 
 				'HTMLElement', // inner div
 				
@@ -226,7 +219,7 @@ var app = app || {};
 		
 		// Add floating 'Add' button
 
-			this.$renderContext().append(this.createWidget(
+			container.appendChild(this.createWidget(
 
 				'FloatingActionButtonWidget',
 
@@ -241,11 +234,29 @@ var app = app || {};
 				}
 			));
 
-			$('#event-list-add').on('mousedown', function(nEvent) {
+			this.elementOptions['event-list-add'] = 
+			{
+				listeners:
+				{
+					mousedown:
+					
+						function(nEvent) {
 
-				this.notifyObservers(this, new module.Event('New Event'), module.View.UIAction.CREATE);
+							this.notifyObservers(this, new module.Event('New Event'), module.View.UIAction.CREATE);
 
-			}.bind(this));
+						}.bind(this)
+				}
+			}
+
+			
+		// Render to DOM
+
+			this.ssuper().prototype.render.call(this);
+
+			
+		// Do post-render initialization
+
+			this.init();
 	};
 
 })(app);
