@@ -143,9 +143,9 @@ describe('Class AccountSettingsView', function(){
 	
 	// Test presence of UI widgets
 
-		it('does not display the main navigation', function() {
+		it('displays the main navigation', function() {
 			
-			expect(testWindow.$('.navbar-fixed').length).toBe(0);
+			expect(testWindow.$('#nav-main').length).toBe(1);
 		});
 
 

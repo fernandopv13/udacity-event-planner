@@ -140,9 +140,9 @@ describe('Class EventView', function(){
 	
 	// Test presence of UI widgets
 
-		xit('displays the main navigation', function() {
+		it('displays the main navigation', function() {
 			
-			expect(testWindow.$('.navbar-fixed').length).toBe(1);
+			expect(testWindow.$('#nav-main').length).toBe(1);
 		});
 
 

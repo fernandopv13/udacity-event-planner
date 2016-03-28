@@ -130,9 +130,9 @@ describe('Class SignInView', function(){
 	
 	// Test presence of UI widgets
 
-		it('does not display the main navigation', function() {
+		it('doesn not display the main navigation', function() {
 			
-			expect(testWindow.$('.navbar-fixed').length).toBe(0);
+			expect(testWindow.$('#nav-main').length).toBe(0);
 		});
 
 

@@ -236,93 +236,6 @@ var app = app || {}; // create a simple namespace for the module
 		}
 
 		
-		/* DEPRECATED: Reove and see what breaks
-		* Factory method for creating the main heading in forms
-		*
-		* @return {HTMLDivElement} DIV element
-		*/
-
-		module.View.prototype.createHeading = function (str_width, str_heading) {
-
-			var outerDiv =  this.createWidget(
-
-			'HTMLElement', // outer div
-
-			{
-				element: 'div',			
-				
-				classList: ['row']
-			});
-
-			var innerDiv =  this.createWidget(
-
-				'HTMLElement', // inner div
-
-				{
-					element: 'div',			
-					
-					classList: ['col', str_width]
-				}
-			);
-
-			innerDiv.appendChild(this.createWidget(
-
-				'HTMLElement',
-
-				{
-
-					element: 'h4',
-
-					attributes: {role: 'heading'},
-
-					innerHTML: str_heading
-				}
-			));
-
-			outerDiv.appendChild(innerDiv);
-			
-			return outerDiv;
-		}
-
-
-		/*  DEPRECATED: Reove and see what breaks
-		* Factory method for creating required field explanations for forms
-		*
-		* @return {HTMLDivElement} DIV element
-		*/
-
-		module.View.prototype.createRequiredFieldExplanation = function () {
-
-			var outerDiv =  this.createWidget(
-
-				'HTMLElement', // outer div
-
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				}
-			);
-			
-			outerDiv.appendChild(this.createWidget(
-
-				'HTMLElement',
-
-				{
-			
-					element: 'p',
-					
-					classList: ['required-indicator'],
-						
-					innerHTML: '* indicates a required field'
-				}
-			));
-						
-			
-			return outerDiv;
-		}
-
-
 		/* Generic UIWidget factory method.
 		*
 		* Provides shorthand notation for (somewhat unwieldy) calls to UIWidgetFactory
@@ -367,37 +280,12 @@ var app = app || {}; // create a simple namespace for the module
 
 		app.View.prototype.init = function() {
 
-			console.log('Initializing ' + this.className()); // debug
+			//console.log('Initializing ' + this.className()); // debug
 
 			this.hide(); // when rendering in the background, prevent first render from resulting in showing the view
 
-			// Initialize UIWidgets
-
-				if (this.elementOptions) { // do post-processing that require elements to be rendered to the DOM
-
-					for (var id in this.elementOptions) { // run through elements (by id) 
-
-						if (this.elementOptions[id].init) { // run any custom initializer
-
-							if (typeof this.elementOptions[id].init === 'function') {
-
-								//console.log(id); //debug
-
-								this.elementOptions[id].init(this, id, this.elementOptions[id]);
-							}
-
-							else {
-
-								throw new IllegalArgumentError('Expected function');
-							}
-						}
-
-						app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
-					}
-				}
-
-
-			// Display nav bar (in most cases)
+			
+			// Generate nav bar (in most cases)
 
 				var exclusions = [module.FrontPageView, module.SignInView, module.SignUpView];
 
@@ -451,7 +339,12 @@ var app = app || {}; // create a simple namespace for the module
 							}
 						));
 
-						module.NavigationWidget.instance().init(this, 'nav-main', {}); // initialize in DOM
+						this.elementOptions['nav-main'] = 
+						{
+							init: module.NavigationWidget.prototype.init
+						}
+
+						//module.NavigationWidget.instance().init(this, 'nav-main', {}); // initialize in DOM
 					}
 
 					else if ($('#nav-main').hasClass('hidden')) { // nav bar in DOM, but hidden, so show
@@ -461,6 +354,32 @@ var app = app || {}; // create a simple namespace for the module
 						$('#nav-main').show();
 
 						// later, also remove aria-hidden attribute, if present
+					}
+				}
+
+
+			// Initialize UIWidgets (including nav bar)
+
+				if (this.elementOptions) { // do post-processing that require elements to be rendered to the DOM
+
+					for (var id in this.elementOptions) { // run through elements (by id) 
+
+						if (this.elementOptions[id].init) { // run any custom initializer
+
+							if (typeof this.elementOptions[id].init === 'function') {
+
+								//console.log(id); //debug
+
+								this.elementOptions[id].init(this, id, this.elementOptions[id]);
+							}
+
+							else {
+
+								throw new IllegalArgumentError('Expected function');
+							}
+						}
+
+						app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
 					}
 				}
 		};
@@ -518,7 +437,7 @@ var app = app || {}; // create a simple namespace for the module
 		* @todo Make navigation (more) accessible e.g. to screen readers
 		*/
 
-		/*
+		/* DEPRECATED: Remove and see what breaks
 		module.View.prototype.renderNavigation = function(str_logotype) {
 
 			var menuItems = 

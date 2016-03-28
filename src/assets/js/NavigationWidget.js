@@ -58,7 +58,7 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-		/** Factory method for creating main navigation bar in views
+		/** Factory method for creating main navigation bar in views that require it
 		
 		* @param {Object} JSON object literal containing specs of date input to be created. Se comments in code for an example.
 		*
@@ -72,7 +72,9 @@ var app = app || {};
 			/* Sample JSON specification object using all default features:
 
 			{
-				id: 'test-email',
+				id: 'nav-main',
+
+				logotype: 'Meetup Planner',
 
 				menuItems: // list of menu items, in order of presentation
 				[

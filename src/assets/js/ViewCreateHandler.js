@@ -83,8 +83,6 @@ var app = app || {};
 
 				ctrl.onAccountSelected.call(ctrl, Model_m); // open its (empty) event list
 
-				void (new module.View()).renderNavigation('Meetup Planner'); // show navigation
-
 				Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
 
 				break;

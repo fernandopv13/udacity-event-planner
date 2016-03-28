@@ -124,9 +124,9 @@ describe('Class FrontPageView', function(){
 
 		it('does not display the main navigation', function() {
 			
-			expect(testWindow.$('.navbar-fixed').length).toBe(0);
+			expect(testWindow.$('#nav-main').length).toBe(0);
 		});
-		
+
 
 		it('displays a main heading', function() {
 			
