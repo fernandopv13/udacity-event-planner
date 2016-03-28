@@ -81,7 +81,7 @@ var app = app || {};
 
 							_views[view].hide('fast');  // hide all views
 
-							_views[view].onUnLoad(); // have hidden views clean up after themselves						
+							//_views[view].onUnLoad(); // DEPRECATED: have hidden views clean up after themselves						
 
 						}
 
@@ -470,6 +470,7 @@ var app = app || {};
 			
 			/** Handles click events in navbar/dropdown */
 
+			/*
 			this.onNavSelection = function(nEvent) {
 
 				switch (event.target.href.split('!')[1]) { // parse the URL partial after #!
@@ -507,7 +508,7 @@ var app = app || {};
 
 						console.log('Navigation selection not supported');
 				}
-			}
+			}*/
 
 
 			/** Passes history onpopstate events on to router */

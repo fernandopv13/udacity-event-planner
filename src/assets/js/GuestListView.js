@@ -87,7 +87,7 @@ var app = app || {};
 
 					listeners:
 					{
-						click: function(e) {self.onClick(e, Person_g);}
+						mousedown: function(e) {self.onSelect(e, Person_g);}
 					}
 				}
 			);
@@ -340,41 +340,10 @@ var app = app || {};
 			));
 		}
 
-		// Add floating 'Add' button
+		
+		// Render to DOM
 
-			container.appendChild(this.createWidget(
-
-				'FloatingActionButtonWidget',
-
-				{
-					id: 'guest-list-add',
-
-					icon: 'add',
-
-					color: 'red',
-
-					label: 'Add guest'
-				}
-			));
-
-			this.elementOptions['guest-list-add'] = 
-			{
-				listeners:
-				{
-					mousedown:
-					
-						function(nEvent) {
-
-							this.notifyObservers(this, new module.Person('New Guest'), module.View.UIAction.CREATE);
-
-						}.bind(this)
-				}
-			}
-
-
-		// Render to DOM and initialize
-
-			this.ssuper().prototype.render.call(this);
+			this.ssuper().prototype.render.call(this, Event_e);
 			
 
 		// Do post-render initialization

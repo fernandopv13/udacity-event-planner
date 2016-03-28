@@ -305,7 +305,7 @@ var app = app || {};
 				{
 					listeners: {
 
-						focus: this.suggestedEventTypes // suggest event types
+						focus: this.suggestEvents // suggest event types
 					}
 				}
 							
@@ -836,7 +836,7 @@ var app = app || {};
 	* Datalists not supported by Safari at the time of this writing, but fails silently with no adverse effects.
 	*/
 
-	module.EventView.prototype.suggestedEventTypes = function() {
+	module.EventView.prototype.suggestEvents = function() {
 
 		var $listElement = $('#suggested-event-types'), optionElement;
 

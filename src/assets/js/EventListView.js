@@ -101,7 +101,7 @@ var app = app || {};
 
 						listeners:
 						{
-							click: function(e) {self.onClick(e, Event_e);}
+							mousedown: function(e) {self.onSelect(e, Event_e);}
 						}
 				});
 
@@ -216,42 +216,10 @@ var app = app || {};
 			));
 		}
 
-		
-		// Add floating 'Add' button
-
-			container.appendChild(this.createWidget(
-
-				'FloatingActionButtonWidget',
-
-				{
-					id: 'event-list-add',
-
-					icon: 'add',
-
-					color: 'red',
-
-					label: 'Add event'
-				}
-			));
-
-			this.elementOptions['event-list-add'] = 
-			{
-				listeners:
-				{
-					mousedown:
-					
-						function(nEvent) {
-
-							this.notifyObservers(this, new module.Event('New Event'), module.View.UIAction.CREATE);
-
-						}.bind(this)
-				}
-			}
-
 			
 		// Render to DOM
 
-			this.ssuper().prototype.render.call(this);
+			this.ssuper().prototype.render.call(this, Account_a);
 
 			
 		// Do post-render initialization

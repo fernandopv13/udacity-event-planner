@@ -309,7 +309,9 @@ var app = app || {}; // create a simple namespace for the module
 
 										href: '#!Settings', // link URL
 
-										icon: 'settings' // Google Material Design icon name (optional)
+										icon: 'settings', // Google Material Design icon name (optional)
+
+										view: 'AccountSettingsView' // class name of view link refers to
 									},
 
 									{
@@ -317,7 +319,9 @@ var app = app || {}; // create a simple namespace for the module
 
 										href: '#!Profile',
 
-										icon: 'account_circle'
+										icon: 'account_circle',
+
+										view: 'AccountProfileView'
 									},
 
 									{
@@ -325,7 +329,9 @@ var app = app || {}; // create a simple namespace for the module
 
 										href: '#!About',
 
-										icon: 'info'
+										icon: 'info',
+
+										view: 'AboutView'
 									},
 
 									{
@@ -333,7 +339,9 @@ var app = app || {}; // create a simple namespace for the module
 
 										href: '#!Sign Out',
 
-										icon: 'power_settings_new'
+										icon: 'power_settings_new',
+
+										view: 'SignOutView'
 									}
 								]
 							}
@@ -356,7 +364,9 @@ var app = app || {}; // create a simple namespace for the module
 						// later, also remove aria-hidden attribute, if present
 					}
 				}
-
+				
+				$('#nav-delete-icon').hide(1); // make sure delete icon is hidden by default; re-show in views that need it
+			
 
 			// Initialize UIWidgets (including nav bar)
 
@@ -396,13 +406,6 @@ var app = app || {}; // create a simple namespace for the module
 		};
 
 
-		module.View.prototype.onUnLoad = function(nEvent) {
-
-			return; // dummy method to make sure it's always available
-		};
-
-		
-
 		/** Renders View to the DOM and then initializes it.
 		*
 		* Call from individual Views after building containerElement.
@@ -412,7 +415,7 @@ var app = app || {}; // create a simple namespace for the module
 		* @throws {ReferenceError} If containerElement is empty
 		*/
 
-		module.View.prototype.render = function() {
+		module.View.prototype.render = function(Model_m) {
 
 			// Render to DOM
 
@@ -428,376 +431,6 @@ var app = app || {}; // create a simple namespace for the module
 		}
 		
 		
-		/** Utility for dynamically rendering main navigation directly to the DOM
-		*
-		* (so we can hide it until we need it).
-		*
-		* @return {HTMLDivElement} DIV element
-		*
-		* @todo Make navigation (more) accessible e.g. to screen readers
-		*/
-
-		/* DEPRECATED: Remove and see what breaks
-		module.View.prototype.renderNavigation = function(str_logotype) {
-
-			var menuItems = 
-			[
-				{
-					text: 'Account Settings',
-
-					href: '#!Settings',
-
-					icon: 'settings'
-				},
-
-				{
-					text: 'Account Profile',
-
-					href: '#!Profile',
-
-					icon: 'account_circle'
-				},
-
-				{
-					text: 'About',
-
-					href: '#!About',
-
-					icon: 'info'
-				},
-
-				{
-					text: 'Sign Out',
-
-					href: '#!Sign Out',
-
-					icon: 'power_settings_new'
-				}
-			]
-
-			// Main container
-
-				var containerDiv = this.createWidget(
-
-					'HTMLElement',
-
-						{
-							element: 'div',
-
-							classList: ['navbar-fixed']
-						}
-					);
-
-			
-			// 'More' dropdown
-
-				// Trying to follow the example here for acccesibility of the dropdown:
-				// https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms/How_to_build_custom_form_widgets#The_role_attribute
-
-				var ULElement = this.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'ul',
-
-						attributes: {id: 'nav-dropdown', role: 'menu'},
-
-						classList: ['dropdown-content']
-					}
-				);
-
-				containerDiv.appendChild(ULElement);
-
-				var listElement, anchorElement;
-
-				menuItems.forEach(function(item) { //dropdown menu items
-
-					anchorElement = this.createWidget(
-
-						'HTMLElement',
-
-						{
-							element: 'a',
-
-							attributes: {href: item.href, title: item.text},
-
-							innerHTML: item.text
-						}
-					);
-
-					listElement = this.createWidget('HTMLElement',{element: 'li', attributes: {role: 'menuitem'}});
-
-					listElement.appendChild(anchorElement);
-
-					ULElement.appendChild(listElement);
-
-				}, this);
-
-
-			// Main nav
-
-				var navContainer =  this.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'nav',
-
-						attributes: {role:'navigation'}
-					}
-				); 
-
-				containerDiv.appendChild(navContainer);
-
-				var divElement = this.createWidget('HTMLElement', // top nav
-				{
-					element: 'div',
-
-					classList: ['nav-wrapper']
-				});
-
-				navContainer.appendChild(divElement);
-
-				divElement.appendChild(this.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'a',
-
-						attributes: {href: '#!'},
-
-						classList: ['brand-logo'],
-
-						innerHTML: str_logotype
-					}
-				));
-
-				var iconElement = this.createWidget('HTMLElement', // 'hamburger' menu (icon)
-				{
-					element: 'i',
-
-					classList: ['material-icons'],
-
-					innerHTML: 'menu'
-				});
-
-				anchorElement = this.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'a',
-
-						attributes: {href: '#'},
-
-						classList: ['button-collapse'],
-
-						dataset: {activates: 'nav-side'}
-					}
-				);
-
-				anchorElement.appendChild(iconElement);
-
-				divElement.appendChild(anchorElement);
-
-
-				ULElement = this.createWidget(
-
-				'HTMLElement', // 'more' menu (desktop)
-
-					{
-						element: 'ul',
-
-						classList: ['right', 'hide-on-med-and-down']
-					}
-				);
-
-				listElement = this.createWidget('HTMLElement',{element: 'li'});
-
-				iconElement = this.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'i',
-
-						classList: ['material-icons', 'left'],
-
-						innerHTML: 'more_vert'
-					}
-				);
-
-				anchorElement = this.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'a',
-
-						attributes: {href: '#!', id: 'nav-dropdown-button'},
-
-						classList: ['dropdown-button'],
-
-						dataset: {activates: 'nav-dropdown'}
-					}
-				);
-
-				anchorElement.appendChild(iconElement);
-
-				listElement.appendChild(anchorElement);
-
-				ULElement.appendChild(listElement);
-
-				divElement.appendChild(ULElement);
-
-
-				ULElement = this.createWidget(
-
-					'HTMLElement', // delete icon
-
-					{
-						element: 'ul',
-
-						classList: ['right', 'hidden']
-					}
-				);
-
-				iconElement = this.createWidget(
-
-					'HTMLElement',
-					{
-						element: 'i',
-
-						classList: ['material-icons', 'left', 'modal-trigger'],
-
-						innerHTML: 'delete'
-					}
-				);
-
-				listElement = this.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'li',
-
-						attributes: {id: 'nav-delete-icon'}
-					}
-				);
-
-				listElement.appendChild(iconElement);
-
-				ULElement.appendChild(listElement);
-
-				divElement.appendChild(ULElement);
-
-	 		
-	 		// Side nav ('drawer')
-				
-				ULElement = this.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'ul',
-
-						attributes: {id: 'nav-side', role: 'menu'},
-
-						classList: ['side-nav']
-					}
-				);
-
-				menuItems.forEach(function(item) {
-
-					listElement = this.createWidget('HTMLElement',{element: 'li'});
-
-					anchorElement = this.createWidget(
-
-						'HTMLElement',
-
-						{
-							element: 'a',
-
-							attributes: {href: item.href, role:'menuitem'},
-
-							innerHTML: item.text
-						}
-					);
-
-					if (item.icon) {
-
-						anchorElement.appendChild(this.createWidget(
-
-							'HTMLElement',
-
-							{
-								element: 'i',
-
-								classList: ['material-icons', 'left'],
-
-								innerHTML: item.icon
-							}
-						));
-					}
-
-					listElement.appendChild(anchorElement);
-
-					ULElement.appendChild(listElement);
-
-				}, this);
-
-				divElement.appendChild(ULElement);
-
-
-			// Render to DOM
-
-				$('body').prepend(containerDiv);
-
-			
-			// Initialize
-
-				// UNCOMMENT AFTER DEBUGGING
-				//$('.dropdown-button').dropdown( // Materialize dropdown needs this call when created dynamically
-				//{
-				//	inDuration: 300,
-				//	
-				//	outDuration: 225,
-				//	
-				//	constrain_width: false, // Does not change width of dropdown to that of the activator
-				//	
-				//	hover: true, // Activate on hover
-				//	
-				//	gutter: 0, // Spacing from edge
-				//	
-				//	belowOrigin: false, // Displays dropdown below the button
-				//	
-				//	alignment: 'left' // Displays dropdown with edge aligned to the left of button
-				//});
-
-
-				$('#nav-delete-icon').hide();
-
-			
-			// Add event handlers
-
-				$('.button-collapse').sideNav(); // 'hamburger' menu
-
-				
-				$('#nav-dropdown, #nav-side').click(function(nEvent) { // navigation selection
-
-					$('.button-collapse').sideNav('hide');
-
-					module.controller.onNavSelection(nEvent);					
-				});
-
-			
-			return containerDiv;
-		}
-		*/
-
-
 		/** Utility for showing view in the UI on demand.
 		*
 		* Uses jQuery.show().

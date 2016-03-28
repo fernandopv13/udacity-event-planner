@@ -62,19 +62,90 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Captures click in list and notifies observers */
+	/** For now, simply passes the call up the inheritance chain.
+	*/
 
-	app.ListView.prototype.onClick = function(nEvent_e, Model_m) {
+	app.ListView.prototype.init = function() {
+
+		// Call parent to perform common post-render task(s)
+
+			app.View.prototype.init.call(this); // ssuper() refers to ListView, so call parent manually or enter infinite loop
+	}
+	
+
+	/** Captures tap/click in list and notifies observers */
+
+	app.ListView.prototype.onSelect = function(nEvent_e, Model_m) {
 
 		this.notifyObservers(this, Model_m, app.View.UIAction.SELECT);
 	};
 
 
-	/** Does misc housekeeping required when ListView has rendered to the DOM */
+	/** Does rendering tasks that are common to all ListViews (e.g. adding a "create" item action button)
+	*/
 
-	app.ListView.prototype.onRender = function(Model_m) {
+	app.ListView.prototype.render = function(Model_m) {
 
-		return; // listviews should respond dynamically to model updates, so dummy method for now
+		// Add floating 'Add' button to container
+
+			var ItemType, itemName; // 'Sentence caps' to please jsHint when using as constructor
+
+			switch (this.constructor) { // parse item type to create based on list type
+
+				case module.EventListView:
+
+					itemName = 'Event'
+
+					ItemType = module.Event;
+
+					break;
+
+				case module.GuestListView:
+
+					itemName = 'Guest'
+
+					ItemType = module.Person;
+
+					break;
+
+				default:
+
+					console.log(this.className() + ' not supported');
+			}
+
+			this.containerElement().appendChild(this.createWidget(
+
+				'FloatingActionButtonWidget',
+
+				{
+					id: itemName.toLowerCase() + '-list-add',
+
+					icon: 'add',
+
+					color: 'red',
+
+					label: 'Add ' + itemName.toLowerCase()
+				}
+			));
+
+			this.elementOptions[itemName.toLowerCase() + '-list-add'] = 
+			{
+				listeners:
+				{
+					mousedown:
+					
+						function(nEvent) {
+
+							this.notifyObservers(this, new ItemType('Create ' + itemName), module.View.UIAction.CREATE);
+
+						}.bind(this)
+				}
+			}
+
+		// Call parent to render to DOM
+
+			app.View.prototype.render.call(this, Model_m); // ssuper() refers to ListView, so call parent manually or enter infinite loop
 	}
+	
 
 })(app);

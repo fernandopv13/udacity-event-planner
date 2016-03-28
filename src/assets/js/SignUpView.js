@@ -71,13 +71,14 @@ var app = app || {};
 
 	/** Makes sure password hints are hidden by default */
 
+	/*
 	module.SignUpView.prototype.onLoad = function() {
 
 		$('#sign-up-password-hints').hide('fast');
 	}
 
 
-	/** Signs into the demo account */
+	/* Signs into the demo account */
 
 	module.SignUpView.prototype.openDemo = function(nEvent) {
 
@@ -473,6 +474,8 @@ var app = app || {};
 			});
 	};
 
+
+	/** Submits sign in credentials and opens acccount, if credentials check out*/
 
 	module.SignUpView.prototype.submit = function(nEvent) {
 

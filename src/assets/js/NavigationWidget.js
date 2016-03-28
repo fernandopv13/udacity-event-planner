@@ -83,7 +83,9 @@ var app = app || {};
 
 						href: '#!Settings', // link URL
 
-						icon: 'settings' // Google Material Design icon name (optional)
+						icon: 'settings', // Google Material Design icon name (optional)
+
+						view: AccountSettingsView
 					},
 
 					{
@@ -91,7 +93,9 @@ var app = app || {};
 
 						href: '#!Profile',
 
-						icon: 'account_circle'
+						icon: 'account_circle',
+
+						view: AccountProfileView
 					},
 
 					{
@@ -99,15 +103,19 @@ var app = app || {};
 
 						href: '#!About',
 
-						icon: 'info'
+						icon: 'info',
+
+						view: AboutView
 					},
 
 					{
 						text: 'Sign Out',
 
-						href: '#!Sign Out',
+						href: '#!SignOut',
 
-						icon: 'power_settings_new'
+						icon: 'power_settings_new',,
+
+						view: SignOutView
 					}
 				]
 			}
@@ -160,6 +168,10 @@ var app = app || {};
 						element: 'a',
 
 						attributes: {href: item.href, title: item.text},
+
+						classList: ['nav-menu-item'],
+
+						dataset: {view: item.view},
 
 						innerHTML: item.text
 					});
@@ -247,7 +259,7 @@ var app = app || {};
 				});
 
 				
-				listElement = createElement('HTMLElement',{element: 'li'});
+				listElement = createElement({element: 'li'});
 
 				
 				iconElement = createElement(
@@ -336,6 +348,10 @@ var app = app || {};
 
 						attributes: {href: item.href, role:'menuitem'},
 
+						classList: ['nav-menu-item'],
+
+						dataset: {view: item.view},
+
 						innerHTML: item.text
 					});
 
@@ -381,7 +397,7 @@ var app = app || {};
 					
 					constrain_width: false, // Does not change width of dropdown to that of the activator
 					
-					hover: true, // Activate on hover
+					hover: false, // Activate on hover
 					
 					gutter: 0, // Spacing from edge
 					
@@ -397,13 +413,23 @@ var app = app || {};
 				
 				$(element).find('.button-collapse').sideNav(); // initialize Materialize 'hamburger' menu
 
-				$(element).find('#nav-dropdown, #nav-side').on('mousedown', function(nEvent) { // side nav and dropdown menu
+				$(element).find('.nav-menu-item').on('mousedown', function(nEvent) { // side nav and dropdown menu items
 
 					$(element).find('.button-collapse').sideNav('hide');
 
-					module.controller.onNavSelection(nEvent);
+					try { // fail silently if menu item doesn't work
 
-				}.bind(View_v));
+						View_v.notifyObservers(new module[$(nEvent.target).data('view')], null, 4);//.target.href.split('!')[1]); // parse the URL partial after #!
+					}
+
+					catch(e) {
+
+						console.log(e);
+					}
+
+					//module.controller.onNavSelection(nEvent);
+
+				});//.bind(View_v));
 		};
 
 		

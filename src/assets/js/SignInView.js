@@ -345,6 +345,8 @@ var app = app || {};
 	};
 
 
+	/** Submits sign in credentials */
+
 	module.SignInView.prototype.submit = function(nEvent) {
 
 		if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass

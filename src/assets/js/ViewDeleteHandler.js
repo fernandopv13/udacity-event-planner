@@ -57,7 +57,7 @@ var app = app || {};
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Handles 'delete' user action in a View on behalf of a Controller.
+	/** Handles 'delete' user action in View on behalf of Controller.
 	* 
 	* @param {int} UIAction An integer representing the user action to respond to
 	*
@@ -66,30 +66,31 @@ var app = app || {};
 	* @param {View} v The View spawning the notification
 	*
 	* @return {void}
+	*
+	* @todo Increase coverage to account deletion
 	*/
 
 	module.ViewDeleteHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		/*
 		var ctrl = this.controller();
 
 		ctrl.removeObserver(Model_m);
 
-		switch (Model_m.constructor) {
+		switch (Model_m.constructor) { // may need to branch on View type in stead to deal with account settings/profile
 
 			case module.Event: // remove event completely from app
 
 				var evtName = Model_m.name();
 
-				module.Account.registry.removeObject(Model_m);
+				module.Event.registry.removeObject(Model_m);
 
 				ctrl.selectedAccount().removeEvent(Model_m);
 
-				ctrl.currentView().model(undefined);
+				//ctrl.currentView().model(undefined);
 
 				Model_m = undefined;
 
-				Materialize.toast(evtName + ' was deleted', 4000);
+				Materialize.toast(evtName + ' was deleted', module.prefs.defaultToastDelay());
 
 				break;
 
@@ -97,13 +98,12 @@ var app = app || {};
 
 				ctrl.selectedEvent().removeGuest(Model_m);
 
-				Materialize.toast(Model_m.name() + ' was taken off the guest list', 4000);
+				Materialize.toast(Model_m.name() + ' was taken off the guest list', module.prefs.defaultToastDelay());
 
 				break;
 		}
 
 		window.history.back();
-		*/
 	};
 
 })(app);

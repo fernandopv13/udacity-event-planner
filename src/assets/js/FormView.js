@@ -23,7 +23,7 @@ var app = app || {};
 	* @author Ulrik H. Gade, March 2016
 	*/
 
-	app.FormView = function(Function_modelClass, str_elementId, str_heading) {
+	module.FormView = function(Function_modelClass, str_elementId, str_heading) {
 
 		//FormView
 
@@ -35,19 +35,19 @@ var app = app || {};
 
 		this.className =  this.className ? this.className : 'FormView';
 
-		this.ssuper = this.ssuper ? this.ssuper : app.View;
+		this.ssuper = this.ssuper ? this.ssuper : module.View;
 
 
 		// Initializes instance members inherited from parent class
 		
-		app.View.call(this, Function_modelClass, str_elementId, str_heading);
+		module.View.call(this, Function_modelClass, str_elementId, str_heading);
 		
 			
 		/*----------------------------------------------------------------------------------------
 		* Other object initialization
 		*---------------------------------------------------------------------------------------*/
 			
-		this.parentList().push(app.FormView);
+		this.parentList().push(module.FormView);
 	};
 
 		
@@ -55,9 +55,9 @@ var app = app || {};
 	* Inherit from View
 	*---------------------------------------------------------------------------------------*/	
 
-	app.FormView.prototype = Object.create(app.View.prototype); // Set up inheritance
+	module.FormView.prototype = Object.create(module.View.prototype); // Set up inheritance
 
-	app.FormView.prototype.constructor = app.FormView; // Reset constructor property
+	module.FormView.prototype.constructor = module.FormView; // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -66,21 +66,32 @@ var app = app || {};
 
 	/** Handles delete event in UI */
 
-	app.FormView.prototype.delete = function(nEvent) {
+	module.FormView.prototype.delete = function(nEvent) {
 
-		this.onUnLoad();
-
-		this.notifyObservers(this, this.model(), app.View.UIAction.DELETE);
+		this.notifyObservers(this, this.model(), module.View.UIAction.DELETE);
 	};
+
+
+	/** Cleans up shared UI when hiding FormView (e.g. hides delete icon in nav bar) */
+
+	module.FormView.prototype.hide = function(obj_speed) {
+
+		// Call parent to perform common hide task(s)
+
+			module.View.prototype.hide.call(this, obj_speed); // ssuper() refers to FormView, so call parent manually or enter infinite loop
+
+		$('#nav-delete-icon').hide(1); // make sure delete icon is hidden by default; re-show in views that need it
+	}
+
 
 
 	/** Initializes event handlers and other functionality after the View has been unhidden */
 
-	app.FormView.prototype.init = function() {
+	module.FormView.prototype.init = function() {
 
 		// Call parent to perform common post-render task(s)
 
-			app.View.prototype.init.call(this); // ssuper() refers to FormView, so call parent manually or enter infinite loop
+			module.View.prototype.init.call(this); // ssuper() refers to FormView, so call parent manually or enter infinite loop
 
 
 		// Make sure Materialize fields and labels are formatted correctly
@@ -88,21 +99,23 @@ var app = app || {};
 			//Materialize.updateTextFields();
 
 		
-		// Display delete icon/button
+		// Setup delete button and modal
 			
-			$('#nav-delete-icon').show('slow');
+			$('#nav-delete-icon, #confirm-delete-modal-cancel, #confirm-delete-modal-ok').off(); // reset event handlers
 
-		
-		// Set up modal for delete confirmation
+			$('#nav-delete-icon').mousedown(function(nEvent) { // set up delete icon to open modal
 
-			$('#confirm-delete-modal-cancel').click(function(nEvent) {
+				$('#confirm-delete-modal').openModal();
+			});
+
+			$('#confirm-delete-modal-cancel').mousedown(function(nEvent) { // model cancel behaviour
 
 				$('#confirm-delete-modal').closeModal();
 
 			}.bind(this));
 
 
-			$('#confirm-delete-modal-ok').click(function(nEvent) {
+			$('#confirm-delete-modal-ok').mousedown(function(nEvent) { // model OK behaviour
 
 				$('#confirm-delete-modal').closeModal();
 
@@ -110,29 +123,17 @@ var app = app || {};
 
 			}.bind(this));
 
+			$('#nav-delete-icon').parent().removeClass('hidden'); // show delete icon
 
-			$('#nav-delete-icon').click(function(nEvent) {
-
-				$('#confirm-delete-modal').openModal();
-			});
-	};
-
-
-	/** Does varies housekeeping after the View has lost focus in the app */
-
-	app.FormView.prototype.onUnLoad = function(nEvent) {
-
-		$('#nav-delete-icon').hide('fast'); // hide delete icon in navbar
-
-		$('#nav-delete-icon, #confirm-delete-modal-cancel, #confirm-delete-modal-ok').off(); // remove all event handlers from delete widgets
+			$('#nav-delete-icon').show('slow');
 	};
 
 
 	/** Submits entries made by the user into the form to the controller, with the purpose of updating of the Model */
 
-	app.FormView.prototype.submit = function(Model_m, int_UIaction) {
+	module.FormView.prototype.submit = function(Model_m, int_UIaction) {
 
-		this.notifyObservers(this, Model_m, typeof int_UIaction === 'number' ? int_UIaction : app.View.UIAction.SUBMIT);
+		this.notifyObservers(this, Model_m, typeof int_UIaction === 'number' ? int_UIaction : module.View.UIAction.SUBMIT);
 
 		return true;
 	}
@@ -147,13 +148,13 @@ var app = app || {};
 	* @return {void}
 	*/
 
-	app.FormView.prototype.update = function(Model_m, View_v) {
+	module.FormView.prototype.update = function(Model_m, View_v) {
 
 		//console.log([this.className(), arguments]);
 
-		if (!app.controller.currentView() || this.constructor !== app.controller.currentView().constructor) { // view is not in focus
+		if (!module.controller.currentView() || this.constructor !== module.controller.currentView().constructor) { // view is not in focus
 
-			app.View.prototype.update.call(this, Model_m, View_v); // ssuper() does not work recursively, so call directly
+			module.View.prototype.update.call(this, Model_m, View_v); // ssuper() does not work recursively, so call directly
 		}
 	}
 
