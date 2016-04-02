@@ -87,7 +87,7 @@ var app = app || {};
 
 					listeners:
 					{
-						mousedown: function(e) {self.onSelect(e, Person_g);}
+						click: function(e) {self.onSelect(e, Person_g);} // jQuery.trigger() doesn't work with mousedown, so using click for purposes of testing
 					}
 				}
 			);

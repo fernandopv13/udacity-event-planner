@@ -284,6 +284,8 @@ var app = app || {};
 			
 			this.onGuestSelected = function(Person_g) { // temporary adapter while transitioning to the Strategy pattern
 
+				void this.selectedGuest(Person_g);
+				
 				this.currentView(_views.guestView, this.selectedGuest(Person_g));
 			};
 

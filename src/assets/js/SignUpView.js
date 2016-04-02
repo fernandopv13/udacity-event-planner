@@ -7,6 +7,7 @@
 var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
+	
 	/** @classdesc View class for displaying app's sign-up page.
 	*
 	* Fits into the MVC framework as a "Create Account" page
@@ -506,8 +507,6 @@ var app = app || {};
 
 			
 			// Dispatch submission using function in parent class
-
-			console.log(this);
 
 			this.ssuper().prototype.submit.call(this, account, module.View.UIAction.CREATE);
 

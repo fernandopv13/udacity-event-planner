@@ -35,16 +35,7 @@ describe('class Controller', function(){
 
 	describe('instance', function() {
 
-		function TestObserver() {this.notification = null;};
-
-		TestObserver.prototype.isInstanceOf = function() {return true;};
-
-		TestObserver.prototype.update = function() {this.notification = arguments;};
-
-		void app.IInterfaceable.mixInto(app.IObserver, TestObserver);
-
-		
-		var testController = new app.Controller(), testObserver = new TestObserver();
+		var testController = new app.Controller(), testObserver = new app.TestObserver();
 
 		testController.init();
 

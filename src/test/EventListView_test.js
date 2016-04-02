@@ -32,6 +32,8 @@ describe('class EventListView', function(){
 
 			testView = testApp.controller.views()['eventListView'];
 
+			testApp.controller.onAccountSelected(testApp.data.accounts[0]);
+
 			testElement = testView.$renderContext();
 
 			testAccount = testApp.data.accounts[0];
@@ -160,17 +162,17 @@ describe('class EventListView', function(){
 	
 	// Test UI behaviours
 
-		xit('navigates to event view for item in list when it is activated', function() {
+		it('navigates to event view for item in list when it is activated', function() {
 			
-			expect(testApp.controller.currentView()).not.toBeDefined();
+			expect(testApp.controller.currentView()).not.toBe(testApp.EventView);
 
-			testElement.find('.collection-item').first().find('div').trigger('mousedown');
+			testElement.find('.collection-item').first().find('div').trigger('click');
 
 			expect(testApp.controller.currentView().constructor).toBe(testApp.EventView);
 		});
 
 
-		xit('navigates to event view for new item when the main floating action button is activated', function(done) {
+		it('navigates to event view for new item when the main floating action button is activated', function(done) {
 			
 			testView.render(testAccount);
 
@@ -180,7 +182,7 @@ describe('class EventListView', function(){
 				
 				//expect(testApp.controller.currentView()).not.toBeDefined();
 
-				testElement.find('#event-list-add').trigger('mousedown');
+				testElement.find('#event-list-add').trigger('click');
 
 				expect(testApp.controller.currentView().constructor).toBe(testApp.EventView);
 
@@ -189,7 +191,6 @@ describe('class EventListView', function(){
 			}, 25);
 		});
 
-			
 
 	afterAll(function() {
 

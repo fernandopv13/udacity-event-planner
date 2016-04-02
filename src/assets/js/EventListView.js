@@ -101,7 +101,7 @@ var app = app || {};
 
 						listeners:
 						{
-							mousedown: function(e) {self.onSelect(e, Event_e);}
+							click: function(e) {self.onSelect(e, Event_e);} // jQuery.trigger() doesn't work with mousedown, so using click for purposes of testing
 						}
 				});
 

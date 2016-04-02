@@ -75,7 +75,9 @@ var app = app || {};
 
 	/** Captures tap/click in list and notifies observers */
 
-	app.ListView.prototype.onSelect = function(nEvent_e, Model_m) {
+	app.ListView.prototype.onSelect = function(nEvent, Model_m) {
+
+		console.log(nEvent);
 
 		this.notifyObservers(this, Model_m, app.View.UIAction.SELECT);
 	};
@@ -132,7 +134,7 @@ var app = app || {};
 			{
 				listeners:
 				{
-					mousedown:
+					click: // jQuery.trigger() doesn't work with mousedown, so using click for purposes of testing
 					
 						function(nEvent) {
 

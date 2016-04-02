@@ -66,7 +66,7 @@ var app = app || {};
 	*
 	* @param {int} UIAction An integer representing the user action to respond to
 	*
-	* @param {Model} m The Model bound to the view spawning the notification
+	* @param {Model} m A Model of the type to create
 	*
 	* @param {View} v The View spawning the notification
 	*
@@ -81,45 +81,62 @@ var app = app || {};
 
 		//console.log('Creating new ' + Model_m.className()); // debug
 
-		var ctrl = this.controller();
+		var ctrl = this.controller(), Model_n, self = this;
 
+		
+		function initModel(Model_m, Model_new, View_new) { // do work common to all Model creations
+
+			Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
+
+			ctrl.newModel(Model_new); // replace with new Model and store for future reference
+
+			ctrl.registerObserver(Model_new); // register new Model and controller as mutual observers
+
+			Model_new.registerObserver(ctrl);
+
+			self.notifyObservers(Model_new, View_new); // render/refresh the view in the background
+		}
+
+		
 		switch (Model_m.constructor) {
 
 			case module.Account:
 
-				/*
-				void ctrl.selectedAccount(Model_m); // set new model as selected
+				Model_n = new module.Account(); // create new Account
 
-				ctrl.registerObserver(Model_m); // register model and controller as mutual observers
+				void ctrl.selectedAccount(Model_n); // set new Account as selected
 
-				Model_m.registerObserver(ctrl);
+				initModel(Model_m, Model_n, ctrl.views().eventListView); // do boilerplate initialization
 
-				this.notifyObservers(Model_m, new module.EventListView()); // render/refresh the view in the background
+				void ctrl.newModel(null) // reset newModel
 
-				ctrl.onAccountSelected.call(ctrl, Model_m); //show the view
+				ctrl.onAccountSelected.call(ctrl, Model_n); // show the View
 
 				Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
 
 				break;
-				*/
 
 			case module.Event: // these steps seem mostly ripe for generalization
 
-				Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
+				//Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
 
-				Model_m = ctrl.newModel(new module.Event()); // replace with new Event and store for future reference
+				//Model_m = ctrl.newModel(new module.Event()); // replace with new Event and store for future reference
 
-				void ctrl.selectedAccount().addEvent(Model_m) // add new event to account
+				//ctrl.registerObserver(Model_m); // register new event and controller as mutual observers
 
-				void ctrl.selectedEvent(Model_m); // set new event as selected
+				//Model_m.registerObserver(ctrl);
 
-				ctrl.registerObserver(Model_m); // register new event and controller as mutual observers
+				//this.notifyObservers(Model_m, new module.EventView()); // render/refresh the view in the background
 
-				Model_m.registerObserver(ctrl);
+				Model_n = new module.Event(); // create new Event
 
-				this.notifyObservers(Model_m, new module.EventView()); // render/refresh the view in the background
+				void ctrl.selectedAccount().addEvent(Model_n) // add new Event to account
 
-				ctrl.onEventSelected.call(ctrl, Model_m); // show the view
+				void ctrl.selectedEvent(Model_n); // set new Event as selected
+
+				initModel(Model_m, Model_n, ctrl.views().eventView); // do boilerplate initialization
+
+				ctrl.onEventSelected.call(ctrl, Model_n); // show the View
 
 				break;
 
@@ -127,23 +144,27 @@ var app = app || {};
 
 				var evt = ctrl.selectedEvent();
 
-				if (evt.guests().length < evt.capacity()) { // check if there is capacity before trying to add a new guest
+				if (evt.capacity() && evt.guests().length < evt.capacity()) { // check if there is capacity before trying to add a new guest
 
-					Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
+					//Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
 
-					Model_m = ctrl.newModel(new module.Person()); // replace with new Person and store for future reference
+					//Model_m = ctrl.newModel(new module.Person()); // replace with new Person and store for future reference
 
-					void ctrl.selectedEvent().addGuest(Model_m) // add new person (guest) to event
+					//ctrl.registerObserver(Model_m); // register person and controller as mutual observers
 
-					void ctrl.selectedGuest(Model_m); // set new person as selected
+					//Model_m.registerObserver(ctrl);
 
-					ctrl.registerObserver(Model_m); // register person and controller as mutual observers
+					//this.notifyObservers(Model_m, new module.PersonView()); // render/refresh the view in the background
 
-					Model_m.registerObserver(ctrl);
+					Model_n = new module.Person(); // do boilerplate initialization
 
-					this.notifyObservers(Model_m, new module.PersonView()); // render/refresh the view in the background
+					void ctrl.selectedEvent().addGuest(Model_n) // add new person (guest) to event
 
-					ctrl.onGuestSelected.call(ctrl, Model_m); // show the view
+					void ctrl.selectedGuest(Model_n); // set new person as selected
+
+					initModel(Model_m, Model_n, ctrl.views().guestView); // do boilerplate initialization
+
+					ctrl.onGuestSelected.call(ctrl, Model_n); // show the view
 				}
 				
 				else { // inform user of capacity constraint

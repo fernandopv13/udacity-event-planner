@@ -36,6 +36,10 @@ describe('class GuestListView', function(){
 
 			testEvent = testApp.data.events[0];
 
+			void testApp.controller.selectedEvent(testEvent);
+
+			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
+
 			done();
 
 		}, 2000); // wait for page to load		
@@ -132,9 +136,9 @@ describe('class GuestListView', function(){
 
 	// Test presence of UI widgets
 		
-		xit('displays the main navigation', function() {
+		it('displays the main navigation', function() {
 			
-			expect(testWindow.$('.navbar-fixed').length).toBe(1);
+			expect(testWindow.$('#nav-main').length).toBe(1);
 		});
 
 
@@ -160,33 +164,27 @@ describe('class GuestListView', function(){
 	
 	// Test UI behaviours
 
-		xit('navigates to person view for item in list when it is activated', function() {
+		it('navigates to person view for item in list when it is activated', function() {
 			
 			expect(testApp.controller.currentView()).not.toBeDefined();
 
-			testElement.find('.collection-item').first().trigger('mousedown');
+			testElement.find('.collection-item').first().trigger('click');
 
 			expect(testApp.controller.currentView().constructor).toBe(testApp.PersonView);
 		});
 
 
-		xit('navigates to person view for new item when the main floating action button is activated', function(done) {
+		it('navigates to person view for new item when the main floating action button is activated', function() {
 			
 			testView.render(testEvent);
 
-			testView.show(5);
+			void testApp.controller.currentView(testView, testEvent);
 
-			setTimeout(function() {
-				
-				//expect(testApp.controller.currentView()).not.toBeDefined();
+			expect(testApp.controller.currentView()).not.toBe(testApp.PersonView);
 
-				testElement.find('#event-list-add').trigger('mousedown');
+			testElement.find('#guest-list-add').trigger('click');
 
-				expect(testApp.controller.currentView().constructor).toBe(testApp.EventView);
-
-				done();
-
-			}, 25);
+			expect(testApp.controller.currentView().constructor).toBe(testApp.PersonView);
 		});
 
 	afterAll(function() {
