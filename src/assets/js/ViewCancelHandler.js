@@ -73,42 +73,19 @@ var app = app || {};
 
 	module.ViewCancelHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		var ctrl = this.controller(), newModel = ctrl.newModel();
+		var ctrl = this.controller();
 
-		/*if (newModel !== null) { // creation of new model cancelled
-
-			newModel.constructor.registry.removeObject(newModel); // remove from registry
+		if (ctrl.newModel() !== null) { // creation of new model cancelled
 
 			ctrl.newModel(null); // reset newModel reference
 
-			ctrl.removeObserver(newModel); // remove from observer list
-
-			switch (newModel.constructor) { // remove from data model
-
-				case module.Account:
-
-					// remove from app?
-
-					break;
-
-				case module.Event:
-
-					///void ctrl.selectedAccount().removeEvent(newModel);
-
-					break;
-
-				case module.Person:
-
-					//void ctrl.selectedEvent().removeGuest(newModel);
-
-					break;
-			}
-
-			newModel = undefined; // free up for garbage collection
+			ctrl.update(View_v, Model_m, module.View.UIAction.DELETE); // delete model, using ViewDeleteHandler
 		}
-		*/
 
-		window.history.back(); // return to previous view
+		else {
+
+			window.history.back();
+		}
 	};
 
 })(app);

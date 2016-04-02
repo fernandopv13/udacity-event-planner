@@ -590,7 +590,7 @@ var app = app || {};
 
 			if(this.email()) {this.email().delete();}
 
-			void this.email(null);
+			void this.email(null); // probably not necessary
 
 			if (this.password()) {this.password().delete();}
 
@@ -602,7 +602,7 @@ var app = app || {};
 
 			for (var prop in this.events()) {
 
-				this.events[prop].guests.forEach(function(guest) {guest.delete();}); // event.delete() does not delete guests
+				this.events()[prop].guests().forEach(function(guest) {guest.delete();}); // event.delete() does not delete guests
 
 				// later, deal with IHosts (beware destroying before removing from guest list)
 

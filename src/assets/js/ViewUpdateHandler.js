@@ -167,9 +167,9 @@ var app = app || {};
 
 	module.ViewUpdateHandler.prototype.update = function(int_UIAction, Model_m, View_v) {
 		
-		if (arguments.length === 3) { // the number of args is right
+		if (arguments.length === 3) { console.log('correct number of arguments');
 
-			if (parseInt(int_UIAction) === int_UIAction && int_UIAction === this.uiAction()) { // UIAction is a matching integer
+			if (parseInt(int_UIAction) === int_UIAction && int_UIAction === this.uiAction()) { //console.log('UIAction is a matching integer');
 
 				if (Model_m === null || (Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model))) { // second param is instance of Model
 

@@ -74,6 +74,7 @@ var app = app || {};
 
 		var ctrl = this.controller(), name;
 		
+		
 		function deleteModel (Model_m) { // do work common to deleting most model types
 
 			void ctrl.removeObserver(Model_m); // unregister observer relationships
@@ -94,15 +95,29 @@ var app = app || {};
 
 			case module.Account:
 
-				
+				void ctrl.selectedAccount(null);
+
+				void ctrl.selectedEvent(null);
+
+				void ctrl.selectedGuest(null);
+
+				deleteModel(Model_m);
+
+				this.notifyObservers(null, ctrl.views().frontPageView); // render/refresh FrontPageView in the background
+
+				ctrl.currentView(ctrl.views().frontPageView, null) // show FrontPageView
+
+				Materialize.toast('Account was deleted. Sorry to see you go.', module.prefs.defaultToastDelay());
 
 				break;
 
 			case module.Event:
 
-				name = Model_m.name();
+				//name = Model_m.name() ? Model_m.name() : 'Untitled event';
 
 				ctrl.selectedAccount().removeEvent(Model_m); // remove from account
+
+				if (ctrl.selectedEvent() && ctrl.selectedEvent().id() === Model_m.id()) {void ctrl.selectedEvent(null);} // reset selected guest in controller
 
 				deleteModel(Model_m); // unregister and delete
 
@@ -110,13 +125,15 @@ var app = app || {};
 
 				ctrl.currentView(ctrl.views().eventListView, ctrl.selectedAccount()); // show the view
 
-				Materialize.toast(name + ' was deleted', module.prefs.defaultToastDelay());
+				//Materialize.toast('Event was deleted', module.prefs.defaultToastDelay());
 
 				break;
 
 			case module.Person: // remove from event but don't delete
 
-				ctrl.selectedEvent().removeGuest(Model_m); // remove from event (but keep in account)
+				void ctrl.selectedEvent().removeGuest(Model_m); // remove from event (but keep in account)
+
+				if (ctrl.selectedGuest() && ctrl.selectedGuest().id() === Model_m.id()) {void ctrl.selectedGuest(null);} // reset selected guest in controller
 
 				void ctrl.newModel(null); // remove reference to model if it was just created
 
@@ -124,7 +141,7 @@ var app = app || {};
 
 				ctrl.currentView(ctrl.views().guestListView, ctrl.selectedEvent()); // show the view
 
-				Materialize.toast(Model_m.name() + ' was taken off the guest list', module.prefs.defaultToastDelay());
+				//Materialize.toast('Guest was taken off the guest list', module.prefs.defaultToastDelay());
 
 				break;
 		}

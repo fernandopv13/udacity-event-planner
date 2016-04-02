@@ -287,6 +287,8 @@ var app = app || {}; // create a simple namespace for the module
 			
 			// Generate nav bar (in most cases)
 
+				//console.log('Initializing ' + this.className()) // debug
+
 				var exclusions = [module.FrontPageView, module.SignInView, module.SignUpView];
 
 				if (exclusions.indexOf(this.constructor) < 0) { // view not excluded from having nav bar
@@ -363,6 +365,11 @@ var app = app || {}; // create a simple namespace for the module
 
 						// later, also remove aria-hidden attribute, if present
 					}
+				}
+
+				else { // hide nav bar, in case its is already rendered and visible
+
+					$('#nav-main').hide('fast');
 				}
 				
 				$('#nav-delete-icon').hide(1); // make sure delete icon is hidden by default; re-show in views that need it
