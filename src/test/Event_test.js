@@ -592,387 +592,401 @@ describe('class Event', function(){
 		});
 
 		
-		// IObserver testing
+		// IObserver/CRUD testing
 
-		it('can update itself when notified of change by Observable', function() {
+			it('can delete itself', function() {
 
-			var id = testEvent.id();
+				expect(typeof testEvent.delete).toBe('function');
 
-			
-			// Create temporary object to copy from
+				var id = testEvent.id();
 
-			var tmpEvent = new app.Event(
+				expect(app.Event.registry.getObjectById(id)).not.toBe(null);
 
-				'Birthday party',
+				testEvent.delete();
+
+				expect(app.Event.registry.getObjectById(id)).toBe(null);
+			});
+
+
+			it('can update itself when notified of change by Observable', function() {
+
+				var id = testEvent.id();
+
 				
-				'Celebration of life',
-				
-				new Date(2500000),
-				
-				new Date(2500001),
-				
-				'Starbucks',
-				
-				'Just testing',
-				
-				new app.Organization('ACME Corp Inc'),
-				
-				5
-			);
+				// Create temporary object to copy from
 
-			var tmpId = tmpEvent.id();
+				var tmpEvent = new app.Event(
 
-			var tmpHostId = tmpEvent.host().id();
+					'Birthday party',
+					
+					'Celebration of life',
+					
+					new Date(2500000),
+					
+					new Date(2500001),
+					
+					'Starbucks',
+					
+					'Just testing',
+					
+					new app.Organization('ACME Corp Inc'),
+					
+					5
+				);
 
-			
-			// Verify that object contents are different
+				var tmpId = tmpEvent.id();
+
+				var tmpHostId = tmpEvent.host().id();
+
+				
+				// Verify that object contents are different
+
+					expect(testEvent.id()).toEqual(id);
+
+					expect(testEvent.name()).not.toEqual(tmpEvent.name());
+
+					expect(testEvent.type()).not.toEqual(tmpEvent.type());
+
+					expect(testEvent.start()).not.toEqual(tmpEvent.start());
+
+					expect(testEvent.end()).not.toEqual(tmpEvent.end());
+
+					expect(testEvent.location()).not.toEqual(tmpEvent.location());
+
+					expect(testEvent.description()).not.toEqual(tmpEvent.description());
+
+					expect(testEvent.capacity()).not.toEqual(tmpEvent.capacity());
+
+					expect(testEvent.host().id()).not.toEqual(tmpEvent.host().id());
+
+
+				// Copy data from temporary object
+
+				testEvent.update (tmpEvent, id);
+
+
+				// Verify copy
 
 				expect(testEvent.id()).toEqual(id);
 
-				expect(testEvent.name()).not.toEqual(tmpEvent.name());
+				expect(testEvent.name()).toEqual('Birthday party');
 
-				expect(testEvent.type()).not.toEqual(tmpEvent.type());
+				expect(testEvent.type()).toEqual('Celebration of life');
 
-				expect(testEvent.start()).not.toEqual(tmpEvent.start());
+				expect(testEvent.start().valueOf()).toEqual(new Date(2500000).valueOf());
 
-				expect(testEvent.end()).not.toEqual(tmpEvent.end());
+				expect(testEvent.end().valueOf()).toEqual(new Date(2500001).valueOf());
 
-				expect(testEvent.location()).not.toEqual(tmpEvent.location());
+				expect(testEvent.location()).toEqual('Starbucks');
 
-				expect(testEvent.description()).not.toEqual(tmpEvent.description());
+				expect(testEvent.description()).toEqual('Just testing');
 
-				expect(testEvent.capacity()).not.toEqual(tmpEvent.capacity());
+				expect(testEvent.capacity()).toEqual(5);
 
-				expect(testEvent.host().id()).not.toEqual(tmpEvent.host().id());
-
-
-			// Copy data from temporary object
-
-			testEvent.update (tmpEvent, id);
+				expect(testEvent.host().id()).toEqual(tmpHostId);
 
 
-			// Verify copy
+				// Verify that temporary object has been removed from registry
 
-			expect(testEvent.id()).toEqual(id);
-
-			expect(testEvent.name()).toEqual('Birthday party');
-
-			expect(testEvent.type()).toEqual('Celebration of life');
-
-			expect(testEvent.start().valueOf()).toEqual(new Date(2500000).valueOf());
-
-			expect(testEvent.end().valueOf()).toEqual(new Date(2500001).valueOf());
-
-			expect(testEvent.location()).toEqual('Starbucks');
-
-			expect(testEvent.description()).toEqual('Just testing');
-
-			expect(testEvent.capacity()).toEqual(5);
-
-			expect(testEvent.host().id()).toEqual(tmpHostId);
-
-
-			// Verify that temporary object has been removed from registry
-
-			expect(app.Event.registry.getObjectById(tmpId)).toBe(null);
-		});
+				expect(app.Event.registry.getObjectById(tmpId)).toBe(null);
+			});
 
 
 		// ISerializable testing
 
-		it('can get its class name', function() {
+			it('can get its class name', function() {
 
-			expect(testEvent.className()).toBe('Event');
-		});
+				expect(testEvent.className()).toBe('Event');
+			});
 
 
-		it('can get its ID', function() {
-		
-			expect((new app.Event()).id()).toBeDefined();
-		});
-		
-		
-		it('rejects attempt to set ID (b/c read-only)', function() {
-		
-			try {
+			it('can get its ID', function() {
+			
+				expect((new app.Event()).id()).toBeDefined();
+			});
+			
+			
+			it('rejects attempt to set ID (b/c read-only)', function() {
+			
+				try {
+					
+					(new app.Event()).id(5);
+				}
 				
-				(new app.Event()).id(5);
-			}
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
 			
-			catch(e) {
 				
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
-		
+			it('has an ID that is a positive integer or zero', function() {
 			
-		it('has an ID that is a positive integer or zero', function() {
-		
-			expect(testEvent.id()).toBeGreaterThan(-1);
-			
-			expect(parseInt(testEvent.id()) === testEvent.id()).toBe(true);
-		});
+				expect(testEvent.id()).toBeGreaterThan(-1);
+				
+				expect(parseInt(testEvent.id()) === testEvent.id()).toBe(true);
+			});
 
-		
-		it('can be serialized to a valid JSON string', function() {
 			
-			// Set up some values to test for
-			
-			testEvent = new app.Event('Fab Festival','Summer Entertainment',new Date());
-			
-			testEvent.capacity(50);
+			it('can be serialized to a valid JSON string', function() {
+				
+				// Set up some values to test for
+				
+				testEvent = new app.Event('Fab Festival','Summer Entertainment',new Date());
+				
+				testEvent.capacity(50);
 
-			testEvent.description('Fabulous summer entertainment!');
-			
-			testEvent.host(testOrg);
-			
-			
-			// Stringify then parse back in
-			
-			var obj = JSON.parse(JSON.stringify(testEvent));
-			
-			
-			// Test
-			
-			expect(typeof obj).toBe('object');
-			
-			expect(obj._className).toBeDefined();
-			
-			expect(obj._id).toBeDefined();
-			
-			expect(obj._start).toBeDefined();
-			
-			expect(obj._end).not.toBeDefined(); // default
-			
-			expect(obj._name).toBeDefined();
-			
-			expect(obj._type).toBeDefined();
-			
-			expect(obj._location).not.toBeDefined();
-			
-			expect(obj._description).toBeDefined();
-			
-			expect(obj._host).toBeDefined();
-			
-			expect(obj._capacity).toBeDefined(); // default
-			
-			expect(obj._guests.constructor).toBe(Array);
-			
-			expect(obj._guests.length).toBe(0); // default
-		});
-		
-		
-		it('can write itself to local storage', function() {
-			
-			testEvent.writeObject();
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
-			
-			expect(testEvent.className()).toEqual(obj._className);
-			
-			expect(testEvent.id()).toEqual(obj._id);
-			
-			expect(JSON.stringify(testEvent).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
-		});
-		
-		
-		it('can read (i.e. re-instantiate) itself from local storage', function() {
-			
-			testEvent.name('Big Fat Summer Festival'); // set a value to test for
-			
-			testEvent.writeObject(); // write out to local storage
-			
-			app.Event.registry = new app.ObjectRegistry(app.Event, 'Event'); // reset registry
-			
-			expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
-			
-			expect(testEvent.className()).toBe('Event'); // test
-			
-			expect(testEvent.name()).toBe('Big Fat Summer Festival');
-		});
-		
-		
-		it('can remove itself from local storage', function() {
-			
-			testEvent.name('Cool Winter Slumber'); // set a value to test for
-			
-			testEvent.writeObject(); // write out to local storage
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
-			
-			expect(obj._name).toBe('Cool Winter Slumber'); // verify write
-			
-			testEvent.removeObject(); // remove from local storage
-			
-			obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
-			
-			expect(obj).toBe(null); // test that it's gone
-		});
-		
-		
-		it('rejects attempt to recreate itself from local storage if JSON has the wrong class', function() {
-			
-			testEvent.writeObject(); // write out to local storage, the read back in
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
-			
-			obj._className = 'no such class'; // deliberately mess up local storage
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
-			
-			app.Event.registry = new app.ObjectRegistry(app.Event, 'Event'); // reset registry
-			
-			expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				testEvent.description('Fabulous summer entertainment!');
+				
+				testEvent.host(testOrg);
+				
+				
+				// Stringify then parse back in
+				
+				var obj = JSON.parse(JSON.stringify(testEvent));
+				
+				
+				// Test
+				
+				expect(typeof obj).toBe('object');
+				
+				expect(obj._className).toBeDefined();
+				
+				expect(obj._id).toBeDefined();
+				
+				expect(obj._start).toBeDefined();
+				
+				expect(obj._end).not.toBeDefined(); // default
+				
+				expect(obj._name).toBeDefined();
+				
+				expect(obj._type).toBeDefined();
+				
+				expect(obj._location).not.toBeDefined();
+				
+				expect(obj._description).toBeDefined();
+				
+				expect(obj._host).toBeDefined();
+				
+				expect(obj._capacity).toBeDefined(); // default
+				
+				expect(obj._guests.constructor).toBe(Array);
+				
+				expect(obj._guests.length).toBe(0); // default
+			});
 			
 			
-			expect(testEvent.className()).toBe('Event'); // test
+			it('can write itself to local storage', function() {
+				
+				testEvent.writeObject();
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
+				
+				expect(testEvent.className()).toEqual(obj._className);
+				
+				expect(testEvent.id()).toEqual(obj._id);
+				
+				expect(JSON.stringify(testEvent).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
+			});
 			
-			try {
+			
+			it('can read (i.e. re-instantiate) itself from local storage', function() {
+				
+				testEvent.name('Big Fat Summer Festival'); // set a value to test for
+				
+				testEvent.writeObject(); // write out to local storage
+				
+				app.Event.registry = new app.ObjectRegistry(app.Event, 'Event'); // reset registry
+				
+				expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're empty
 				
 				testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
 				
-				expect(e.message.indexOf('Wrong class')).toBeGreaterThan(-1);
-			}
+				expect(testEvent.className()).toBe('Event'); // test
+				
+				expect(testEvent.name()).toBe('Big Fat Summer Festival');
+			});
 			
-			expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
 			
-			expect(testEvent.className()).toBe('Event'); // we should not have overridden original object
-		});
-		
-		
-		it('rejects attempt to recreate itself from storage if JSON does not have a valid ID', function() {
+			it('can remove itself from local storage', function() {
+				
+				testEvent.name('Cool Winter Slumber'); // set a value to test for
+				
+				testEvent.writeObject(); // write out to local storage
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
+				
+				expect(obj._name).toBe('Cool Winter Slumber'); // verify write
+				
+				testEvent.removeObject(); // remove from local storage
+				
+				obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
+				
+				expect(obj).toBe(null); // test that it's gone
+			});
+			
+			
+			it('rejects attempt to recreate itself from local storage if JSON has the wrong class', function() {
+				
+				testEvent.writeObject(); // write out to local storage, the read back in
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
+				
+				obj._className = 'no such class'; // deliberately mess up local storage
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
+				
+				app.Event.registry = new app.ObjectRegistry(app.Event, 'Event'); // reset registry
+				
+				expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				
+				
+				expect(testEvent.className()).toBe('Event'); // test
+				
+				try {
+					
+					testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message.indexOf('Wrong class')).toBeGreaterThan(-1);
+				}
+				
+				expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
+				
+				expect(testEvent.className()).toBe('Event'); // we should not have overridden original object
+			});
+			
+			
+			it('rejects attempt to recreate itself from storage if JSON does not have a valid ID', function() {
 
-			testEvent.writeObject(); // write out to local storage
+				testEvent.writeObject(); // write out to local storage
+				
+				app.Event.registry = new app.ObjectRegistry(app.Event, 'Event'); // reset registry
+				
+				expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
+				
+				
+				delete obj._id; // ID is undefined
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID not defined');
+				}
+				
+				
+				obj._id = 'not an integer'; // ID is not an integer
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID must be an integer');
+				}
+				
+				
+				obj._id = -1 // ID is negative
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID must be greater than or equal to zero');
+				}
+				
+				
+				obj._id = testEvent.id() + 1; // ID mismatch
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message.indexOf('ID mismatch')).toBe(0);
+				}
+				
+				expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
+			});
 			
-			app.Event.registry = new app.ObjectRegistry(app.Event, 'Event'); // reset registry
 			
-			expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id()));
-			
-			
-			delete obj._id; // ID is undefined
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
-			
-			try {
+			it('can re-establish object references when de-serializing from JSON', function(){
+				
+				testEvent.addGuest(new app.Person('Jorge'));
+				
+				testEvent.addGuest(new app.Person('Juanita'));
+				
+				testEvent.addGuest(new app.Person('Jaime'));
+				
+				testEvent.host(testOrg);
+				
+				testEvent.writeObject(); // write out to local storage
+				
+				app.Event.registry.remove(testEvent); // remove from registry
 				
 				testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
 				
-				expect(e.message).toBe('Cannot re-instantiate object: ID not defined');
-			}
-			
-			
-			obj._id = 'not an integer'; // ID is not an integer
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
-			
-			try {
+				expect(testEvent.className()).toBe('Event'); // verify re-instantiation
 				
-				testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
+				expect(testEvent.name()).toBe('Vinter solstice celebration');
 				
-				expect(e.message).toBe('Cannot re-instantiate object: ID must be an integer');
-			}
-			
-			
-			obj._id = -1 // ID is negative
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
-			
-			try {
 				
-				testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
+				testEvent.onDeserialized();
 				
-				expect(e.message).toBe('Cannot re-instantiate object: ID must be greater than or equal to zero');
-			}
-			
-			
-			obj._id = testEvent.id() + 1; // ID mismatch
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testEvent.className() + '.' + testEvent.id(), JSON.stringify(obj));
-			
-			try {
 				
-				testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
+				expect(testEvent.guests()[0].name()).toBe('Jorge'); // verify deserialization
 				
-				expect(e.message.indexOf('ID mismatch')).toBe(0);
-			}
-			
-			expect(Object.keys(app.Event.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
-		});
-		
-		
-		it('can re-establish object references when de-serializing from JSON', function(){
-			
-			testEvent.addGuest(new app.Person('Jorge'));
-			
-			testEvent.addGuest(new app.Person('Juanita'));
-			
-			testEvent.addGuest(new app.Person('Jaime'));
-			
-			testEvent.host(testOrg);
-			
-			testEvent.writeObject(); // write out to local storage
-			
-			app.Event.registry.remove(testEvent); // remove from registry
-			
-			testEvent = new app.Event(testEvent.id()); // re-instantiate from local storage
-			
-			expect(testEvent.className()).toBe('Event'); // verify re-instantiation
-			
-			expect(testEvent.name()).toBe('Vinter solstice celebration');
+				expect(testEvent.guests()[1].name()).toBe('Juanita');
+				
+				expect(testEvent.guests()[2].name()).toBe('Jaime');
+				
+				expect(testEvent.guests()[3]).not.toBeDefined();
+				
+				expect(testEvent.host().name()).toBe('test organization');
+			});
 			
 			
-			testEvent.onDeserialized();
+			afterEach(function() {
+				
+				app.prefs.isLocalStorageAllowed(oldPermission);
+				
+				localStorage.clear();
+			});
 			
 			
-			expect(testEvent.guests()[0].name()).toBe('Jorge'); // verify deserialization
-			
-			expect(testEvent.guests()[1].name()).toBe('Juanita');
-			
-			expect(testEvent.guests()[2].name()).toBe('Jaime');
-			
-			expect(testEvent.guests()[3]).not.toBeDefined();
-			
-			expect(testEvent.host().name()).toBe('test organization');
-		});
-		
-		
-		afterEach(function() {
-			
-			app.prefs.isLocalStorageAllowed(oldPermission);
-			
-			localStorage.clear();
-		});
-		
-		
-		afterAll(function() {
-			
-			testEvent = null;
-			
-			testOrg = null;
-			
-			testPerson = null;
-			
-			delete app.testData;
-		});
+			afterAll(function() {
+				
+				testEvent = null;
+				
+				testOrg = null;
+				
+				testPerson = null;
+				
+				delete app.testData;
+			});
 		
 	});
 	

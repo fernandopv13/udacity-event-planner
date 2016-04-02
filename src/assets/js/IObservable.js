@@ -180,8 +180,8 @@ var app = app || {}; // create a simple namespace for the module
 
 				return null;
 			}
-			
-			if (this.observers().length > 1) {this.observers().splice(ix, 1);} else {this.observers.pop();}
+
+			if (this.observers().length > 1) {this.observers().splice(ix, 1);} else {this.observers().pop();}
 		}
 
 		else {

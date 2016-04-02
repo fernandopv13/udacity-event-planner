@@ -72,40 +72,64 @@ var app = app || {};
 
 	module.ViewDeleteHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		var ctrl = this.controller();
+		var ctrl = this.controller(), name;
+		
+		function deleteModel (Model_m) { // do work common to deleting most model types
 
-		void Model_m.constructor.registry.removeObject(Model_m); // remove from registry
+			void ctrl.removeObserver(Model_m); // unregister observer relationships
 
-		void ctrl.removeObserver(Model_m); // remove from observers
+			Model_m.observers().forEach(function(observer) {
 
+				void Model_m.removeObserver(observer);
+
+			}, Model_m);
+
+			void ctrl.newModel(null); // remove reference to model if it was just created
+
+			Model_m.delete(); // call Model's delete() method
+		}
+
+		
 		switch (Model_m.constructor) { // do type specfic cleanup and notification
 
 			case module.Account:
 
-				// do something
+				
 
 				break;
 
 			case module.Event:
 
+				name = Model_m.name();
+
 				ctrl.selectedAccount().removeEvent(Model_m); // remove from account
 
-				Materialize.toast(Model_m.name() + ' was deleted', module.prefs.defaultToastDelay());
+				deleteModel(Model_m); // unregister and delete
+
+				this.notifyObservers(ctrl.selectedAccount(), ctrl.views().eventListView); // render/refresh EventListView in the background
+
+				ctrl.currentView(ctrl.views().eventListView, ctrl.selectedAccount()); // show the view
+
+				Materialize.toast(name + ' was deleted', module.prefs.defaultToastDelay());
 
 				break;
 
-			case module.Person:
+			case module.Person: // remove from event but don't delete
 
-				ctrl.selectedEvent().removeGuest(Model_m); 
+				ctrl.selectedEvent().removeGuest(Model_m); // remove from event (but keep in account)
+
+				void ctrl.newModel(null); // remove reference to model if it was just created
+
+				this.notifyObservers(ctrl.selectedEvent(), ctrl.views().guestListView); // render/refresh guestListView in the background
+
+				ctrl.currentView(ctrl.views().guestListView, ctrl.selectedEvent()); // show the view
 
 				Materialize.toast(Model_m.name() + ' was taken off the guest list', module.prefs.defaultToastDelay());
 
 				break;
 		}
 
-		void ctrl.newModel(null); // remove reference to model if it was just created (this may be redundant)
-
-		window.history.back();
+		//window.history.back();
 	};
 
 })(app);

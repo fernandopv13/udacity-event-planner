@@ -340,6 +340,20 @@ describe('class Organization', function(){
 		});
 		
 		
+		it('can delete itself', function() {
+
+			expect(typeof testOrg.delete).toBe('function');
+
+			var id = testOrg.id();
+
+			expect(app.Organization.registry.getObjectById(id)).not.toBe(null);
+
+			testOrg.delete();
+
+			expect(app.Organization.registry.getObjectById(id)).toBe(null);				
+		});
+
+
 		it('can update itself when notified of change by Observable', function() {
 
 			var id = testOrg.id();

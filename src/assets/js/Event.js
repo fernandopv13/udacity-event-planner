@@ -610,67 +610,67 @@ var app = app || {}; // create a simple namespace for the app
 	* Inherit from Model
 	*---------------------------------------------------------------------------------------*/	
 
-	module.Event.prototype = Object.create(module.Model.prototype); // Set up inheritance
+		module.Event.prototype = Object.create(module.Model.prototype); // Set up inheritance
 
-	module.Event.prototype.constructor = module.Event; // Reset constructor property
+		module.Event.prototype.constructor = module.Event; // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Updates Event instance when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Event} event Object holding the data to update from
-	*
-	* @param {int} id Id of the event intended to receive the update
-	*
-	* @return {Boolean} true if copy was successful, otherwise error or false
-	*
-	* @throws {IllegalArgumentError} If object provided is not an instance of Event
-	*
-	* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
-	*
-	* @throws {IllegalArgumentError} If any of the data provided by the source does not fit the validation criteria of the target, as managed by accessors.
-	*/
+		/** Updates Event instance when notified of change by observable (controller). Autosaves to local storage if available.
+		*
+		* (See IObserver for further documentation.)
+		*
+		* @param {Event} event Object holding the data to update from
+		*
+		* @param {int} id Id of the event intended to receive the update
+		*
+		* @return {Boolean} true if copy was successful, otherwise error or false
+		*
+		* @throws {IllegalArgumentError} If object provided is not an instance of Event
+		*
+		* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+		*
+		* @throws {IllegalArgumentError} If any of the data provided by the source does not fit the validation criteria of the target, as managed by accessors.
+		*/
 
-	module.Event.prototype.update = function(Event_e, int_id) {
+		module.Event.prototype.update = function(Event_e, int_id) {
 
-		if (this.ssuper().prototype.update.call(this, Event_e, int_id)) { // check whether to respond to this notification
+			if (this.ssuper().prototype.update.call(this, Event_e, int_id)) { // check whether to respond to this notification
 
-			//console.log(JSON.stringify(Event_e)); // debug
+				//console.log(JSON.stringify(Event_e)); // debug
 
-			// Update using accessors (for validation)
+				// Update using accessors (for validation)
 
-			this.name(Event_e.name());
+				this.name(Event_e.name());
 
-			this.type(Event_e.type());
+				this.type(Event_e.type());
 
-			if (Event_e.start() && Event_e.end()) {this.start(null);this.end(null);} // don't compare to existing data if supplied valid replacements
+				if (Event_e.start() && Event_e.end()) {this.start(null);this.end(null);} // don't compare to existing data if supplied valid replacements
 
-			this.start(Event_e.start() ? Event_e.start() : null);
+				this.start(Event_e.start() ? Event_e.start() : null);
 
-			this.end(Event_e.end() ? Event_e.end() : null);
+				this.end(Event_e.end() ? Event_e.end() : null);
 
-			if (Event_e.location()) {this.location(Event_e.location());}
+				if (Event_e.location()) {this.location(Event_e.location());}
 
-			this.description(Event_e.description());
+				this.description(Event_e.description());
 
-			this.capacity(Event_e.capacity());
+				this.capacity(Event_e.capacity());
 
-			this.host(Event_e.host());
-			
-			// Do some housekeeping common to all Model updates
+				this.host(Event_e.host());
+				
+				// Do some housekeeping common to all Model updates
 
-			this.ssuper().prototype.onUpdate.call(this, Event_e);
-			
-			return true;
+				this.ssuper().prototype.onUpdate.call(this, Event_e);
+				
+				return true;
+			}
+
+			return false; // this should never happen, keeping just in case
 		}
-
-		return false; // this should never happen, keeping just in case
-	}
 
 
 
@@ -678,8 +678,8 @@ var app = app || {}; // create a simple namespace for the app
 	* Public class (static) members
 	*---------------------------------------------------------------------------------------*/
 
-	/** Provides non-mutable, unique event IDs */
+		/** Provides non-mutable, unique event IDs */
 
-	module.Event.registry = new module.ObjectRegistry(module.Event, 'Event');
+		module.Event.registry = new module.ObjectRegistry(module.Event, 'Event');
 
 })(app);

@@ -468,6 +468,20 @@ describe('class Password', function(){
 		});
 
 
+		it('can delete itself', function() {
+
+				expect(typeof testPassword.delete).toBe('function');
+
+				var id = testPassword.id();
+
+				expect(app.Password.registry.getObjectById(id)).not.toBe(null);
+
+				testPassword.delete();
+
+				expect(app.Password.registry.getObjectById(id)).toBe(null);				
+			});
+
+
 		it('can update itself when notified of change by Observable', function() {
 
 			var id = testPassword.id();

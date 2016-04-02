@@ -116,17 +116,7 @@ var app = app || {};
 
 				break;
 
-			case module.Event: // these steps seem mostly ripe for generalization
-
-				//Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
-
-				//Model_m = ctrl.newModel(new module.Event()); // replace with new Event and store for future reference
-
-				//ctrl.registerObserver(Model_m); // register new event and controller as mutual observers
-
-				//Model_m.registerObserver(ctrl);
-
-				//this.notifyObservers(Model_m, new module.EventView()); // render/refresh the view in the background
+			case module.Event:
 
 				Model_n = new module.Event(); // create new Event
 
@@ -145,16 +135,6 @@ var app = app || {};
 				var evt = ctrl.selectedEvent();
 
 				if (evt.capacity() && evt.guests().length < evt.capacity()) { // check if there is capacity before trying to add a new guest
-
-					//Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
-
-					//Model_m = ctrl.newModel(new module.Person()); // replace with new Person and store for future reference
-
-					//ctrl.registerObserver(Model_m); // register person and controller as mutual observers
-
-					//Model_m.registerObserver(ctrl);
-
-					//this.notifyObservers(Model_m, new module.PersonView()); // render/refresh the view in the background
 
 					Model_n = new module.Person(); // do boilerplate initialization
 

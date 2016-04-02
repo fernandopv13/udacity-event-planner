@@ -194,257 +194,271 @@ describe('class Email', function(){
 		
 		// ISerializable testing
 
-		it('can get its class name', function() {
+			it('can get its class name', function() {
 
-			expect(testMail.className()).toBe('Email');
-		});
-		
+				expect(testMail.className()).toBe('Email');
+			});
+			
 
-		it('can get its ID', function() {
-		
-			expect(testMail.id()).toBeDefined();
-		});
-		
-		
-		it('rejects attempt to set ID (b/c read-only)', function() {
-		
-			try {
-				
-				testMail.id(5);
-			}
+			it('can get its ID', function() {
 			
-			catch(e) {
-				
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
-		
-				
-		it('has an ID that is a positive integer or zero', function() {
-		
-			expect(testMail.id()).toBeGreaterThan(-1);
+				expect(testMail.id()).toBeDefined();
+			});
 			
-			expect(parseInt(testMail.id()) === testMail.id()).toBe(true);
-		});
-		
+			
+			it('rejects attempt to set ID (b/c read-only)', function() {
+			
+				try {
+					
+					testMail.id(5);
+				}
+				
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+			
+					
+			it('has an ID that is a positive integer or zero', function() {
+			
+				expect(testMail.id()).toBeGreaterThan(-1);
+				
+				expect(parseInt(testMail.id()) === testMail.id()).toBe(true);
+			});
+			
 
-		it('can be serialized to a valid JSON string', function() {
-			
-			var obj = JSON.parse(JSON.stringify(testMail));
-			
-			expect(typeof obj).toBe('object');
-			
-			expect(obj._className).toBeDefined();
-			
-			expect(obj._id).toBeDefined();
-			
-			expect(obj._address).toBeDefined();
-			
-			expect(obj._isValid).toBeDefined();
-		});
-		
-		
-		it('can write itself to local storage', function() {
-			
-			testMail.writeObject();
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
-			
-			expect(testMail.className()).toEqual(obj._className);
-			
-			expect(testMail.id()).toEqual(obj._id);
-			
-			expect(JSON.stringify(testMail).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
-		});
-		
-		
-		it('can read (i.e. re-instantiate) itself from local storage', function() {
-			
-			testMail.address('somemail@server.dk'); // set a value to test for
-			
-			testMail.writeObject(); // write out to local storage
-			
-			app.Email.registry = new app.ObjectRegistry(app.Email, 'Email'); // reset registry
-			
-			expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			testMail = new app.Email(testMail.id()); // re-instantiate from local storage
-			
-			expect(testMail.className()).toBe('Email'); // test
-			
-			expect(testMail.address()).toBe('somemail@server.dk');
-		});
-		
-		it('can remove itself from local storage', function() {
-			
-			testMail.address('anothermail@serv.org'); // set a value to test for
-			
-			testMail.writeObject(); // write out to local storage
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
-			
-			expect(obj._address).toBe('anothermail@serv.org'); // verify write
-			
-			testMail.removeObject(); // remove from local storage
-			
-			obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
-			
-			expect(obj).toBe(null); // test that it's gone
-			
-		});
-		
-		
-		it('rejects attempt to recreate itself from local storage if JSON has the wrong class', function() {
-			
-			testMail.writeObject(); // write out to local storage, the read back in
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
-			
-			obj._className = 'no such class'; // deliberately mess up local storage
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
-			
-			app.Email.registry = new app.ObjectRegistry(app.Email, 'Email'); // reset registry
-			
-			expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+			it('can be serialized to a valid JSON string', function() {
+				
+				var obj = JSON.parse(JSON.stringify(testMail));
+				
+				expect(typeof obj).toBe('object');
+				
+				expect(obj._className).toBeDefined();
+				
+				expect(obj._id).toBeDefined();
+				
+				expect(obj._address).toBeDefined();
+				
+				expect(obj._isValid).toBeDefined();
+			});
 			
 			
-			expect(testMail.className()).toBe('Email'); // test
+			it('can write itself to local storage', function() {
+				
+				testMail.writeObject();
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
+				
+				expect(testMail.className()).toEqual(obj._className);
+				
+				expect(testMail.id()).toEqual(obj._id);
+				
+				expect(JSON.stringify(testMail).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
+			});
 			
-			try {
+			
+			it('can read (i.e. re-instantiate) itself from local storage', function() {
+				
+				testMail.address('somemail@server.dk'); // set a value to test for
+				
+				testMail.writeObject(); // write out to local storage
+				
+				app.Email.registry = new app.ObjectRegistry(app.Email, 'Email'); // reset registry
+				
+				expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're empty
 				
 				testMail = new app.Email(testMail.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
 				
-				expect(e.message.indexOf('Wrong class')).toBeGreaterThan(-1);
-			}
+				expect(testMail.className()).toBe('Email'); // test
+				
+				expect(testMail.address()).toBe('somemail@server.dk');
+			});
 			
-			expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
+			it('can remove itself from local storage', function() {
+				
+				testMail.address('anothermail@serv.org'); // set a value to test for
+				
+				testMail.writeObject(); // write out to local storage
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
+				
+				expect(obj._address).toBe('anothermail@serv.org'); // verify write
+				
+				testMail.removeObject(); // remove from local storage
+				
+				obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
+				
+				expect(obj).toBe(null); // test that it's gone
+				
+			});
 			
-			expect(testMail.className()).toBe('Email'); // we should not have overridden original object
-		});
+			
+			it('rejects attempt to recreate itself from local storage if JSON has the wrong class', function() {
+				
+				testMail.writeObject(); // write out to local storage, the read back in
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
+				
+				obj._className = 'no such class'; // deliberately mess up local storage
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
+				
+				app.Email.registry = new app.ObjectRegistry(app.Email, 'Email'); // reset registry
+				
+				expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				
+				
+				expect(testMail.className()).toBe('Email'); // test
+				
+				try {
+					
+					testMail = new app.Email(testMail.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message.indexOf('Wrong class')).toBeGreaterThan(-1);
+				}
+				
+				expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
+				
+				expect(testMail.className()).toBe('Email'); // we should not have overridden original object
+			});
+			
+			
+			it('rejects attempt to recreate itself from storage if JSON does not have a valid ID', function() {
+				
+				testMail.writeObject(); // write out to local storage
+				
+				app.Email.registry = new app.ObjectRegistry(app.Email, 'Email'); // reset registry
+				
+				expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
+				
+				
+				delete obj._id; // ID is undefined
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testMail = new app.Email(testMail.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID not defined');
+				}
+				
+				
+				obj._id = 'not an integer'; // ID is not an integer
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testMail = new app.Email(testMail.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID must be an integer');
+				}
+				
+				
+				obj._id = -1 // ID is negative
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testMail = new app.Email(testMail.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID must be greater than or equal to zero');
+				}
+				
+				
+				obj._id = testMail.id() + 1; // ID mismatch
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testMail = new app.Email(testMail.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message.indexOf('ID mismatch')).toBe(0);
+				}
+				
+				expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
+			});
+			
+			
+			it('can re-establish object references when de-serializing from JSON', function(){
+				
+				// Required by ISerializable but nothing to do for now
+				
+				expect(testMail.onDeserialized()).toBe(true);
+			});
 		
-		
-		it('rejects attempt to recreate itself from storage if JSON does not have a valid ID', function() {
-			
-			testMail.writeObject(); // write out to local storage
-			
-			app.Email.registry = new app.ObjectRegistry(app.Email, 'Email'); // reset registry
-			
-			expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id()));
-			
-			
-			delete obj._id; // ID is undefined
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
-			
-			try {
+
+		// IObserver/CRUD testing
+
+			it('can delete itself', function() {
+
+				expect(typeof testMail.delete).toBe('function');
+
+				var id = testMail.id();
+
+				expect(app.Email.registry.getObjectById(id)).not.toBe(null);
+
+				testMail.delete();
+
+				expect(app.Email.registry.getObjectById(id)).toBe(null);				
+			});
+
+
+			it('can update itself when notified of change by Observable', function() {
+
+				var id = testMail.id();
 				
-				testMail = new app.Email(testMail.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Cannot re-instantiate object: ID not defined');
-			}
-			
-			
-			obj._id = 'not an integer'; // ID is not an integer
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testMail = new app.Email(testMail.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Cannot re-instantiate object: ID must be an integer');
-			}
-			
-			
-			obj._id = -1 // ID is negative
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testMail = new app.Email(testMail.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Cannot re-instantiate object: ID must be greater than or equal to zero');
-			}
-			
-			
-			obj._id = testMail.id() + 1; // ID mismatch
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testMail.className() + '.' + testMail.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testMail = new app.Email(testMail.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message.indexOf('ID mismatch')).toBe(0);
-			}
-			
-			expect(Object.keys(app.Email.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
-		});
-		
-		
-		it('can re-establish object references when de-serializing from JSON', function(){
-			
-			// Required by ISerializable but nothing to do for now
-			
-			expect(testMail.onDeserialized()).toBe(true);
-		});
-		
+				testMail.address('aname@serv.com');
 
-		// IObserver testing
+				// Create temporary object to copy from
 
-		it('can update itself when notified of change by Observable', function() {
-
-			var id = testMail.id();
-			
-			testMail.address('aname@serv.com');
-
-			// Create temporary object to copy from
-
-			var tmpMail = new app.Email('name@server.domain');
-
-			
-			// Verify that object contents are different
-
-				expect(testMail.id()).toEqual(id);
-
-				expect(testMail.id()).not.toEqual(tmpMail.id());
-
-				expect(testMail.address()).not.toEqual(tmpMail.address());
+				var tmpMail = new app.Email('name@server.domain');
 
 				
-			// Copy data from temporary object
+				// Verify that object contents are different
 
-			testMail.update (tmpMail, id);
+					expect(testMail.id()).toEqual(id);
+
+					expect(testMail.id()).not.toEqual(tmpMail.id());
+
+					expect(testMail.address()).not.toEqual(tmpMail.address());
+
+					
+				// Copy data from temporary object
+
+				testMail.update (tmpMail, id);
 
 
-			// Verify copy
+				// Verify copy
 
-			expect(testMail.address()).toEqual(tmpMail.address());
+				expect(testMail.address()).toEqual(tmpMail.address());
 
-			
-			// Verify that temporary object has been removed from registry
+				
+				// Verify that temporary object has been removed from registry
 
-			expect(app.Email.registry.getObjectById(tmpMail.id())).toBe(null);
-		});
+				expect(app.Email.registry.getObjectById(tmpMail.id())).toBe(null);
+			});
 		
 		afterEach(function() {
 			

@@ -26,57 +26,26 @@ function TestObserver() {
 describe('class Account', function(){
 	
 	app.Email = app.Email || function() {};
+		
+	// test class properties	
+	
+		it('can be created with an email and a valid password', function() {
 			
-	
-	it('can be created with an email and a valid password', function() {
+			expect((new app.Account(new app.Email(), new app.Password('123!abcDEF'))).constructor).toBe(app.Account);
+		});
 		
-		expect((new app.Account(new app.Email(), new app.Password('123!abcDEF'))).constructor).toBe(app.Account);
-	});
-	
-	
-	it('can be created with an email, a valid password, and an account holder', function() {
 		
-		expect((new app.Account(new app.Email(), new app.Password('123!abcDEF'), new app.Person('Test person'))).constructor).toBe(app.Account);
-	});
+		it('can be created with an email, a valid password, and an account holder', function() {
+			
+			expect((new app.Account(new app.Email(), new app.Password('123!abcDEF'), new app.Person('Test person'))).constructor).toBe(app.Account);
+		});
 
 
-	it('rejects attempt to create with an email that is not an Email', function() {
-			
-		try {
-			
-			this.success = new app.Account('Not an Email', 'Abcd!123');
-		}
-		
-		catch(e) {
-			
-			expect(e.name).toBe('IllegalArgumentError');
-		}
-		
-		expect(this.success).not.toBeDefined();
-	});
-	
-	
-	it('rejects attempt to create with an insecure password', function() {
-			
-		try {
-			
-			this.success = new app.Account(new app.Email(), 'Abcd123');
-		}
-		
-		catch(e) {
-			
-			expect(e.name).toBe('IllegalArgumentError');
-		}
-		
-		expect(this.success).not.toBeDefined();
-	});
-	
-	
-	it('rejects attempt to create with an account holder that is not a Person', function() {
-			
+		it('rejects attempt to create with an email that is not an Email', function() {
+				
 			try {
 				
-				this.success = new app.Account(new app.Email(), new app.Password('123!abcDEF'), 'Not a person');
+				this.success = new app.Account('Not an Email', 'Abcd!123');
 			}
 			
 			catch(e) {
@@ -85,15 +54,47 @@ describe('class Account', function(){
 			}
 			
 			expect(this.success).not.toBeDefined();
-	});
+		});
+		
+		
+		it('rejects attempt to create with an insecure password', function() {
+				
+			try {
+				
+				this.success = new app.Account(new app.Email(), 'Abcd123');
+			}
+			
+			catch(e) {
+				
+				expect(e.name).toBe('IllegalArgumentError');
+			}
+			
+			expect(this.success).not.toBeDefined();
+		});
+		
+		
+		it('rejects attempt to create with an account holder that is not a Person', function() {
+				
+				try {
+					
+					this.success = new app.Account(new app.Email(), new app.Password('123!abcDEF'), 'Not a person');
+				}
+				
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+				
+				expect(this.success).not.toBeDefined();
+		});
 
 
-	it('has an object registry', function() {
-		
-		expect(app.Account.registry.constructor).toBe(app.ObjectRegistry);
-		
-		expect(app.Account.registry.type()).toBe(app.Account);
-	});
+		it('has an object registry', function() {
+			
+			expect(app.Account.registry.constructor).toBe(app.ObjectRegistry);
+			
+			expect(app.Account.registry.type()).toBe(app.Account);
+		});
 	
 	
 	describe('instance', function() {
@@ -165,668 +166,684 @@ describe('class Account', function(){
 		});
 		
 
-		it('can set and get its email', function() {
-		
-			testAccount.email(new app.Email('test@noserver.nodomain'));
+		// Accessor testing
+
+			it('can set and get its email', function() {
 			
-			expect(testAccount.email().address()).toBe('test@noserver.nodomain');
-		});
-		
-		
-		it('rejects attempt to set an email that is not of class Email', function() {
-			
-			try {
+				testAccount.email(new app.Email('test@noserver.nodomain'));
 				
-				testAccount.email('Not an Email');
-			}
+				expect(testAccount.email().address()).toBe('test@noserver.nodomain');
+			});
 			
-			catch(e) {
+			
+			it('rejects attempt to set an email that is not of class Email', function() {
 				
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-			
-			expect(testAccount.email()).not.toBeDefined();
-		});
-		
-		it('can set and get its password', function() {
-		
-			testAccount.password(new app.Password('123!abcDEF'));
-			
-			expect(testAccount.password().password()).toBe('123!abcDEF');
-		});
-		
-		
-		it('rejects attempt to set an insecure password', function() {
-			
-			try {
+				try {
+					
+					testAccount.email('Not an Email');
+				}
 				
-				testAccount.password(new app.Password('insecure'));
-			}
-			
-			catch(e) {
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
 				
-				expect(e.name).toBe('IllegalArgumentError');
-			}
+				expect(testAccount.email()).not.toBeDefined();
+			});
 			
-			expect(testAccount.password()).not.toBeDefined();
-		});
-		
-
-		it('can set and get its account holder', function() {
-		
-			testAccount.accountHolder(new app.Person('No such person'));
+			it('can set and get its password', function() {
 			
-			expect(testAccount.accountHolder().name()).toBe('No such person');
-		});
-		
-		
-		it('rejects attempt to set an account holder that is not of class Person', function() {
-			
-			try {
+				testAccount.password(new app.Password('123!abcDEF'));
 				
-				testAccount.accountHolder('Not a Person');
-			}
+				expect(testAccount.password().password()).toBe('123!abcDEF');
+			});
 			
-			catch(e) {
+			
+			it('rejects attempt to set an insecure password', function() {
 				
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-			
-			expect(testAccount.accountHolder().name()).toBe('Test person');
-		});
-
-		
-		it('can get and set its local storage access permission preference', function() {
-
-			expect(testAccount.localStorageAllowed()).toBe(false);
-
-			expect(testAccount.localStorageAllowed(true)).toBe(true);
-
-			testAccount.localStorageAllowed(false);
-		});
-
-
-		it('rejects attempt to set local storage permission that is not a Boolean', function() {
-
-			try {
-
-				testAccount.localStorageAllowed('not a Boolean');
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
-
-
-		it('can get and set its geolocation access permission preference', function() {
-
-			expect(testAccount.geoLocationAllowed()).toBe(false);
-
-			expect(testAccount.geoLocationAllowed(true)).toBe(true);
-
-			testAccount.geoLocationAllowed(false);
-		});
-
-
-		it('rejects attempt to set geolocation permission that is not a Boolean', function() {
-
-			try {
-
-				testAccount.geoLocationAllowed('not a Boolean');
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
-
-		
-		it('can get and set its default event capacity', function() {
-
-			expect(testAccount.defaultCapacity()).toBeGreaterThan(-1);
-
-			expect(testAccount.defaultCapacity(25)).toBe(25);
-
-			expect(testAccount.defaultCapacity(50)).toBe(50);
-		});
-
-
-		it('rejects attempt to set default event capacity that is not a non-negative integer', function() {
-
-			try {
-
-				testAccount.defaultCapacity('not an integer');
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-
-			try {
-
-				testAccount.defaultCapacity(-1);
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
-
-		
-		xit('can get and set its default location', function() {
-
-			expect(testAccount.defaultLocation('Las Vegas')).toBe('Las Vegas');
-
-			if (navigator.geolocation) {
-
-				navigator.geolocation.getCurrentPosition(
-
-					function(position) { // success
-
-						expect(testAccount.defaultLocation(position)).toBe(position);
-					},
-
-					function(error) { // error
-
-						console.log(error);
-					}
-				)
-			}
-		});
-
-
-		it('rejects attempt to set default location that is neither a string nor a Position', function() {
-
-			try {
-
-				testAccount.defaultLocation(1);
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
-
-
-		it('can get its collection of events', function() {
-		
-			expect(testAccount.events().constructor).toBe(Object);
-		});
-
-
-		it('can add an event', function() {
-		
-			var testEvent = testAccount.addEvent(new app.Event('test event'));
-
-			expect(testEvent.constructor).toBe(app.Event);
-			
-			expect(testAccount.events()[testEvent.id()].name()).toBe('test event');
-		});
-		
-		
-		it('rejects attempt to add event that is not of class Event', function() {
-			
-			try {
+				try {
+					
+					testAccount.password(new app.Password('insecure'));
+				}
 				
-				testAccount.addEvent('Not an Event');
-			}
-			
-			catch(e) {
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
 				
-				expect(e.name).toBe('IllegalArgumentError');
-			}
+				expect(testAccount.password()).not.toBeDefined();
+			});
 			
-			expect(true).toBe(true); //Jasmine may not notice try in catch
-		});
 
-		
-		it('can remove an event', function() {
-		
-			var testEvent = testAccount.addEvent(new app.Event('test event'));
-
-			var len = Object.keys(testAccount.events()).length;
-
-			var evt = testAccount.removeEvent(testEvent);
-
-			expect(evt.constructor).toBe(app.Event);
-
-			expect(Object.keys(testAccount.events()).length).toBe(len - 1);
-		});
-		
-		
-		it('rejects attempt to remove event that is not of class Event', function() {
+			it('can set and get its account holder', function() {
 			
-			try {
+				testAccount.accountHolder(new app.Person('No such person'));
 				
-				testAccount.removeEvent('Not an Event');
-			}
+				expect(testAccount.accountHolder().name()).toBe('No such person');
+			});
 			
-			catch(e) {
+			
+			it('rejects attempt to set an account holder that is not of class Person', function() {
 				
-				expect(e.name).toBe('IllegalArgumentError');
-			}
+				try {
+					
+					testAccount.accountHolder('Not a Person');
+				}
+				
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+				
+				expect(testAccount.accountHolder().name()).toBe('Test person');
+			});
+
 			
-			expect(true).toBe(true); //Jasmine may not notice try in catch
-		});
+			it('can get and set its local storage access permission preference', function() {
+
+				expect(testAccount.localStorageAllowed()).toBe(false);
+
+				expect(testAccount.localStorageAllowed(true)).toBe(true);
+
+				testAccount.localStorageAllowed(false);
+			});
 
 
-		it('rejects attempt to remove event that is not registred with account', function() {
+			it('rejects attempt to set local storage permission that is not a Boolean', function() {
+
+				try {
+
+					testAccount.localStorageAllowed('not a Boolean');
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
+
+			it('can get and set its geolocation access permission preference', function() {
+
+				expect(testAccount.geoLocationAllowed()).toBe(false);
+
+				expect(testAccount.geoLocationAllowed(true)).toBe(true);
+
+				testAccount.geoLocationAllowed(false);
+			});
+
+
+			it('rejects attempt to set geolocation permission that is not a Boolean', function() {
+
+				try {
+
+					testAccount.geoLocationAllowed('not a Boolean');
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
 			
-			try {
+			it('can get and set its default event capacity', function() {
+
+				expect(testAccount.defaultCapacity()).toBeGreaterThan(-1);
+
+				expect(testAccount.defaultCapacity(25)).toBe(25);
+
+				expect(testAccount.defaultCapacity(50)).toBe(50);
+			});
+
+
+			it('rejects attempt to set default event capacity that is not a non-negative integer', function() {
+
+				try {
+
+					testAccount.defaultCapacity('not an integer');
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+
+				try {
+
+					testAccount.defaultCapacity(-1);
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
+			
+			xit('can get and set its default location', function() {
+
+				expect(testAccount.defaultLocation('Las Vegas')).toBe('Las Vegas');
+
+				if (navigator.geolocation) {
+
+					navigator.geolocation.getCurrentPosition(
+
+						function(position) { // success
+
+							expect(testAccount.defaultLocation(position)).toBe(position);
+						},
+
+						function(error) { // error
+
+							console.log(error);
+						}
+					)
+				}
+			});
+
+
+			it('rejects attempt to set default location that is neither a string nor a Position', function() {
+
+				try {
+
+					testAccount.defaultLocation(1);
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
+
+			it('can get its collection of events', function() {
+			
+				expect(testAccount.events().constructor).toBe(Object);
+			});
+
+
+			it('can add an event', function() {
+			
+				var testEvent = testAccount.addEvent(new app.Event('test event'));
+
+				expect(testEvent.constructor).toBe(app.Event);
 				
-				testAccount.removeEvent(new app.Event('unknown event'));
-			}
+				expect(testAccount.events()[testEvent.id()].name()).toBe('test event');
+			});
 			
-			catch(e) {
+			
+			it('rejects attempt to add event that is not of class Event', function() {
 				
-				expect(e.name).toBe('ReferenceError');
-			}
+				try {
+					
+					testAccount.addEvent('Not an Event');
+				}
+				
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+				
+				expect(true).toBe(true); //Jasmine may not notice try in catch
+			});
+
 			
-			expect(true).toBe(true); //Jasmine may not notice try in catch
-		});
+			it('can remove an event', function() {
+			
+				var testEvent = testAccount.addEvent(new app.Event('test event'));
+
+				var len = Object.keys(testAccount.events()).length;
+
+				var evt = testAccount.removeEvent(testEvent);
+
+				expect(evt.constructor).toBe(app.Event);
+
+				expect(Object.keys(testAccount.events()).length).toBe(len - 1);
+			});
+			
+			
+			it('rejects attempt to remove event that is not of class Event', function() {
+				
+				try {
+					
+					testAccount.removeEvent('Not an Event');
+				}
+				
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+				
+				expect(true).toBe(true); //Jasmine may not notice try in catch
+			});
+
+
+			it('rejects attempt to remove event that is not registred with account', function() {
+				
+				try {
+					
+					testAccount.removeEvent(new app.Event('unknown event'));
+				}
+				
+				catch(e) {
+					
+					expect(e.name).toBe('ReferenceError');
+				}
+				
+				expect(true).toBe(true); //Jasmine may not notice try in catch
+			});
 
 		
 		// IObservable testing
 
-		it('can register an observer', function(){
+			it('can register an observer', function(){
 
-			expect(testAccount.registerObserver(testObserver)).not.toBe(null);
+				expect(testAccount.registerObserver(testObserver)).not.toBe(null);
 
-			var testObserver2 = new TestObserver();
+				var testObserver2 = new TestObserver();
 
-			expect(testAccount.registerObserver(testObserver2)).not.toBe(null);
+				expect(testAccount.registerObserver(testObserver2)).not.toBe(null);
 
-			expect(testAccount.observers().length).toBe(2);
-		});
-		
-
-		it('rejects attempt to register an observer that does not implement IObservable', function(){
-
-			try {
-
-				testAccount.registerObserver({});
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-
-		});
-
-
-		it('can notify its observers', function(){
-
-			var testObserver2 = new TestObserver();
-
-			expect(testObserver.isUpdated).toBe(false);
-
-			expect(testObserver2.isUpdated).toBe(false);
-
-			testAccount.registerObserver(testObserver);
-
-			testAccount.registerObserver(testObserver2);
-
-			testAccount.notifyObservers();
-
-			expect(testObserver.isUpdated).toBe(true);
-
-			expect(testObserver2.isUpdated).toBe(true);
-		});
-
-
-		it('can remove an observer', function(){
-
-			var testObserver2 = new TestObserver(2);
-
-			testAccount.registerObserver(testObserver);
-
-			testAccount.registerObserver(testObserver2);
-
-			expect(testAccount.observers().length).toBe(2);
-
-			expect(testAccount.removeObserver(testObserver2)).toBe(testObserver2);
-
-			expect(testAccount.observers().length).toBe(1);
-		});
-		
-		
-		// IObserver testing
-
-		it('can update itself when notified of change by Observable', function() {
-
-			var id = testAccount.id();
+				expect(testAccount.observers().length).toBe(2);
+			});
 			
-			testAccount.email(new app.Email('aname@serv.com'));
 
-			testAccount.password(new app.Password('HDF#!3245hrtshys'));
+			it('rejects attempt to register an observer that does not implement IObservable', function(){
 
-			testAccount.defaultLocation('New York');
+				try {
+
+					testAccount.registerObserver({});
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+
+			});
 
 
-			// Create temporary object to copy from
+			it('can notify its observers', function(){
 
-			var tmpAccount = new app.Account(
+				var testObserver2 = new TestObserver();
 
-				new app.Email('name@server.domain'),
+				expect(testObserver.isUpdated).toBe(false);
+
+				expect(testObserver2.isUpdated).toBe(false);
+
+				testAccount.registerObserver(testObserver);
+
+				testAccount.registerObserver(testObserver2);
+
+				testAccount.notifyObservers();
+
+				expect(testObserver.isUpdated).toBe(true);
+
+				expect(testObserver2.isUpdated).toBe(true);
+			});
+
+
+			it('can remove an observer', function(){
+
+				var testObserver2 = new TestObserver(2);
+
+				testAccount.registerObserver(testObserver);
+
+				testAccount.registerObserver(testObserver2);
+
+				expect(testAccount.observers().length).toBe(2);
+
+				expect(testAccount.removeObserver(testObserver2)).toBe(testObserver2);
+
+				expect(testAccount.observers().length).toBe(1);
+			});
+		
+		
+		// IObserver/CRUD testing
+
+			it('can update itself when notified of change by Observable', function() {
+
+				var id = testAccount.id();
 				
-				new app.Password('abcd!2EFGH'),
+				testAccount.email(new app.Email('aname@serv.com'));
+
+				testAccount.password(new app.Password('HDF#!3245hrtshys'));
+
+				testAccount.defaultLocation('New York');
+
+
+				// Create temporary object to copy from
+
+				var tmpAccount = new app.Account(
+
+					new app.Email('name@server.domain'),
+					
+					new app.Password('abcd!2EFGH'),
+					
+					new app.Person('Test Person')
+				);
+
+				tmpAccount.localStorageAllowed(true);
+
+				tmpAccount.geoLocationAllowed(true);
+
+				tmpAccount.defaultCapacity(100);
+
+				tmpAccount.defaultLocation('San Francisco');
+
+				var tmpId = tmpAccount.id();
+
+				var tmpAccountHolderId = tmpAccount.accountHolder().id();
+
 				
-				new app.Person('Test Person')
-			);
+				// Verify that object contents are different
 
-			tmpAccount.localStorageAllowed(true);
+					expect(testAccount.id()).toEqual(id);
 
-			tmpAccount.geoLocationAllowed(true);
+					expect(testAccount.email().id()).not.toEqual(tmpAccount.email().id());
 
-			tmpAccount.defaultCapacity(100);
+					expect(testAccount.password().id()).not.toEqual(tmpAccount.password().id());
 
-			tmpAccount.defaultLocation('San Francisco');
+					expect(testAccount.accountHolder().id()).not.toEqual(tmpAccount.accountHolder().id());
 
-			var tmpId = tmpAccount.id();
+					expect(testAccount.localStorageAllowed()).not.toEqual(tmpAccount.localStorageAllowed());
 
-			var tmpAccountHolderId = tmpAccount.accountHolder().id();
+					expect(testAccount.localStorageAllowed()).not.toEqual(tmpAccount.geoLocationAllowed());
 
-			
-			// Verify that object contents are different
+					expect(testAccount.defaultCapacity()).not.toEqual(tmpAccount.defaultCapacity());
 
-				expect(testAccount.id()).toEqual(id);
-
-				expect(testAccount.email().id()).not.toEqual(tmpAccount.email().id());
-
-				expect(testAccount.password().id()).not.toEqual(tmpAccount.password().id());
-
-				expect(testAccount.accountHolder().id()).not.toEqual(tmpAccount.accountHolder().id());
-
-				expect(testAccount.localStorageAllowed()).not.toEqual(tmpAccount.localStorageAllowed());
-
-				expect(testAccount.localStorageAllowed()).not.toEqual(tmpAccount.geoLocationAllowed());
-
-				expect(testAccount.defaultCapacity()).not.toEqual(tmpAccount.defaultCapacity());
-
-				expect(testAccount.defaultLocation()).not.toEqual(tmpAccount.defaultLocation());
+					expect(testAccount.defaultLocation()).not.toEqual(tmpAccount.defaultLocation());
 
 
-			// Copy data from temporary object
+				// Copy data from temporary object
 
-			testAccount.update (tmpAccount, id);
-
-
-			// Verify copy
-
-			expect(testAccount.email().id()).toEqual(tmpAccount.email().id());
-
-			expect(testAccount.password().id()).toEqual(tmpAccount.password().id());
-
-			expect(testAccount.accountHolder().id()).toEqual(tmpAccount.accountHolder().id());
-
-			expect(testAccount.localStorageAllowed()).toEqual(tmpAccount.localStorageAllowed());
-
-			expect(testAccount.localStorageAllowed()).toEqual(tmpAccount.geoLocationAllowed());
-
-			expect(testAccount.defaultCapacity()).toEqual(tmpAccount.defaultCapacity());
-
-			expect(testAccount.defaultLocation()).toEqual(tmpAccount.defaultLocation());
+				testAccount.update (tmpAccount, id);
 
 
-			// Verify that temporary object has been removed from registry
+				// Verify copy
 
-			expect(app.Account.registry.getObjectById(tmpId)).toBe(null);
-		});
+				expect(testAccount.email().id()).toEqual(tmpAccount.email().id());
+
+				expect(testAccount.password().id()).toEqual(tmpAccount.password().id());
+
+				expect(testAccount.accountHolder().id()).toEqual(tmpAccount.accountHolder().id());
+
+				expect(testAccount.localStorageAllowed()).toEqual(tmpAccount.localStorageAllowed());
+
+				expect(testAccount.localStorageAllowed()).toEqual(tmpAccount.geoLocationAllowed());
+
+				expect(testAccount.defaultCapacity()).toEqual(tmpAccount.defaultCapacity());
+
+				expect(testAccount.defaultLocation()).toEqual(tmpAccount.defaultLocation());
+
+
+				// Verify that temporary object has been removed from registry
+
+				expect(app.Account.registry.getObjectById(tmpId)).toBe(null);
+			});
+
+
+			it('can delete itself', function() {
+
+				expect(typeof testAccount.delete).toBe('function');
+
+				var id = testAccount.id();
+
+				expect(app.Account.registry.getObjectById(id)).not.toBe(null);
+
+				testAccount.delete();
+
+				expect(app.Account.registry.getObjectById(id)).toBe(null);
+			});
 
 
 		// ISerializable testing
 
-		it('can get its class name', function() {
+			it('can get its class name', function() {
 
-			expect(testAccount.className()).toBe('Account');
-		});
-		
+				expect(testAccount.className()).toBe('Account');
+			});
+			
 
-		it('can get its ID', function() {
-		
-			expect(testAccount.id()).toBeDefined();
-		});
-		
-		
-		it('rejects attempt to set ID (b/c read-only)', function() {
-		
-			try {
+			it('can get its ID', function() {
+			
+				expect(testAccount.id()).toBeDefined();
+			});
+			
+			
+			it('rejects attempt to set ID (b/c read-only)', function() {
+			
+				try {
+					
+					testAccount.id(5);
+				}
 				
-				testAccount.id(5);
-			}
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
 			
-			catch(e) {
+					
+			it('has an ID that is a positive integer or zero', function() {
+			
+				expect(testAccount.id()).toBeGreaterThan(-1);
 				
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
-		
+				expect(parseInt(testAccount.id()) === testAccount.id()).toBe(true);
+			});
+			
+			
+			it('can be serialized to a valid JSON string', function() {
 				
-		it('has an ID that is a positive integer or zero', function() {
-		
-			expect(testAccount.id()).toBeGreaterThan(-1);
-			
-			expect(parseInt(testAccount.id()) === testAccount.id()).toBe(true);
-		});
-		
-		
-		it('can be serialized to a valid JSON string', function() {
-			
-			testAccount.password(new app.Password('adsghlkggAGA435q23!'));
-			
-			var obj = JSON.parse(JSON.stringify(testAccount));
-			
-			expect(typeof obj).toBe('object');
-			
-			expect(obj._className).toBeDefined();
-			
-			expect(obj._id).toBeDefined();
-			
-			expect(obj._email).not.toBeDefined();
-			
-			expect(obj._password).toBeDefined();
+				testAccount.password(new app.Password('adsghlkggAGA435q23!'));
+				
+				var obj = JSON.parse(JSON.stringify(testAccount));
+				
+				expect(typeof obj).toBe('object');
+				
+				expect(obj._className).toBeDefined();
+				
+				expect(obj._id).toBeDefined();
+				
+				expect(obj._email).not.toBeDefined();
+				
+				expect(obj._password).toBeDefined();
 
-			expect(obj._accountHolder).toBeDefined();
-		});
-		
-		
-		it('can write itself to local storage', function() {
+				expect(obj._accountHolder).toBeDefined();
+			});
 			
-			testAccount.writeObject();
 			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
-			
-			expect(testAccount.className()).toEqual(obj._className);
-			
-			expect(testAccount.id()).toEqual(obj._id);
+			it('can write itself to local storage', function() {
+				
+				testAccount.writeObject();
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
+				
+				expect(testAccount.className()).toEqual(obj._className);
+				
+				expect(testAccount.id()).toEqual(obj._id);
 
-			expect(testAccount.accountHolder().id()).toEqual(obj._accountHolder._id);
-			
-			expect(JSON.stringify(testAccount).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
-		});
-		
-		
-		it('can read (i.e. re-instantiate) itself from local storage', function() {
-			
-			testAccount.password(new app.Password('Pass!Word2')); // set a value to test for
-			
-			testAccount.writeObject(); // write out to local storage
-			
-			app.Account.registry = new app.ObjectRegistry(app.Account, 'Account'); // reset registry
-			
-			expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
-
-			expect(testAccount.className()).toBe('Account'); // test
-			
-			expect(testAccount.password()._className).toBe('Password');
-
-			expect(testAccount.accountHolder()._className).toBe('Person'); // not deserialized yet
-		});
-		
-		
-		it('can remove itself from local storage', function() {
-			
-			testAccount.password(new app.Password('Pass!Word2')); // set a value to test for
-			
-			testAccount.writeObject(); // write out to local storage
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
-			
-			expect(obj._password._className).toBe('Password'); // verify write
-			
-			testAccount.removeObject(); // remove from local storage
-			
-			obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
-			
-			expect(obj).toBe(null); // test that it's gone
-		});
-		
-		
-		it('rejects attempt to recreate itself from local storage if JSON has the wrong class', function() {
-			
-			testAccount.writeObject(); // write out to local storage, the read back in
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
-			
-			obj._className = 'no such class'; // deliberately mess up local storage
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
-			
-			app.Account.registry = new app.ObjectRegistry(app.Account, 'Account'); // reset registry
-			
-			expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				expect(testAccount.accountHolder().id()).toEqual(obj._accountHolder._id);
+				
+				expect(JSON.stringify(testAccount).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
+			});
 			
 			
-			expect(testAccount.className()).toBe('Account'); // test
-			
-			try {
+			it('can read (i.e. re-instantiate) itself from local storage', function() {
+				
+				testAccount.password(new app.Password('Pass!Word2')); // set a value to test for
+				
+				testAccount.writeObject(); // write out to local storage
+				
+				app.Account.registry = new app.ObjectRegistry(app.Account, 'Account'); // reset registry
+				
+				expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're empty
 				
 				testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message.indexOf('Wrong class')).toBeGreaterThan(-1);
-			}
-			
-			expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
-			
-			expect(testAccount.className()).toBe('Account'); // we should not have overridden original object
-		});
-		
-		
-		it('rejects attempt to recreate itself from storage if JSON does not have a valid ID', function() {
 
-			testAccount.writeObject(); // write out to local storage
-			
-			app.Account.registry = new app.ObjectRegistry(app.Account, 'Account'); // reset registry
-			
-			expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
-			
-			
-			delete obj._id; // ID is undefined
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
-			
-			try {
+				expect(testAccount.className()).toBe('Account'); // test
 				
-				testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Cannot re-instantiate object: ID not defined');
-			}
-			
-			
-			obj._id = 'not an integer'; // ID is not an integer
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Cannot re-instantiate object: ID must be an integer');
-			}
-			
-			
-			obj._id = -1 // ID is negative
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Cannot re-instantiate object: ID must be greater than or equal to zero');
-			}
-			
-			
-			obj._id = testAccount.id() + 1; // ID mismatch
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message.indexOf('ID mismatch')).toBe(0);
-			}
-			
-			expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
-		});
-			
-		
-		it('can re-establish object references when de-serializing from JSON', function(){
-			
-			testAccount.password(new app.Password('Pass!Word76')); // set a value to test for
-			
-			testAccount.email(new app.Email('nosuchuser@undef.nowhere'));
-			
-			var id = testAccount.email().id();
-			
-			
-			testAccount.writeObject(); // write out to local storage
-			
-			app.Account.registry.remove(testAccount); // remove from registry
-			
-			testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
-			
-			
-			expect(testAccount.className()).toBe('Account'); // verify re-instantiation
-			
-			expect(testAccount.password()._className).toBe('Password');
-			
-			expect(testAccount.email()._id).toBe(id);
-			
-			
-			testAccount.onDeserialized(); // verify deserialization
-			
-			expect(testAccount.email().address()).toBe('nosuchuser@undef.nowhere');
+				expect(testAccount.password()._className).toBe('Password');
 
-			expect(testAccount.accountHolder().name()).toBe('Test person')
-		});
+				expect(testAccount.accountHolder()._className).toBe('Person'); // not deserialized yet
+			});
+			
+			
+			it('can remove itself from local storage', function() {
+				
+				testAccount.password(new app.Password('Pass!Word2')); // set a value to test for
+				
+				testAccount.writeObject(); // write out to local storage
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
+				
+				expect(obj._password._className).toBe('Password'); // verify write
+				
+				testAccount.removeObject(); // remove from local storage
+				
+				obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
+				
+				expect(obj).toBe(null); // test that it's gone
+			});
+			
+			
+			it('rejects attempt to recreate itself from local storage if JSON has the wrong class', function() {
+				
+				testAccount.writeObject(); // write out to local storage, the read back in
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
+				
+				obj._className = 'no such class'; // deliberately mess up local storage
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
+				
+				app.Account.registry = new app.ObjectRegistry(app.Account, 'Account'); // reset registry
+				
+				expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				
+				
+				expect(testAccount.className()).toBe('Account'); // test
+				
+				try {
+					
+					testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message.indexOf('Wrong class')).toBeGreaterThan(-1);
+				}
+				
+				expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
+				
+				expect(testAccount.className()).toBe('Account'); // we should not have overridden original object
+			});
+			
+			
+			it('rejects attempt to recreate itself from storage if JSON does not have a valid ID', function() {
+
+				testAccount.writeObject(); // write out to local storage
+				
+				app.Account.registry = new app.ObjectRegistry(app.Account, 'Account'); // reset registry
+				
+				expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id()));
+				
+				
+				delete obj._id; // ID is undefined
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID not defined');
+				}
+				
+				
+				obj._id = 'not an integer'; // ID is not an integer
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID must be an integer');
+				}
+				
+				
+				obj._id = -1 // ID is negative
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID must be greater than or equal to zero');
+				}
+				
+				
+				obj._id = testAccount.id() + 1; // ID mismatch
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testAccount.className() + '.' + testAccount.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message.indexOf('ID mismatch')).toBe(0);
+				}
+				
+				expect(Object.keys(app.Account.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
+			});
+				
+			
+			it('can re-establish object references when de-serializing from JSON', function(){
+				
+				testAccount.password(new app.Password('Pass!Word76')); // set a value to test for
+				
+				testAccount.email(new app.Email('nosuchuser@undef.nowhere'));
+				
+				var id = testAccount.email().id();
+				
+				
+				testAccount.writeObject(); // write out to local storage
+				
+				app.Account.registry.remove(testAccount); // remove from registry
+				
+				testAccount = new app.Account(testAccount.id()); // re-instantiate from local storage
+				
+				
+				expect(testAccount.className()).toBe('Account'); // verify re-instantiation
+				
+				expect(testAccount.password()._className).toBe('Password');
+				
+				expect(testAccount.email()._id).toBe(id);
+				
+				
+				testAccount.onDeserialized(); // verify deserialization
+				
+				expect(testAccount.email().address()).toBe('nosuchuser@undef.nowhere');
+
+				expect(testAccount.accountHolder().name()).toBe('Test person')
+			});
 		
 		afterEach(function() {
 			

@@ -74,6 +74,8 @@ var app = app || {};
 
 		this.notifyObservers(Model_m, View_v.model().id()); // update model with any user edits
 
+		void ctrl.newModel(null); // reset newModel, if not null (i.e. saving freshly created model)
+
 		window.history.back(); // go one step back in browser history
 	};
 

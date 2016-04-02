@@ -73,16 +73,15 @@ var app = app || {};
 
 	module.ViewCancelHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		/*
 		var ctrl = this.controller(), newModel = ctrl.newModel();
 
-		if (newModel !== null) { // creation of new model cancelled
+		/*if (newModel !== null) { // creation of new model cancelled
 
 			newModel.constructor.registry.removeObject(newModel); // remove from registry
 
 			ctrl.newModel(null); // reset newModel reference
 
-			//ctrl.removeObserver(newModel); // remove from observer list
+			ctrl.removeObserver(newModel); // remove from observer list
 
 			switch (newModel.constructor) { // remove from data model
 

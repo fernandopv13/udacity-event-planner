@@ -426,44 +426,44 @@ var app = app || {}; // create a simple namespace for the app
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/	
 
-	/** Updates Person instance when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Person} p Object holding the data to update from
-	*
-	* @param {int} id Id of the person intended to receive the update
-	*
-	* @return {Boolean} true if copy was successful, else error or false
-	*/
+		/** Updates Person instance when notified of change by observable (controller). Autosaves to local storage if available.
+		*
+		* (See IObserver for further documentation.)
+		*
+		* @param {Person} p Object holding the data to update from
+		*
+		* @param {int} id Id of the person intended to receive the update
+		*
+		* @return {Boolean} true if copy was successful, else error or false
+		*/
 
-	module.Person.prototype.update = function(Person_p, int_id) {
+		module.Person.prototype.update = function(Person_p, int_id) {
 
-		if (this.ssuper().prototype.update.call(this, Person_p, int_id)) { // check whether to respond to this notification
+			if (this.ssuper().prototype.update.call(this, Person_p, int_id)) { // check whether to respond to this notification
 
-			// Update using accessors for validation
+				// Update using accessors for validation
 
-			this.name(Person_p.name());
+				this.name(Person_p.name());
 
-			this.employer(Person_p.employer() ? Person_p.employer() : null);
+				this.employer(Person_p.employer() ? Person_p.employer() : null);
 
-			this.jobTitle(Person_p.jobTitle());
+				this.jobTitle(Person_p.jobTitle());
 
-			this.email(Person_p.email() ? Person_p.email() : null);
+				this.email(Person_p.email() ? Person_p.email() : null);
 
-			this.birthday(Person_p.birthday() ? Person_p.birthday() : null);
+				this.birthday(Person_p.birthday() ? Person_p.birthday() : null);
 
-			
-			// Do some housekeeping (calls method in parent class)
+				
+				// Do some housekeeping (calls method in parent class)
 
-			this.ssuper().prototype.update.call(this, Person_p);
-			
+				this.ssuper().prototype.update.call(this, Person_p);
+				
 
-			return true;
+				return true;
+			}
+
+			return false;
 		}
-
-		return false;
-	}
 
 
 	/*----------------------------------------------------------------------------------------

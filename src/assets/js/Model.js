@@ -60,62 +60,56 @@ var app = app || {}; // create a simple namespace for the module
 		* Accessors for private instance fields (dependency injection enables access for subclasses)
 		*---------------------------------------------------------------------------------------*/
 
-		/** Gets name of the Model's class (read-only).
-		*
-		* @return {String} className The name of the View's class
-		*
-		* @throws {IllegalArgumentError} If trying to set the className.
-		*/
+			/** Gets name of the Model's class (read-only).
+			*
+			* @return {String} className The name of the View's class
+			*
+			* @throws {IllegalArgumentError} If trying to set the className.
+			*/
 
-		this.className = new module.Accessor(_className, true); // replace temporary literal with read-only accessor
+			this.className = new module.Accessor(_className, true); // replace temporary literal with read-only accessor
 
-		
-		/** Gets Model's unique id (read-only).
-		*
-		* @return {int} id The Model's unique id
-		*
-		* @throws {IllegalArgumentError} If trying to set the id.
-		*/
+			
+			/** Gets Model's unique id (read-only).
+			*
+			* @return {int} id The Model's unique id
+			*
+			* @throws {IllegalArgumentError} If trying to set the id.
+			*/
 
-		this.id = new module.Accessor(_id, true);
+			this.id = new module.Accessor(_id, true);
 
-		
-		/** Gets the collection of IObservers currently registered with the Model
-		*
-		* @return {Array} observers An array of IObservers
-		*
-		* @throws {IllegalArgumentError} If trying to set the observers array
-		*/
+			
+			/** Gets the collection of IObservers currently registered with the Model
+			*
+			* @return {Array} observers An array of IObservers
+			*
+			* @throws {IllegalArgumentError} If trying to set the observers array
+			*/
 
-		this.observers = new module.Accessor(_observers, true);
+			this.observers = new module.Accessor(_observers, true);
 
-		
-		/** Gets a collection of classes or 'interfaces' (by function reference) the Model extends or implements. Includes the class of the Model itself.
-		*
-		* @return {Array} parentList An array of functions
-		*
-		* @throws {IllegalArgumentError} If trying to set the parentList array
-		*/
+			
+			/** Gets a collection of classes or 'interfaces' (by function reference) the Model extends or implements. Includes the class of the Model itself.
+			*
+			* @return {Array} parentList An array of functions
+			*
+			* @throws {IllegalArgumentError} If trying to set the parentList array
+			*/
 
-		this.parentList = new module.Accessor(_parentList, true);
-		
-		
-		/** Gets a reference to the Model's parent (by function reference) in the class inheritence hierarchy (the topmost class is Object)
-		*
-		* @return {Function} ssuper The parent class
-		*
-		* @throws {IllegalArgumentError} If trying to set the ssuper attribute
-		*
-		* @todo Not fully functional; only works one level up from the lowest level in the tree
-		*/
+			this.parentList = new module.Accessor(_parentList, true);
+			
+			
+			/** Gets a reference to the Model's parent (by function reference) in the class inheritence hierarchy (the topmost class is Object)
+			*
+			* @return {Function} ssuper The parent class
+			*
+			* @throws {IllegalArgumentError} If trying to set the ssuper attribute
+			*
+			* @todo Not fully functional; only works one level up from the lowest level in the tree
+			*/
 
-		this.ssuper = new module.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
-		
-		/*----------------------------------------------------------------------------------------
-		* Other initialization
-		*---------------------------------------------------------------------------------------*/
-
-		// none so far
+			this.ssuper = new module.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
 	}
 
 
@@ -123,113 +117,127 @@ var app = app || {}; // create a simple namespace for the module
 	Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 	*---------------------------------------------------------------------------------------*/
 
-	void module.IInterfaceable.mixInto(module.IInterfaceable, module.Model);
+		void module.IInterfaceable.mixInto(module.IInterfaceable, module.Model);
 
-	void module.IInterfaceable.mixInto(module.IObservable, module.Model);
+		void module.IInterfaceable.mixInto(module.IObservable, module.Model);
 
-	void module.IInterfaceable.mixInto(module.IObserver, module.Model);
+		void module.IInterfaceable.mixInto(module.IObserver, module.Model);
 
-	void module.IInterfaceable.mixInto(module.ISerializable, module.Model);
+		void module.IInterfaceable.mixInto(module.ISerializable, module.Model);
 
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
+		/** Does clean up associated with deletion of Model, e.g. removes from registry and
+		*
+		* deletes objects it is uniquely composed of. Removes Model from local storage, if available.
+		*
+		* @return {void}
+		*/
 
-	/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference).
-	*
-	* See IInterfaceable for further documentation.
-	*
-	* @todo Now that the parent list is publicly available, this should be able to rely on the/a default method in IInterfaceable
-	*/
+		module.Model.prototype.delete = function () {
 
-	module.Model.prototype.isInstanceOf = function (func_interface) {
-		
-		return this.parentList().indexOf(func_interface) > -1;
-	};
+			void this.constructor.registry.remove(this);
+
+			if (window.localStorage && module.prefs.isLocalStorageAllowed()) {this.removeObject();}
+		};
 
 
-	/** Does housekeeping common to all Models after they have updated themselves.
-	*
-	* Override in subclsees to do the actual updating, then call this.
-	*
-	* @param {Model} obj Temporary object holding the updated information. Is of same class as Modelable itself.
-	*
-	* @param {int} id ID of the object to be updated
-	*
-	* @return {void}
-	*/
+		/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference).
+		*
+		* See IInterfaceable for further documentation.
+		*
+		* @todo Now that the parent list is publicly available, this should be able to rely on the/a default method in IInterfaceable
+		*/
 
-	module.Model.prototype.onUpdate = function(Model_obj) {
+		module.Model.prototype.isInstanceOf = function (func_interface) {
+			
+			return this.parentList().indexOf(func_interface) > -1;
+		};
 
-		// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
 
-		this.constructor.registry.remove(Model_obj);
+		/** Does housekeeping common to all Models after they have updated themselves.
+		*
+		* Override in subclsees to do the actual updating, then call this.
+		*
+		* @param {Model} obj Temporary object holding the updated information. Is of same class as Modelable itself.
+		*
+		* @param {int} id ID of the object to be updated
+		*
+		* @return {void}
+		*/
 
-		Model_obj = undefined;
-		
-		
-		// Write new state to local storage, if available
+		module.Model.prototype.onUpdate = function(Model_obj) {
 
-		var account = module.controller.selectedAccount();
+			// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
 
-		if (account.localStorageAllowed() && window.localStorage) {
+			this.constructor.registry.remove(Model_obj);
 
-			this.writeObject();
+			Model_obj = undefined;
+			
+			
+			// Write new state to local storage, if available
 
-			//console.log(JSON.parse(localStorage.getItem(module.prefs.localStoragePrefix() + this.className() + '.' + this.id())));
+			var account = module.controller.selectedAccount();
+
+			if (account.localStorageAllowed() && window.localStorage) {
+
+				this.writeObject();
+
+				//console.log(JSON.parse(localStorage.getItem(module.prefs.localStoragePrefix() + this.className() + '.' + this.id())));
+			}
+
+
+			// Register controller as observer of object (auto-skips if already registered)
+
+			this.registerObserver(module.controller);
+
+			
+			// Notify observers (i.e. controller)
+
+			//console.log('Updated ' + this.className() + ', notifying controller'); // debug
+
+			this.notifyObservers(this);
 		}
 
 
-		// Register controller as observer of object (auto-skips if already registered)
+		/** Reports whether this object should respond to an update notification broadcast (from controller)
+		*
+		* @param {Model} m Temporary Model instance holding the data to update from. Its class must match the class of the target object.
+		*
+		* @param {int} id Id of the Model instance intended to receive the update. Must match the id of the target object.
+		*
+		* @return {Boolean} true if both class and id of provided params match this instance, otherwise or false
+		*
+		*/
 
-		this.registerObserver(module.controller);
+		module.Model.prototype.update = function(Model_m, int_id) {
 
-		
-		// Notify observers (i.e. controller)
+			var args = arguments;
 
-		//console.log('Updated ' + this.className() + ', notifying controller'); // debug
+			if (args.length === 2) {
 
-		this.notifyObservers(this);
-	}
+				if (args[0] && args[0].isInstanceOf && args[0].isInstanceOf(module.Model) && args[1] === parseInt(args[1])) { //console.log('correct method signature');
 
+					if (args[0].constructor === this.constructor) { //console.log('correct Model subtype');
 
-	/** Reports whether this object should respond to an update notification broadcast (from controller)
-	*
-	* @param {Model} m Temporary Model instance holding the data to update from. Its class must match the class of the target object.
-	*
-	* @param {int} id Id of the Model instance intended to receive the update. Must match the id of the target object.
-	*
-	* @return {Boolean} true if both class and id of provided params match this instance, otherwise or false
-	*
-	*/
+						if (typeof args[1] === 'number' && parseInt(args[1]) === this.id()) { //console.log('correct id');
 
-	module.Model.prototype.update = function(Model_m, int_id) {
+							console.log('Received update to ' + this.className() + ' ' + this.id()); // debug
 
-		var args = arguments;
+							return true;
+						}
 
-		if (args.length === 2) {
-
-			if (args[0] && args[0].isInstanceOf && args[0].isInstanceOf(module.Model) && args[1] === parseInt(args[1])) { //console.log('correct method signature');
-
-				if (args[0].constructor === this.constructor) { //console.log('correct Model subtype');
-
-					if (typeof args[1] === 'number' && parseInt(args[1]) === this.id()) { //console.log('correct id');
-
-						console.log('Received update to ' + this.className() + ' ' + this.id()); // debug
-
-						return true;
+						// else: ignore silently, the call may not be for this object
 					}
 
-					// else: ignore silently, the call may not be for this object
+					// else : ignore silently, the call may not be for this object
 				}
-
-				// else : ignore silently, the call may not be for this object
 			}
-		}
 
-		return false;
-	}
+			return false;
+		}
 
 })(app);

@@ -73,7 +73,7 @@ var app = app || {};
 
 	module.ViewNavigateHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		console.log('Navigating to ' + View_v.className()); //debug
+		//console.log('Navigating to ' + View_v.className()); //debug
 
 		var ctrl = this.controller(), view, views = ctrl.views();
 

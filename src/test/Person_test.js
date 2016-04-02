@@ -278,278 +278,292 @@ describe('class Person', function(){
 			expect(testPerson.birthday()).toEqual(oldDate);
 		});
 
+
+		it('can delete itself', function() {
+
+			expect(typeof testPerson.delete).toBe('function');
+
+			var id = testPerson.id();
+
+			expect(app.Person.registry.getObjectById(id)).not.toBe(null);
+
+			testPerson.delete();
+
+			expect(app.Person.registry.getObjectById(id)).toBe(null);				
+		});
+
 		
 		// IHost testing
 
-		it('can set and get its IHost hostName', function() {
-			
-			testPerson.hostName('testHostName');
-			
-			expect(testPerson.hostName()).toBe('testHostName');
-		});
+			it('can set and get its IHost hostName', function() {
+				
+				testPerson.hostName('testHostName');
+				
+				expect(testPerson.hostName()).toBe('testHostName');
+			});
 		
 		
 		// ISerializable testing
 
-		it('can get its class name', function() {
+			it('can get its class name', function() {
 
-			expect(testPerson.className()).toBe('Person');
-		});
+				expect(testPerson.className()).toBe('Person');
+			});
 
 
-		it('can get its ID', function() {
-		
-			expect(testPerson.id()).toBeDefined();
-		});
-		
-		
-		it('rejects attempt to set ID (b/c read-only)', function() {
-		
-			try {
+			it('can get its ID', function() {
+			
+				expect(testPerson.id()).toBeDefined();
+			});
+			
+			
+			it('rejects attempt to set ID (b/c read-only)', function() {
+			
+				try {
+					
+					testPerson.id(5);
+				}
 				
-				testPerson.id(5);
-			}
+				catch(e) {
+					
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
 			
-			catch(e) {
+			
+			it('has an ID that is a positive integer or zero', function() {
+			
+				expect(testPerson.id()).toBeGreaterThan(-1);
 				
-				expect(e.name).toBe('IllegalArgumentError');
-			}
-		});
-		
-		
-		it('has an ID that is a positive integer or zero', function() {
-		
-			expect(testPerson.id()).toBeGreaterThan(-1);
+				expect(parseInt(testPerson.id()) === testPerson.id()).toBe(true);
+			});
 			
-			expect(parseInt(testPerson.id()) === testPerson.id()).toBe(true);
-		});
-		
-		
-		it('can be serialized to a valid JSON string', function() {
 			
-			testPerson.name('what\'s in a name?');
+			it('can be serialized to a valid JSON string', function() {
+				
+				testPerson.name('what\'s in a name?');
 
-			testPerson.birthday(new Date());
-			
-			var obj = JSON.parse(JSON.stringify(testPerson));
+				testPerson.birthday(new Date());
+				
+				var obj = JSON.parse(JSON.stringify(testPerson));
 
-			expect(typeof obj).toBe('object');
-			
-			expect(obj._className).toBeDefined();
-			
-			expect(obj._id).toBeDefined();
-			
-			expect(obj._name).toBeDefined();
-			
-			expect(obj._employer).not.toBeDefined();
-			
-			expect(obj._jobTitle).not.toBeDefined();
-			
-			expect(obj._email).not.toBeDefined();
+				expect(typeof obj).toBe('object');
+				
+				expect(obj._className).toBeDefined();
+				
+				expect(obj._id).toBeDefined();
+				
+				expect(obj._name).toBeDefined();
+				
+				expect(obj._employer).not.toBeDefined();
+				
+				expect(obj._jobTitle).not.toBeDefined();
+				
+				expect(obj._email).not.toBeDefined();
 
-			expect(obj._birthday).toBeDefined();
-		});
-		
-		
-		it('can write itself to local storage', function() {
+				expect(obj._birthday).toBeDefined();
+			});
 			
-			testPerson.writeObject();
 			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
+			it('can write itself to local storage', function() {
+				
+				testPerson.writeObject();
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
+				
+				expect(testPerson.className()).toEqual(obj._className);
+				
+				expect(testPerson.id()).toEqual(obj._id);
+				
+				expect(JSON.stringify(testPerson).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
+			});
 			
-			expect(testPerson.className()).toEqual(obj._className);
 			
-			expect(testPerson.id()).toEqual(obj._id);
-			
-			expect(JSON.stringify(testPerson).split('').sort().join()).toBe(JSON.stringify(obj).split('').sort().join());
-		});
-		
-		
-		it('can read (i.e. re-instantiate) itself from local storage', function() {
-			
-			testPerson.name('Claudia'); // set a couple of values to test for
-			
-			testPerson.birthday(new Date());
+			it('can read (i.e. re-instantiate) itself from local storage', function() {
+				
+				testPerson.name('Claudia'); // set a couple of values to test for
+				
+				testPerson.birthday(new Date());
 
-			testPerson.writeObject(); // write out to local storage
-			
-			app.Person.registry = new app.ObjectRegistry(app.Person, 'Person'); // reset registry
-			
-			expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
-			
-			expect(testPerson.className()).toBe('Person'); // test
-			
-			expect(testPerson.name()).toBe('Claudia');
-
-			expect(testPerson.imgUrl()).toBe('test URL');
-
-			expect(testPerson.birthday()).toBeDefined()
-		});
-		
-		
-		it('can remove itself from local storage', function() {
-			
-			testPerson.name('Tina'); // set a value to test for
-			
-			testPerson.writeObject(); // write out to local storage
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
-			
-			expect(obj._name).toBe('Tina'); // verify write
-			
-			testPerson.removeObject(); // remove from local storage
-			
-			obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
-			
-			expect(obj).toBe(null); // test that it's gone
-		});
-		
-		
-		it('rejects attempt to recreate itself from local storage if JSON has the wrong class', function() {
-			
-			testPerson.writeObject(); // write out to local storage, the read back in
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
-			
-			obj._className = 'no such class'; // deliberately mess up local storage
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
-			
-			app.Person.registry = new app.ObjectRegistry(app.Person, 'Person'); // reset registry
-			
-			expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			
-			expect(testPerson.className()).toBe('Person'); // test
-			
-			try {
+				testPerson.writeObject(); // write out to local storage
+				
+				app.Person.registry = new app.ObjectRegistry(app.Person, 'Person'); // reset registry
+				
+				expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're empty
 				
 				testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
 				
-				expect(e.message.indexOf('Wrong class')).toBeGreaterThan(-1);
-			}
-			
-			expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
-			
-			expect(testPerson.className()).toBe('Person'); // we should not have overridden original object
-		});
-		
-		
-		it('rejects attempt to recreate itself from storage if JSON does not have a valid ID', function() {
+				expect(testPerson.className()).toBe('Person'); // test
+				
+				expect(testPerson.name()).toBe('Claudia');
 
-			testPerson.writeObject(); // write out to local storage
-			
-			app.Person.registry = new app.ObjectRegistry(app.Person, 'Person'); // reset registry
-			
-			expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're empty
-			
-			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
-			
-			
-			delete obj._id; // ID is undefined
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Cannot re-instantiate object: ID not defined');
-			}
-			
-			
-			obj._id = 'not an integer'; // ID is not an integer
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Cannot re-instantiate object: ID must be an integer');
-			}
-			
-			
-			obj._id = -1 // ID is negative
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message).toBe('Cannot re-instantiate object: ID must be greater than or equal to zero');
-			}
-			
-			
-			obj._id = testPerson.id() + 1; // ID mismatch
-			
-			localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
-			
-			try {
-				
-				testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
-			}
-			
-			catch(e) {
-				
-				expect(e.message.indexOf('ID mismatch')).toBe(0);
-			}
-			
-			expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
-		});
-		
-		
-		it('can re-establish object references when de-serializing from JSON', function(){
-			
-			testPerson.name('Big boss tester'); // set some values to test for
+				expect(testPerson.imgUrl()).toBe('test URL');
 
-			testPerson.email(new app.Email('nosuchuser@undef.anywhere'));
+				expect(testPerson.birthday()).toBeDefined()
+			});
 			
-			var email_id = testPerson.email().id();
 			
-			testPerson.employer(new app.Organization('ACME Corp'));
+			it('can remove itself from local storage', function() {
+				
+				testPerson.name('Tina'); // set a value to test for
+				
+				testPerson.writeObject(); // write out to local storage
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
+				
+				expect(obj._name).toBe('Tina'); // verify write
+				
+				testPerson.removeObject(); // remove from local storage
+				
+				obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
+				
+				expect(obj).toBe(null); // test that it's gone
+			});
 			
-			var employer_id = testPerson.employer().id();
 			
-			testPerson.writeObject(); // write out to local storage
+			it('rejects attempt to recreate itself from local storage if JSON has the wrong class', function() {
+				
+				testPerson.writeObject(); // write out to local storage, the read back in
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
+				
+				obj._className = 'no such class'; // deliberately mess up local storage
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
+				
+				app.Person.registry = new app.ObjectRegistry(app.Person, 'Person'); // reset registry
+				
+				expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				
+				
+				expect(testPerson.className()).toBe('Person'); // test
+				
+				try {
+					
+					testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message.indexOf('Wrong class')).toBeGreaterThan(-1);
+				}
+				
+				expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
+				
+				expect(testPerson.className()).toBe('Person'); // we should not have overridden original object
+			});
 			
-			app.Person.registry.remove(testPerson); // remove from registry
 			
-			testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
-			
-			expect(testPerson.className()).toBe('Person'); // verify re-instantiation
-			
-			expect(testPerson.name()).toBe('Big boss tester');
+			it('rejects attempt to recreate itself from storage if JSON does not have a valid ID', function() {
 
-			expect(testPerson.imgUrl()).toBe('test URL');
+				testPerson.writeObject(); // write out to local storage
+				
+				app.Person.registry = new app.ObjectRegistry(app.Person, 'Person'); // reset registry
+				
+				expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're empty
+				
+				var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id()));
+				
+				
+				delete obj._id; // ID is undefined
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID not defined');
+				}
+				
+				
+				obj._id = 'not an integer'; // ID is not an integer
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID must be an integer');
+				}
+				
+				
+				obj._id = -1 // ID is negative
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message).toBe('Cannot re-instantiate object: ID must be greater than or equal to zero');
+				}
+				
+				
+				obj._id = testPerson.id() + 1; // ID mismatch
+				
+				localStorage.setItem(app.prefs.localStoragePrefix() + testPerson.className() + '.' + testPerson.id(), JSON.stringify(obj));
+				
+				try {
+					
+					testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
+				}
+				
+				catch(e) {
+					
+					expect(e.message.indexOf('ID mismatch')).toBe(0);
+				}
+				
+				expect(Object.keys(app.Person.registry.getObjectList()).length).toBe(0); // confirm that we're still empty
+			});
 			
-			expect(testPerson.email()._id).toBe(email_id);
 			
-			expect(testPerson.employer()._id).toBe(employer_id);
-			
-			
-			testPerson.onDeserialized();
-			
-			
-			expect(testPerson.email().address()).toBe('nosuchuser@undef.anywhere');
-			
-			expect(testPerson.employer().name()).toBe('ACME Corp');
-		});
+			it('can re-establish object references when de-serializing from JSON', function(){
+				
+				testPerson.name('Big boss tester'); // set some values to test for
+
+				testPerson.email(new app.Email('nosuchuser@undef.anywhere'));
+				
+				var email_id = testPerson.email().id();
+				
+				testPerson.employer(new app.Organization('ACME Corp'));
+				
+				var employer_id = testPerson.employer().id();
+				
+				testPerson.writeObject(); // write out to local storage
+				
+				app.Person.registry.remove(testPerson); // remove from registry
+				
+				testPerson = new app.Person(testPerson.id()); // re-instantiate from local storage
+				
+				expect(testPerson.className()).toBe('Person'); // verify re-instantiation
+				
+				expect(testPerson.name()).toBe('Big boss tester');
+
+				expect(testPerson.imgUrl()).toBe('test URL');
+				
+				expect(testPerson.email()._id).toBe(email_id);
+				
+				expect(testPerson.employer()._id).toBe(employer_id);
+				
+				
+				testPerson.onDeserialized();
+				
+				
+				expect(testPerson.email().address()).toBe('nosuchuser@undef.anywhere');
+				
+				expect(testPerson.employer().name()).toBe('ACME Corp');
+			});
 		
 		
 		afterEach(function() {

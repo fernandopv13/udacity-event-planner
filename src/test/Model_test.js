@@ -44,6 +44,14 @@ describe('Class Model', function(){
 
 			expect(app.IInterfaceable.isImplementationOf(app.Model, app.IObserver)).toBe(true);
 		});
+
+		
+		it('can delete itself', function() {
+
+			expect(typeof testModel.delete).toBe('function');
+
+			// Model itself is abstract so test details in derived classes
+		});
 		
 		
 		it('can get its class name', function() {

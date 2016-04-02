@@ -218,55 +218,57 @@ var app = app || {}; // create a simple namespace for the app
 	* Public instance members (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Updates Organization instance when notified of change by observable (controller). Autosaves to local storage if available.
-	*
-	* (See IObserver for further documentation.)
-	*
-	* @param {Organization} Organization Object holding the data to update with
-	*
-	* @return {Boolean} true if copy was successful, else error or false
-	*
-	* @throws {IllegalArgumentError} If object provided is not an instance of Organization
-	*
-	* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
-	*
-	* @throws {IllegalArgumentError} If any of the data provided by the source does not fit the validation criteria of the target, as managed by accessors.
-	*/
+		/** Updates Organization instance when notified of change by observable (controller). Autosaves to local storage if available.
+		*
+		* (See IObserver for further documentation.)
+		*
+		* @param {Organization} Organization Object holding the data to update with
+		*
+		* @return {Boolean} true if copy was successful, else error or false
+		*
+		* @throws {IllegalArgumentError} If object provided is not an instance of Organization
+		*
+		* @throws {IllegalArgumentError} If id provided does not match that of the object being updated
+		*
+		* @throws {IllegalArgumentError} If any of the data provided by the source does not fit the validation criteria of the target, as managed by accessors.
+		*/
 
-	module.Organization.prototype.update = function(Organization_o, int_id) {
+		module.Organization.prototype.update = function(Organization_o, int_id) {
 
-		if (this.ssuper().prototype.update.call(this, Organization_o, int_id)) { // check whether to respond to this notification
+			if (this.ssuper().prototype.update.call(this, Organization_o, int_id)) { // check whether to respond to this notification
 
-			// Update using accessors (for validation)
+				// Update using accessors (for validation)
 
-			this.name(Organization_o.name());
-		
+				this.name(Organization_o.name());
 			
-			// Do some housekeeping (calls method in parent class, i.e. Model)
+				
+				// Do some housekeeping (calls method in parent class, i.e. Model)
 
-			this.ssuper().prototype.onUpdate.call(this, Organization_o);
+				this.ssuper().prototype.onUpdate.call(this, Organization_o);
 
-			
-			return true;
+				
+				return true;
+			}
+
+			return false; // this should never happen, keeping just in case
 		}
 
-		return false; // this should never happen, keeping just in case
-	}
+
 	/*----------------------------------------------------------------------------------------
 	* Public class (static) members
 	*---------------------------------------------------------------------------------------*/
 
-	/** Provides non-mutable, unique organization IDs (must be available before mixin in interfaces) */
+		/** Provides non-mutable, unique organization IDs (must be available before mixin in interfaces) */
 
-	module.Organization.registry = new module.ObjectRegistry(module.Organization, 'Organization');
+		module.Organization.registry = new module.ObjectRegistry(module.Organization, 'Organization');
 
 
 	/*----------------------------------------------------------------------------------------
 	Mix in default methods from implemented interfaces, unless overridden by class or ancestor
 	*---------------------------------------------------------------------------------------*/
 
-	void module.IInterfaceable.mixInto(module.IHost, module.Organization);
+		void module.IInterfaceable.mixInto(module.IHost, module.Organization);
 
-	module.Organization.registry.clear(); // remove objects created by mixInto()
+		module.Organization.registry.clear(); // remove objects created by mixInto()
 
 })(app);
