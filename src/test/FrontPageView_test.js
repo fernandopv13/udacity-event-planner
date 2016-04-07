@@ -8,6 +8,9 @@
 *
 */
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 8000;
+
+
 describe('Class FrontPageView', function(){
 	
 	/* This code only works if testsuite and app are both loaded from the same server.

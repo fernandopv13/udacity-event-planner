@@ -8,6 +8,9 @@
 *
 */
 
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 8000;
+
 describe('Class EventView', function(){
 	
 	/* This code only works if testsuite and app are both loaded from the same server.
@@ -315,9 +318,23 @@ describe('Class EventView', function(){
 
 			testWindow.$('#event-location').val('Death Star');
 
-			testWindow.$('#event-start-date').val('05/13/2250');
+			if (testWindow.$('#event-start-date').attr('type') === 'datetime-local') { // datetime-local requires ISO string 
 
-			testWindow.$('#event-end-date').val('05/14/2250');
+				testWindow.$('#event-start-date').attr('value', '2250-05-12T22:00:00.000'); // using $.val() alone does not set attribute, causing stepMismatch validity error
+
+				testWindow.$('#event-start-date').val('2250-05-12T22:00:00.000'); // must also set val() or change won't submit
+
+				testWindow.$('#event-end-date').attr('value', '2250-05-13T22:00:00.000');
+
+				testWindow.$('#event-end-date').val('2250-05-13T22:00:00.000');
+			}
+
+			else { // text input requires formatted date string
+
+				testWindow.$('#event-start-date').val('05/13/2250');
+
+				testWindow.$('#event-end-date').val('05/14/2250');
+			}
 
 			testWindow.$('#event-type').val('Attack Launch Day');
 
@@ -338,9 +355,9 @@ describe('Class EventView', function(){
 
 			expect(testView.model().location()).toBe('Death Star');
 
-			expect(testView.model().start().valueOf()).toBe(8847352800000);
+			expect(testView.model().start().getFullYear()).toBe(2250);  // browsers diverge on valueOf() conversion, so just check year
 
-			expect(testView.model().end().valueOf()).toBe(8847439200000);
+			expect(testView.model().end().getFullYear()).toBe(2250);
 
 			expect(testView.model().type()).toBe('Attack Launch Day');
 

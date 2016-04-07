@@ -1003,6 +1003,8 @@ var app = app || {};
 
 	module.EventView.prototype.validateEndDate = function(Element_e) {
 
+		//console.log('validating end date');
+
 		var dateWidget = module.DateInputWidget.instance(),
 
 		endDate = dateWidget.value(Element_e),
@@ -1043,6 +1045,8 @@ var app = app || {};
 
 		Element_e.setCustomValidity(ret ? '' : false); // set up for global handler, anything other than the empty string is taken as indicating an error
 
+		//console.log('// end date validates to ' + ret);
+
 		return ret;
 
 	}.bind(this);
@@ -1055,6 +1059,8 @@ var app = app || {};
 
 	module.EventView.prototype.validateStartDate = function(Element_e) {
 
+		//console.log('validating start date');
+
 		var ret = false; // return false by default
 
 		if (app.DateInputWidget.instance().validate(Element_e)) { // start date is a valid date
@@ -1065,6 +1071,8 @@ var app = app || {};
 		}
 
 		Element_e.setCustomValidity(ret ? '' : false); // set up for global handler, anything other than the empty string is taken as indicating an error
+
+		//console.log('// startdate validates to ' + ret);
 
 		return ret;
 	};

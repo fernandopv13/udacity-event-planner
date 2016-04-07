@@ -49,7 +49,7 @@ var app = app || {};
 
 			//console.log('popping ' + className); // debug
 
-			switch (className) { // Hijacking the MVC protocol to simulate an update from a view
+			switch (className) { // use the MVC protocol to simulate an update from a view
 
 				case 'EventListView':
 

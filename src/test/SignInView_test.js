@@ -8,6 +8,8 @@
 *
 */
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 8000;
+
 describe('Class SignInView', function(){
 	
 	/* This code only works if testsuite and app are both loaded from the same server.
@@ -36,7 +38,7 @@ describe('Class SignInView', function(){
 
 			done();
 
-		}, 500); // wait for page to load
+		}, 2000); // wait for page to load
 	});
 
 	

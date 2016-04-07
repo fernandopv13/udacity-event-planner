@@ -280,9 +280,18 @@ describe('Class AccountProfileView', function(){
 
 			testWindow.$('#account-profile-employer').val('Galaxy Inc.');
 
-			testWindow.$('#account-profile-birthday').val('05/22/2263');
+			if (testWindow.$('#account-profile-birthday').attr('type') === 'datetime-local') { // datetime-local requires ISO string 
 
-			
+				testWindow.$('#account-profile-birthday').attr('value', '2263-05-21T20:00:00.000'); // using $.val() alone does not set attribute, causing stepMismatch validity error
+
+				testWindow.$('#account-profile-birthday').val('2263-05-21T20:00:00.000'); // must also set val() or change won't submit
+			}
+
+			else { // text input requires formatted date string
+
+				testWindow.$('#account-profile-birthday').val('05/22/2263');
+			}
+
 			expect(app.FormWidget.instance().validate(testWindow.$('#account-profile-form'))).toBe(true);
 			
 			testWindow.$('#account-profile-submit').trigger('mousedown');
@@ -296,7 +305,7 @@ describe('Class AccountProfileView', function(){
 
 			expect(testView.model().employer().name()).toBe('Galaxy Inc.');
 
-			expect(testView.model().birthday().valueOf()).toBe(9258357600000);
+			expect(testView.model().birthday().getFullYear()).toBe(2263); // browsers diverge on valueOf() conversion, so just check year
 		});
 
 

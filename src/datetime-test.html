@@ -1,0 +1,63 @@
+<html>
+	<head>
+
+	</head>
+
+	<body>
+		
+		<form>
+			
+			<input id="picker" type="datetime-local" step="0.001"/>
+
+		</form>
+		
+		<button id="btn">Check</button>
+
+		<!--button id="btn_true">Set true</button>
+
+		<button id="btn_false">Set false</button-->
+		
+		<p>Result:</p>
+
+		<div id="output"></div>
+
+		<script>
+			
+			document.getElementById('btn').addEventListener('click', function(nEvent) {
+
+				var validity = document.getElementById('picker').validity;
+
+				var out = document.getElementById('output');
+
+				var html = '';
+
+				html += document.getElementById('picker').step + '<br/>';
+
+				for(var prop in validity) {
+
+					html += prop + ': ' + validity[prop] + '<br/>';
+				}
+
+				html += 'checkValidity: ' + document.getElementById('picker').checkValidity();
+
+				out.innerHTML = html;
+			});
+
+			/*
+			$('#btn_true').click(function(nEvent) {
+
+				$('#picker')[0].setCustomValidity('');
+			});
+
+			$('#btn_false').click(function(nEvent) {
+
+				$('#picker')[0].setCustomValidity(false);
+			});
+			*/
+
+		</script>
+		
+
+	</body>
+
+</html>

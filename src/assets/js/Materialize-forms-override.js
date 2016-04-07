@@ -42,11 +42,13 @@ var app = app || {};
 
 				var fn = $(element).data('customValidator').split('.').reduce(function(obj, ix) {return obj[ix]}, module); // resolve dot string into js reference (w/o resorting to eval()!)
 
+				//alert(fn); // CHECK THIS: if picker even has data and/or custom validate value
+				
 				if (element.setCustomValidity && typeof fn === 'function') { // custom validator is a function
 
 					element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
 
-					//console.log(element.id + ': ' + element.checkValidity());// debug
+					console.log(element.id + ': ' + element.checkValidity());// debug
 				}
 			}
 		}

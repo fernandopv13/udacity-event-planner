@@ -167,7 +167,7 @@ var app = app || {};
 
 	module.ViewUpdateHandler.prototype.update = function(int_UIAction, Model_m, View_v) {
 		
-		if (arguments.length === 3) { console.log('correct number of arguments');
+		if (arguments.length === 3) { //console.log('correct number of arguments');
 
 			if (parseInt(int_UIAction) === int_UIAction && int_UIAction === this.uiAction()) { //console.log('UIAction is a matching integer');
 
@@ -175,7 +175,7 @@ var app = app || {};
 
 					if (View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { // third param is instance of View
 
-						console.log('Executing UIAction ' + int_UIAction + ' on ' + View_v.className());
+						//console.log('Executing UIAction ' + int_UIAction + ' on ' + View_v.className());
 
 						this.execute(int_UIAction, Model_m, View_v); // UIAction and call signature are a match, so respond
 					}

@@ -242,7 +242,7 @@ var app = app || {};
 
 			if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
 
-				|| !app.device().isMobile()) { // use custom widget (always prefer on lap/desktop)
+				|| !app.device().isMobile()) { // always prefer custom widget on lap/desktop
 
 				
 				// Set bootstrap-datetimepicker widget options
@@ -338,6 +338,11 @@ var app = app || {};
 
 			else { // Use native widget
 
+				if (app.device().isiOS()) { // iOS browsers will create a stepMismatch error unless step is set to milliseconds
+
+					$(element).attr('step', '0.001');
+				}
+
 				// Make sure any existing value(s) is/are presented, and nicely formatted
 
 				// This ought to be redundant since we already set the value at creation,
@@ -363,8 +368,10 @@ var app = app || {};
 		};
 
 	
-		/** Initializes any and all datetime pickers on the pages using datetime-local inputs */
+		/** DEPRECATED: Remove and see what breaks
+		Initializes any and all datetime pickers on the pages using datetime-local inputs */
 
+		/*
 		module.DateInputWidget.prototype.initAll = function(HTMLInputElement_e) {
 
 			if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
@@ -498,8 +505,8 @@ var app = app || {};
 					}
 				});
 			}
-			
 		};
+		*/
 
 		
 		/** Event handler for interactive validation of date field
@@ -508,6 +515,8 @@ var app = app || {};
 		*/
 
 		module.DateInputWidget.prototype.validate = function(HTMLInputElement_e) {
+
+			//console.log('validating date');
 
 			if (HTMLInputElement_e.validity && HTMLInputElement_e.validity.valueMissing
 

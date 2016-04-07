@@ -64,6 +64,35 @@ var app = app || {}; // Create a simple namespace for the app
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
+	/**
+	* Gets whether device runs Android or not
+	*
+	* @return {Boolean} true if device runs Android, otherwise false
+	*/
+	
+	module.Device.prototype.isAndroid = function() {
+
+		return /android/i.test(navigator.userAgent.toLowerCase());
+	}
+
+
+	/**
+	* Gets whether device runs iOS (i.e. is an Apple iPhone or iPad) or not
+	*
+	* @return {Boolean} true if device runs iOS, otherwise false
+	*/
+	
+	module.Device.prototype.isiOS = function() {
+
+		return /ipad|iphone|ipod/.test(navigator.userAgent.toLowerCase()) && !window.MSStream;
+	}
+
+
+	/** Gets whether device's currently held in landscape orientation
+	*
+	* @return {Boolean} true if landscape, else false
+	*/
+
 	module.Device.prototype.isLandscape = function () {
 		
 		return this.orientation() === 'landscape';
@@ -102,14 +131,12 @@ var app = app || {}; // Create a simple namespace for the app
 		}
 	};
 
-	/*
-	module.Device.prototype.isPhone = function () {
-		
-		return Math.min(window.outerWidth, window.outerHeight) < 1024;
-	};
+
+	/** Gets whether device's currently held in portrait orientation
+	*
+	* @return {Boolean} true if portrait, else false
 	*/
-
-
+	
 	module.Device.prototype.isPortrait = function () {
 		
 		return this.orientation() === 'portrait';
