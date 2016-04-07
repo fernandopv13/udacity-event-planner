@@ -80,6 +80,7 @@ describe('Class Device', function(){
 			expect(testDevice.isPortrait()).toBe(false);
 		});
 		
+		
 		it('can tell if device is mobile (i.e. phone or tablet)', function() {
 			
 			// very crude, but no time to write test that doesn't just repeat the algorithm of the method itself
@@ -87,11 +88,18 @@ describe('Class Device', function(){
 
 			expect(typeof testDevice.isMobile()).toBe('boolean');
 		});
-		
-		
-		xit('can tell if device is a phone', function() {
+
+
+		it('can tell if device runs Android', function() {
 			
+			expect(testDevice.isAndroid()).toBeDefined();
+		});
+		
+
+
+		it('can tell if device runs iOS', function() {
 			
+			expect(testDevice.isiOS()).toBeDefined();
 		});
 	});
 });

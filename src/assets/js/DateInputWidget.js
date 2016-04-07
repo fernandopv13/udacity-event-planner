@@ -338,9 +338,9 @@ var app = app || {};
 
 			else { // Use native widget
 
-				if (app.device().isiOS()) { // iOS browsers will create a stepMismatch error unless step is set to milliseconds
+				if (app.device().isiOS()) { // iOS browsers will create a stepMismatch validation API error unless step is set to milliseconds
 
-					$(element).attr('step', '0.001');
+					$(element).attr('step', '0.001'); // only set to ms here, or lap/desktops will add sec an ms fields (hidden by iOS picker)
 				}
 
 				// Make sure any existing value(s) is/are presented, and nicely formatted
