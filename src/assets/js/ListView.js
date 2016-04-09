@@ -77,7 +77,7 @@ var app = app || {};
 
 	app.ListView.prototype.onSelect = function(nEvent, Model_m) {
 
-		console.log(nEvent);
+		//console.log(nEvent); //debug
 
 		this.notifyObservers(this, Model_m, app.View.UIAction.SELECT);
 	};

@@ -116,4 +116,19 @@ var app = app || {};
 		throw new AbstractMethodError('init() must be realized in subclasses');
 	};
 
+
+	/** Returns singleton instance of UIWidget. Using singletons to avoid duplication of DOM memory structure while retaining inheritance.
+	*
+	* @abstract
+	*
+	* @return {void}
+	*
+	* @throws {AbstractMethodError} If invoked directly on the abstract base class (subclasses must provide their own implementation)
+	*/
+
+	module.UIWidget.prototype.instance = function() {
+		
+		throw new AbstractMethodError('instance() must be realized in subclasses');
+	};
+
 })(app);

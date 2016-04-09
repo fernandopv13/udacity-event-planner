@@ -77,11 +77,9 @@ var app = app || {};
 				logotype: 'Meetup Planner',
 
 				menuItems: // list of menu items, in order of presentation
-				[
+				[ // menuitems point to a view; Router takes care of URL generation
 					{
 						text: 'Account Settings', // link text
-
-						href: '#!Settings', // link URL
 
 						icon: 'settings', // Google Material Design icon name (optional)
 
@@ -91,8 +89,6 @@ var app = app || {};
 					{
 						text: 'Account Profile',
 
-						href: '#!Profile',
-
 						icon: 'account_circle',
 
 						view: AccountProfileView
@@ -101,8 +97,6 @@ var app = app || {};
 					{
 						text: 'About',
 
-						href: '#!About',
-
 						icon: 'info',
 
 						view: AboutView
@@ -110,8 +104,6 @@ var app = app || {};
 
 					{
 						text: 'Sign Out',
-
-						href: '#!SignOut',
 
 						icon: 'power_settings_new',,
 
@@ -167,7 +159,7 @@ var app = app || {};
 					{
 						element: 'a',
 
-						attributes: {href: item.href, title: item.text},
+						attributes: {title: item.text},// href: item.href},
 
 						classList: ['nav-menu-item'],
 
@@ -216,7 +208,7 @@ var app = app || {};
 				{
 					element: 'a',
 
-					attributes: {href: '#!'},
+					//attributes: {href: '#!'},
 
 					classList: ['brand-logo'],
 
@@ -238,7 +230,7 @@ var app = app || {};
 				{
 					element: 'a',
 
-					attributes: {href: '#'},
+					//attributes: {href: '#'},
 
 					classList: ['button-collapse'],
 
@@ -276,7 +268,7 @@ var app = app || {};
 				{
 					element: 'a',
 
-					attributes: {href: '#!', id: 'nav-dropdown-button'},
+					attributes: {id: 'nav-dropdown-button'}, //href: '#!'},
 
 					classList: ['dropdown-button'],
 
@@ -346,7 +338,7 @@ var app = app || {};
 					{
 						element: 'a',
 
-						attributes: {href: item.href, role:'menuitem'},
+						attributes: {role:'menuitem'}, //href: item.href},
 
 						classList: ['nav-menu-item'],
 
@@ -419,7 +411,7 @@ var app = app || {};
 
 					try { // fail silently if menu item doesn't work
 
-						View_v.notifyObservers(new module[$(nEvent.target).data('view')], null, 4);//.target.href.split('!')[1]); // parse the URL partial after #!
+						View_v.notifyObservers(new module[$(nEvent.target).data('view')], null, module.View.UIAction.NAVIGATE);//.target.href.split('!')[1]); // parse the URL partial after #!
 					}
 
 					catch(e) {
