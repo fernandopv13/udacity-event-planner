@@ -65,6 +65,8 @@ var app = app || {};
 		* @return {HTMLDivElement} The requested nav bar
 		*
 		* @throws {ReferenceError} If no options are specified
+		*
+		* @todo Figure out why appending to the main container late in the code affects its contents earlier in the code, causing loss of  control over exact construction of DOM structure (really weird)
 		*/
 
 		module.NavigationWidget.prototype.createProduct = function(obj_options) {
@@ -159,7 +161,7 @@ var app = app || {};
 					{
 						element: 'a',
 
-						attributes: {title: item.text},// href: item.href},
+						attributes: {role: 'menuitem', title: item.text},// href: item.href},
 
 						classList: ['nav-menu-item'],
 
@@ -170,16 +172,14 @@ var app = app || {};
 
 					listElement = createElement(
 					{
-						element: 'li',
-
-						attributes: {role: 'menuitem'}
+						element: 'li'
 					});
 
 					listElement.appendChild(anchorElement);
 
 					ULElement.appendChild(listElement);
 
-				}, this);
+				});
 
 
 			// Main nav
@@ -281,10 +281,10 @@ var app = app || {};
 				listElement.appendChild(anchorElement);
 
 				ULElement.appendChild(listElement);
-
+				
 				divElement.appendChild(ULElement);
 
-
+				
 				ULElement = createElement( // delete icon
 				{
 					element: 'ul',
@@ -367,6 +367,8 @@ var app = app || {};
 
 				divElement.appendChild(ULElement);
 
+			
+			//console.log(containerDiv); // debug
 
 			return containerDiv;
 		};
@@ -407,6 +409,8 @@ var app = app || {};
 
 				$(element).find('.nav-menu-item').on('mousedown', function(nEvent) { // side nav and dropdown menu items
 
+					//console.log('menu item clicked/tapped'); //debug
+
 					$(element).find('.button-collapse').sideNav('hide');
 
 					try { // fail silently if menu item doesn't work
@@ -419,9 +423,7 @@ var app = app || {};
 						console.log(e);
 					}
 
-					//module.controller.onNavSelection(nEvent);
-
-				});//.bind(View_v));
+				});
 		};
 
 		

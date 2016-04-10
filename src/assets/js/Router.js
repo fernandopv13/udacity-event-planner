@@ -47,7 +47,7 @@ var app = app || {};
 
 			id = parseInt(PopStateEvent_e.state.id);
 
-			console.log('popping ' + className); // debug
+			//console.log('popping ' + className); // debug
 
 			switch (className) { // use the MVC protocol to simulate an update from a view
 
@@ -101,7 +101,7 @@ var app = app || {};
 
 				if (!history.state || history.state.className !== className) { // don't set state if navigating back
 
-					console.log('pushing ' + className); // debug
+					//console.log('pushing ' + className); // debug
 
 					history.pushState( // state object
 					{

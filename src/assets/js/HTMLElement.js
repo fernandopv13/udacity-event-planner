@@ -123,6 +123,8 @@ var app = app || {};
 
 			var options = obj_options;
 
+			//console.log(options); // debug
+
 			var element = document.createElement(options.element), prop;
 						
 			if (options.attributes) {
