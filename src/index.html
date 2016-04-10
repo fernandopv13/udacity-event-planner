@@ -92,7 +92,6 @@
 			<script src="lib/polyfills/Object.js"></script>
 			<script src="lib/polyfills/Array.js"></script>
 			<!--script src="lib/polyfills/H5F_v1.1.1/src/H5F.js"></script --><!-- HTML5 forms polyfill (ineffective) -->
-			<script src="lib/polyfills/webshim-1.15.10/js-webshim/minified/polyfiller.js"></script><!-- HTML5 forms polyfill (also not effective, keeping it just in case) -->
 			<script src="lib/polyfills/Storage.js"></script>
 			
 			<!--script src="lib/jquery-2.1.1.min.js"></script--> <!--Import jQuery before materialize.js; stic with 2.1.1 until materialize/picker.js catch up -->
@@ -181,8 +180,6 @@
 			
 			window.onload = function() { // $(document).ready()) may fire too early, so going old school
 				
-				webshim.polyfill('forms'); // this may be ineffective, as th eforms have yet to render; maybe call as part of form's onLoad/onRender call
-
 				app.init();
 			};
 		</script>

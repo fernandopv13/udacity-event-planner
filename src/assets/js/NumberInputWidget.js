@@ -112,7 +112,7 @@ var app = app || {};
 
 			var createElement = module.HTMLElement.instance().createProduct;
 
-			
+
 			var outerDiv =  createElement( // outer div
 			{
 				element: 'div',
@@ -160,7 +160,7 @@ var app = app || {};
 				
 				classList: ['validate'],
 
-				dataset: {customValidator: options.validator ? options.validator : (Modernizr && Modernizr.formvalidation ? '' : 'NumberInputWidget.prototype.validate')}
+				dataset: {customValidator: options.validator ? options.validator : 'NumberInputWidget.prototype.validate'}
 			}));
 			
 			
@@ -197,12 +197,6 @@ var app = app || {};
 		};
 
 		
-		/*DEPRECATED: Handled by InputWidget
-		 Initializes email field (required by UIWidget) */
-
-		//module.NumberInputWidget.prototype.init = function(HTMLInputElement_e) {};
-
-		
 		/** Event handler for interactive validation of number field
 		*
 		* @return {Boolean} true if validation is succesful, otherwise false
@@ -210,9 +204,53 @@ var app = app || {};
 
 		module.NumberInputWidget.prototype.validate = function(HTMLInputElement_e) {
 
-			return $(HTMLInputElement_e).checkValidity(); // no need for custom validation, HTML5 validation suffices
+			if (Modernizr && Modernizr.formvalidation) { // form validation API supported
 
-			// later, maybe add branching to support non-HTML5 compliant browsers
+				return $(HTMLInputElement_e)[0].checkValidity(); // no need for custom validation, HTML5 validation suffices
+			}
+
+			else { // check manually
+
+				var val = $(HTMLInputElement_e).val(),
+
+				min = $(HTMLInputElement_e).attr('min'),
+
+				max = $(HTMLInputElement_e).attr('max'),
+
+				step = $(HTMLInputElement_e).attr('step'),
+
+				required = $(HTMLInputElement_e).attr('required');
+
+				if (typeof val !== 'undefined') { // a value has been entered
+
+					val = parseFloat(val);
+
+					if (typeof min !== 'undefined' && val < parseFloat(min)) { // too low
+
+						return false;
+					}
+
+					else if (typeof max !== 'undefined' && val > parseFloat(max)) { // too high
+
+						return false;
+					}
+
+					else if (typeof step !== 'undefined' && typeof min !== 'undefined') { // out of step
+
+						return (val - parseFloat(min)) % parseFloat(step) === 0;
+					}
+
+					else {
+
+						return true;
+					}
+				}
+
+				else { // no entry, test if required
+
+					return typeof required === 'undefined'; // true if not required, and vice versa
+				}
+			}
 		};
 
 
