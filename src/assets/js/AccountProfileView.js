@@ -158,6 +158,7 @@ var app = app || {};
 					}
 				));
 				
+				this.elementOptions['account-profile-name'] = {}; // make sure widget gets initialized
 			
 			// Add email field
 
@@ -176,6 +177,8 @@ var app = app || {};
 						datasource: Person_p.email() || null
 					}
 				);
+
+				this.elementOptions['account-profile-email'] = {}; // make sure widget gets initialized
 
 
 				outerDiv.appendChild(this.createWidget(
@@ -210,6 +213,8 @@ var app = app || {};
 					}
 				));
 
+				this.elementOptions['account-profile-jobtitle'] = {}; // make sure widget gets initialized
+
 							
 			// Add employer field
 
@@ -231,6 +236,8 @@ var app = app || {};
 						datalist: 'suggested-employers'
 					}
 				));
+
+				this.elementOptions['account-profile-employer'] = {}; // make sure widget gets initialized
 			
 			
 			// Add birthday field
@@ -252,10 +259,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-profile-birthday'] = 
-				{
-					init: module.DateInputWidget.prototype.init
-				}
+				this.elementOptions['account-profile-birthday'] = {}; // make sure widget gets initialized
 
 			
 			// Add requirement indicator (asterisk) explanation
@@ -313,10 +317,7 @@ var app = app || {};
 					}
 				));
 				
-				this.elementOptions['account-profile-cancel'] =
-				{
-					init: module.CancelButtonWidget.prototype.init
-				}
+				this.elementOptions['account-profile-cancel'] = {}; // make sure widget gets initialized
 
 				
 				outerDiv.appendChild(this.createWidget(
@@ -332,10 +333,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-profile-submit'] =
-				{
-					init: module.SubmitButtonWidget.prototype.init
-				}
+				this.elementOptions['account-profile-submit'] = {}; // make sure widget gets initialized
 
 				formElement.appendChild(outerDiv);
 		}

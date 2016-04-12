@@ -30,9 +30,11 @@ var app = app || {};
 		* Call (chain) parent class constructor
 		*---------------------------------------------------------------------------------------*/
 		
-			// Set temporary literals for use by parent class constructor
+			// Set temporary literals for use by parent class constructor (unless already defined in calling class)
 
 			this.type = this.type || 'InputWidget';
+
+			this.ssuper = module.InputWidget; // All derived classes has InputWidget as super, so set here
 
 			
 			// Initialize instance members inherited from parent class
@@ -53,26 +55,21 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Initializes UIWidget upon rendering it into the HTML DOM.
+	/** Initializes InputWidget upon rendering it into the HTML DOM.
 	*
-	* Currently does nothing but comply with requirement in UIWidget on behalf of widgets that do not
+	* Currently does nothing but pass call up the inheritance chain to UIWidget.
 	*
-	* need initialization after rendering to the DOM.
+	* (ssuper only works on level up from the 'lowest' derived class, so must pass manually.)
 	*
-	* @param {View} v The View the input belongs to
-	*
-	* @param {String} id Id of the element to be initialized
-	*
-	* @param {Object} options JSON object with the options to use for initialization (see source for supported formats) 
-	*
-	* @return {void}
 	*/
 
 	module.InputWidget.prototype.init = function(View_v, str_id, obj_options) {
 		
-		// do nothing
-	};
+		//console.log(arguments); // debug
 
+		module.UIWidget.prototype.init(View_v, str_id, obj_options);
+	};
+	
 
 	/** Performs custom validation of input field beyond what can be acheived using the
 	*

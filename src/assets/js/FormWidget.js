@@ -122,7 +122,7 @@ var app = app || {};
 		
 		/* Initializes form (required by UIWidget) */
 
-		module.FormWidget.prototype.init = function() {};
+		//module.FormWidget.prototype.init = function() {};
 
 
 		/** Event handler for interactive validation of entire form.

@@ -8,7 +8,11 @@ var app = app || {}; // create a simple namespace for the app
 	* public Interface ISerializable
 	***********************************************************/
 
-	/** @classdesc Represents an interface for classes that can be serialized for local or remote storage. Provides default methods that do most of the heavy lifting object of serialization and deserialization. Inspired by, but not a direct copy of, the similar Java API.
+	/** @classdesc Represents an interface for classes that can be serialized for local or remote storage.
+	*
+	* Provides default methods that do most of the heavy lifting of object serialization and deserialization.
+	*
+	* Inspired by, but not a direct copy of, the similar Java API.
 	*
 	* @interface
 	*
@@ -20,7 +24,7 @@ var app = app || {}; // create a simple namespace for the app
 	*
 	* @author Ulrik H. Gade, January 2016
 	*
-	* @todo: Figure out how to get jsDoc to show (all) the method signature(s)
+	* @todo Get rid of the discrete error messages and just throw an error with that message (requires updating unit tests as well).
 	*/
 
 	module.ISerializable = function() {
@@ -298,7 +302,7 @@ var app = app || {}; // create a simple namespace for the app
 			localStorage.setItem(module.prefs.localStoragePrefix() + this.className() + '.' + this.id(), JSON.stringify(this));
 		}
 		
-		catch(e) { // notcrazy about this interface communicating directly in the UI, but will have to do for now
+		catch(e) { // not crazy about this interface communicating directly in the UI, but will have to do for now
 			
 			console.log(e);
 

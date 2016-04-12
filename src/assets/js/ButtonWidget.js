@@ -32,6 +32,8 @@ var app = app || {};
 
 			this.type = this.type || 'ButtonWidget';
 
+			this.ssuper = module.ButtonWidget; // All derived classes has ButtonWidget as super, so set here
+
 			
 			// Initialize instance members inherited from parent class
 			
@@ -50,6 +52,20 @@ var app = app || {};
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
+
+	/** Initializes ButtonWidget upon rendering it into the HTML DOM.
+	*
+	* Currently does nothing but pass call up the inheritance chain to UIWidget.
+	*
+	* (ssuper only works on level up from the 'lowest' derived class, so must pass manually.)
+	*
+	*/
+
+	module.ButtonWidget.prototype.init = function(View_v, str_id, obj_options) {
+		
+		module.UIWidget.prototype.init(View_v, str_id, obj_options);
+	};
+
 
 	module.ButtonWidget.prototype.onClick = function(HTMLInputElement) {
 

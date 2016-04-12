@@ -16,9 +16,9 @@ describe('Navigation', function(){
 	
 	beforeAll(function(done){
 
-		testWindow = window.open('../index.html'); // test on development version of app
+		//testWindow = window.open('../index.html'); // test on development version of app
 
-		//testWindow = window.open('../../dist/index.html'); // test on production version of app
+		testWindow = window.open('../../build/index.html'); // test on production version of app
 
 		setTimeout(function() {
 

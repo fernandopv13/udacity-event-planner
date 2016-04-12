@@ -118,6 +118,8 @@ var app = app || {};
 
 				classList: ['large', 'material-icons'],
 
+				dataset: {widgetclass: 'FloatingActionButtonWidget'},
+
 				innerHTML: options.icon
 			}));
 
@@ -127,7 +129,7 @@ var app = app || {};
 		
 		/* Initializes element (required by UIWidget) */
 
-		module.FloatingActionButtonWidget.prototype.init = function() {};
+		//module.FloatingActionButtonWidget.prototype.init = function() {};
 
 
 	/*----------------------------------------------------------------------------------------

@@ -143,7 +143,12 @@ var app = app || {};
 				
 				attributes: attributes,
 
-				dataset: {customValidator: options.validator ? options.validator : 'PasswordConfirmationInputWidget.prototype.validate'},
+				dataset:
+				{
+					customValidator: options.validator ? options.validator : 'PasswordConfirmationInputWidget.prototype.validate',
+
+					widgetclass: 'PasswordConfirmationInputWidget'
+				},
 				
 				classList: ['validate']
 			}));

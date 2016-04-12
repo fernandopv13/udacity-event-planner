@@ -153,7 +153,12 @@ var app = app || {};
 				
 				classList: classList,
 
-				dataset: {customValidator: options.validator ? options.validator : (Modernizr && Modernizr.formvalidation ? '' : 'TextInputWidget.prototype.validate')}
+				dataset:
+				{
+					customValidator: options.validator ? options.validator : (Modernizr && Modernizr.formvalidation ? '' : 'TextInputWidget.prototype.validate'),
+
+					widgetclass: 'TextInputWidget'
+				}
 			}));
 			
 			

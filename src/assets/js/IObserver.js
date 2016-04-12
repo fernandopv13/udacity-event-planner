@@ -19,8 +19,6 @@ var app = app || {}; // create a simple namespace for the module
 	* @throws {AbstractMethodError} If attempting to invoke (abstract) method signature
 	*
 	* @author Ulrik H. Gade, January 2016
-	*
-	* @todo: Figure out how to get jsDoc to show (all) the method signature(s)
 	*/
 
 	module.IObserver = function() {

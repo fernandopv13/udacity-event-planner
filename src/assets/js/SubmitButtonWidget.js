@@ -95,6 +95,8 @@ var app = app || {};
 				
 				classList: ['waves-effect', 'waves-light', 'btn'],
 
+				dataset: {widgetclass: 'SubmitButtonWidget'},
+
 				innerHTML: options.label
 			});
 			
@@ -130,7 +132,7 @@ var app = app || {};
 		* @throws {IllegalArgumentError} If 'submit' property of View is not a function
 		*/
 
-		module.SubmitButtonWidget.prototype.init = function(View_v, str_elementId, obj_elementOptions) {
+		module.SubmitButtonWidget.prototype.init = function(View_v, str_id, obj_options) {
 
 			// Attach generic event handler
 
@@ -140,7 +142,7 @@ var app = app || {};
 
 				if (typeof fn === 'function') {
 
-					$('#' + str_elementId).on('mousedown', fn.bind(View_v));
+					$('#' + str_id).on('mousedown', fn.bind(View_v));
 				}
 
 				else {
@@ -153,6 +155,11 @@ var app = app || {};
 
 				throw new ReferenceError('View must support "submit()"" instance method');
 			}
+
+			
+			// Call generic initializer in parent class
+
+			module.ButtonWidget.prototype.init(View_v, str_id, obj_options);
 		};
 
 

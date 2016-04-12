@@ -209,6 +209,8 @@ var app = app || {};
 				}
 			));
 
+			this.elementOptions['sign-in-email'] = {};  // make sure initializer gets called on widget
+
 
 		// Add password field
 
@@ -227,10 +229,7 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['sign-in-password'] = 
-			{
-				init: module.PasswordInputWidget.prototype.init
-			}
+			this.elementOptions['sign-in-password'] = {};  // make sure initializer gets called on widget
 
 		
 		// Add sign-in button

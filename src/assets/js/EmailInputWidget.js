@@ -145,7 +145,12 @@ var app = app || {};
 				
 				attributes: attributes,
 
-				dataset: {customValidator: options.validator ? options.validator : 'EmailInputWidget.prototype.validate'},
+				dataset:
+				{
+					customValidator: options.validator ? options.validator : 'EmailInputWidget.prototype.validate',
+
+					widgetclass: 'EmailInputWidget'
+				},
 				
 				classList: ['validate']
 			}));

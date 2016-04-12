@@ -169,18 +169,29 @@ var app = app || {};
 		};
 
 		
-		/* Initializes element once rendered to the DOM (required by UIWidget)
+		/*DEPRECATED: Remove after committing
+		 Initializes element once rendered to the DOM (required by UIWidget).
 		*
-		* @param {String} id id of the element to initialize
+		* Also used as generic intializer of View-specific event handlers for all UIWidgets.
+		*
+		* This approach is necessary in order to support using anonymous functions as event handlers,
+		*
+		* given that references to such handlers cannot be embedded in the DOM element when calling a UIWidget's createProduct() method.
+		*
+		* See also comments about initializationin in UIWidget.
+		*
+		* @param {String} id Id of the element to initialize
 		*
 		* @param {Object} options JSON object with the options to use for initialization (see source for supported format)
 		*
 		* @return {void}
 		*
 		* @throws {IllegalArgumentError} If a parameter does not resolve to an expected value or type
+		*
+		* @todo Move this into UIWidget and invoke from individual widgets using a 'super' call.
 		*/
 
-		module.HTMLElement.prototype.init = function(View_v, str_id, obj_elementOptions) {
+		//module.HTMLElement.prototype.init = function(View_v, str_id, obj_elementOptions) {
 
 			/* Example of currently supported JSON format for elementOptions:
 			{
@@ -199,7 +210,7 @@ var app = app || {};
 			
 			//console.log(arguments); // debug
 
-			if (obj_elementOptions.listeners) { // attach event listeners
+		/*	if (obj_elementOptions.listeners) { // attach event listeners
 
 				var listeners = obj_elementOptions.listeners;
 
@@ -217,6 +228,7 @@ var app = app || {};
 				}
 			}
 		};
+		*/
 
 
 	/*----------------------------------------------------------------------------------------

@@ -93,6 +93,8 @@ var app = app || {};
 				
 				classList: ['waves-effect', 'waves-teal', 'btn-flat'],
 
+				dataset: {widgetclass: 'CancelButtonWidget'},
+
 				innerHTML: options.label
 			});
 			
@@ -118,7 +120,7 @@ var app = app || {};
 		* @throws {IllegalArgumentError} If 'cancel' property of View is not a function
 		*/
 
-		module.CancelButtonWidget.prototype.init = function(View_v, str_elementId, obj_elementOptions) {
+		module.CancelButtonWidget.prototype.init = function(View_v, str_id, obj_options) {
 
 			// Attach generic event handler
 
@@ -128,7 +130,7 @@ var app = app || {};
 
 				if (typeof fn === 'function') {
 
-					$('#' + str_elementId).on('mousedown', fn.bind(View_v));
+					$('#' + str_id).on('mousedown', fn.bind(View_v));
 				}
 
 				else {
@@ -141,6 +143,11 @@ var app = app || {};
 
 				throw new ReferenceError('View must support "cancel()"" instance method');
 			}
+
+
+			// Call generic initializer in parent class
+
+			module.ButtonWidget.prototype.init(View_v, str_id, obj_options);
 		};
 
 

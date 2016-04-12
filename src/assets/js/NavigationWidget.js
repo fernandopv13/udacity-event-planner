@@ -415,7 +415,7 @@ var app = app || {};
 
 					try { // fail silently if menu item doesn't work
 
-						View_v.notifyObservers(new module[$(nEvent.target).data('view')], null, module.View.UIAction.NAVIGATE);//.target.href.split('!')[1]); // parse the URL partial after #!
+						View_v.notifyObservers(new module[$(nEvent.target).data('view')](), null, module.View.UIAction.NAVIGATE);//.target.href.split('!')[1]); // parse the URL partial after #!
 					}
 
 					catch(e) {
@@ -424,6 +424,11 @@ var app = app || {};
 					}
 
 				});
+
+
+			// Call generic initializer in parent class
+
+				module.UIWidget.prototype.init(View_v, str_id, obj_options);
 		};
 
 		

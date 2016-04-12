@@ -156,6 +156,8 @@ var app = app || {};
 						datasource: Person_p.name() || null
 					}
 				));
+
+				this.elementOptions['guest-name'] = {}; // make sure widget gets initialized
 			
 			
 			// Add email field
@@ -177,6 +179,8 @@ var app = app || {};
 					}
 				));
 
+				this.elementOptions['guest-email'] = {}; // make sure widget gets initialized
+
 			
 			// Add job title field
 
@@ -196,6 +200,8 @@ var app = app || {};
 						datasource: Person_p.jobTitle() || null
 					}
 				));
+
+				this.elementOptions['guest-jobtitle'] = {}; // make sure widget gets initialized
 				
 
 			// Add employer field
@@ -247,10 +253,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['guest-birthday'] = 
-				{
-					init: module.DateInputWidget.prototype.init
-				};
+				this.elementOptions['guest-birthday'] = {}; // make sure widget gets initialized
 				
 			
 			// Add requirement indicator (asterisk) explanation
@@ -291,10 +294,7 @@ var app = app || {};
 					label: 'Cancel'
 				}));
 
-				this.elementOptions['guest-form-cancel'] =
-				{
-					init: module.CancelButtonWidget.prototype.init
-				}
+				this.elementOptions['guest-form-cancel'] = {}; // make sure widget gets initialized
 				
 
 				outerDiv.appendChild(this.createWidget('SubmitButtonWidget',  // submit button
@@ -306,10 +306,7 @@ var app = app || {};
 					icon: 'send'
 				}));
 
-				this.elementOptions['guest-form-submit'] =
-				{
-					init: module.SubmitButtonWidget.prototype.init
-				}
+				this.elementOptions['guest-form-submit'] = {}; // make sure widget gets initialized
 
 				formElement.appendChild(outerDiv);
 		}

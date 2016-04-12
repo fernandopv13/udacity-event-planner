@@ -233,6 +233,8 @@ var app = app || {};
 				}
 			));
 
+			this.elementOptions['sign-up-email'] = {};  // make sure initializer gets called on widget
+
 
 		// Add password field
 
@@ -251,10 +253,7 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['sign-up-password'] = 
-			{
-				init: module.PasswordInputWidget.prototype.init
-			}
+			this.elementOptions['sign-up-password'] = {};  // make sure initializer gets called on widget
 
 		
 		// Add password confirmation field
@@ -271,6 +270,8 @@ var app = app || {};
 					label: 'Confirm Password'
 				}
 			));
+
+			this.elementOptions['sign-up-password-confirmation'] = {};  // make sure initializer gets called on widget
 
 
 		// Add optional extras instruction
@@ -309,6 +310,8 @@ var app = app || {};
 				}
 			));
 
+			this.elementOptions['sign-up-name'] = {};  // make sure initializer gets called on widget
+
 
 		// Add birthday field
 
@@ -327,10 +330,7 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['sign-up-birthday'] = 
-			{
-				init: module.DateInputWidget.prototype.init
-			};
+			this.elementOptions['sign-up-birthday'] = {};  // make sure initializer gets called on widget
 
 
 		// Add job title field
@@ -351,6 +351,8 @@ var app = app || {};
 					required: false
 				}
 			));
+
+			this.elementOptions['sign-up-jobtitle'] = {};  // make sure initializer gets called on widget
 
 
 		// Add sign-up button
@@ -466,7 +468,7 @@ var app = app || {};
 
 					&& $(nEvent.currentTarget).val() !== $(nEvent.currentTarget).data('value') // pw is 'dirty'
 
-					&&  $(nEvent.currentTarget).checkValidity()) { // pw is valid
+					&&  $(nEvent.currentTarget)[0].checkValidity()) { // pw is valid
 
 						$('#sign-up-password-confirmation-parent').removeClass('hidden');
 

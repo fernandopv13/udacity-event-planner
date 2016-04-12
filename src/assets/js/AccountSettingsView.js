@@ -157,6 +157,8 @@ var app = app || {};
 					}
 				));
 
+				this.elementOptions['account-settings-email'] = {}; // make sure widget gets initialized
+
 
 			// Add password field
 
@@ -177,10 +179,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-settings-password'] = 
-				{
-					init: module.PasswordInputWidget.prototype.init
-				}
+				this.elementOptions['account-settings-password'] = {}; // make sure widget gets initialized
 
 
 			// Add password confirmation field
@@ -195,6 +194,8 @@ var app = app || {};
 						id: 'account-settings-password-confirmation'
 					}
 				));
+
+				this.elementOptions['account-settings-password-confirmation'] = {}; // make sure widget gets initialized
 
 				
 			// Add default event capacity field
@@ -221,6 +222,8 @@ var app = app || {};
 						errormessage: 'Please enter capacity (0 or greater)'
 					}
 				));
+
+				this.elementOptions['account-settings-capacity'] = {}; // make sure widget gets initialized
 				
 
 			// Add default location field
@@ -243,6 +246,8 @@ var app = app || {};
 						//datalist: 'suggested-locations'
 					}
 				));
+
+				this.elementOptions['account-settings-location'] = {}; // make sure widget gets initialized
 
 				/*
 				formElement.appendChild(this.createWidget(
@@ -275,6 +280,8 @@ var app = app || {};
 					}
 				);
 
+				this.elementOptions['account-settings-localstorage'] = {}; // make sure widget gets initialized
+
 				outerDiv.appendChild(this.createWidget(
 
 					'InputDescriptionWidget',
@@ -305,6 +312,8 @@ var app = app || {};
 						datasource: Account_a.geoLocationAllowed()
 					}
 				);
+
+				this.elementOptions['account-settings-geolocation'] = {}; // make sure widget gets initialized
 				
 				outerDiv.appendChild(this.createWidget(
 
@@ -372,10 +381,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-settings-cancel'] =
-				{
-					init: module.CancelButtonWidget.prototype.init
-				}
+				this.elementOptions['account-settings-cancel'] = {}; // make sure widget gets initialized
 				
 
 				outerDiv.appendChild(this.createWidget(
@@ -391,12 +397,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-settings-submit'] =
-				{
-					init: module.SubmitButtonWidget.prototype.init
-				}
-
-				formElement.appendChild(outerDiv);
+				this.elementOptions['account-settings-submit'] = {}; // make sure widget gets initialized
 		}
 
 		else { // present default message

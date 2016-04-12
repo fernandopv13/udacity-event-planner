@@ -8,7 +8,7 @@ var app = app || {};
 	* public class Account extends Model
 	**********************************************************************************************/
 
-	/** @classdesc Holds information about a account.
+	/** @classdesc Represents a user account in the app.
 	*
 	* See 'polymorphic', inner helper 'constructors' for supported signatures.
 	*
@@ -24,7 +24,7 @@ var app = app || {};
 	*
 	*/
 
-	module.Account = function(Email_email, Password_password, Person_accountHolder) {
+	module.Account = function(Email_e, Password_p, Person_accountHolder) {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -39,7 +39,7 @@ var app = app || {};
 		this.ssuper = module.Model;
 
 		
-		/** Initialize instance members inherited from parent class*/
+		/** Initialize instance members inherited from parent class */
 		
 		module.Model.call(this);
 		
@@ -320,9 +320,9 @@ var app = app || {};
 			* @throws {IllegalArgumentError} If attempting to set event not of class Event
 			*/
 			
-			this.addEvent = function (Event_event) {
+			this.addEvent = function (Event_e) {
 			
-				var event = Event_event;
+				var event = Event_e;
 
 				if (event.constructor === module.Event) {
 					
@@ -361,9 +361,9 @@ var app = app || {};
 			* @return {Boolean} True if the event is belongs to the account, otherwise false
 			*/
 
-			this.isInAccount = function (Event_event) {
+			this.isInAccount = function (Event_e) {
 				
-				var event = Event_event;
+				var event = Event_e;
 				
 				if (event.constructor === module.Event) {
 					
@@ -517,13 +517,13 @@ var app = app || {};
 			* @return {Account} Returns an Account, by way of the main constructor. This function itself has no return value.
 			*/
 
-			function Account__(Email_email, Password_password, Person_accountHolder) {
+			function Account__(Email_e, Password_p, Person_accountHolder) {
 
 				// Call accessors for any supplied params (accessors provide simple validation and error handling)
 				
-				if (Email_email) {this.email(Email_email);}
+				if (Email_e) {this.email(Email_e);}
 				
-				if (Password_password) {this.password(Password_password);}
+				if (Password_p) {this.password(Password_p);}
 
 				if (Person_accountHolder) {this.accountHolder(Person_accountHolder);}
 			}
@@ -548,15 +548,7 @@ var app = app || {};
 					
 				// Call accessors for any supplied params (accessors provide simple validation and error handling)
 				
-				Account__.call(this, Email_email, Password_password, Person_accountHolder);
-
-				/*
-				if (Email_email) {this.email(Email_email);}
-				
-				if (Password_password) {this.password(Password_password);}
-
-				if (Person_accountHolder) {this.accountHolder(Person_accountHolder);}
-				*/
+				Account__.call(this, Email_e, Password_p, Person_accountHolder);
 			}
 
 			

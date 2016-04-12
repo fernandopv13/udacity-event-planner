@@ -90,7 +90,7 @@ var app = app || {}; // create a simple namespace for the app
 		
 		// Inner function to reuse the control loop
 		
-		function _doCheck(Target, source) { // Uppercase first letter to pleae jshint when calling Target as constructor
+		function _doCheck(Target, source) { // Uppercase first letter to please jshint when calling Target as constructor
 
 			var testObj = typeof source === 'function' ? Target : new Target(); // verify statics against class, others against instance
 		

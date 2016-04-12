@@ -211,7 +211,12 @@ var app = app || {};
 					return attr;
 				})(),
 
-				dataset: {customValidator: options.validator ? options.validator : ''}
+				dataset:
+				{
+					customValidator: options.validator ? options.validator : '',
+
+					widgetclass: 'SwitchInputWidget'
+				}
 			}));
 
 			

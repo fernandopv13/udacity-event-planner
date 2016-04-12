@@ -89,12 +89,13 @@ describe('Class UIWidget', function(){
 		*/
 
 
-		it('defines an abstract init() method', function() {
+		it('defines an init() method', function() {
 			
 			expect(typeof app.UIWidget.prototype.init).toBe('function');
 		});
 
 
+		/*
 		it('rejects attempt to invoke init()', function() {
 			
 			try {
@@ -109,5 +110,6 @@ describe('Class UIWidget', function(){
 
 			expect(true).toBe(true);
 		});
+		*/
 	});
 });

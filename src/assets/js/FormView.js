@@ -85,7 +85,7 @@ var app = app || {};
 
 
 
-	/** Initializes event handlers and other functionality after the View has been unhidden */
+	/** Initializes event handlers and other functionality after the View has been rendered */
 
 	module.FormView.prototype.init = function() {
 

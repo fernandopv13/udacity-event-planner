@@ -40,53 +40,12 @@ var app = app || {};
 
 			this.type = this.type || 'UIWidget';
 
+			this.ssuper = this.ssuper ? this.ssuper : module.Product;
+
 			
 			// Initialize instance members inherited from parent class
 			
 			module.Product.call(this);
-
-
-		/*----------------------------------------------------------------------------------------
-		* Private instance fields (encapsulated data members)
-		*---------------------------------------------------------------------------------------*/
-		
-			//var _instance = this.instance || null; // reference to the instance used when using class as singleton
-
-
-		/*----------------------------------------------------------------------------------------
-		* Accessors for private instance fields (dependency injection enables access for subclasses)
-		*---------------------------------------------------------------------------------------*/
-
-			/** Gets singleton instance of class (read-only). Creates instance if none exists.
-			*
-			* @return {Factory} instance Singleton instance of the UIWidget
-			*
-			* @throws {IllegalArgumentError} If trying to set the instance.
-			*/
-
-			/*
-			this.instance = (function(obj_prop) { // mimic Accessor class, but deal with singleton creation
-
-				return function() {
-
-					if (arguments.length === 0) {
-
-						if (obj_prop === null) { // no instance, so create one
-
-							obj_prop = new this.constructor();
-						}
-					}
-
-					else {
-
-						throw new IllegalArgumentError('"instance" is read-only')
-					}
-
-					return obj_prop; // objects from subclass get their own copy of the private property, and can access it
-				};
-
-			}(_instance));
-			*/
 	};
 
 	/*----------------------------------------------------------------------------------------
@@ -102,33 +61,79 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Initializes UIWidget upon rendering it into the HTML DOM
-	*
-	* @abstract
-	*
-	* @return {void}
-	*
-	* @throws {AbstractMethodError} If invoked directly on the abstract base class (subclasses must provide their own implementation)
-	*/
+		/** Factory method for creating UIWidgets in Views
+		*
+		* @abstract
+		*
+		* @param {Object} JSON object literal containing specs of widget to be created. Details may vary in concrete classes.
+		*
+		* @return {HTMLElement} An HTML element containing the DOM structure needed to render the widget in the browser.
+		*
+		* @throws {ReferenceError} If no options are specified
+		*
+		*/
 
-	module.UIWidget.prototype.init = function() {
+		module.UIWidget.prototype.createProduct = function() {
 		
-		throw new AbstractMethodError('init() must be realized in subclasses');
-	};
+			throw new AbstractMethodError('createProduct() must be realized in subclasses');
+		};
 
 
-	/** Returns singleton instance of UIWidget. Using singletons to avoid duplication of DOM memory structure while retaining inheritance.
-	*
-	* @abstract
-	*
-	* @return {void}
-	*
-	* @throws {AbstractMethodError} If invoked directly on the abstract base class (subclasses must provide their own implementation)
-	*/
+		/** Does generic initialization of widget upon rendering it into the HTML DOM (e.g. setting up View-agnostic 'internal' functionality of custom date picker).
+		*
+		* Creating a clear separation of concerns between createProduct() and init() helps reduce the complexity of each method.
+		*
+		* Initialization (mostly attaching event handlers) that is specific to the View the widget is embedded in is handled seperately by HTMLELement.init().
+		*
+		* This slightly convoluted approach is necessitated by the fact that UIWidgets have no separate existence outside their representation in the HTML DOM, so cannot be encapsulated as neatly/fully as might theoretically be ideal.
+		*
+		* @param {View} v The View the input belongs to
+		*
+		* @param {String} id Id of the element to be initialized
+		*
+		* @param {Object} options JSON object with the options to use for initialization (see source in concrete classes for supported formats) 
+		*
+		* @return {void}
+		*
+		* @throws {AbstractMethodError} If invoked directly on the abstract base class (subclasses must provide their own implementation)
+		*/
 
-	module.UIWidget.prototype.instance = function() {
-		
-		throw new AbstractMethodError('instance() must be realized in subclasses');
-	};
+		module.UIWidget.prototype.init = function(View_v, str_id, obj_options) {
+			
+			/* Example of currently supported JSON format for elementOptions:
+			{
+				listeners: 
+				{
+					mousedown: // handler may also be reference to named function
+
+						function(nEvent) { // submit (blur hides click event so using mousedown)
+
+							this.submit(nEvent);
+
+						}.bind(this)
+				}
+			}
+			*/
+			
+			//console.log(arguments); // debug
+
+			if (obj_options.listeners) { // attach event listeners
+
+				var listeners = obj_options.listeners;
+
+				for (var event in listeners) {
+
+					if (typeof listeners[event] === 'function') {
+
+						$('#' + str_id).on(event, listeners[event]);
+					}
+
+					else {
+
+						throw new IllegalArgumentError('Expected function');
+					}
+				}
+			}
+		};
 
 })(app);

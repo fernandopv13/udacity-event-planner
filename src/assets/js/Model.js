@@ -9,7 +9,7 @@ var app = app || {}; // create a simple namespace for the module
 	* public abstract class Model implements IInterfaceable, IObserable, IObserver, ISerializable
 	*********************************************************************************************/
 
-	/** @classdesc Abstract base class for the 'M' part of our MVC framework. Holds information about data in the app.
+	/** @classdesc Abstract base class for the 'M' part of our MVC framework. Represents data in the app.
 	*
 	* Enables loosely coupled messaging among main MVC collaborators.
 	*
@@ -33,7 +33,7 @@ var app = app || {}; // create a simple namespace for the module
 	*
 	* @author Ulrik H. Gade, February 2016
 	*
-	* @todo: Try to pull some of the boilerplate initialization (e.g. retrieval from storage) from subclasses up into this (the parent)
+	* @todo: Try to pull some of the boilerplate initialization (e.g. retrieval from storage, id assignment) from subclasses up into this (the parent)
 	*/
 
 	module.Model = function() {
@@ -42,7 +42,7 @@ var app = app || {}; // create a simple namespace for the module
 		* Private instance fields (encapsulated data members)
 		*---------------------------------------------------------------------------------------*/
 
-		var _className = (this.className ? this.className : 'Model'), // name of this view class (override if provided by subclass constructor)
+		var _className = (this.className ? this.className : 'Model'), // name of this view class (override by subclass constructor, if provided )
 
 		_id = (this.id >= 0 ? this.id: undefined), // (int) Unique object ID obtained from object class' registry
 

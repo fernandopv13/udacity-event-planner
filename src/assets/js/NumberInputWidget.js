@@ -160,7 +160,12 @@ var app = app || {};
 				
 				classList: ['validate'],
 
-				dataset: {customValidator: options.validator ? options.validator : 'NumberInputWidget.prototype.validate'}
+				dataset:
+				{
+					customValidator: options.validator ? options.validator : 'NumberInputWidget.prototype.validate',
+
+					widgetclass: 'NumberInputWidget'
+				}
 			}));
 			
 			

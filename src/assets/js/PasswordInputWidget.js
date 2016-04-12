@@ -150,7 +150,9 @@ var app = app || {};
 				{
 					customValidator: options.validator ? options.validator : 'PasswordInputWidget.prototype.validate',
 
-					value: options.datasource && options.datasource.password() ? options.datasource.password() : ''
+					value: options.datasource && options.datasource.password() ? options.datasource.password() : '',
+
+					widgetclass: 'PasswordInputWidget'
 				},
 
 				classList: ['validate']
@@ -359,6 +361,11 @@ var app = app || {};
 				$('#' + str_id + hintsprefix).attr('aria-hidden', true);
 
 			}.bind(View_v));
+
+			
+			// Call generic initializer in parent class
+
+			module.InputWidget.prototype.init(View_v, str_id, obj_options);
 		};
 
 		

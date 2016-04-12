@@ -91,7 +91,7 @@ var app = app || {};
 
 		var container; // shorthand reference to inherited temporary container element
 		
-		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
+		this.elementOptions = {}; // temporary object holding JSON data used for page-specific UI widgets that need initializing post-render
 		
 		
 		if (Event_e !== null) {
@@ -173,6 +173,8 @@ var app = app || {};
 					datasource: Event_e.name() ? Event_e.name() : ''
 				}));
 
+				this.elementOptions['event-name'] = {}; // make sure initializer gets called on widget
+
 							
 			// Add location field
 
@@ -243,10 +245,7 @@ var app = app || {};
 
 				).children[0]); // extract from wrapper
 
-				this.elementOptions['event-start-date'] = 
-				{
-					init: module.DateInputWidget.prototype.init
-				};
+				this.elementOptions['event-start-date'] = {}; // make sure initializer gets called on widget
 				
 				
 				var endDate = this.createWidget(
@@ -271,10 +270,7 @@ var app = app || {};
 					}
 				).children[0]; // extract from wrapper
 				
-				this.elementOptions['event-end-date'] = 
-				{
-					init: module.DateInputWidget.prototype.init
-				}
+				this.elementOptions['event-end-date'] = {} // make sure initializer gets called on widget
 
 				endDate.children[0].classList.add('validate'); // 'validate' normally only comes with required field, so add seperately here
 
@@ -336,6 +332,8 @@ var app = app || {};
 				);
 
 				formElement.appendChild(outerDiv);
+
+				this.elementOptions['event-capacity'] = {};  // make sure initializer gets called on widget
 				
 
 				var innerDiv = this.createWidget(
@@ -699,10 +697,7 @@ var app = app || {};
 					}
 				));
 				
-				this.elementOptions['event-form-cancel'] =
-				{
-					init: module.CancelButtonWidget.prototype.init
-				}
+				this.elementOptions['event-form-cancel'] ={}; // make sure initializer gets called on widget
 
 				outerDiv.appendChild(this.createWidget(
 
@@ -717,10 +712,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['event-form-submit'] =
-				{
-					init: module.SubmitButtonWidget.prototype.init
-				}
+				this.elementOptions['event-form-submit'] = {}; // make sure initializer gets called on widget
 
 				formElement.appendChild(outerDiv);
 

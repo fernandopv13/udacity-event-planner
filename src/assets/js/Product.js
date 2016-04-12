@@ -26,7 +26,9 @@ var app = app || {};
 		* Private instance fields (encapsulated data members)
 		*---------------------------------------------------------------------------------------*/
 		
-			var _type = this.type || 'Product'; // the type of this product (a unique, case-insensitive identifier)
+			var _type = this.type || 'Product', // the type of this product (a unique, case-insensitive identifier)
+
+			_super = (this.ssuper ? this.ssuper : Object); // reference to immediate parent class (by function) if provided by subclass, otherwise Object
 
 
 		/*----------------------------------------------------------------------------------------
@@ -41,6 +43,18 @@ var app = app || {};
 			*/
 
 			this.type = new app.Accessor(_type, true);
+
+
+			/** Gets a reference to the object's parent (by function reference) in the class inheritance hierarchy (the topmost class is Object)
+			*
+			* @return {Function} ssuper The parent class
+			*
+			* @throws {IllegalArgumentError} If trying to set the ssuper attribute
+			*
+			* @todo Not fully functional; only works one level up from the lowest level in the tree
+			*/
+
+			this.ssuper = new module.Accessor(_super, true); // 'super' may be a reserved word, so slight name change
 	};
 
 

@@ -12,13 +12,15 @@ var app = app || {}; // create a simple namespace for the module
 	*
 	* Presents information from the data model in the UI. Handles all work directly related to the UI.
 	*
-	* Provides a number of default HTML (form) element factory, and validation, methods.
+	* Provides a default UI widget factory method draaing on the UIWidgetFactory object ecology.
 	*
 	* NOTE: Views must only notify observers as a direct result of user actions in the UI.
 	*
 	* Otherwise the MVC objects will likely enter an infinite update loop.
 	*
 	* (Interfaces are implemented as mixins, using static method in IInterface.)
+	*
+	* @public
 	*
 	* @abstract
 	*
@@ -39,8 +41,6 @@ var app = app || {}; // create a simple namespace for the module
 	* @return {View} Not supposed to be instantiated, except when extended by subclasses. But subclasses need to be able to call constructor when setting up inheritance.
 	*
 	* @author Ulrik H. Gade, March 2016
-	*
-	* @todo Break up into many more smaller chunks. Find a nice design pattern that supports this.
 	*/
 
 
@@ -273,12 +273,12 @@ var app = app || {}; // create a simple namespace for the module
 		}
 
 
-		/** Does various generic housekeeping after the View has rendered to the DOM
+		/** Initializes UIWidgets, optionally renders navigation, and does various other generic housekeeping after a View has rendered to the DOM.
 		*
-		* @todo Consolidate with onLoad(): they serve the same purpose
+		* @todo Pull navbar options out into JSON data file so they can be changed without touching the View
 		*/
 
-		app.View.prototype.init = function() {
+		module.View.prototype.init = function() {
 
 			//console.log('Initializing ' + this.className()); // debug
 
@@ -377,17 +377,19 @@ var app = app || {}; // create a simple namespace for the module
 
 			// Initialize UIWidgets (including nav bar)
 
-				if (this.elementOptions) { // do post-processing that require elements to be rendered to the DOM
+				if (this.elementOptions) { // do post-processing that requires elements to be rendered to the DOM
 
 					for (var id in this.elementOptions) { // run through elements (by id) 
 
-						if (this.elementOptions[id].init) { // run any custom initializer
+						var widgetClass = $('#' + id).data('widgetclass');
 
-							if (typeof this.elementOptions[id].init === 'function') {
+						if (widgetClass !== undefined) { // UIWidget, so call initializer in concrete class
 
-								//console.log(id); //debug
+							if (module[widgetClass]) {
 
-								this.elementOptions[id].init(this, id, this.elementOptions[id]);
+								console.log(widgetClass); //debug
+
+								module[widgetClass].instance().init(this, id, this.elementOptions[id]);
 							}
 
 							else {
@@ -396,7 +398,12 @@ var app = app || {}; // create a simple namespace for the module
 							}
 						}
 
-						app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
+						else {
+
+							module.UIWidget.prototype.init(this, id, this.elementOptions[id]); // do generic init of other elements
+
+							//DEPRECATED: app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
+						}
 					}
 				}
 		};
@@ -478,7 +485,7 @@ var app = app || {}; // create a simple namespace for the module
 
 					if (Model_m === null || Model_m && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) && Model_m.constructor === this.modelClass()) {
 
-						console.log('Received update to ' + View_v.className()); // debug
+						//console.log('Received update to ' + View_v.className()); // debug
 
 						this.model(Model_m);
 

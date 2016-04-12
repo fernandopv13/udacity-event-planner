@@ -8,7 +8,7 @@ var app = app || {}; // create a simple namespace for the app
 	* public class Event extends Model
 	**********************************************************************************************/
 
-	/** @classdesc Holds information about an event.
+	/** @classdesc Represents an event in the app.
 	*
 	* See 'polymorphic', inner helper 'constructors' for supported signatures.
 	*
