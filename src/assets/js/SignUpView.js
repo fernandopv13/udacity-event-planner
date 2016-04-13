@@ -60,7 +60,10 @@ var app = app || {};
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Clears input fields page */
+	/** Clears input fields in View
+	*
+	* @return {void}
+	*/
 
 	module.SignUpView.prototype.clear = function() {
 
@@ -70,17 +73,9 @@ var app = app || {};
 	}
 
 
-	/** Makes sure password hints are hidden by default */
-
-	/*
-	module.SignUpView.prototype.onLoad = function() {
-
-		$('#sign-up-password-hints').hide('fast');
-	}
-
-
 	/* Signs into the demo account */
 
+	/*DEPRECATED, delete after commit
 	module.SignUpView.prototype.openDemo = function(nEvent) {
 
 		var account = new module.Account();
@@ -92,7 +87,7 @@ var app = app || {};
 		// Dispatch submission using function in parent class
 
 		this.ssuper().prototype.submit.call(this, account, module.View.UIAction.SIGNIN);
-	}
+	}*/
 
 
 	/** Renders sign in page.
@@ -428,7 +423,21 @@ var app = app || {};
 			{
 				listeners:
 				{
-					mousedown: this.openDemo.bind(this)
+					//mousedown: this.openDemo.bind(this)
+
+					mousedown: function(nEvent) {
+
+						var account = new module.Account();
+
+						account.email(new module.Email('demo@demo.demo'));
+
+						account.password(new module.Password('DEMO5%demo'));
+						
+						// Dispatch submission using function in parent class
+
+						this.ssuper().prototype.submit.call(this, account, module.View.UIAction.SIGNIN);
+					
+					}.bind(this)
 				}
 			}
 		

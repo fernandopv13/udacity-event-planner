@@ -94,11 +94,6 @@ var app = app || {};
 			module.View.prototype.init.call(this); // ssuper() refers to FormView, so call parent manually or enter infinite loop
 
 
-		// Make sure Materialize fields and labels are formatted correctly
-
-			//Materialize.updateTextFields();
-
-		
 		// Setup delete button and modal
 			
 			$('#nav-delete-icon, #confirm-delete-modal-cancel, #confirm-delete-modal-ok').off(); // reset event handlers
@@ -149,8 +144,6 @@ var app = app || {};
 	*/
 
 	module.FormView.prototype.update = function(Model_m, View_v) {
-
-		//console.log([this.className(), arguments]);
 
 		if (!module.controller.currentView() || this.constructor !== module.controller.currentView().constructor) { // view is not in focus
 

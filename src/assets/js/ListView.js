@@ -73,7 +73,7 @@ var app = app || {};
 	}
 	
 
-	/** Captures tap/click in list and notifies observers */
+	/** Captures tap/click in list and notifies observers (i.e. Controller) */
 
 	app.ListView.prototype.onSelect = function(nEvent, Model_m) {
 

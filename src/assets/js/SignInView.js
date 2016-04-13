@@ -58,7 +58,10 @@ var app = app || {};
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Clears input fields on sign-in page */
+	/** Clears input fields on sign-in view
+	*
+	* @return {void}
+	*/
 
 	module.SignInView.prototype.clear = function() {
 
@@ -67,20 +70,10 @@ var app = app || {};
 		$('#sign-in-password-hints').hide('fast');
 	}
 
-
-	/* Makes sure password hints are hidden by default */
-
-	/*
-	module.SignInView.prototype.onLoad = function() {
-
-		//$('#sign-in-password-hints').hide('fast');
-	}*/
-
-
-
+	
 	/** Renders sign in page.
 	*
-	* @return void
+	* @return {void}
 	*/
 
 	module.SignInView.prototype.render = function() {
@@ -245,28 +238,7 @@ var app = app || {};
 	
 			formElement.appendChild(innerDiv);
 			
-			/*
-			innerDiv.appendChild(this.createWidget(
-
-				'HTMLElement',  // button
-
-				{
-					element: 'a',
-					
-					attributes: {id: 'sign-in-submit', role: 'button', tabindex: 0},
-					
-					classList: ['waves-effect', 'waves-light', 'btn'],
-
-					innerHTML: 'Sign In'
-				}
-			));
-
-			this.elementOptions['sign-in-submit'] =
-			{
-				init: module.SubmitButtonWidget.prototype.init.bind(this)
-			}
-			*/
-
+			
 			innerDiv.appendChild(this.createWidget(
 
 					'SubmitButtonWidget',  // submit button

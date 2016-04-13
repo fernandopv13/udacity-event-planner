@@ -226,7 +226,7 @@ var app = app || {}; // create a simple namespace for the module
 	* Public instance methods (implemented, on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-		/** Handles cancellation by user of navigation to current view  */
+		/** Passes cancellation by user of navigation to current view on to ViewUpdateHandler  */
 
 		module.View.prototype.cancel = function() {
 
