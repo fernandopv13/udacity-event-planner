@@ -247,8 +247,6 @@ var app = app || {};
 		// Do post-render initialization
 
 			this.init(); // call init up parent class chain
-
-			delete this.elementOptions; // free up temporary variable for garbage collection after (parent) inits are done
 	};
 
 })(app);

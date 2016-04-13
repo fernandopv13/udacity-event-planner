@@ -91,8 +91,6 @@ var app = app || {};
 
 		var container; // shorthand reference to inherited temporary container element
 		
-		this.elementOptions = {}; // temporary object holding JSON data used for page-specific UI widgets that need initializing post-render
-		
 		
 		if (Event_e !== null) {
 			
@@ -172,9 +170,7 @@ var app = app || {};
 
 					datasource: Event_e.name() ? Event_e.name() : ''
 				}));
-
-				this.elementOptions['event-name'] = {}; // make sure initializer gets called on widget
-
+				
 							
 			// Add location field
 
@@ -245,9 +241,7 @@ var app = app || {};
 
 				).children[0]); // extract from wrapper
 
-				this.elementOptions['event-start-date'] = {}; // make sure initializer gets called on widget
-				
-				
+								
 				var endDate = this.createWidget(
 
 					'DateInputWidget',
@@ -270,8 +264,6 @@ var app = app || {};
 					}
 				).children[0]; // extract from wrapper
 				
-				this.elementOptions['event-end-date'] = {} // make sure initializer gets called on widget
-
 				endDate.children[0].classList.add('validate'); // 'validate' normally only comes with required field, so add seperately here
 
 				outerDiv.appendChild(endDate);
@@ -333,9 +325,7 @@ var app = app || {};
 
 				formElement.appendChild(outerDiv);
 
-				this.elementOptions['event-capacity'] = {};  // make sure initializer gets called on widget
 				
-
 				var innerDiv = this.createWidget(
 
 					'HTMLElement', // inner div
@@ -697,8 +687,6 @@ var app = app || {};
 					}
 				));
 				
-				this.elementOptions['event-form-cancel'] ={}; // make sure initializer gets called on widget
-
 				outerDiv.appendChild(this.createWidget(
 
 					'SubmitButtonWidget',  // submit button
@@ -711,8 +699,6 @@ var app = app || {};
 						icon: 'send'
 					}
 				));
-
-				this.elementOptions['event-form-submit'] = {}; // make sure initializer gets called on widget
 
 				formElement.appendChild(outerDiv);
 
@@ -743,7 +729,7 @@ var app = app || {};
 
 			this.init(); // call init up parent class chain
 
-			delete this.elementOptions; // free up temporary variable for garbage collection after (parent) inits are done
+			//delete this.elementOptions; // free up temporary variable for garbage collection after (parent) inits are done
 	};
 
 

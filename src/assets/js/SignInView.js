@@ -87,9 +87,7 @@ var app = app || {};
 
 		var container; // shorthand reference to inherited temporary container element
 
-		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
-			
-		
+				
 		// Set up container div
 			
 			container = this.containerElement(this.createWidget(
@@ -209,7 +207,7 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['sign-in-email'] = {};  // make sure initializer gets called on widget
+			//this.elementOptions['sign-in-email'] = {};  // make sure initializer gets called on widget
 
 
 		// Add password field
@@ -229,7 +227,7 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['sign-in-password'] = {};  // make sure initializer gets called on widget
+			//this.elementOptions['sign-in-password'] = {};  // make sure initializer gets called on widget
 
 		
 		// Add sign-in button
@@ -338,8 +336,6 @@ var app = app || {};
 
 			this.init(); // call init up parent class chain
 
-			delete this.elementOptions; // free up temporary variable for garbage collection after (parent) inits are done
-			
 			$('#sign-in-email').attr('autofocus', true); // set focus on email field
 	};
 

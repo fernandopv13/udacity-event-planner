@@ -236,12 +236,27 @@ var app = app || {}; // create a simple namespace for the module
 		}
 
 		
-		/* Generic UIWidget factory method.
+		/** Generic UIWidget factory method.
 		*
-		* Provides shorthand notation for (somewhat unwieldy) calls to UIWidgetFactory
+		* Provides shorthand notation for creation of UIWidgets.
+		*
+		* Also makes sure UIWidgets are registered for initialization after rendering the View.
+		*
+		* @param {String} type Type of UIWidget to create (by class name)
+		*
+		* @param {Object} options JSON object specifying the details of the widget to create. See concrete UIWidget classes for details.
+		*
+		* @return {UIWidget}
 		*/
 
 		module.View.prototype.createWidget = function(str_type, obj_options) {
+
+			this.elementOptions = this.elementOptions || {}; // temporary object holding JSON data used for initializing elements post-render
+
+			if (obj_options && obj_options.id) { // skip if we're creating a basic HTMLElement that has no (need for an) id
+
+				this.elementOptions[obj_options.id] = {}; // make sure identifiable widgets always get initialized
+			}
 
 			return module.UIWidgetFactory.instance().createProduct.call(
 
@@ -274,6 +289,10 @@ var app = app || {}; // create a simple namespace for the module
 
 
 		/** Initializes UIWidgets, optionally renders navigation, and does various other generic housekeeping after a View has rendered to the DOM.
+		*
+		* UI elements must have an entry in the temporary, private elementOptions object built during rendering in order to be initialized.
+		*
+		* Initialization of UIWidgets relies on an element data attribute, so only works in browsers that support that feature.
 		*
 		* @todo Pull navbar options out into JSON data file so they can be changed without touching the View
 		*/
@@ -379,7 +398,9 @@ var app = app || {}; // create a simple namespace for the module
 
 				if (this.elementOptions) { // do post-processing that requires elements to be rendered to the DOM
 
-					for (var id in this.elementOptions) { // run through elements (by id) 
+					console.log(this.elementOptions); // debug
+
+					for (var id in this.elementOptions) { // run through elements (by id): UIWidgets are registered automatically by createWidget
 
 						var widgetClass = $('#' + id).data('widgetclass');
 
@@ -387,14 +408,14 @@ var app = app || {}; // create a simple namespace for the module
 
 							if (module[widgetClass]) {
 
-								console.log(widgetClass); //debug
+								//console.log(widgetClass); //debug
 
 								module[widgetClass].instance().init(this, id, this.elementOptions[id]);
 							}
 
 							else {
 
-								throw new IllegalArgumentError('Expected function');
+								throw new ReferenceError(widgetClass + ' not defined in app');
 							}
 						}
 
@@ -405,6 +426,8 @@ var app = app || {}; // create a simple namespace for the module
 							//DEPRECATED: app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
 						}
 					}
+
+					this.elementOptions = null; // free up temporary object for garbage collection after initializing
 				}
 		};
 

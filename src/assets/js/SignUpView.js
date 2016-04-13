@@ -104,9 +104,7 @@ var app = app || {};
 
 		var container; // shorthand reference to inherited temporary container element
 
-		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
-
 		// Add container
 
 			container = this.containerElement(this.createWidget( // container
@@ -233,8 +231,6 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['sign-up-email'] = {};  // make sure initializer gets called on widget
-
 
 		// Add password field
 
@@ -253,8 +249,6 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['sign-up-password'] = {};  // make sure initializer gets called on widget
-
 		
 		// Add password confirmation field
 
@@ -270,8 +264,6 @@ var app = app || {};
 					label: 'Confirm Password'
 				}
 			));
-
-			this.elementOptions['sign-up-password-confirmation'] = {};  // make sure initializer gets called on widget
 
 
 		// Add optional extras instruction
@@ -310,8 +302,6 @@ var app = app || {};
 				}
 			));
 
-			this.elementOptions['sign-up-name'] = {};  // make sure initializer gets called on widget
-
 
 		// Add birthday field
 
@@ -329,8 +319,6 @@ var app = app || {};
 					required: false
 				}
 			));
-
-			this.elementOptions['sign-up-birthday'] = {};  // make sure initializer gets called on widget
 
 
 		// Add job title field
@@ -351,9 +339,7 @@ var app = app || {};
 					required: false
 				}
 			));
-
-			this.elementOptions['sign-up-jobtitle'] = {};  // make sure initializer gets called on widget
-
+			
 
 		// Add sign-up button
 
@@ -455,8 +441,6 @@ var app = app || {};
 		// Do post-render initialization
 
 			this.init(); // call init up parent class chain
-
-			delete this.elementOptions; // free up temporary variable for garbage collection after (parent) inits are done
 			
 			
 			$('#sign-up-email').attr('autofocus', true); // set focus on email

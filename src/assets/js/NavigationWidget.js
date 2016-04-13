@@ -130,7 +130,9 @@ var app = app || {};
 
 					attributes: {id: options.id || ''},
 
-					classList: ['navbar-fixed']
+					classList: ['navbar-fixed'],
+
+					dataset: {widgetclass: 'NavigationWidget'}
 				});
 
 			
@@ -377,6 +379,8 @@ var app = app || {};
 		/** Initializes nav bar (required by UIWidget) */
 
 		module.NavigationWidget.prototype.init = function(View_v, str_id, obj_options) {
+
+			//console.log('initializing...'); // debug
 
 			var element = $('#' + str_id);
 

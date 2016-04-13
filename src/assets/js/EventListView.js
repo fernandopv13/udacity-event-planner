@@ -70,9 +70,7 @@ var app = app || {};
 		
 		var container; // shorthand reference to inherited temporary container element
 
-		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
- 		
  		// List item builder
 			
 			function renderListItem(Event_e, self) {

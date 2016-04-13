@@ -100,7 +100,9 @@ var app = app || {};
 					novalidate: options.novalidate
 				},
 				
-				classList: ['col', 's12']
+				classList: ['col', 's12'],
+
+				dataset: {widgetclass: 'FormWidget'}
 			});
 
 

@@ -71,9 +71,7 @@ var app = app || {};
 
 		var container; // shorthand reference to inherited temporary container element
 
-		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
-
 		if (Account_a) {
 			
 			// Setup container div
@@ -157,9 +155,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-settings-email'] = {}; // make sure widget gets initialized
-
-
+				
 			// Add password field
 
 				formElement.appendChild(this.createWidget(
@@ -179,9 +175,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-settings-password'] = {}; // make sure widget gets initialized
-
-
+				
 			// Add password confirmation field
 
 				formElement.appendChild(this.createWidget(
@@ -195,9 +189,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-settings-password-confirmation'] = {}; // make sure widget gets initialized
-
-				
+								
 			// Add default event capacity field
 
 				formElement.appendChild(this.createWidget(
@@ -223,9 +215,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-settings-capacity'] = {}; // make sure widget gets initialized
 				
-
 			// Add default location field
 
 				formElement.appendChild(this.createWidget(
@@ -246,8 +236,6 @@ var app = app || {};
 						//datalist: 'suggested-locations'
 					}
 				));
-
-				this.elementOptions['account-settings-location'] = {}; // make sure widget gets initialized
 
 				/*
 				formElement.appendChild(this.createWidget(
@@ -280,8 +268,7 @@ var app = app || {};
 					}
 				);
 
-				this.elementOptions['account-settings-localstorage'] = {}; // make sure widget gets initialized
-
+				
 				outerDiv.appendChild(this.createWidget(
 
 					'InputDescriptionWidget',
@@ -313,7 +300,6 @@ var app = app || {};
 					}
 				);
 
-				this.elementOptions['account-settings-geolocation'] = {}; // make sure widget gets initialized
 				
 				outerDiv.appendChild(this.createWidget(
 
@@ -381,9 +367,7 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['account-settings-cancel'] = {}; // make sure widget gets initialized
 				
-
 				outerDiv.appendChild(this.createWidget(
 
 					'SubmitButtonWidget',  // submit button
@@ -396,8 +380,6 @@ var app = app || {};
 						icon: 'send'
 					}
 				));
-
-				this.elementOptions['account-settings-submit'] = {}; // make sure widget gets initialized
 		}
 
 		else { // present default message
@@ -427,7 +409,7 @@ var app = app || {};
 
 					&& $(nEvent.currentTarget).val() !== $(nEvent.currentTarget).data('value') // pw is 'dirty'
 
-					&&  $(nEvent.currentTarget).checkValidity()) { // pw is valid
+					&&  $(nEvent.currentTarget)[0].checkValidity()) { // pw is valid
 
 						$('#account-settings-password-confirmation-parent').removeClass('hidden');
 

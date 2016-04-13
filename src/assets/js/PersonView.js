@@ -70,9 +70,7 @@ var app = app || {};
 
 		var container; // shorthand reference to inherited temporary container element
 
-		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
 		
-
 		if (Person_p !== null) {
 			
 			// Setup container
@@ -157,8 +155,6 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['guest-name'] = {}; // make sure widget gets initialized
-			
 			
 			// Add email field
 
@@ -178,8 +174,6 @@ var app = app || {};
 						datasource: Person_p.email() || null
 					}
 				));
-
-				this.elementOptions['guest-email'] = {}; // make sure widget gets initialized
 
 			
 			// Add job title field
@@ -201,8 +195,6 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['guest-jobtitle'] = {}; // make sure widget gets initialized
-				
 
 			// Add employer field
 
@@ -253,8 +245,6 @@ var app = app || {};
 					}
 				));
 
-				this.elementOptions['guest-birthday'] = {}; // make sure widget gets initialized
-				
 			
 			// Add requirement indicator (asterisk) explanation
 
@@ -294,8 +284,6 @@ var app = app || {};
 					label: 'Cancel'
 				}));
 
-				this.elementOptions['guest-form-cancel'] = {}; // make sure widget gets initialized
-				
 
 				outerDiv.appendChild(this.createWidget('SubmitButtonWidget',  // submit button
 				{					
@@ -306,7 +294,6 @@ var app = app || {};
 					icon: 'send'
 				}));
 
-				this.elementOptions['guest-form-submit'] = {}; // make sure widget gets initialized
 
 				formElement.appendChild(outerDiv);
 		}

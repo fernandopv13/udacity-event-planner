@@ -79,13 +79,19 @@ var app = app || {};
 		};
 
 
-		/** Does generic initialization of widget upon rendering it into the HTML DOM (e.g. setting up View-agnostic 'internal' functionality of custom date picker).
+		/** Does generic initialization of UIWidget upon rendering it into the HTML DOM.
 		*
-		* Creating a clear separation of concerns between createProduct() and init() helps reduce the complexity of each method.
+		* Currently mostly attaches event listeners defined for the widget in the calling View's render() method.
 		*
-		* Initialization (mostly attaching event handlers) that is specific to the View the widget is embedded in is handled seperately by HTMLELement.init().
+		* Creating a clear separation of concerns between createProduct() and init() helps reduce the complexity of either method.
 		*
-		* This slightly convoluted approach is necessitated by the fact that UIWidgets have no separate existence outside their representation in the HTML DOM, so cannot be encapsulated as neatly/fully as might theoretically be ideal.
+		* If overriding init in derived classes, be sure to also call this method from the overriding method (inits are complementary, not mutually exclusive).
+		*
+		* This slightly convoluted, two-step approach is necessitated by the fact that UIWidgets have no separate existence outside their representation in the HTML DOM, so cannot be encapsulated as neatly/fully as might theoretically be ideal.
+		*
+		* It is also necessary in order to support using anonymous functions as event handlers,
+		*
+		* given that references to such handlers cannot be embedded in the DOM element when calling a UIWidget's createProduct() method.
 		*
 		* @param {View} v The View the input belongs to
 		*
