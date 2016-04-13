@@ -380,6 +380,8 @@ var app = app || {};
 						icon: 'send'
 					}
 				));
+
+				formElement.appendChild(outerDiv);
 		}
 
 		else { // present default message

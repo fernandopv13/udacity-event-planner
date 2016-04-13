@@ -225,7 +225,7 @@ var app = app || {}; // create a simple namespace for the module
 
 						if (typeof args[1] === 'number' && parseInt(args[1]) === this.id()) { //console.log('correct id');
 
-							console.log('Received update to ' + this.className() + ' ' + this.id()); // debug
+							//console.log('Received update to ' + this.className() + ' ' + this.id()); // debug
 
 							return true;
 						}

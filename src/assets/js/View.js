@@ -253,7 +253,7 @@ var app = app || {}; // create a simple namespace for the module
 
 			this.elementOptions = this.elementOptions || {}; // temporary object holding JSON data used for initializing elements post-render
 
-			if (obj_options && obj_options.id) { // skip if we're creating a basic HTMLElement that has no (need for an) id
+			if (obj_options && typeof obj_options.id !== 'undefined') { // skip if we're creating a basic HTMLElement that has no (need for an) id
 
 				this.elementOptions[obj_options.id] = {}; // make sure identifiable widgets always get initialized
 			}
@@ -396,9 +396,9 @@ var app = app || {}; // create a simple namespace for the module
 
 			// Initialize UIWidgets (including nav bar)
 
-				if (this.elementOptions) { // do post-processing that requires elements to be rendered to the DOM
+				if (this.elementOptions) { // do post-processing that requires elements to be rendered to the DOM first
 
-					console.log(this.elementOptions); // debug
+					//console.log(this.elementOptions); // debug
 
 					for (var id in this.elementOptions) { // run through elements (by id): UIWidgets are registered automatically by createWidget
 
@@ -422,8 +422,6 @@ var app = app || {}; // create a simple namespace for the module
 						else {
 
 							module.UIWidget.prototype.init(this, id, this.elementOptions[id]); // do generic init of other elements
-
-							//DEPRECATED: app.HTMLElement.instance().init(this, id, this.elementOptions[id]); // do base init of element
 						}
 					}
 

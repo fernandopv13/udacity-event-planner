@@ -118,17 +118,17 @@ describe('class EventListView', function(){
 
 			testView.hide(5);
 
-			expect(testElement.hasClass('hidden')).toBe(true);
-
-			expect(testElement.css('display')).toBe('none');
-
-			testView.show(5);
-
 			setTimeout(function() {
 				
+				expect(testElement.hasClass('hidden')).toBe(true);
+
+				expect(testElement.css('display')).toBe('none');
+
+				testView.show(5);
+
 				done();
 
-			}, 1000);
+			}, 25);
 		});
 
 

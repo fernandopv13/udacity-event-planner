@@ -116,14 +116,14 @@ describe('Class SignInView', function(){
 
 			testView.hide(5);
 
-			expect(testElement.hasClass('hidden')).toBe(true);
-
-			expect(testElement.css('display')).toBe('none');
-
-			testView.show(5);
-
 			setTimeout(function() {
 				
+				expect(testElement.hasClass('hidden')).toBe(true);
+
+				expect(testElement.css('display')).toBe('none');
+
+				testView.show(5);
+
 				done();
 
 			}, 25);
@@ -132,7 +132,7 @@ describe('Class SignInView', function(){
 	
 	// Test presence of UI widgets
 
-		it('doesn not display the main navigation', function() {
+		it('does not display the main navigation', function() {
 			
 			expect(testWindow.$('#nav-main').length).toBe(0);
 		});
@@ -231,7 +231,7 @@ describe('Class SignInView', function(){
 
 			expect(testApp.controller.currentView().constructor).toBe(testApp.EventListView);
 		});
-
+		
 
 	afterAll(function() {
 

@@ -242,10 +242,10 @@ var app = app || {};
 					classList: ['row', 'center-align']
 				}
 			);
-
-			
+	
 			formElement.appendChild(innerDiv);
 			
+			/*
 			innerDiv.appendChild(this.createWidget(
 
 				'HTMLElement',  // button
@@ -265,6 +265,18 @@ var app = app || {};
 			{
 				init: module.SubmitButtonWidget.prototype.init.bind(this)
 			}
+			*/
+
+			innerDiv.appendChild(this.createWidget(
+
+					'SubmitButtonWidget',  // submit button
+
+					{					
+						id: 'sign-in-submit',
+
+						label: 'Done'
+					}
+				));
 
 		
 		// Add (hidden) demo sign-in link
