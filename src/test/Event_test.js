@@ -61,7 +61,7 @@ describe('class Event', function(){
 				
 				new Date(0),
 				
-				new Date(),
+				new Date(100000000),
 				
 				'Camp Muddy',
 				
@@ -966,6 +966,51 @@ describe('class Event', function(){
 				expect(testEvent.guests()[3]).not.toBeDefined();
 				
 				expect(testEvent.host().name()).toBe('test organization');
+			});
+
+
+			it('can create a clone of itself', function(){
+				
+				testEvent.addGuest(new app.Person('Jorge'));
+				
+				testEvent.addGuest(new app.Person('Juanita'));
+				
+				testEvent.addGuest(new app.Person('Jaime'));
+				
+				testEvent.host(testOrg);
+				
+				
+				var clone = testEvent.clone(); // create clone
+				
+				
+				expect(clone).not.toBe(testEvent); // verify type and non-identity
+
+				expect(clone.id()).not.toBe(testEvent.id());
+
+				expect(testEvent.className()).toBe('Event');
+
+				
+				expect(clone.name()).toBe('Vinter solstice celebration'); // verify data members
+
+				expect(clone.type()).toBe('Mood enhancer');
+
+				expect(clone.start().valueOf()).toBe(0);
+
+				expect(clone.end().valueOf()).toBe(100000000);
+
+				expect(clone.location()).toBe('Camp Muddy');
+
+				expect(clone.description()).toBe('We\'ll meet around a bonfire and keep warm with booze and tall tales under the open sky.');
+				
+				expect(clone.host().name()).toBe('test organization');
+
+				expect(clone.guests()[0].name()).toBe('Jorge');
+				
+				expect(clone.guests()[1].name()).toBe('Juanita');
+				
+				expect(clone.guests()[2].name()).toBe('Jaime');
+				
+				expect(clone.guests()[3]).not.toBeDefined();
 			});
 			
 			

@@ -42,7 +42,7 @@ var app = app || {}; // create a simple namespace for the module
 
 	/** Notifies observers of some change to Observable
 	*
-	* @param Method is agnostic about invoking signature: It simply passes on whichever parameters it receives.
+	* @param Method is agnostic about invoking signature: It simply passes on whichever parameters it receives, in the order received.
 	*
 	* @return void
 	*
@@ -55,9 +55,9 @@ var app = app || {}; // create a simple namespace for the module
 
 		var args = arguments;
 
-		console.log(args); // debug
+		//console.log(args); // debug
 
-		switch (args.length) {
+		switch (args.length) { // can't figure out a more generic approach, so basic manual branching will have to do for now
 
 			case 0:
 

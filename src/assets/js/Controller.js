@@ -580,9 +580,9 @@ var app = app || {};
 			}
 			
 
-			/** Handles update notifications from either of the Controllers collaborators
+			/** Handles update notifications from either of the Controller's collaborators
 			*
-			* Uses JS style 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked.
+			* Uses JS style method 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked.
 			*
 			* Delegates response to private '_update(...)' functions. See these for supported method signatures.
 			*
@@ -595,9 +595,13 @@ var app = app || {};
 
 			this.update = function() {
 
-				// Using 'internal strategy pattern' to avoid unwieldy branching statement that doesn't scale,
-				// i.e. call every private _update() subfunction, passing in arguments received, until a match is found (or not),
-				// letting subfunctions decide whether to respond (in this case, subfunction signatures must be mutually exclusive).
+				// Using 'method overloading' to avoid unwieldy branching statement that doesn't scale.
+				// Method overloading its not native to JavaScript, so conditional dispatch has to be handled manually, rather than by the compiler/runtime.
+				// See http://stackoverflow.com/questions/456177/function-overloading-in-javascript-best-practices for a good discussion.
+				// Here, I'm taking the approach of an 'internal strategy pattern', treating each 'strategy' as its own, self-contained  'class'
+				// that does its own parameter validation. JSDoc doesn't seem to discover inner functions, so implementing individual 'strategies'
+				// as private functions in class scope to ensure that they will be documented correctly.
+				
 
 				var args = arguments, ret = false, strategies = [_update, __update, ___update, ____update];
 
@@ -605,7 +609,7 @@ var app = app || {};
 
 				for (var i = 0, len = strategies.length; i < len; i++) { // using 'for' b/c forEach does not support break
 
-					switch (args.length) { // 'strategies' evaluate param count, so branch call
+					switch (args.length) { // invoke 'strategies' using provided signature
 
 						case 3:
 
@@ -633,7 +637,7 @@ var app = app || {};
 
 					console.log(args);
 
-					throw new IllegalArgumentError('Unexpected method signature. See docs/source for supported signatures.');
+					throw new IllegalArgumentError('Unexpected method signature. See docs/source for details.');
 				}
 			}
 	};
