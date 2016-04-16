@@ -147,6 +147,91 @@ describe('class Controller', function(){
 			});
 
 
+			it('can get and set its newModel', function() {
+
+				var testSource = new app.Person();
+
+				expect(testController.newModel(testSource)).toBe(testSource);
+			});
+
+
+			it('rejects attempt to set newModel that is not a Model', function() {
+
+				try {
+
+					testController.newModel('not a Model');
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
+
+			it('can get and set its sourceModel', function() {
+
+				var testSource = new app.Person();
+
+				expect(testController.sourceModel(testSource)).toBe(testSource);
+			});
+
+
+			it('rejects attempt to set sourceModel that is not a Model', function() {
+
+				try {
+
+					testController.sourceModel('not a Model');
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
+
+			it('can get and set its cloneModel', function() {
+
+				var testSource = new app.Person();
+
+				expect(testController.sourceModel(testSource)).toBe(testSource);
+
+				expect(testController.cloneModel(testSource)).toBe(testSource);
+			});
+
+
+			it('rejects attempt to set cloneModel that is not a Model', function() {
+
+				try {
+
+					testController.cloneModel('not a Model');
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
+
+			it('rejects attempt to set cloneModel that not of same class as sourceModel', function() {
+
+				void testController.sourceModel(new app.Email());
+
+				try {
+
+					testController.cloneModel(new app.Password());
+				}
+
+				catch(e) {
+
+					expect(e.name).toBe('IllegalArgumentError');
+				}
+			});
+
+
+
 		describe('communication protocol', function() {
 
 			beforeEach(function() {

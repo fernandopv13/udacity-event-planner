@@ -31,11 +31,17 @@ var app = app || {};
 		* Private instance fields (encapsulated data members)
 		*---------------------------------------------------------------------------------------*/
 		
-			var _implements = [module.IObservable, module.IObserver], // list of interfaces implemented by this class (by function reference)
+			var _cloneModel = null, // the top-level source model when conducting multi-view transaction
 
 			_currentView, // the view currently being displayed in the UI
 
+			_implements = [module.IObservable, module.IObserver], // list of interfaces implemented by this class (by function reference)
+
 			_newModel = null, // a newly created model object, held in edit mode for the first time
+
+			_observers = [], // Array of IObservers. Expected by IObservable.
+
+			_router, // router managing browser history
 
 			_selectedAccount = null, // the currently selected account, or null if none selected
 
@@ -43,16 +49,61 @@ var app = app || {};
 
 			_selectedGuest = null, // the currently selected guest, or null if none selected
 
-			_views, // collection of views we need to keep track of
+			_sourceModel = null, // the top-level source model when conducting multi-view transaction
 
-			_router, // router managing browser history
+			_views; // collection of views we need to keep track of
 
-			_observers = []; // Array of IObservers. Expected by IObservable.
 
 		
 		/*----------------------------------------------------------------------------------------
 		* Accessors for private instance fields
 		*---------------------------------------------------------------------------------------*/
+
+			/** Gets or sets reference to clone Model when conducting multi-view transaction
+			*
+			* @return {Model} The source Model, or null
+			*
+			* @throws {IllegalArgumentError} If trying to set a Model that is neither an instance of Model, nor null;
+			*
+			* or if trying to set a cloneModel of a different type than the sourceModel
+			*/
+
+			this.cloneModel = function(Model_m) {
+
+				if (arguments.length > 0) { // setting
+
+					if (Model_m === null && _sourceModel === null) { // reset after transaction
+
+						_cloneModel = Model_m;
+					}
+
+					else if // set when starting transaction
+					(
+						Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model) // clone and source are both Models
+
+						&& this.sourceModel() && this.sourceModel().isInstanceOf && this.sourceModel().isInstanceOf(module.Model)
+					){
+
+						if (Model_m.constructor === this.sourceModel().constructor) { // clone is instance of same class as source
+
+							_cloneModel = Model_m;
+						}
+
+						else {
+
+							throw new IllegalArgumentError('Clone must be instance of same class as source');
+						}
+					}
+
+					else {
+
+						throw new IllegalArgumentError('Expected instance of Model, or null');
+					}
+				}
+
+				return _cloneModel;
+			};
+
 
 			/** Gets or sets the view currently being displayed in the UI.
 			*
@@ -114,6 +165,9 @@ var app = app || {};
 			* @throws {IllegalArgumentError} If trying to set a model that is neither an instance of module.Model, nor null
 			*/
 
+			this.newModel = new module.Accessor(_newModel, false, module.Model, 'Model');
+
+			/*/*DEPRECATED: Delete after commit
 			this.newModel = function(Model_m) {
 
 				if (arguments.length > 0) {
@@ -131,6 +185,7 @@ var app = app || {};
 
 				return _newModel;
 			};
+			*/
 
 
 			/** Gets the collection of IObservers of the controller
@@ -140,6 +195,9 @@ var app = app || {};
 			* @throws {IllegalArgumentError} If passing in any parameters: property is read-only
 			*/
 
+			this.observers = new module.Accessor(_observers, true);
+
+			/*
 			this.observers = function() {
 
 				if (arguments.length > 0) {
@@ -149,6 +207,7 @@ var app = app || {};
 
 				return _observers;
 			}
+			*/
 
 
 			/** Gets or sets the currently selected (active) account
@@ -160,6 +219,9 @@ var app = app || {};
 			* @throws {IllegalArgumentError} If attempting to set account that is not an Account, or null
 			*/
 			
+			this.selectedAccount = new module.Accessor(_selectedAccount, false, module.Account, 'Account');
+
+			/*DEPRECATED: Delete after commit
 			this.selectedAccount = function (Account_a) {
 			
 				if (arguments.length > 0) {
@@ -177,6 +239,7 @@ var app = app || {};
 				
 				return _selectedAccount;
 			};
+			*/
 
 
 			/** Gets or sets the currently selected Event
@@ -188,6 +251,9 @@ var app = app || {};
 			* @throws {IllegalArgumentError} If attempting to set event that is not an Event, or null
 			*/
 			
+			this.selectedEvent = new module.Accessor(_selectedEvent, false, module.Event, 'Event');
+
+			/*DEPRECATED: Delete after commit
 			this.selectedEvent = function (Event_e) {
 			
 				if (arguments.length > 0) {
@@ -205,6 +271,7 @@ var app = app || {};
 				
 				return _selectedEvent;
 			};
+			*/
 
 
 			/** Gets or sets the currently selected guest
@@ -216,6 +283,9 @@ var app = app || {};
 			* @throws {IllegalArgumentError} If attempting to set guest that is not a Person, or null
 			*/
 			
+			this.selectedGuest = new module.Accessor(_selectedGuest, false, module.Person, 'Person');
+
+			/*DEPRECATED: Delete after commit
 			this.selectedGuest = function (Person_g) {
 			
 				if (arguments.length > 0) {
@@ -232,7 +302,17 @@ var app = app || {};
 				}
 				
 				return _selectedGuest;
-			};
+			};*/
+
+
+			/** Gets or sets reference to source Model when conducting multi-view transaction
+			*
+			* @return {Model} The source Model, or null
+			*
+			* @throws {IllegalArgumentError} If trying to set a Model that is neither an instance of Model, nor null
+			*/
+
+			this.sourceModel = new module.Accessor(_sourceModel, false, module.Model, 'Model');
 
 
 			this.views = function() { // getter for _views, to flesh out

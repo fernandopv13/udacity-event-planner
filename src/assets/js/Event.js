@@ -628,7 +628,7 @@ var app = app || {}; // create a simple namespace for the app
 
 		module.Event.prototype.clone = function() {
 
-			var clone = new module.Event // create and initalize clone with simple attributes
+			var clone = new module.Event // create and initalize clone with basic attributes
 			(
 				this.name(),
 
@@ -642,7 +642,7 @@ var app = app || {}; // create a simple namespace for the app
 
 				this.description(),
 
-				this.host(),
+				this.host(), // copied by refererence, not cloned
 
 				this.capacity()
 			);

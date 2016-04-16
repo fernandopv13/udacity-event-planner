@@ -218,7 +218,9 @@ var app = app || {}; // create a simple namespace for the module
 
 			SUBMIT: 6,
 
-			TEST: 7
+			SUBVIEW: 7,
+
+			TEST: 8
 		}
 
 

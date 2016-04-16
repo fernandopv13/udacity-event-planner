@@ -72,9 +72,9 @@ var app = app || {};
 
 	/** Enables navigation to the event's guest list from the event form */
 
-	module.EventView.prototype.navigateToGuestList = function(nEvent) {
+	module.EventView.prototype.editGuests = function(nEvent) {
 
-		this.notifyObservers(new module.GuestListView(), this.model(), module.View.UIAction.NAVIGATE);
+		this.notifyObservers(new module.GuestListView(), this.model(), module.View.UIAction.SUBVIEW);
 	};
 
 
@@ -361,7 +361,7 @@ var app = app || {};
 
 							function(nEvent) { // navigate to guest list
 
-								this.navigateToGuestList(nEvent);
+								this.editGuests(nEvent);
 
 							}.bind(this)
 					}
