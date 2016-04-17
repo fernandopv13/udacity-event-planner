@@ -182,7 +182,7 @@ describe('class ViewDeleteHandler', function(){
 
 		expect(testApp.Person.registry.getObjectById(id)).toBe(guest);
 
-		expect(ctrl.currentView().constructor).toBe(testApp.GuestListView);
+		expect(ctrl.currentView().constructor).toBe(testApp.EventListView); // bit of a hack, refine later
 	});
 
 	

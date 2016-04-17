@@ -139,9 +139,9 @@ var app = app || {};
 
 				this.notifyObservers(ctrl.selectedEvent(), ctrl.views().guestListView); // render/refresh guestListView in the background
 
-				window.history.back();
+				window.history.back(); // navigate back to guest list
 
-				//ctrl.currentView(ctrl.views().guestListView, ctrl.selectedEvent()); // show the view
+				//DEPRECATED: ctrl.currentView(ctrl.views().guestListView, ctrl.selectedEvent()); // show the view
 
 				//Materialize.toast('Guest was taken off the guest list', module.prefs.defaultToastDelay());
 

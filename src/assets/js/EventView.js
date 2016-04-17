@@ -1148,9 +1148,7 @@ var app = app || {};
 		}
 
 		Element_e.setCustomValidity(ret ? '' : false); // set up for global handler, anything other than the empty string is taken as indicating an error
-
-		//console.log('// startdate validates to ' + ret);
-
+		
 		return ret;
 	};
 

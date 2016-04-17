@@ -242,7 +242,7 @@ var app = app || {};
 
 			var element = $('#' + str_id), val;
 
-			if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, if available
+			if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, but go custom if native picker and/or moment is unavailable
 
 				|| !app.device().isMobile()) { // always prefer custom widget on lap/desktop
 
@@ -338,11 +338,11 @@ var app = app || {};
 				});
 			}
 
-			else { // Use native widget
+			else { // use native widget
 
-				if (app.device().isiOS()) { // iOS browsers will create a stepMismatch validation API error unless step is set to milliseconds
+				if (app.device.isAndroid() || app.device().isiOS()) { // Some Android and iOS browsers will create a stepMismatch validation API error unless step is set to milliseconds
 
-					$(element).attr('step', '0.001'); // only set to ms here, or lap/desktops will add sec an ms fields (hidden by iOS picker)
+					$(element).attr('step', '0.001'); // only set to ms here, or lap/desktops will add sec and ms fields (hidden by iOS picker; causes Android to display seconds)
 				}
 
 				// Make sure any existing value(s) is/are presented, and nicely formatted
@@ -354,17 +354,16 @@ var app = app || {};
 
 				if (val !== '') { // there is a date entry
 
-					// native datetime-locals require an ISO 8601 string with no trailing 'Z'
-					// we also want to trim the seconds, or else some browsers will display them, some not
+					// Native datetime-locals require an ISO 8601 string with no trailing 'Z'.
+					// We also want to trim the seconds, or else some browsers will display them, some not.
+					//
+					// This formatting sometimes fails on Android, with the browser e.g. insisting on displaying seconds
+					// despite jQuery val() returning a string without seconds. This will have to suffice as long as checkValidity
+					// returns false unless the picker's step attribute is set to milliseconds.
 
 					val = new Date(val);
 
 					$(element).val(val.toISOString().split('T')[0] + 'T' + val.getHours() + ':' + val.getMinutes());
-
-					// This currently fails in Firefox on Android: it formats the date using a comma separator, indicates
-					// that as a validation error and then blocks clearing this with setCustomValidity().
-					// Modernizr' formvalidation test aren't a reliable predicter of what works (produces both false
-					// positives and negatives), so can't use that. Oh well,...
 				}
 			}
 
