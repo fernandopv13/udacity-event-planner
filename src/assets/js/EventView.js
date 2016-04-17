@@ -739,80 +739,6 @@ var app = app || {};
 	};
 
 
-	/** Gets Model representing current values entered in form
-	*
-	* @return {Model} Model of the type associated with the View, or null if form doesn't validate
-	*
-	* @throws {IllegalArgumentError} If trying to set data (property is read-only)
-	*/
-
-	module.EventView.prototype.val = function() {
-		
-		if (arguments.length > 0) {
-
-			throw new IllegalArgumentError('data is read-only');
-		}
-
-		if (!app.FormWidget.instance().validate(this.form())) {
-
-			return null;
-		}
-
-		else {
-
-			return new module.Event(
-
-				$('#event-name').val(),
-
-				$('#event-type').val(),
-
-				(function() {
-
-					var date = module.DateInputWidget.instance().value($('#event-start-date'));
-
-					return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
-
-				}.bind(this))(),
-
-				(function() {
-
-					var date = module.DateInputWidget.instance().value($('#event-end-date'));
-
-					return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
-
-				}.bind(this))(),
-
-				$('#event-location').val(),
-
-				$('#event-description').val(),
-
-				(function() { // host
-
-					// get type (by function reference) of host
-
-					var Type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
-
-					// look user entry up on type's registry (simple name matching will suffice for now)
-
-					var host = Type.registry.getObjectByAttribute('hostName', $('#event-host').val());
-
-					if (host === null) { // no existing match, so create new IHost
-
-						host = new Type(); // jsHint insists on cap in first letter of constructor names, hence the aberration
-
-						host.hostName($('#event-host').val());
-					}
-
-					return host;
-				})(),
-
-				parseInt($('#event-capacity').val())
-			);
-		}
-	};
-
-
-
 	/** Submits event form to controller if it passes all validations
 	*
 	* @return {Boolean} true if validation and is succesful, otherwise false
@@ -824,67 +750,9 @@ var app = app || {};
 		
 		var val = this.val(); // get Model to submit
 
-		//if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
-
 		if (val !== null) { // Submit form if all validations pass
 
-			this.ssuper().prototype.submit.call(
-
-				this,
-				
-				val
-
-				/*
-				new module.Event(
-
-					$('#event-name').val(),
-
-					$('#event-type').val(),
-
-					(function() {
-
-						var date = module.DateInputWidget.instance().value($('#event-start-date'));
-
-						return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
-
-					}.bind(this))(),
-
-					(function() {
-
-						var date = module.DateInputWidget.instance().value($('#event-end-date'));
-
-						return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
-
-					}.bind(this))(),
-
-					$('#event-location').val(),
-
-					$('#event-description').val(),
-
-					(function() { // host
-
-						// get type (by function reference) of host
-
-						var Type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
-
-						// look user entry up on type's registry (simple name matching will suffice for now)
-
-						var host = Type.registry.getObjectByAttribute('hostName', $('#event-host').val());
-
-						if (host === null) { // no existing match, so create new IHost
-
-							host = new Type(); // jsHint insists on cap in first letter of constructor names, hence the aberration
-
-							host.hostName($('#event-host').val());
-						}
-
-						return host;
-					})(),
-
-					parseInt($('#event-capacity').val())
-				)
-				*/
-			);
+			this.ssuper().prototype.submit.call(this, val);
 
 			return true;
 		}
@@ -1122,6 +990,87 @@ var app = app || {};
 		}
 	};
 	*/
+
+
+	/** Gets new Event representing current values entered in form
+	*
+	* @return {Event} Event with the form data, or null if form doesn't validate
+	*
+	* @throws {IllegalArgumentError} If trying to set val (property is read-only)
+	*/
+
+	module.EventView.prototype.val = function() {
+		
+		if (arguments.length > 0) {
+
+			throw new IllegalArgumentError('val is read-only');
+		}
+
+		if (!app.FormWidget.instance().validate(this.form())) {
+
+			return null;
+		}
+
+		else {
+
+			var ret = new module.Event(
+
+				$('#event-name').val(),
+
+				$('#event-type').val(),
+
+				(function() {
+
+					var date = module.DateInputWidget.instance().value($('#event-start-date'));
+
+					return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
+
+				}.bind(this))(),
+
+				(function() {
+
+					var date = module.DateInputWidget.instance().value($('#event-end-date'));
+
+					return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
+
+				}.bind(this))(),
+
+				$('#event-location').val(),
+
+				$('#event-description').val(),
+
+				(function() { // host
+
+					// get type (by function reference) of host
+
+					var Type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
+
+					// look user entry up on type's registry (simple name matching will suffice for now)
+
+					var host = Type.registry.getObjectByAttribute('hostName', $('#event-host').val());
+
+					if (host === null) { // no existing match, so create new IHost
+
+						host = new Type(); // jsHint insists on cap in first letter of constructor names, hence the aberration
+
+						host.hostName($('#event-host').val());
+					}
+
+					return host;
+				})(),
+
+				parseInt($('#event-capacity').val())
+			);
+
+			this.model().guests().forEach(function(guest) { // copy guest list
+
+				void ret.addGuest(guest);
+			});
+
+			return ret;
+		}
+	};
+
 
 
 	/** Event handler for interactive validation of end date field

@@ -119,20 +119,15 @@ var app = app || {};
 
 			else if (clone !== null && source !== null) { // a transaction is in progress
 
-				console.log('Transaction in progress');
-
 				if (Model_m !== null && Model_m.constructor === clone.constructor
 
 					&& clone.constructor === source.constructor) { // Model, source and clone are of the same type
 
 					// we are navigating to the view initiating the transaction, so update using clone, rather than source
 
-					console.log('Loading clone');
-
 					Model_m = clone;
 				}
 			}
-
 
 			this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
 

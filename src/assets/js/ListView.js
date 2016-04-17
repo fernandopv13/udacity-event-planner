@@ -92,7 +92,7 @@ var app = app || {};
 
 			var ItemType, itemName; // 'Sentence caps' to please jsHint when using as constructor
 
-			switch (this.constructor) { // parse item type to create based on list type
+			switch (this.constructor) { // parse item type to create button based on list type
 
 				case module.EventListView:
 

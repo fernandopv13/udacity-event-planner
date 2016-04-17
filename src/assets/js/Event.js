@@ -678,8 +678,6 @@ var app = app || {}; // create a simple namespace for the app
 
 			if (this.ssuper().prototype.update.call(this, Event_e, int_id)) { // check whether to respond to this notification
 
-				//console.log(JSON.stringify(Event_e)); // debug
-
 				// Update using accessors (for validation)
 
 				this.name(Event_e.name());
@@ -699,11 +697,15 @@ var app = app || {}; // create a simple namespace for the app
 				this.capacity(Event_e.capacity());
 
 				this.host(Event_e.host());
+
+				while (this.guests().length > 0) {void this.guests().shift();} // empty guest list
+
+				Event_e.guests().forEach(function(guest) {void this.addGuest(guest);}, this); // update guest list
 				
 				// Do some housekeeping common to all Model updates
 
 				this.ssuper().prototype.onUpdate.call(this, Event_e);
-				
+
 				return true;
 			}
 

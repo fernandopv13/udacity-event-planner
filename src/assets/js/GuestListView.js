@@ -315,17 +315,17 @@ var app = app || {};
 
 		else { // default
 
-			container.appendChild(this.createWidget(
+			container = this.containerElement(this.createWidget(
 
 				'HTMLElement', // outer div
 
-				{
-					element: 'div',
-
-					classList: ['collection-item', 'row']
-				}
+					{
+						element: 'div',			
+						
+						classList: ['collection-item', 'row']
+					}
 			));
-			
+
 			container.appendChild(this.createWidget(
 
 				'HTMLElement', // inner div

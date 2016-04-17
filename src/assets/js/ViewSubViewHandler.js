@@ -70,13 +70,13 @@ var app = app || {};
 
 	module.ViewSubViewHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		console.log('initializing transaction');
-
 		var ctrl = this.controller();
 
 		void ctrl.sourceModel(ctrl.currentView().model());  // set source to the original Model of the calling View
 
 		void ctrl.cloneModel(ctrl.currentView().val()); // set clone to value Model of the calling View
+
+		void ctrl.selectedEvent(ctrl.cloneModel()); // set selected event to clone
 
 		if (ctrl.cloneModel() !== null) { 
 
