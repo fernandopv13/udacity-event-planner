@@ -72,6 +72,26 @@ var app = app || {};
 	};
 
 
+	/** Gets reference to the View's main form element (read-only)
+	*
+	* @return {HTMLFormElement}
+	*
+	* @throws {IllegalArgumentError} If trying to set the form property (to make mistake easy to discover)
+	*/
+
+	module.FormView.prototype.form = function() {
+
+		if (arguments.length > 0) {
+
+			throw new IllegalArgumentError('form property is read-only');
+		}
+		else {
+
+			return this.$renderContext().find('form')[0];
+		}
+	};
+
+
 	/** Cleans up shared UI when hiding FormView (e.g. hides delete icon in nav bar) */
 
 	module.FormView.prototype.hide = function(obj_speed) {

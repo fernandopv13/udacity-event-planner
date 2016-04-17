@@ -16,7 +16,12 @@ var app = app || {};
 
 	module.TestObserver.prototype.isInstanceOf = function() {return true;};
 
-	module.TestObserver.prototype.update = function() {this.notification = arguments; console.log(arguments)};
+	module.TestObserver.prototype.update = function() {
+
+		this.notification = arguments;
+
+		//console.log(arguments);
+	};
 
 	void app.IInterfaceable.mixInto(app.IObserver, module.TestObserver);
 

@@ -74,7 +74,15 @@ var app = app || {};
 
 	module.EventView.prototype.editGuests = function(nEvent) {
 
-		this.notifyObservers(new module.GuestListView(), this.model(), module.View.UIAction.SUBVIEW);
+		if (app.FormWidget.instance().validate(this.form())) {
+
+			this.notifyObservers(new module.GuestListView(), this.model(), module.View.UIAction.SUBVIEW);
+		}
+
+		else {
+
+			Materialize.toast('Some info seems to be missing. Please try again.', app.prefs.defaultToastDelay());
+		}
 	};
 
 
@@ -731,6 +739,80 @@ var app = app || {};
 	};
 
 
+	/** Gets Model representing current values entered in form
+	*
+	* @return {Model} Model of the type associated with the View, or null if form doesn't validate
+	*
+	* @throws {IllegalArgumentError} If trying to set data (property is read-only)
+	*/
+
+	module.EventView.prototype.val = function() {
+		
+		if (arguments.length > 0) {
+
+			throw new IllegalArgumentError('data is read-only');
+		}
+
+		if (!app.FormWidget.instance().validate(this.form())) {
+
+			return null;
+		}
+
+		else {
+
+			return new module.Event(
+
+				$('#event-name').val(),
+
+				$('#event-type').val(),
+
+				(function() {
+
+					var date = module.DateInputWidget.instance().value($('#event-start-date'));
+
+					return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
+
+				}.bind(this))(),
+
+				(function() {
+
+					var date = module.DateInputWidget.instance().value($('#event-end-date'));
+
+					return moment && moment.isMoment(date) ? date.toDate() : date; // Event.js only accepts native Date objects
+
+				}.bind(this))(),
+
+				$('#event-location').val(),
+
+				$('#event-description').val(),
+
+				(function() { // host
+
+					// get type (by function reference) of host
+
+					var Type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
+
+					// look user entry up on type's registry (simple name matching will suffice for now)
+
+					var host = Type.registry.getObjectByAttribute('hostName', $('#event-host').val());
+
+					if (host === null) { // no existing match, so create new IHost
+
+						host = new Type(); // jsHint insists on cap in first letter of constructor names, hence the aberration
+
+						host.hostName($('#event-host').val());
+					}
+
+					return host;
+				})(),
+
+				parseInt($('#event-capacity').val())
+			);
+		}
+	};
+
+
+
 	/** Submits event form to controller if it passes all validations
 	*
 	* @return {Boolean} true if validation and is succesful, otherwise false
@@ -740,12 +822,19 @@ var app = app || {};
 
 	module.EventView.prototype.submit = function(nEvent) {
 		
-		if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
+		var val = this.val(); // get Model to submit
+
+		//if (app.FormWidget.instance().validate($(nEvent.currentTarget).closest('form'))) { // Submit form if all validations pass
+
+		if (val !== null) { // Submit form if all validations pass
 
 			this.ssuper().prototype.submit.call(
 
 				this,
 				
+				val
+
+				/*
 				new module.Event(
 
 					$('#event-name').val(),
@@ -794,6 +883,7 @@ var app = app || {};
 
 					parseInt($('#event-capacity').val())
 				)
+				*/
 			);
 
 			return true;
@@ -804,7 +894,7 @@ var app = app || {};
 		Materialize.updateTextFields(); // make sure validation errors are shown
 
 		return false;
-	}
+	};
 
 
 	/** Suggest event types based on a hard-coded list
@@ -969,7 +1059,69 @@ var app = app || {};
 		}
 		
 		// else don't provide suggestions
-	}
+	};
+
+
+	/** Gets JSON object reflecting the data currently held in the View's data containers.
+	*
+	* Mostly useful for getting the form field values of a FormView, whether the form validates or not
+	*
+	* @return {Object} JSON object reflecting the values held by the View
+	*/
+
+	/*DEPRECATED
+	module.EventView.prototype.toJSON = function(nEvent) {
+		
+		return {
+
+			name: $('#event-name').val(),
+
+			type: $('#event-type').val(),
+			
+			'start-date': (function() {
+
+				var date = module.DateInputWidget.instance().value($('#event-start-date'));
+
+				return (moment && moment.isMoment(date) ? date.toDate() : date).toJSON();
+
+			}.bind(this))(),
+
+			'end-date': (function() {
+
+				var date = module.DateInputWidget.instance().value($('#event-end-date'));
+
+				return (moment && moment.isMoment(date) ? date.toDate() : date).toJSON();
+
+			}.bind(this))(),
+
+			location: $('#event-location').val(),
+
+			description: $('#event-description').val(),
+
+			host: (function() { // host
+
+				// get type (by function reference) of host
+
+				var Type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
+
+				// look user entry up on type's registry (simple name matching will suffice for now)
+
+				var host = Type.registry.getObjectByAttribute('hostName', $('#event-host').val());
+
+				if (host === null) { // no existing match, so create new IHost
+
+					host = new Type(); // jsHint insists on cap in first letter of constructor names, hence the aberration
+
+					host.hostName($('#event-host').val());
+				}
+
+				return host.toJSON();
+			})(),
+
+			capacity: parseInt($('#event-capacity').val())
+		}
+	};
+	*/
 
 
 	/** Event handler for interactive validation of end date field

@@ -1,14 +1,14 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /**********************************************************************************************
-* public class ViewSubmitHandler extends ViewUpdateHandler
+* public class ViewSubViewHandler extends ViewUpdateHandler
 **********************************************************************************************/
 
 var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Handles 'submit' action from View on behalf of Controller.
+	/** @classdesc Handles initiation of multi-(sub)view transaction on behalf of Controller.
 	*
 	* Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
 	*
@@ -16,10 +16,10 @@ var app = app || {};
 	*
 	* @extends ViewUpdateHandler
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, April 2016
 	*/
 
-	module.ViewSubmitHandler = function(Controller_c) {
+	module.ViewSubViewHandler = function(Controller_c) {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -29,7 +29,7 @@ var app = app || {};
 
 		this.ssuper = module.ViewUpdateHandler;
 
-		this.uiAction = module.View.UIAction.SUBMIT;
+		this.uiAction = module.View.UIAction.SUBVIEW;
 
 		
 		// Initialize instance members inherited from parent class
@@ -41,23 +41,23 @@ var app = app || {};
 		* Other initialization
 		*---------------------------------------------------------------------------------------*/
 
-		this.parentList().push(module.ViewSubmitHandler);
+		this.parentList().push(module.ViewSubViewHandler);
 	};
 
 	/*----------------------------------------------------------------------------------------
 	* Inherit from ViewUpdateHandler
 	*---------------------------------------------------------------------------------------*/	
 
-	module.ViewSubmitHandler.prototype = Object.create(module.ViewUpdateHandler.prototype); // Set up inheritance
+	module.ViewSubViewHandler.prototype = Object.create(module.ViewUpdateHandler.prototype); // Set up inheritance
 
-	module.ViewSubmitHandler.prototype.constructor = module.ViewSubmitHandler; //Reset constructor property
+	module.ViewSubViewHandler.prototype.constructor = module.ViewSubViewHandler; //Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Handles 'submit' user action in a View on behalf of a Controller.
+	/** Handles initiation of multi-(sub)view transaction on behalf of controller
 	*
 	* @param {int} UIAction An integer representing the user action to respond to
 	*
@@ -68,32 +68,25 @@ var app = app || {};
 	* @return {void}
 	*/
 
-	module.ViewSubmitHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
+	module.ViewSubViewHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		var ctrl = this.controller(), clone = ctrl.cloneModel(), source = ctrl.sourceModel(), id = View_v.model().id();
+		console.log('initializing transaction');
 
-		if (clone !== null && source !== null) { // a transaction is in progress
+		var ctrl = this.controller();
 
-			if (Model_m !== null && Model_m.constructor === clone.constructor && clone.constructor === source.constructor) { // Model, source and clone are of the same type
+		void ctrl.sourceModel(ctrl.currentView().model());  // set source to the original Model of the calling View
 
-				// this submission is the conclusion of the transaction, so save changes to source
+		void ctrl.cloneModel(ctrl.currentView().val()); // set clone to value Model of the calling View
 
-				id = source.id();
+		if (ctrl.cloneModel() !== null) { 
 
-				// then reset transaction
-
-				ctrl.clone().delete(); void ctrl.clone(null);
-
-				ctrl.source().delete(); void ctrl.source(null);
-			}
+			this.notifyObservers(View_v, ctrl.cloneModel(), module.View.UIAction.NAVIGATE); // navigate to requested subview, using clone
 		}
 
+		else { // val() returns null if a valid Model cannot be created, e.g. if a FormView doesn't validate
 
-		this.notifyObservers(Model_m, id); // update model
-
-		void ctrl.newModel(null); // reset newModel, if not null (i.e. when saving freshly created model)
-
-		window.history.back(); // go one step back in browser history
+			throw new IllegalArgumentError('Expected Model');
+		}
 	};
 
 })(app);

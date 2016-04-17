@@ -75,7 +75,7 @@ var app = app || {};
 
 		//console.log('Navigating to ' + View_v.className()); //debug
 
-		var ctrl = this.controller(), view, views = ctrl.views();
+		var ctrl = this.controller(), clone = ctrl.cloneModel(), source = ctrl.sourceModel(), view, views = ctrl.views();
 
 		for (var prop in views) { // search for (existing) view matching the request
 
@@ -114,6 +114,22 @@ var app = app || {};
 					default:
 
 						console.log('Navigation selection not supported');
+				}
+			}
+
+			else if (clone !== null && source !== null) { // a transaction is in progress
+
+				console.log('Transaction in progress');
+
+				if (Model_m !== null && Model_m.constructor === clone.constructor
+
+					&& clone.constructor === source.constructor) { // Model, source and clone are of the same type
+
+					// we are navigating to the view initiating the transaction, so update using clone, rather than source
+
+					console.log('Loading clone');
+
+					Model_m = clone;
 				}
 			}
 

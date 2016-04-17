@@ -126,22 +126,14 @@ var app = app || {};
 
 						//console.log('Setting current view to ' + View_v.className()); // debug
 
-						//this.update(Model_m, View_v); // first notify observers: forms won't update if they are the current view
-						
 						for (var view in _views) {
 
 							_views[view].hide('fast');  // hide all views
-
-							//_views[view].onUnLoad(); // DEPRECATED: have hidden views clean up after themselves						
-
 						}
 
 						_currentView = View_v; // set current view
 
 						_currentView.show('slow'); // show current view
-
-						//_currentView.onLoad(); // have current view init itself
-
 						
 						_router.onViewChange(View_v); // update browser history
 					}
@@ -167,27 +159,7 @@ var app = app || {};
 
 			this.newModel = new module.Accessor(_newModel, false, module.Model, 'Model');
 
-			/*/*DEPRECATED: Delete after commit
-			this.newModel = function(Model_m) {
-
-				if (arguments.length > 0) {
-
-					if (Model_m === null || (Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model))) {
-
-						_newModel = Model_m;
-					}
-
-					else {
-
-						throw new IllegalArgumentError('Expected instance of Model, or null');
-					}
-				}
-
-				return _newModel;
-			};
-			*/
-
-
+			
 			/** Gets the collection of IObservers of the controller
 			*
 			* @return {Array} An array of IObservers
@@ -197,19 +169,7 @@ var app = app || {};
 
 			this.observers = new module.Accessor(_observers, true);
 
-			/*
-			this.observers = function() {
-
-				if (arguments.length > 0) {
-
-					throw new IllegalArgumentError('Property is read-only');
-				}
-
-				return _observers;
-			}
-			*/
-
-
+			
 			/** Gets or sets the currently selected (active) account
 			*
 			* @param {Account} selectedAccount The selected account, or null
@@ -221,27 +181,7 @@ var app = app || {};
 			
 			this.selectedAccount = new module.Accessor(_selectedAccount, false, module.Account, 'Account');
 
-			/*DEPRECATED: Delete after commit
-			this.selectedAccount = function (Account_a) {
 			
-				if (arguments.length > 0) {
-
-					if (Account_a === null || Account_a.constructor === module.Account) {
-					
-						_selectedAccount = Account_a;
-					}
-
-					else {
-					
-						throw new IllegalArgumentError('Expected instance of Account')
-					}
-				}
-				
-				return _selectedAccount;
-			};
-			*/
-
-
 			/** Gets or sets the currently selected Event
 			*
 			* @param {Event} selectedEvent The selected event, or null
@@ -253,27 +193,7 @@ var app = app || {};
 			
 			this.selectedEvent = new module.Accessor(_selectedEvent, false, module.Event, 'Event');
 
-			/*DEPRECATED: Delete after commit
-			this.selectedEvent = function (Event_e) {
 			
-				if (arguments.length > 0) {
-
-					if (Event_e === null || Event_e.constructor === module.Event) {
-					
-						_selectedEvent = Event_e;
-					}
-
-					else {
-					
-						throw new IllegalArgumentError('Expected instance of Event')
-					}
-				}
-				
-				return _selectedEvent;
-			};
-			*/
-
-
 			/** Gets or sets the currently selected guest
 			*
 			* @param {Person} selectedGuest The selected guest, or null
@@ -285,26 +205,7 @@ var app = app || {};
 			
 			this.selectedGuest = new module.Accessor(_selectedGuest, false, module.Person, 'Person');
 
-			/*DEPRECATED: Delete after commit
-			this.selectedGuest = function (Person_g) {
 			
-				if (arguments.length > 0) {
-
-					if (Person_g === null || Person_g.constructor === module.Person) {
-					
-						_selectedGuest = Person_g;
-					}
-
-					else {
-					
-						throw new IllegalArgumentError('Expected instance of Person')
-					}
-				}
-				
-				return _selectedGuest;
-			};*/
-
-
 			/** Gets or sets reference to source Model when conducting multi-view transaction
 			*
 			* @return {Model} The source Model, or null
@@ -455,7 +356,9 @@ var app = app || {};
 
 						new module.ViewSignInHandler(this),
 
-						new module.ViewSubmitHandler(this)
+						new module.ViewSubmitHandler(this),
+
+						new module.ViewSubViewHandler(this)
 					
 					].forEach(function(handler) {
 

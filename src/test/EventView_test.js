@@ -294,6 +294,60 @@ describe('Class EventView', function(){
 		});
 
 
+		it('can return a Model representing current entries if all form fields valididate', function() {
+			
+			testWindow.$('#event-name').val('Darth Wader');
+
+			testWindow.$('#event-location').val('Death Star');
+
+			if (testWindow.$('#event-start-date').attr('type') === 'datetime-local') { // datetime-local requires ISO string 
+
+				testWindow.$('#event-start-date').attr('value', '2250-05-12T22:00:00.000'); // using $.val() alone does not set attribute, causing stepMismatch validity error
+
+				testWindow.$('#event-start-date').val('2250-05-12T22:00:00.000'); // must also set val() or change won't submit
+
+				testWindow.$('#event-end-date').attr('value', '2250-05-13T22:00:00.000');
+
+				testWindow.$('#event-end-date').val('2250-05-13T22:00:00.000');
+			}
+
+			else { // text input requires formatted date string
+
+				testWindow.$('#event-start-date').val('05/13/2250');
+
+				testWindow.$('#event-end-date').val('05/14/2250');
+			}
+
+			testWindow.$('#event-type').val('Attack Launch Day');
+
+			testWindow.$('#event-capacity').val('10000');
+
+			testWindow.$('#event-host').val('Sith Lord');
+
+			testWindow.$('#event-description').val('Death to the rebels!');
+
+			expect(app.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(true);
+			
+			
+			var val = testView.val(); // get values Model
+			
+
+			expect(val.name()).toBe('Darth Wader');
+
+			expect(val.location()).toBe('Death Star');
+
+			expect(val.start().getFullYear()).toBe(2250);  // browsers diverge on valueOf() conversion, so just check year
+
+			expect(val.end().getFullYear()).toBe(2250);
+
+			expect(val.type()).toBe('Attack Launch Day');
+
+			expect(val.host().hostName()).toBe('Sith Lord');
+
+			expect(val.description()).toBe('Death to the rebels!');
+		});
+
+
 		it('submits form when the "Done" button is activated if all fields valididate', function() {
 			
 			void testView.model().name('');
