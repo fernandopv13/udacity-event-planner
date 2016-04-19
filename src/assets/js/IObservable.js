@@ -79,6 +79,8 @@ var app = app || {}; // create a simple namespace for the module
 
 			case 2:
 
+				//console.log('IObservable: ' + (args[0] && args[0].className ? args[0].className() : args[0]) + ', ' + (args[1] && args[1].className ? args[1].className() : args[1]))
+
 				this.observers().forEach(function(observer) {
 
 					observer.update(args[0], args[1]);
@@ -123,6 +125,8 @@ var app = app || {}; // create a simple namespace for the module
 
 				});
 		}
+
+		//console.log('exiting IObservable'); // debug
 	};
 
 

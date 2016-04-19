@@ -65,9 +65,11 @@ var app = app || {};
 
 	module.InputWidget.prototype.init = function(View_v, str_id, obj_options) {
 		
-		//console.log(arguments); // debug
+		//console.log('entering InputWidget init(), passing call to UIWidget'); // debug
 
 		module.UIWidget.prototype.init(View_v, str_id, obj_options);
+
+		//console.log('back fro UIWidget, exiting InputWidget init()');
 	};
 	
 

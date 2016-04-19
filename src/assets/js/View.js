@@ -308,7 +308,7 @@ var app = app || {}; // create a simple namespace for the module
 			
 			// Generate nav bar (in most cases)
 
-				//console.log('Initializing ' + this.className()) // debug
+				//console.log('Generating navbar'); // debug
 
 				var exclusions = [module.FrontPageView, module.SignInView, module.SignUpView];
 
@@ -398,6 +398,8 @@ var app = app || {}; // create a simple namespace for the module
 
 			// Initialize UIWidgets (including nav bar)
 
+				//console.log('parsing elementOptions');
+
 				if (this.elementOptions) { // do post-processing that requires elements to be rendered to the DOM first
 
 					//console.log(this.elementOptions); // debug
@@ -429,6 +431,8 @@ var app = app || {}; // create a simple namespace for the module
 
 					this.elementOptions = null; // free up temporary object for garbage collection after initializing
 				}
+			
+			//console.log('exiting View init()');
 		};
 
 

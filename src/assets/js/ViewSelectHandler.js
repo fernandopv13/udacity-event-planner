@@ -77,7 +77,11 @@ var app = app || {};
 
 			case module.EventListView: // selection made in event list
 
+				//console.log('ViewSelectHandler notifying controller');
+
 				this.notifyObservers(Model_m, new module.EventView()); // render/refresh the view in the background
+
+				//console.log('back in ViewSelectHandler, calling onEventSelected()');
 
 				ctrl.onEventSelected.call(ctrl, Model_m); // show the view
 

@@ -111,11 +111,15 @@ var app = app || {};
 
 		// Call parent to perform common post-render task(s)
 
+			//console.log('in FormView init(), calling View init()');// debug
+
 			module.View.prototype.init.call(this); // ssuper() refers to FormView, so call parent manually or enter infinite loop
 
 
 		// Setup delete button and modal
 			
+			//console.log('back from View init(), setting up modal');
+
 			$('#nav-delete-icon, #confirm-delete-modal-cancel, #confirm-delete-modal-ok').off(); // reset event handlers
 
 			$('#nav-delete-icon').mousedown(function(nEvent) { // set up delete icon to open modal
@@ -141,6 +145,8 @@ var app = app || {};
 			$('#nav-delete-icon').parent().removeClass('hidden'); // show delete icon
 
 			$('#nav-delete-icon').show('slow');
+
+			//console.log('exiting FormView init()');
 	};
 
 

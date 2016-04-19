@@ -121,7 +121,7 @@ var app = app || {};
 			}
 			*/
 			
-			//console.log(arguments); // debug
+			//console.log('entering UIWidget init()'); // debug
 
 			if (obj_options.listeners) { // attach event listeners
 
@@ -130,6 +130,8 @@ var app = app || {};
 				for (var event in listeners) {
 
 					if (typeof listeners[event] === 'function') {
+
+						//console.log('attaching ' + event + ' to ' + str_id);
 
 						$('#' + str_id).on(event, listeners[event]);
 					}
@@ -140,6 +142,8 @@ var app = app || {};
 					}
 				}
 			}
+
+			//console.log('exiting UIWidget init()');
 		};
 
 })(app);

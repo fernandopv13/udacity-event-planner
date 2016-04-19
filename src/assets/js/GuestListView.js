@@ -231,9 +231,11 @@ var app = app || {};
 
 							function(nEvent) {
 
-								window.history.back();
+								console.log(window.history.state);
 
-								$('#secondary-nav').off();
+								//window.history.back();
+
+								//$('#secondary-nav').off();
 
 							}.bind(this)
 					}

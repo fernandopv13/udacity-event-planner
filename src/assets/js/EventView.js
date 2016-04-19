@@ -97,6 +97,8 @@ var app = app || {};
 
 	module.EventView.prototype.render = function(Event_e) {
 
+		//console.log('entering EventView render()'); // debug
+
 		var container; // shorthand reference to inherited temporary container element
 		
 		
@@ -730,12 +732,18 @@ var app = app || {};
 
 		// Render to DOM
 
+			//console.log('generated element, calling FormView render()'); //debug
+
 			this.ssuper().prototype.render.call(this);
+
+			//console.log('back from FormView, initializing EventView');
 
 		
 		// Do post-render initialization
 
 			this.init(); // call init up parent class chain
+
+		//console.log('done initializing, exiting EventView render()'); // debug
 	};
 
 
@@ -930,68 +938,6 @@ var app = app || {};
 	};
 
 
-	/** Gets JSON object reflecting the data currently held in the View's data containers.
-	*
-	* Mostly useful for getting the form field values of a FormView, whether the form validates or not
-	*
-	* @return {Object} JSON object reflecting the values held by the View
-	*/
-
-	/*DEPRECATED
-	module.EventView.prototype.toJSON = function(nEvent) {
-		
-		return {
-
-			name: $('#event-name').val(),
-
-			type: $('#event-type').val(),
-			
-			'start-date': (function() {
-
-				var date = module.DateInputWidget.instance().value($('#event-start-date'));
-
-				return (moment && moment.isMoment(date) ? date.toDate() : date).toJSON();
-
-			}.bind(this))(),
-
-			'end-date': (function() {
-
-				var date = module.DateInputWidget.instance().value($('#event-end-date'));
-
-				return (moment && moment.isMoment(date) ? date.toDate() : date).toJSON();
-
-			}.bind(this))(),
-
-			location: $('#event-location').val(),
-
-			description: $('#event-description').val(),
-
-			host: (function() { // host
-
-				// get type (by function reference) of host
-
-				var Type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
-
-				// look user entry up on type's registry (simple name matching will suffice for now)
-
-				var host = Type.registry.getObjectByAttribute('hostName', $('#event-host').val());
-
-				if (host === null) { // no existing match, so create new IHost
-
-					host = new Type(); // jsHint insists on cap in first letter of constructor names, hence the aberration
-
-					host.hostName($('#event-host').val());
-				}
-
-				return host.toJSON();
-			})(),
-
-			capacity: parseInt($('#event-capacity').val())
-		}
-	};
-	*/
-
-
 	/** Gets new Event representing current values entered in form
 	*
 	* @return {Event} Event with the form data, or null if form doesn't validate
@@ -1070,7 +1016,6 @@ var app = app || {};
 			return ret;
 		}
 	};
-
 
 
 	/** Event handler for interactive validation of end date field

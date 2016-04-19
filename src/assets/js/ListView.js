@@ -77,9 +77,13 @@ var app = app || {};
 
 	app.ListView.prototype.onSelect = function(nEvent, Model_m) {
 
-		//console.log(nEvent); //debug
+		//console.log(arguments); //debug
+
+		//console.log('ListView onSelect() notifying controller');
 
 		this.notifyObservers(this, Model_m, app.View.UIAction.SELECT);
+
+		//console.log('back in ListView onSelect()');
 	};
 
 

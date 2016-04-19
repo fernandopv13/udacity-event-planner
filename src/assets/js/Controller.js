@@ -257,6 +257,8 @@ var app = app || {};
 
 			this.onEventSelected = function(Event_e) { // temporary adapter while transitioning to the Strategy pattern
 
+				//console.log('controller onEventSelected received ' + Event_e.name()); // debug
+
 				this.selectedGuest(null);
 
 				this.currentView(_views.eventView, this.selectedEvent(Event_e));
@@ -507,15 +509,17 @@ var app = app || {};
 
 					//console.log('call has expected number of params'); // debug
 
-					if (typeof View_v !== 'undefined' && View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { // second param is instance of View
+					if (typeof View_v !== 'undefined' && View_v.isInstanceOf && View_v.isInstanceOf(module.View)) { //console.log('second param is instance of View');
 
-						if (Model_m === null || (typeof Model_m !== 'undefined' && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model))) { // first param is instance of Model, or null
+						if (Model_m === null || (typeof Model_m !== 'undefined' && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model))) { //console.log('first param is instance of Model, or null');
+
+							//console.log('entering ___update()');
 
 							//console.log('Notifying Views of update from ViewUpdateHandler: Model, View');
 
-							//console.log(arguments);
-
 							this.notifyObservers(Model_m, View_v);
+
+							//console.log('exiting ___update()');
 
 							return true;
 						}
@@ -588,7 +592,7 @@ var app = app || {};
 
 				var args = arguments, ret = false, strategies = [_update, __update, ___update, ____update];
 
-				//console.log(args); // debug
+				//console.log('entering controller.update()'); // debug
 
 				for (var i = 0, len = strategies.length; i < len; i++) { // using 'for' b/c forEach does not support break
 
@@ -616,9 +620,11 @@ var app = app || {};
 					if (ret) {break;} // we only need a single match, so break when found
 				}
 
+				//console.log('exiting controller.update()');
+
 				if (!ret) { // no 'strategy' matches provided params
 
-					console.log(args);
+					//console.log(args);
 
 					throw new IllegalArgumentError('Unexpected method signature. See docs/source for details.');
 				}

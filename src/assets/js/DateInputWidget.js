@@ -240,6 +240,8 @@ var app = app || {};
 
 		module.DateInputWidget.prototype.init = function(View_v, str_id, obj_options) {
 
+			console.log('DateInputWidget initializing ' + str_id);
+
 			var element = $('#' + str_id), val;
 
 			if (app.device().isMobile() && !Modernizr.inputtypes['datetime-local'] && typeof moment !== 'undefined' // prefer native datetime picker on mobile, but go custom if native picker and/or moment is unavailable
@@ -340,7 +342,11 @@ var app = app || {};
 
 			else { // use native widget
 
-				if (app.device.isAndroid() || app.device().isiOS()) { // Some Android and iOS browsers will create a stepMismatch validation API error unless step is set to milliseconds
+				//console.log('going native');
+
+				if (app.device().isAndroid() || app.device().isiOS()) { // Some Android and iOS browsers will create a stepMismatch validation API error unless step is set to milliseconds
+
+					//console.log('resetting step atribute');
 
 					$(element).attr('step', '0.001'); // only set to ms here, or lap/desktops will add sec and ms fields (hidden by iOS picker; causes Android to display seconds)
 				}
@@ -349,6 +355,8 @@ var app = app || {};
 
 				// This ought to be redundant since we already set the value at creation,
 				// but mobiles are very finicky about this, so keeping what works for now.
+
+				//console.log('reacquiring value');
 
 				val = $(element).val() || $(element).data().value;
 
@@ -363,13 +371,19 @@ var app = app || {};
 
 					val = new Date(val);
 
+					//console.log('reformatting value');
+
 					$(element).val(val.toISOString().split('T')[0] + 'T' + val.getHours() + ':' + val.getMinutes());
 				}
 			}
 
 			// Call generic initializer in parent class
 
+			//console.log('calling InputWidget init()');
+
 			module.InputWidget.prototype.init(View_v, str_id, obj_options);
+
+			//console.log('back from InputWidget, exiting DateInputWidget init()');
 		};
 
 	
