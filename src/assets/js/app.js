@@ -41,9 +41,6 @@ var app = (function(self) {
 
 	_registry = []; // top level collection of collections of data model objects managed by the app
 	
-	
-	
-	
 	self.controller = new self.Controller();
 
 	self.prefs = { // public accessors for preferences, using unified accessor pattern

@@ -447,7 +447,7 @@ describe('class Email', function(){
 					
 				// Copy data from temporary object
 
-				testMail.update (tmpMail, id);
+				testMail.update(tmpMail, id);
 
 
 				// Verify copy

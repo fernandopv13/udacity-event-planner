@@ -103,7 +103,9 @@ describe('Storage localStorage', function(){
 		
 		localStorage.setItem(prefix + 'storageTest3', 'storageTest3');
 		
-		expect(localStorage.key(1)).toBe(prefix + 'storageTest2');
+		//expect(localStorage.key(1)).toBe(prefix + 'storageTest2'); // fails on iOS
+
+		expect(localStorage.key(1).indexOf(prefix)).toBe(0); //  order of keys is arbitrary, so simply test for presence of known content
 	});
 	
 	

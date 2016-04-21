@@ -76,7 +76,10 @@ describe('Class SwitchInputWidget', function(){
 
 			el = el.firstChild;
 
-			expect(el.constructor).toBe(HTMLSpanElement); // main label span
+			if (typeof HTMLSpanElement !== 'undefined') { // not supported in Safari
+
+				expect(el.constructor).toBe(HTMLSpanElement); // main label span
+			}
 
 			expect(el.classList[1]).toBe('input-switch-label');
 
@@ -94,7 +97,10 @@ describe('Class SwitchInputWidget', function(){
 
 			el = el.firstChild;
 
-			expect(el.constructor).toBe(HTMLSpanElement); // switch span
+			if (typeof HTMLSpanElement !== 'undefined') { // not supported in Safari
+
+				expect(el.constructor).toBe(HTMLSpanElement); // switch span
+			}
 
 			el = el.firstChild;
 
@@ -102,7 +108,10 @@ describe('Class SwitchInputWidget', function(){
 
 			el = el.firstChild;
 
-			expect(el.constructor).toBe(HTMLSpanElement); // 'off' label
+			if (typeof HTMLSpanElement !== 'undefined') { // not supported in Safari 
+
+				expect(el.constructor).toBe(HTMLSpanElement); // 'off' label
+			}
 
 			expect(el.innerHTML).toBe('No');
 
@@ -116,13 +125,19 @@ describe('Class SwitchInputWidget', function(){
 
 			el = el.nextSibling;
 
-			expect(el.constructor).toBe(HTMLSpanElement); // visual presentation of switch ('lever')
+			if (typeof HTMLSpanElement !== 'undefined') { // not supported in Safari
+
+				expect(el.constructor).toBe(HTMLSpanElement); // visual presentation of switch ('lever')
+			}
 
 			expect(el.classList[0]).toBe('lever');
 
 			el = el.nextSibling;
 
-			expect(el.constructor).toBe(HTMLSpanElement); // 'on' label
+			if (typeof HTMLSpanElement !== 'undefined') { // not supported in Safari
+			
+				expect(el.constructor).toBe(HTMLSpanElement); // 'on' label
+			}
 
 			expect(el.innerHTML).toBe('Yes');
 		});

@@ -304,8 +304,6 @@ var app = app || {}; // create a simple namespace for the app
 		
 		catch(e) { // not crazy about this interface communicating directly in the UI, but will have to do for now
 			
-			console.log(e);
-
 			Materialize.toast('There was a problem saving your event. Are you in private/incognito mode? Try non-private browsing instead.', 5000);
 		}
 		

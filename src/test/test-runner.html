@@ -9,33 +9,6 @@
 	</head>
 
 	<body>
-		
-		<!-- Placeholders for dynamically generated main content views -->
-			
-			<style>.row {display: none;}</style>
-
-			<div class="row button-collapse"></div>
-					
-			<div id="front-page" class="row"></div>
-
-			<div id="signup-form" class="row"></div>
-
-			<div id="signup-permissions" class="row"></div>
-
-			<div id="login-form" class="row"></div>
-
-			<div id="account-form" class="row"></div>
-
-			<div id="event-list" class="row"></div>
-
-			<div id="event-form" class="row"></div>
-
-			<div id="guest-list" class="row"></div>
-
-			<div id="guest-form" class="row"></div>
-
-			<div id="test" class="row hidden"></div>
-			
 
 		<!-- Jasmine.js (unit test) libraries/resources -->
 			<link rel="shortcut icon" type="image/png" href="jasmine-2.4.0/jasmine_favicon.png">
@@ -43,7 +16,9 @@
 			<script src="jasmine-2.4.0/jasmine.js"></script>
 			<script src="jasmine-2.4.0/jasmine-html.js"></script>
 			<script src="jasmine-2.4.0/boot.js"></script>
+			<!---script type="text/javascript" src="util/firebug-lite/build/firebug-lite-debug.js"></script--><!-- Debug: shows JavaScript console on mobile devices -->
 
+			
 		
 		<!-- Library source files -->
 			<script src="../lib/polyfills/Object.js"></script>
@@ -114,10 +89,9 @@
 			<script src="../assets/js/AccountSettingsView.js"></script>
 			<script src="../assets/js/EventView.js"></script>
 			<script src="../assets/js/PersonView.js"></script>
-			<!--
 			
 			<script src="../assets/js/FoursquareSearch.js"></script>
-			-->
+			
 			<script src="../assets/js/Router.js"></script>
 			<script src="../assets/js/Controller.js"></script>
 			<script src="../assets/js/ViewUpdateHandler.js"></script>
@@ -132,15 +106,12 @@
 			<script src="../assets/js/ViewSubViewHandler.js"></script>
 			<script src="../assets/js/app.js"></script>
 			<script src="../assets/js/demodata.js"></script>
-
 			
-			<!-- App.js tested in spawned test window, so not needed here -->
 			
+		<!-- Jasmine.js (unit test) files -->
 			<script src="util/TestObserver.js"></script>
 			<script src="util/TestModel.js"></script>
 			<script src="util/TestView.js"></script>
-			
-		<!-- Jasmine.js (unit test) files -->
 			<script src="Device_test.js"></script>
 			<script src="Storage_test.js"></script>
 			
@@ -181,9 +152,7 @@
 			<script src="Person_test.js"></script>
 			<script src="Account_test.js"></script>
 			<script src="Event_test.js"></script>
-			
-			
-			
+
 			<script src="View_test.js"></script>
 			<script src="FrontPageView_test.js"></script>
 			<script src="SignInView_test.js"></script>
@@ -194,15 +163,12 @@
 			<script src="AccountSettingsView_test.js"></script>
 			<script src="AccountProfileView_test.js"></script>
 			<script src="Navigation_test.js"></script>
-			
-			
 			<script src="ViewUpdateHandler_test.js"></script>
 			<script src="ViewCreateHandler_test.js"></script>
 			<script src="ViewDeleteHandler_test.js"></script>
+
 			<!--
-			
 			-->
-			
 			
 			<!-- TODO:
 			<script src="FormView_test.js"></script>
@@ -219,8 +185,6 @@
 			<script src="Controller_test.js"></script>
 			<!--
 			-->
-
-			<!--script src="app_test.js"></script-->
 		
 
 	</body>

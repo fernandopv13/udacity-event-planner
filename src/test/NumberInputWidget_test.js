@@ -106,7 +106,10 @@ describe('Class NumberInputWidget', function(){
 
 			el = el.nextSibling; // required indicator
 
-			expect(el.constructor).toBe(HTMLSpanElement);
+			if (typeof HTMLSpanElement !== 'undefined') { // not supported in Safari
+
+				expect(el.constructor).toBe(HTMLSpanElement);
+			}
 
 			expect(el.classList[0]).toBe('required-indicator');
 

@@ -136,7 +136,7 @@ describe('Class PersonView', function(){
 
 				done();
 
-			}, 25);
+			}, 1000); // Safari Win needs a longish delay, others are OK with 25ms
 		});
 		
 

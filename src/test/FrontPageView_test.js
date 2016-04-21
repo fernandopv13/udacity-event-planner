@@ -21,9 +21,9 @@ describe('Class FrontPageView', function(){
 	
 	beforeAll(function(done){
 		
-		testWindow = window.open('../index.html'); // test on development version of app
+		//testWindow = window.open('../index.html'); // test on development version of app
 
-		//testWindow = window.open('../../dist/index.html'); // test on production version of app
+		testWindow = window.open('../../build/index.html'); // test on production version of app
 
 		setTimeout(function() {
 
@@ -119,7 +119,7 @@ describe('Class FrontPageView', function(){
 
 				done();
 
-			}, 25);
+			}, 1000); // Safari win needs longish delay here, others are OK with 25ms
 		});
 
 	

@@ -9,7 +9,6 @@
 
 describe('Interface ISerializable', function(){
 	
-	
 	it('cannot be instantiated', function() {
 		
 		try { // this shold throw an error
@@ -129,13 +128,14 @@ describe('Interface ISerializable', function(){
 		}
 	});
 	
-	
 	describe('when interacting with localStorage', function() {
 		
 		var testObj, oldPermission, testController;
 		
 		beforeEach(function() {
 			
+			app = app || {};
+
 			app.Controller = app.Controller || function() {
 
 				var _selectedAccount;
@@ -161,7 +161,7 @@ describe('Interface ISerializable', function(){
 				}
 			}
 
-			app.TestClass = function() {
+			app.TestClass = app.TestClass || function() {
 				
 				var _className = 'TestClass', _id = 100, _a = 2, _b = 'one', _name = '';
 				
@@ -190,9 +190,20 @@ describe('Interface ISerializable', function(){
 			
 			app.controller.selectedAccount(new app.Account());
 
+			app.prefs = app.prefs || {
+
+				isLocalStorageAllowed: function() {return true;},
+
+				defaultEventCapacity: function() {return 50;},
+
+				defaultToastDelay: function() {return 4000;}, // in ms
+
+				localStoragePrefix: function() {return 'dk.ulrikgade.udacity.srwebdev.meetup-app.';}
+			};
+
 			oldPermission = app.prefs.isLocalStorageAllowed();
-			
-			app.prefs.isLocalStorageAllowed(true);
+
+			void app.prefs.isLocalStorageAllowed(true);
 		});
 		
 		
@@ -206,7 +217,7 @@ describe('Interface ISerializable', function(){
 		
 		it('can write an object to local storage', function() {
 			
-			testObj.writeObject();
+			void testObj.writeObject();
 			
 			expect(JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + 'TestClass.100'))._className).toBe('TestClass');
 		});
@@ -218,7 +229,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 				
-				testObj.writeObject();
+				void testObj.writeObject();
 			}
 			
 			catch(e) {
@@ -236,7 +247,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 			
-				testObj.writeObject();
+				void testObj.writeObject();
 			}
 			
 			catch(e) {
@@ -254,7 +265,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 			
-				testObj.writeObject();
+				void testObj.writeObject();
 			}
 			
 			catch(e) {
@@ -267,7 +278,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 			
-				testObj.writeObject();
+				void testObj.writeObject();
 			}
 			
 			catch(e) {
@@ -280,7 +291,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 			
-				testObj.writeObject();
+				void testObj.writeObject();
 			}
 			
 			catch(e) {
@@ -295,31 +306,40 @@ describe('Interface ISerializable', function(){
 		
 		it('rejects attempt to write an object containing circular reference to local storage', function() {
 			
-			app.TestClass.prototype.toJSON = function() {var a = {}, b = {a: a}; a.b = b; return a};
-			
-			try { // normal object circularity
-			
-				testObj.writeObject();
+			// This test cannot help but deliberately inducing an infinite loop.
+			// Most modern browsers protect against this, but not all.
+			// Exceptions include Safari and Chrome on iOS, so skip test for these browsers
+
+			if (!/ipad|iphone|ipod/.test(navigator.userAgent.toLowerCase()) // skip iOS
+
+				&& (navigator.userAgent.indexOf('Safari') === -1 || navigator.userAgent.indexOf('Chrome') > -1) ) { // skip Safari
+
+				app.TestClass.prototype.toJSON = function() {var a = {}, b = {a: a}; a.b = b; return a};
+				
+				try { // normal object circularity
+				
+					void testObj.writeObject();
+				}
+				
+				catch(e) {
+				
+					expect(e).toBeDefined(); // browser errors vary, so just check for existence
+				}
+				
+				app.TestClass.prototype.toJSON = function() {return {t:this}};
+				
+				try { // reference to 'this'
+				
+					void testObj.writeObject();
+				}
+				
+				catch(e) {
+				
+					expect(e).toBeDefined(); // browser errors vary, so just check for existence
+				}
 			}
 			
-			catch(e) {
-			
-				expect(e).toBeDefined(); // browser errors vary, so just check for existence
-			}
-			
-			app.TestClass.prototype.toJSON = function() {return {t:this}};
-			
-			try { // reference to 'this'
-			
-				testObj.writeObject();
-			}
-			
-			catch(e) {
-			
-				expect(e).toBeDefined(); // browser errors vary, so just check for existence
-			}
-			
-			expect(true).toBe(true); // Jasmine.js may not see expect()s in trys
+			expect(true).toBe(true); // Jasmine.js may not see expect()s in trys and ifs
 		});
 		
 		
@@ -337,11 +357,11 @@ describe('Interface ISerializable', function(){
 			
 			testObj.name('superman');
 			
-			testObj.writeObject();
+			void testObj.writeObject();
 			
 			testObj.name('batman');
 			
-			testObj.readObject();
+			void testObj.readObject();
 			
 			expect(Object.keys(testObj).length).toEqual(len); // same number of keys...
 			
@@ -359,11 +379,15 @@ describe('Interface ISerializable', function(){
 		
 		it('rejects attempt to read object unless given permission to do so in prefs', function() {
 			
+			app.prefs.isLocalStorageAllowed(true);
+
+			void void testObj.writeObject();
+
 			app.prefs.isLocalStorageAllowed(false);
 			
 			try {
 				
-				testObj.readObject();
+				void testObj.readObject();
 			}
 			
 			catch(e) {
@@ -380,7 +404,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 			
-				testObj.readObject();
+				void testObj.readObject();
 			}
 			
 			catch(e) {
@@ -393,7 +417,7 @@ describe('Interface ISerializable', function(){
 		
 		it('rejects attempt to read an object not spefifying a valid class from local storage', function() {
 			
-			testObj.writeObject(); // write out to local storage, the read back in
+			void testObj.writeObject(); // write out to local storage, the read back in
 			
 			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testObj.className() + '.' + testObj.id()));
 			
@@ -406,7 +430,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 				
-				testObj.readObject();
+				void testObj.readObject();
 			}
 			
 			catch(e) {
@@ -420,7 +444,7 @@ describe('Interface ISerializable', function(){
 		
 		it('rejects attempt to read an object not spefifying a valid ID from local storage', function() {
 			
-			testObj.writeObject(); // write out to local storage and read back in
+			void testObj.writeObject(); // write out to local storage and read back in
 			
 			var obj = JSON.parse(localStorage.getItem(app.prefs.localStoragePrefix() + testObj.className() + '.' + testObj.id()));
 			
@@ -431,7 +455,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 				
-				testObj.readObject();
+				void testObj.readObject();
 			}
 			
 			catch(e) {
@@ -446,7 +470,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 				
-				testObj.readObject();
+				void testObj.readObject();
 			}
 			
 			catch(e) {
@@ -461,7 +485,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 				
-				testObj.readObject();
+				void testObj.readObject();
 			}
 			
 			catch(e) {
@@ -476,7 +500,7 @@ describe('Interface ISerializable', function(){
 			
 			try {
 				
-				testObj.readObject();
+				void testObj.readObject();
 			}
 			
 			catch(e) {
@@ -498,7 +522,7 @@ describe('Interface ISerializable', function(){
 		
 		it('can accurately remove an object from local storage', function() {
 			
-			testObj.writeObject();
+			void testObj.writeObject();
 			
 			var test2 = new app.TestClass(); test2.id(101);test2.writeObject();
 			
@@ -507,11 +531,11 @@ describe('Interface ISerializable', function(){
 			expect(localStorage.length).toBe(3);
 			
 			
-			test2.removeObject();
+			void test2.removeObject();
 			
 			try {
 			
-				test2.readObject();
+				void test2.readObject();
 			}
 			
 			catch(e) {
@@ -521,7 +545,7 @@ describe('Interface ISerializable', function(){
 					
 			expect(localStorage.length).toBe(2);
 		});
-		
+
 		
 		afterEach(function() {
 			
@@ -529,9 +553,7 @@ describe('Interface ISerializable', function(){
 			
 			localStorage.clear();
 			
-			app.prefs.isLocalStorageAllowed(oldPermission);
+			void app.prefs.isLocalStorageAllowed(oldPermission);
 		});
 	});
-	
-	
 });

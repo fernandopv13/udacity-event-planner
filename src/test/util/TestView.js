@@ -16,7 +16,7 @@ var app = app || {};
 			this.className = function() {return 'View'};
 		};
 
-		TestObserver.prototype.isInstanceOf = function(fn_View) {return fn_View === module.View;};
+		module.View.prototype.isInstanceOf = function(fn_View) {return fn_View === module.View;};
 
 		void app.IInterfaceable.mixInto(app.IObservable, module.View);
 

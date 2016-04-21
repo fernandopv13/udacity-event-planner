@@ -240,7 +240,7 @@ var app = app || {};
 
 		module.DateInputWidget.prototype.init = function(View_v, str_id, obj_options) {
 
-			console.log('DateInputWidget initializing ' + str_id);
+			//console.log('DateInputWidget initializing ' + str_id);
 
 			var element = $('#' + str_id), val;
 
