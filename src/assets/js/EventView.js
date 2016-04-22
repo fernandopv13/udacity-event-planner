@@ -815,14 +815,17 @@ var app = app || {};
 
 			$listElement.append(optionElement);
 		}
+
+		console.log($listElement);
 	};
+
 
 
 	/** Suggest hosts based on hosts of previous events in the account.
 	* 
 	* Suggest either Organizations or Persons, depending on the users choice of host type.
 	*
-	* Not supported by Safari at the time of this writing, but fails silently with no adverse effects.
+	* Not supported on iOS at the time of this writing, but fails silently with no adverse effects.
 	*/
 
 	module.EventView.prototype.suggestHosts = function() {
@@ -852,14 +855,14 @@ var app = app || {};
 
 	/** Suggests venues for event based on device's location (if available).
 	*
-	* Not supported by Safari at the time of this writing, but fails silently with no adverse effects.
+	* Not supported on iOS at the time of this writing, but fails silently with no adverse effects.
 	*
 	* @return {void} Directly updates location datalist in the DOM
-	*
-	* @todo Add address info to venue display
 	*/
 
 	module.EventView.prototype.suggestLocations = function() {
+
+		if (app.device().isiOS()) {return;} // prevent iOS user from being asked to accept location access
 
 		var account = module.controller.selectedAccount(),
 
@@ -885,13 +888,11 @@ var app = app || {};
 					}
 				)
 
-				// geolocation seems to require access via https
-
-				// don't currently have access to a secure server, so,
-
-				// mocked geolocation result during development
-
-				// this works, but isn't helpful for people in different locations
+				// Geolocation seems to require access via https.
+				// Don't currently have access to a secure server,
+				// so mocked geolocation result here during development.
+				// This works, but isn't helpful for people in other
+				// locations than mine, so disabling it in production.
 
 				/*
 				position = {
@@ -905,15 +906,16 @@ var app = app || {};
 					},
 
 					timestamp: new Date().valueOf()
-				}*/
+				}
+				*/
 			}
 		}
 
-		//console.log(position);
-
 		if (position) {// position is defined
 
-			new module.FourSquareSearch($(window).width() > 1024 || $(window).height() > 1024 ? 20 : 50).execute(function(venues) { // get venues (max on mobile, fewer in desktop)
+			//new module.FourSquareSearch($(window).width() > 1024 || $(window).height() > 1024 ? 20 : 50).execute(function(venues) { // get venues (max on mobile, fewer in desktop)
+
+			module.prefs.locationSearchProvider().execute(function(venues) { // get venues (max on mobile, fewer in desktop)
 
 				if (venues !== null) { // search succeeded
 

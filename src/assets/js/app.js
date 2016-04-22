@@ -34,7 +34,9 @@ var app = (function(self) {
 
 		isLocalStorageAllowed: false,	
 	
-		localStoragePrefix: 'dk.ulrikgade.udacity.srwebdev.meetup-app.'
+		localStoragePrefix: 'dk.ulrikgade.udacity.srwebdev.meetup-app.',
+
+		locationSearchProvider: new app.FourSquareSearch($(window).width() > 1024 || $(window).height() > 1024 ? 20 : 50) // get max venues on mobile, fewer on desktop (b/c poor scrolling)
 	},
 
 	_ready = false, // set true at end of app initialization
@@ -123,6 +125,19 @@ var app = (function(self) {
 				
 				throw new IllegalAccessError('Illegal parameter: Local storage prefix is read-only');
 			}
+		},
+
+		
+		/** Gets location search provider.
+		*
+		* Serves as a first step toward decoupling classes using the search provider from the exact provider used,
+		*
+		* though the full implementation of a LocationSearchProvider interface is currently left for later.
+		*/
+
+		locationSearchProvider: function() {
+
+			return _prefs.locationSearchProvider;
 		}
 	}
 		
