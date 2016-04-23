@@ -773,41 +773,11 @@ var app = app || {};
 	};
 
 
-	/** Suggest event types based on a hard-coded list
-	*
-	* Datalists not supported by Safari at the time of this writing, but fails silently with no adverse effects.
-	*/
+	/** Suggest event types based on a hard-coded list */
 
 	module.EventView.prototype.suggestEventTypes = function(nEvent) {
 
-		var input = nEvent.currentTarget;//, $listElement = $('#suggested-event-types'), optionElement;
-
-		//console.log($input.attr('id'));
-
-		//$listElement.empty();
-
-		/*
-		var types =
-		[
-			'Birthday party',
-
-			'Bachelor\'s party',
-
-			'Business meeting',
-
-			'Conference talk',
-
-			'Family gathering',
-
-			'Job interview',
-
-			'Religious festival',
-
-			'Romantic dinner',
-
-			'Wedding'
-		];
-		*/
+		var input = nEvent.currentTarget;
 
 		if ($(input).parent().find('datalist').length === 0 && $(input).parent().find('ul').length === 0) { // only generate list once
 
@@ -832,33 +802,33 @@ var app = app || {};
 				'Wedding'
 			]);
 		}
-
-
-		/*
-		for (var ix in types) {
-			
-			optionElement = document.createElement('option');
-
-			optionElement.value = types[ix];
-
-			optionElement.innerHTML = types[ix];
-
-			$listElement.append(optionElement);
-		}
-		*/
 	};
 
 
 
 	/** Suggest hosts based on hosts of previous events in the account.
 	* 
-	* Suggest either Organizations or Persons, depending on the users choice of host type.
-	*
-	* Not supported on iOS at the time of this writing, but fails silently with no adverse effects.
+	* Suggest either Organizations or Persons, depending on the users choice of host type. effects.
 	*/
 
-	module.EventView.prototype.suggestHosts = function() {
+	module.EventView.prototype.suggestHosts = function(nEvent) {
 
+		var input = nEvent.currentTarget;
+
+		var type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
+		
+		var hosts = type.registry.getObjectList(); // get list of hosts of selected type in account
+
+		var list = [];
+
+		for (var ix in hosts) { // generate list of host names (addAutocomplete() requires flat string array)
+
+			void list.push(hosts[ix].hostName());
+		}
+
+		module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
+
+		/*
 		var $listElement = $('#suggested-hosts'), optionElement;
 
 		$listElement.empty();
@@ -877,22 +847,23 @@ var app = app || {};
 
 			$listElement.append(optionElement);
 		}
+		*/
 	};
 
 
 
 	/** Suggests venues for event based on device's location (if available).
 	*
-	* Not supported on iOS at the time of this writing, but fails silently with no adverse effects.
-	*
 	* @return {void} Directly updates location datalist in the DOM
 	*/
 
-	module.EventView.prototype.suggestLocations = function() {
+	module.EventView.prototype.suggestLocations = function(nEvent) {
 
-		if (app.device().isiOS()) {return;} // prevent iOS user from being asked to accept location access
+		//if (app.device().isiOS()) {return;} // prevent iOS user from being asked to accept location access
 
 		var account = module.controller.selectedAccount(),
+
+		input = nEvent.currentTarget,
 
 		position = account.defaultLocation(); // set default
 
@@ -947,18 +918,24 @@ var app = app || {};
 
 				if (venues !== null) { // search succeeded
 
-					var $listElmnt = $('#suggested-locations'), optionElmnt;
+					var list = [];
 
-					$listElmnt.empty();
+					//var $listElmnt = $('#suggested-locations'), optionElmnt;
+
+					//$listElmnt.empty();
 
 					venues.forEach(function(venue) { // build suggest list
 
-						optionElmnt = document.createElement('option');
+						void list.push(venue.name + (venue.location.address ? ' (' + venue.location.address + ')' : ''));
 
-						optionElmnt.value = venue.name + (venue.location.address ? ' (' + venue.location.address + ')' : '');
+						//optionElmnt = document.createElement('option');
 
-						$listElmnt.append(optionElmnt);
-					});
+						//optionElmnt.value = venue.name + (venue.location.address ? ' (' + venue.location.address + ')' : '');
+
+						//$listElmnt.append(optionElmnt);
+					})
+
+					module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
 				}
 
 			}, position);	

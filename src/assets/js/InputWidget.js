@@ -59,13 +59,15 @@ var app = app || {};
 	*
 	* Uses HTML5 datalist when available, custom list design when not.
 	*
-	* Custom list draws heavily on example at https://jsfiddle.net/ypcrumble/ht379nq5/.
+	* Custom list gneration inspired by example at https://jsfiddle.net/ypcrumble/ht379nq5/.
 	*
 	* @param {HTMLInputELement} element The input element to be augmented with an autocomplete feature.
 	*
 	* @param {Array} options A flat array of strings to be used as autocomplete list options
 	*
 	* @return {void}
+	*
+	* @todo Invert logic to show all suggestions by default, then narrow down in response to user entries (tried blur on input, but prematurely closes list when making selection)
 	*/
 
 	module.InputWidget.prototype.addAutocomplete = function(HTMLInputElement, arr_options) {
@@ -78,6 +80,8 @@ var app = app || {};
 
 
 		if (Modernizr.input.list && !module.device().isiOS()) { // datalist available, so use it
+
+			void $input.parent().find('datalist').remove(); // remove existing lists, if any
 
 			listElement = document.createElement('datalist');
 
@@ -98,6 +102,8 @@ var app = app || {};
 		}
 
 		else { // create custom list
+
+			void $input.parent().find('ul').remove(); // remove existing lists, if any
 
 			listElement = document.createElement('ul');
 
@@ -139,7 +145,7 @@ var app = app || {};
 					
 					$(listElement).children('li').filter(function() { // match options to user's entry
 						
-						$(listElement).removeClass('hide');
+						//$(listElement).removeClass('hide');
 
 						return $(this).text().toLowerCase().indexOf($val.toLowerCase()) === 0;
 
