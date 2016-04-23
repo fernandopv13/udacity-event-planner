@@ -197,9 +197,9 @@ var app = app || {};
 
 						required: false,
 
-						datasource: Event_e.location() ? Event_e.location() : '',
+						datasource: Event_e.location() ? Event_e.location() : ''//,
 
-						datalist: 'suggested-locations'
+						//datalist: 'suggested-locations'
 					}
 				));
 
@@ -293,9 +293,9 @@ var app = app || {};
 
 						required: false,
 
-						datasource: Event_e.type() || '',
+						datasource: Event_e.type() || ''//,
 
-						datalist: 'suggested-event-types'
+						//datalist: 'suggested-event-types'
 					}
 				));
 
@@ -303,7 +303,7 @@ var app = app || {};
 				{
 					listeners: {
 
-						focus: this.suggestEvents // suggest event types
+						focus: this.suggestEventTypes // suggest event types
 					}
 				}
 							
@@ -395,9 +395,9 @@ var app = app || {};
 
 						required: false,
 
-						datasource: Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : '',
+						datasource: Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : ''//,
 
-						datalist: 'suggested-hosts'
+						//datalist: 'suggested-hosts'
 					}
 				));
 
@@ -778,12 +778,15 @@ var app = app || {};
 	* Datalists not supported by Safari at the time of this writing, but fails silently with no adverse effects.
 	*/
 
-	module.EventView.prototype.suggestEvents = function() {
+	module.EventView.prototype.suggestEventTypes = function(nEvent) {
 
-		var $listElement = $('#suggested-event-types'), optionElement;
+		var input = nEvent.currentTarget;//, $listElement = $('#suggested-event-types'), optionElement;
 
-		$listElement.empty();
+		//console.log($input.attr('id'));
 
+		//$listElement.empty();
+
+		/*
 		var types =
 		[
 			'Birthday party',
@@ -803,8 +806,35 @@ var app = app || {};
 			'Romantic dinner',
 
 			'Wedding'
-		]
+		];
+		*/
 
+		if ($(input).parent().find('datalist').length === 0 && $(input).parent().find('ul').length === 0) { // only generate list once
+
+			module.TextInputWidget.instance().addAutocomplete(input,
+			[
+				'Birthday party',
+
+				'Bachelor\'s party',
+
+				'Business meeting',
+
+				'Conference talk',
+
+				'Family gathering',
+
+				'Job interview',
+
+				'Religious festival',
+
+				'Romantic dinner',
+
+				'Wedding'
+			]);
+		}
+
+
+		/*
 		for (var ix in types) {
 			
 			optionElement = document.createElement('option');
@@ -815,8 +845,7 @@ var app = app || {};
 
 			$listElement.append(optionElement);
 		}
-
-		console.log($listElement);
+		*/
 	};
 
 
@@ -840,7 +869,6 @@ var app = app || {};
 
 		for (var ix in hosts) {
 
-			
 			optionElement = document.createElement('option');
 
 			optionElement.value = hosts[ix].hostName();

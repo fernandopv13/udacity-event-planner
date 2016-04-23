@@ -62,7 +62,7 @@ var app = app || {};
 
 		_defaultCapacity = 50,
 
-		_defaultLocation = 'San Francisco';
+		_defaultLocation;
 
 		
 		

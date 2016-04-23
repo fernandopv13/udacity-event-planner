@@ -55,6 +55,107 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
+	/** Adds autocomplete to input widget.
+	*
+	* Uses HTML5 datalist when available, custom list design when not.
+	*
+	* Custom list draws heavily on example at https://jsfiddle.net/ypcrumble/ht379nq5/.
+	*
+	* @param {HTMLInputELement} element The input element to be augmented with an autocomplete feature.
+	*
+	* @param {Array} options A flat array of strings to be used as autocomplete list options
+	*
+	* @return {void}
+	*/
+
+	module.InputWidget.prototype.addAutocomplete = function(HTMLInputElement, arr_options) {
+
+		var $input = $(HTMLInputElement),
+
+		id = $input.attr('id') + '-suggest',
+
+		listElement, option, spanElement;
+
+
+		if (Modernizr.input.list && !module.device().isiOS()) { // datalist available, so use it
+
+			listElement = document.createElement('datalist');
+
+			listElement.id = id
+
+			arr_options.forEach(function(value) {
+
+				option = document.createElement('option');
+
+				option.value = value;
+
+				option.innerHTML = value;
+
+				listElement.appendChild(option);
+			});
+
+			$input.attr('list', id);
+		}
+
+		else { // create custom list
+
+			listElement = document.createElement('ul');
+
+			listElement.id = id;
+
+			listElement.classList.add('autocomplete-content');
+
+			arr_options.forEach(function(value) {
+
+				option = document.createElement('li');
+
+				option.classList.add('autocomplete-option');
+
+				option.classList.add('hide');
+
+				spanElement = document.createElement('span');
+
+				spanElement.innerHTML = value;
+
+				option.appendChild(spanElement);
+
+				listElement.appendChild(option);
+
+				$(option).click(function() {
+
+					$input.val($(this).text().trim());
+				
+					$('.autocomplete-option').addClass('hide');
+				});
+			});
+
+			$input.on('keyup', function() { // show suggestions
+
+				var $val = $input.val().trim();
+				
+				if ($val !== '') {
+					
+					$(listElement).children('li').addClass('hide');
+					
+					$(listElement).children('li').filter(function() { // match options to user's entry
+						
+						$(listElement).removeClass('hide');
+
+						return $(this).text().toLowerCase().indexOf($val.toLowerCase()) === 0;
+
+					}).removeClass('hide');
+
+				} else {
+
+					$(listElement).children('li').addClass('hide');
+				}
+			});
+		}
+
+		$input.parent().append(listElement);
+	};
+
+
 	/** Initializes InputWidget upon rendering it into the HTML DOM.
 	*
 	* Currently does nothing but pass call up the inheritance chain to UIWidget.
@@ -65,6 +166,8 @@ var app = app || {};
 
 	module.InputWidget.prototype.init = function(View_v, str_id, obj_options) {
 		
+		var element = $('#' + str_id);
+
 		//console.log('entering InputWidget init(), passing call to UIWidget'); // debug
 
 		module.UIWidget.prototype.init(View_v, str_id, obj_options);

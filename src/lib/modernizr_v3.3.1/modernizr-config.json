@@ -2,6 +2,7 @@
   "minify": false,
   "options": [],
   "feature-detects": [
+    "test/input", //input attributes, specifically datalist
     "test/inputtypes",
     "test/forms/validation",
     "test/storage/localstorage",

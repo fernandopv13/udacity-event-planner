@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+	<head>
+		
+		<title>Materialize Autocomplete Test</title>
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="http://fonts.googleapis.com/icon?family=Roboto" rel="stylesheet">
+		
+		<link rel="stylesheet" href="assets/css/app.css" media="screen"/>
+
+		<link rel="stylesheet" href="materialize-autocomplete.css" media="screen"/>
+
+	</head>
+
+	<body>
+
+		<!--script type="text/javascript" src="test/util/firebug-lite/build/firebug-lite-debug.js"></script--><!-- Debug: shows JavaScript console on mobile devices -->
+		<script src="lib/jquery-2.2.2.min.js"></script>
+		<script src="lib/materialize.min.js"></script>
+		
+			
+		<div class="row">
+			<div class="input-field col s12">
+				<label class="active">State</label>
+				<input type="text" id="autocompleteState" class="autocomplete inputFields">
+			</div>
+		</div>
+
+		<script>
+			var stateData = [{
+				value: "Alabama"
+			}, {
+				value: "Alaska"
+			}, {
+				value: "Arizona"
+			}, {
+				value: "Arkansas"
+			}, {
+				value: "California"
+			}, {
+				value: "Colorado"
+			}, {
+				value: "Connecticut"
+			}, {
+				value: "District of Columbia"
+			}, {
+				value: "Delaware"
+			}, {
+				value: "Florida"
+			}, {
+				value: "Georgia"
+			}, {
+				value: "Hawaii"
+			}, {
+				value: "Idaho"
+			}, {
+				value: "Illinois"
+			}, {
+				value: "Indiana"
+			}, {
+				value: "Iowa"
+			}, {
+				value: "Kansas"
+			}, {
+				value: "Kentucky"
+			}, {
+				value: "Louisiana"
+			}, {
+				value: "Maine"
+			}, ];
+
+			$('#autocompleteState').data('array', stateData);
+		</script>
+		<script src="materialize-autocomplete.js"></script>
+	
+			
+		<script>
+			
+			window.onload = function() { // $(document).ready()) may fire too early, so going old school
+				
+				
+			};
+		</script>
+		<noscript>
+			
+			This app relies very heavily on scripted content running in the browser 'front-end'. You seem to have scripting disabled, or perhaps prefer not to enable it. Which is fine. But at this time the app is only available with scripting enabled. Sorry.
+
+		</noscript>
+
+
+	</body>
+
+</html>

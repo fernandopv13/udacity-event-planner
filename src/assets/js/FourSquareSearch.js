@@ -132,19 +132,6 @@ app.FourSquareSearch.prototype.getPlaceDetails = function(place, callback) {
 		
 		success: function(data) { // request successful, so proces response
 			
-			// Initialize custom methods
-			// Only detailed venues need this
-			
-			//app.FourSquareVenue.initPlace(data.response.venue);
-			
-			
-			// Copy over address from compact version of venue
-			
-			//data.response.venue.formatted_address = place.formatted_address;
-			
-			
-			//call caller callback(!), passing in detailed venue
-			
 			callback(data.response.venue);
 		},
 		
