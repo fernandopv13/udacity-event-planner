@@ -282,6 +282,80 @@ describe('Class EventView', function(){
 
 	// Test UI behaviours
 
+		it('provides event location suggestions (autocomplete)', function(done) {
+			
+			var el = $(testElement).find('#event-location');
+
+			var tagName = Modernizr.input.list && !testApp.device().isiOS() ? 'datalist' : 'ul'; // InputWidget uses ul when datalist isn't supported
+
+			void testApp.controller.selectedAccount().defaultLocation('Copenhagen'); // location suggestions may need to fall back on account default
+
+			$(el).focus(); $(el)[0].select(); // trigger generation of suggest list
+
+			setTimeout(function() {
+
+				$(el).focus(); $(el)[0].select();
+
+				expect($(el).parent().find(tagName).length).not.toBe(0); // suggest list should now exist
+
+				expect($(el).parent().find(tagName).children().length).not.toBe(0); // suggest list should be populated
+
+				done();
+
+			}, 2500); // allow some time for the location search API to respond
+
+			expect(true).toBe(true);
+		});
+
+
+		it('provides event type suggestions (autocomplete)', function() {
+			
+			var el = $(testElement).find('#event-type');
+
+			var tagName = Modernizr.input.list && !testApp.device().isiOS() ? 'datalist' : 'ul'; // InputWidget uses ul when datalist isn't supported
+
+			$(el).focus(); $(el)[0].select(); // trigger generation of suggest list
+
+			setTimeout(function() {
+
+				$(el).focus(); $(el)[0].select();
+
+				expect($(el).parent().find(tagName).length).not.toBe(0); // suggest list should now exist
+
+				expect($(el).parent().find(tagName).children().length).not.toBe(0); // suggest list should be populated
+
+				done();
+
+			}, 1000); // allow some time for the list generation to respond
+
+			expect(true).toBe(true);
+		});
+
+
+		it('provides host suggestions (autocomplete)', function() {
+			
+			var el = $(testElement).find('#event-host');
+
+			var tagName = Modernizr.input.list && !testApp.device().isiOS() ? 'datalist' : 'ul'; // InputWidget uses ul when datalist isn't supported
+
+			$(el).focus(); $(el)[0].select(); // trigger generation of suggest list
+
+			setTimeout(function() {
+
+				$(el).focus(); $(el)[0].select();
+
+				expect($(el).parent().find(tagName).length).not.toBe(0); // suggest list should now exist
+
+				expect($(el).parent().find(tagName).children().length).not.toBe(0); // suggest list should be populated
+
+				done();
+
+			}, 1000); // allow some time for the list generation to respond
+
+			expect(true).toBe(true);
+		});
+
+
 		it('will not submit the form if there are validation errors in any fields', function() {
 			
 			testWindow.$('#event-name').val('');

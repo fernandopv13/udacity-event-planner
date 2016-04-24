@@ -145,8 +145,6 @@ var app = app || {};
 					
 					$(listElement).children('li').filter(function() { // match options to user's entry
 						
-						//$(listElement).removeClass('hide');
-
 						return $(this).text().toLowerCase().indexOf($val.toLowerCase()) === 0;
 
 					}).removeClass('hide');

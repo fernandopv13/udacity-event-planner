@@ -7,7 +7,7 @@
 * Excludes some unnecessary materialize components to reduce file size,
 * and adds a few apparent bug fixes and other customizations.
 *
-* Author: Ulrik H. Gade, March 2016
+* Author: Ulrik H. Gade, April 2016
  */
 
 
@@ -50,9 +50,9 @@
 @import "../../lib/materialize_v0.97.5/sass/components/preloader";
 //@import "../../lib/materialize_v0.97.5/sass/components/slider";
 //@import "../../lib/materialize_v0.97.5/sass/components/carousel";
-@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.scss";
-@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.date.scss";
-@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.time.scss";
+//@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.scss";
+//@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.date.scss";
+//@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.time.scss";
 
 
 // Add app-specific customizations and bug fixes
@@ -63,7 +63,7 @@
 // Custom validation message for date- and timepickers:
 // stock message doesn't seem to work with the pickers
 
-/*DEPRECATED
+/*DEPRECATED: Keep in case we want to revert to the Materialize date/timepicker
 .custom-validate {
 	color: #F44336;
 	opacity: 1;
@@ -111,58 +111,6 @@
 	padding-right: 15px;
 }
 
-/* debug: trying to see if the 'fix' is only making it worse
-// Bugfix: prevent error messages from overlapping active labels on fields below.
-// Known remaining bug: problem persists when capacity field goes negative. This is rare enough to ignore for now.
-
-input:not([type]) + label::after,
-input[type=text] + label::after,
-input[type=password] + label::after,
-input[type=email] + label::after,
-input[type=url] + label::after,
-input[type=time] + label::after,
-input[type=date] + label::after,
-input[type=datetime-local] + label::after,
-input[type=tel] + label::after,
-input[type=number] + label::after,
-input[type=search] + label::after,
-textarea.materialize-textarea + label::after {
-	font-size: 0.8rem;
-}
-
-
-input:not([type]).invalid + label::after,
-input[type=text].invalid + label::after,
-input[type=password].invalid + label::after,
-input[type=email].invalid + label::after,
-input[type=url].invalid+ label::after,
-input[type=time].invalid + label::after,
-input[type=date].invalid + label::after,
-input[type=datetime-local].invalid + label::after,
-input[type=tel].invalid + label::after,
-input[type=number].invalid + label::after,
-input[type=search].invalid + label::after,
-textarea.materialize-textarea.invalid + label::after {
-	top: 45px;
-}
-
-
-input:not([type]):focus.invalid + label::after,
-input[type=text]:focus.invalid + label::after,
-input[type=password]:focus.invalid + label::after,
-input[type=email]:focus.invalid + label::after,
-input[type=url]:focus.invalid+ label::after,
-input[type=time]:focus.invalid + label::after,
-input[type=date]:focus.invalid + label::after,
-input[type=datetime-local].invalid + label::after,
-input[type=tel]:focus.invalid + label::after,
-input[type=number]:focus.invalid + label::after,
-input[type=search]:focus.invalid + label::after,
-textarea.materialize-textarea:focus.invalid + label::after {
-	top: 67px;
-}
-*/
-
 
 // Descriptions for input fields
 
@@ -181,7 +129,7 @@ textarea.materialize-textarea:focus.invalid + label::after {
 }
 
 
-// Hides elements with the class in a way compatiable with jQuery's show() function
+// Hides elements with the class in a way compatible with jQuery's show() function
 // Used to hide views and other items by default that are to only be progressively displayed when conditions are right.
 
 .hidden {
@@ -224,7 +172,7 @@ textarea.materialize-textarea:focus.invalid + label::after {
 // Limit timepicker height on devices with large physical screens (i.e. laptops and PCs):
 // The very long default lists are unwieldy to operate on non-mobile, non-touch screens
 
-/*DEPRECATED
+/*DEPRECATED: Keep in case we want to revert to the Materialize date/timepicker
 @media (min-width:1025px) {
 	.picker__list {
 		max-height: 500px;
@@ -311,4 +259,55 @@ td.today {
 	.glyphicon-chevron-up:hover,
 	.glyphicon-chevron-down:hover {
 		color:#000;
+}
+
+
+// Custom autocomplete list styling (used when datalist is not supported)
+// Draws heavily on example at https://jsfiddle.net/ypcrumble/ht379nq5/ 
+
+.autocomplete-content { /*UL holding list*/
+	position: absolute;
+	background: rgba(255,255,255,255);
+	margin-top: -.9rem;
+	width: 95%;
+	z-index: 1000;
+	box-shadow: 0 2px 5px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12);
+}
+
+.autocomplete-content li {
+	clear: both;
+	color: rgba(0, 0, 0, 0);
+	cursor: pointer;
+	line-height: 0;
+	width: 100%;
+	text-align: left;
+	text-transform: none;
+	padding: 10px;
+}
+
+.autocomplete-content li > span {
+	color: #26a69a;
+	font-size: .9rem;
+	padding: 1.2rem;
+	display: block;
+}
+
+.autocomplete-content li > span .highlight {
+	color: #000000;
+}
+
+.autocomplete-content li img {
+	height: 52px;
+	width: 52px;
+	padding: 5px;
+	margin: 0 15px;
+}
+
+.autocomplete-content li:hover {
+	background: #eeeeee;
+	cursor: pointer;
+}
+
+.autocomplete-content > li:hover {
+	background: #eeeeee;
 }
