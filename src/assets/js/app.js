@@ -218,6 +218,11 @@ var app = (function(self) {
 	
 	self.init = function() {
 		
+		if (self.controller.observers().length > 0) { //DEPRECATED: ignore repeated firing of window.onload caused by e.g. navigating between views
+
+			return;
+		}
+
 		// Hide progress indicator
 
 		$('#preloader').hide('fast');
@@ -246,8 +251,6 @@ var app = (function(self) {
 		//self.registry.onDeserialized();
 
 		self.controller.init();
-
-		_ready = true;
 	};
 
 	return self;

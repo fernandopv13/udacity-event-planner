@@ -96,10 +96,21 @@ describe('Class Device', function(){
 		});
 		
 
-
 		it('can tell if device runs iOS', function() {
 			
 			expect(testDevice.isiOS()).toBeDefined();
+		});
+
+
+		it('can tell if browser is Google Chrome', function() {
+			
+			expect(testDevice.isChrome()).toBeDefined();
+		});
+
+
+		it('can tell if browser is Safari', function() {
+			
+			expect(testDevice.isChrome()).toBeDefined();
 		});
 	});
 });

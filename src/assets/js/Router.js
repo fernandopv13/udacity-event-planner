@@ -41,43 +41,46 @@ var app = app || {};
 
 	module.Router.prototype.onPopState = function(PopStateEvent_e) {
 
-		if (PopStateEvent_e.state && PopStateEvent_e.state.className) { // we're still in the app
+		if (typeof PopStateEvent_e !== 'undefined' && PopStateEvent_e !== null ) { // ignore state if undefined/null (several causes, none of which important, e.g. closing popup)
 
-			var className = PopStateEvent_e.state.className,
+			if (PopStateEvent_e.state && PopStateEvent_e.state.className) { // we're still in the app
 
-			id = parseInt(PopStateEvent_e.state.id);
+				var className = PopStateEvent_e.state.className,
 
-			//console.log('popping ' + className); // debug
+				id = parseInt(PopStateEvent_e.state.id);
 
-			switch (className) { // use the MVC protocol to simulate an update from a view
+				console.log('popping ' + className); // debug
 
-				case 'EventListView':
+				switch (className) { // use the MVC protocol to simulate an update from a view
 
-					module.controller.update(new module.EventListView(), module.Account.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
+					case 'EventListView':
 
-					break;
+						module.controller.update(new module.EventListView(), module.Account.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
 
-				case 'EventView':
+						break;
 
-					module.controller.update(new module.EventView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
+					case 'EventView':
 
-					break;
+						module.controller.update(new module.EventView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
 
-				case 'GuestListView':
+						break;
 
-					module.controller.update(new module.GuestListView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
+					case 'GuestListView':
 
-					break;
+						module.controller.update(new module.GuestListView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
 
-				case 'PersonView':
+						break;
 
-					module.controller.update(new module.PersonView(), module.Person.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
+					case 'PersonView':
 
-					break;
+						module.controller.update(new module.PersonView(), module.Person.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
 
-				default: // includes AccountProfileView and AccountSettingsView
+						break;
 
-					module.controller.update(new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, module.View.UIAction.NAVIGATE);
+					default: // includes AccountProfileView and AccountSettingsView
+
+						module.controller.update(new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, module.View.UIAction.NAVIGATE);
+				}
 			}
 		}
 
@@ -93,15 +96,15 @@ var app = app || {};
 
 	module.Router.prototype.onViewChange = function(View_v) {
 
-		if (history.pushState) {
+		if (history.pushState) { // only works in browsers that support the History API
 
 			var className = View_v.className(), id = View_v.model() ? View_v.model().id() : null;
 
-			try {// needs to be run off a server to work
+			try {// needs to be run off a Web server to work
 
 				if (!history.state || history.state.className !== className) { // don't set state if navigating back
 
-					//console.log('pushing ' + className); // debug
+					console.log('pushing ' + className); // debug
 
 					history.pushState( // state object
 					{

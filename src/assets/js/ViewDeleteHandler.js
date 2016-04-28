@@ -72,6 +72,8 @@ var app = app || {};
 
 	module.ViewDeleteHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
+		console.log(arguments);
+
 		var ctrl = this.controller(), name;
 		
 		
@@ -139,11 +141,9 @@ var app = app || {};
 
 				this.notifyObservers(ctrl.selectedEvent(), ctrl.views().guestListView); // render/refresh guestListView in the background
 
-				window.history.back(); // navigate back to guest list
+				ctrl.recentDeleted = true;
 
-				//DEPRECATED: ctrl.currentView(ctrl.views().guestListView, ctrl.selectedEvent()); // show the view
-
-				//Materialize.toast('Guest was taken off the guest list', module.prefs.defaultToastDelay());
+				window.history.go(module.device().isiOS() && module.device().isSafari() ? -2 : -1); // navigate back to guest list (working around strange iOS Safari bug)
 
 				break;
 		}

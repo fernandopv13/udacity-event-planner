@@ -65,6 +65,22 @@ var app = app || {}; // Create a simple namespace for the app
 	*---------------------------------------------------------------------------------------*/
 
 	/**
+	* Gets whether browser is Safari or not
+	*
+	* @return {Boolean} true if browser is Safari, otherwise false
+	*/
+	
+	module.Device.prototype.isSafari = function() {
+
+		return /safari/i.test(navigator.userAgent.toLowerCase())
+
+				&& !/chrome/i.test(navigator.userAgent.toLowerCase()) // chrome also reports as Safari
+
+				&& !/crios/i.test(navigator.userAgent.toLowerCase());
+	}
+
+
+	/**
 	* Gets whether device runs Android or not
 	*
 	* @return {Boolean} true if device runs Android, otherwise false
@@ -75,6 +91,19 @@ var app = app || {}; // Create a simple namespace for the app
 		return /android/i.test(navigator.userAgent.toLowerCase());
 	}
 
+
+	/**
+	* Gets whether browser is Google Chrome or not
+	*
+	* @return {Boolean} true if browser is Safari, otherwise false
+	*/
+	
+	module.Device.prototype.isChrome = function() {
+
+		return /chrome/i.test(navigator.userAgent.toLowerCase())
+
+				|| /crios/i.test(navigator.userAgent.toLowerCase()); // on iOS, Chrome identifies as 'CriOS'
+	}
 
 	/**
 	* Gets whether device runs iOS (i.e. is an Apple iPhone or iPad) or not

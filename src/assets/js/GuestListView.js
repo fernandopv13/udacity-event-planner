@@ -230,12 +230,40 @@ var app = app || {};
 						mousedown:
 
 							function(nEvent) {
+								
+								 // Hack: work around iOS history weirdness causing back() to reload app
+								 // Spent ages trying to analyze the cause, to no avail, so settling for what works.
+								 // Too late to capture problem in Router.onPopState, so doing it here.
+								
+								if (module.device().isiOS() && module.controller.recentDeleted) {
 
-								console.log(window.history.state);
+									history.pushState( // pushing a redundant state object seems to do the trick
+									{
+										className: 'EventView',
 
-								//window.history.back();
+										id: Event_e.id()
+									},
 
-								//$('#secondary-nav').off();
+										'', // title
+
+										'#!' // URL
+
+										+ 'Event'
+
+										+ '?id=' + Event_e.id()
+									);
+
+									module.controller.recentDeleted = false;
+
+									window.history.go(module.device().isChrome() ? -4: -2); // skip back to EventView (Chroms and Safari have different behaviours)
+								}
+
+								else { // normal operation in compliant browsers
+
+									window.history.back();
+
+									//$('#secondary-nav').off();
+								}
 
 							}.bind(this)
 					}

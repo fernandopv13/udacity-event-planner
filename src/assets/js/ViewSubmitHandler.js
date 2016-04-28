@@ -72,9 +72,9 @@ var app = app || {};
 
 		var ctrl = this.controller(), clone = ctrl.cloneModel(), source = ctrl.sourceModel(), id = View_v.model().id();
 
-		if (clone !== null && source !== null) { console.log('transaction in progress');
+		if (clone !== null && source !== null) { //console.log('transaction in progress');
 
-			if (Model_m !== null && Model_m.constructor === clone.constructor && clone.constructor === source.constructor) { console.log('Model, source and clone are of the same type');
+			if (Model_m !== null && Model_m.constructor === clone.constructor && clone.constructor === source.constructor) { //console.log('Model, source and clone are of the same type');
 
 				// this submission is the conclusion of the transaction, so save changes to source
 

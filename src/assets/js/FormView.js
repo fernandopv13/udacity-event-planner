@@ -127,16 +127,18 @@ var app = app || {};
 				$('#confirm-delete-modal').openModal();
 			});
 
-			$('#confirm-delete-modal-cancel').mousedown(function(nEvent) { // model cancel behaviour
+			/*DEPRECATED: Handled automatically by materialize,js
+			$('#confirm-delete-modal-cancel').mousedown(function(nEvent) { // modal cancel behaviour
 
 				$('#confirm-delete-modal').closeModal();
 
 			}.bind(this));
+			*/
 
 
-			$('#confirm-delete-modal-ok').mousedown(function(nEvent) { // model OK behaviour
+			$('#confirm-delete-modal-ok').mousedown(function(nEvent) { // modal OK behaviour
 
-				$('#confirm-delete-modal').closeModal();
+				//$('#confirm-delete-modal').closeModal(); //DEPRECATED: Handled automatically by materialize,js
 
 				this.delete();
 
