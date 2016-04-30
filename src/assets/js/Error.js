@@ -1,6 +1,6 @@
 /* A subset of Java inspired extentions to the native JS Error class */
 
-/** Java-like error for when trying to invoke an abstract method (including interface methos signatures) */
+/** Java-like error for when trying to invoke an abstract method (including interface method signatures) */
 
 function AbstractMethodError(message) {
 	

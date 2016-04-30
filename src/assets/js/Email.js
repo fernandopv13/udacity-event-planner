@@ -10,7 +10,7 @@ var app = app || {}; // create a simple namespace for the app
 
 	/** @classdesc Describes an email address.
 	*
-	* See 'polymorphic', inner helper 'constructors' for supported signatures.
+	* See polymorphic, inner helper 'constructors' for supported signatures.
 	*
 	* @constructor
 	*
@@ -21,6 +21,8 @@ var app = app || {}; // create a simple namespace for the app
 	* @throws Same errors as address accessor if passing in invalid data.
 	*
 	* @author Ulrik H. Gade, January 2016
+	*
+	* @todo Move as many non-accessor methods as possible from the object itself to the function prototype.
 	*/
 
 	module.Email = function(str_address) {
@@ -187,7 +189,7 @@ var app = app || {}; // create a simple namespace for the app
 		* Other initialization
 		*---------------------------------------------------------------------------------------*/
 		
-			// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
+			// Define inner functions that handle polymorphic constructor response to parameter parsing
 
 			/** Constructor signature 1: Single param that is an integer => deserialize from local storage
 			*

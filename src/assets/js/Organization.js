@@ -10,7 +10,7 @@ var app = app || {}; // create a simple namespace for the app
 
 	/** @classdesc Describes an organization that may host an event.
 	*
-	* See 'polymorphic', inner helper 'constructors' for supported signatures.
+	* See polymorphic, inner helper 'constructors' for supported signatures.
 	*
 	* @constructor
 	*
@@ -21,6 +21,8 @@ var app = app || {}; // create a simple namespace for the app
 	* @return {Organization} An organization
 	*
 	* @author Ulrik H. Gade, January 2016
+	*
+	* @todo Move as many non-accessor methods as possible from the object itself to the function prototype.
 	*/
 
 	module.Organization = function(str_name) {
@@ -134,7 +136,7 @@ var app = app || {}; // create a simple namespace for the app
 		
 		
 		/*----------------------------------------------------------------------------------------
-		* Other initialization (Parameter parsing/constructor 'polymorphism')
+		* Other initialization (Parameter parsing/constructor polymorphism)
 		*---------------------------------------------------------------------------------------*/
 		
 		// Make sure isInstanceOf() will return true for IHost
@@ -142,7 +144,7 @@ var app = app || {}; // create a simple namespace for the app
 		this.parentList().push(module.IHost);
 		
 
-		// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
+		// Define inner functions that handle polymorphic constructor response to parameter parsing
 
 		/** Constructor signature 1: Single param that is an integer => deserialize from local storage
 		*

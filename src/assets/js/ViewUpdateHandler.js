@@ -10,7 +10,7 @@ var app = app || {};
 
 	/** @classdesc Abstract base class for handlers of updates from Views to a Controller, in the mold of the Strategy pattern.
 	*
-	* Relies on the Observer pattern for handling inter-object messaging among the collaborators.
+	* Relies on the Observer pattern for handling basic inter-object messaging among the collaborators.
 	*
 	* @abstract
 	*

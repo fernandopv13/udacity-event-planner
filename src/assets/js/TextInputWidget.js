@@ -212,7 +212,7 @@ var app = app || {};
 		//module.TextInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
-		/** Event handler for interactive validation text input field.
+		/** Event handler for interactive validation of text input field.
 		*
 		* Fallback for browsers that don't support the HTML5 form validation API. 
 		*

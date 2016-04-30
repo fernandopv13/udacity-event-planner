@@ -11,7 +11,7 @@ var app = app || {}; // create a simple namespace for the app
 
 	/** @classdesc Describes a person who may host and/or participate in an event.
 	*
-	* See 'polymorphic', inner helper 'constructors' for supported signatures.
+	* See polymorphic, inner helper 'constructors' for supported signatures.
 	*
 	* @constructor
 	*
@@ -24,6 +24,8 @@ var app = app || {}; // create a simple namespace for the app
 	* @author Ulrik H. Gade, December 2015/January 2016
 	*
 	* @throws Same errors as parameter accessors if passing in invalid data.
+	*
+	* @todo Move as many non-accessor methods as possible from the object itself to the function prototype.
 	*/
 
 	module.Person = function(str_name, Organization_employer, str_jobTitle, Email_email, Date_birthday, str_imgUrl) {
@@ -313,7 +315,7 @@ var app = app || {}; // create a simple namespace for the app
 		
 		
 		/*----------------------------------------------------------------------------------------
-		* Other initialization (parameter parsing/constructor 'polymorphism')
+		* Other initialization (parameter parsing/constructor polymorphism)
 		*---------------------------------------------------------------------------------------*/
 		
 		// Make sure isInstanceOf() will return true IHost
@@ -321,7 +323,7 @@ var app = app || {}; // create a simple namespace for the app
 		this.parentList().push(module.IHost);
 		
 
-		// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
+		// Define inner functions that handle polymorphic constructor response to parameter parsing
 
 		/** Constructor signature 1: Single param that is an integer => deserialize from local storage
 		*
@@ -375,7 +377,8 @@ var app = app || {}; // create a simple namespace for the app
 		}
 
 		
-		// Parameter parsing to invoke 'polymorphic' constructor response
+		// Parameter parsing to invoke polymorphic constructor response
+
 		// Single param that is integer => deserialize from local storage
 
 		if (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) {
@@ -392,21 +395,7 @@ var app = app || {}; // create a simple namespace for the app
 
 		else {
 		
-			Person__.call(this, str_name, Organization_employer, str_jobTitle, Email_email, Date_birthday, str_imgUrl)
-
-			// Call accessors for any supplied params (accessors provide simple validation and error handling)
-			
-			/*
-			if (str_name) {this.name(str_name);}
-					
-			if (Organization_employer) {this.employer(Organization_employer);}
-			
-			if (str_jobTitle) {this.jobTitle(str_jobTitle);}
-			
-			if (Email_email) {this.email(Email_email);}
-
-			if (Date_birthday) {this.birthday(Date_birthday);}
-			*/
+			Person__.call(this, str_name, Organization_employer, str_jobTitle, Email_email, Date_birthday, str_imgUrl);
 		}
 		
 		this.constructor.registry.add(this); // Will only happend if param passing passes w/o error

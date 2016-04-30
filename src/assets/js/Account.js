@@ -10,7 +10,7 @@ var app = app || {};
 
 	/** @classdesc Represents a user account in the app.
 	*
-	* See 'polymorphic', inner helper 'constructors' for supported signatures.
+	* See polymorphic, inner helper 'constructors' for supported signatures.
 	*
 	* @constructor
 	*
@@ -22,6 +22,7 @@ var app = app || {};
 	*
 	* @author Ulrik H. Gade, January 2016
 	*
+	* @todo Move as many non-accessor methods as possible from the object itself to the function prototype.
 	*/
 
 	module.Account = function(Email_e, Password_p, Person_accountHolder) {
@@ -487,7 +488,7 @@ var app = app || {};
 		* Other initialization
 		*---------------------------------------------------------------------------------------*/
 		
-			// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
+			// Define inner functions that handle polymorphic constructor response to parameter parsing
 
 			/** Constructor signature 1: Single param that is an integer => deserialize from local storage
 			*

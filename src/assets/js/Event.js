@@ -10,7 +10,7 @@ var app = app || {}; // create a simple namespace for the app
 
 	/** @classdesc Represents an event in the app.
 	*
-	* See 'polymorphic', inner helper 'constructors' for supported signatures.
+	* See polymorphic, inner helper 'constructors' for supported signatures.
 	*
 	* @constructor
 	*
@@ -19,6 +19,8 @@ var app = app || {}; // create a simple namespace for the app
 	* @return {Event} An Event instance
 	*
 	* @author Ulrik H. Gade, April 2016
+	*
+	* @todo Move as many non-accessor methods as possible from the object itself to the function prototype.
 	*/
 
 	module.Event = function(str_name, str_type, date_start, date_end, str_location, str_description, ihost_host, int_capacity) {
@@ -349,7 +351,7 @@ var app = app || {}; // create a simple namespace for the app
 			/** Adds a person to the event's guest list
 			*
 			* @return {Person} The person just added. Otherwise throws error.
-			 */
+			*/
 
 			this.addGuest = function (Person_g) {
 				
@@ -470,7 +472,7 @@ var app = app || {}; // create a simple namespace for the app
 			};
 
 
-			/** Converts event to JSON object
+			/** Converts event to JSON object.
 			*
 			* (Method realization required by ISerializable.)
 			*
@@ -520,7 +522,7 @@ var app = app || {}; // create a simple namespace for the app
 		* Other initialization
 		*---------------------------------------------------------------------------------------*/
 			
-			// Define inner functions that handle 'polymorphic' constructor response to parameter parsing
+			// Define inner functions that handle polymorphic constructor response to parameter parsing
 
 			/** Constructor signature 1: Single param that is an integer => deserialize from local storage
 			*
@@ -582,7 +584,7 @@ var app = app || {}; // create a simple namespace for the app
 			}
 
 			
-			// Parameter parsing to invoke 'polymorphic' constructor response
+			// Parameter parsing to invoke polymorphic constructor response
 
 			// Single param that is integer => deserialize from local storage
 
@@ -622,6 +624,12 @@ var app = app || {}; // create a simple namespace for the app
 		/** Creates a shallow clone of the Event,
 		*
 		* i.e. complex object attributes are not cloned but copied by reference (e.g. host).
+		*
+		* Used when entering a transactional editing flow, i.e. editing the guest list for an event
+		*
+		* but wishing to retain the option the discard such edits.
+		*
+		* See UML sequence diagram for a detailed analysis of the messaging flow in a transaction.
 		*
 		* @return {Event} A clone of the Event
 		*/

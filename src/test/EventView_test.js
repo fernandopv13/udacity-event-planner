@@ -302,13 +302,13 @@ describe('Class EventView', function(){
 
 				done();
 
-			}, 2500); // allow some time for the location search API to respond
+			}, 3000); // allow some time for the location search API to respond
 
 			expect(true).toBe(true);
 		});
 
 
-		it('provides event type suggestions (autocomplete)', function() {
+		it('provides event type suggestions (autocomplete)', function(done) {
 			
 			var el = $(testElement).find('#event-type');
 
@@ -332,7 +332,7 @@ describe('Class EventView', function(){
 		});
 
 
-		it('provides host suggestions (autocomplete)', function() {
+		it('provides host suggestions (autocomplete)', function(done) {
 			
 			var el = $(testElement).find('#event-host');
 
