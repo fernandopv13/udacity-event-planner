@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Creates cancel buttons. Use as singleton to conserve memory resources.
+	/** @classdesc Creates Materialize-styled cancel button. Use as singleton to conserve memory resources.
 	*
 	* @constructor
 	*

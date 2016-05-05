@@ -106,75 +106,77 @@
 			
 		<!-- JavaScript app source files (will be concatenated and minified to single 'app.js' in build process) -->
 			<!-- @gulp-app-script-tags-begin -->
-			<script src="assets/js/Accessor.js"></script>
-			<script src="assets/js/Device.js"></script>
-			<script src="assets/js/Error.js"></script>
-			<script src="assets/js/Materialize-forms-override.js"></script>
+			<script src="assets/js/util/Accessor.js"></script>
+			<script src="assets/js/util/Device.js"></script>
+			<script src="assets/js/util/Error.js"></script>
+			<script src="assets/js/util/Materialize-forms-override.js"></script>
 			
-			<script src="assets/js/IHost.js"></script>
-			<script src="assets/js/IInterfaceable.js"></script>
-			<script src="assets/js/IObserver.js"></script>
-			<script src="assets/js/IObservable.js"></script>
-			<script src="assets/js/ISerializable.js"></script>
+			<script src="assets/js/model/IHost.js"></script>
+			<script src="assets/js/util/IInterfaceable.js"></script>
+			<script src="assets/js/observer/IObserver.js"></script>
+			<script src="assets/js/observer/IObservable.js"></script>
+			<script src="assets/js/model/ISerializable.js"></script>
 
-			<script src="assets/js/Product.js"></script>
-			<script src="assets/js/Factory.js"></script>
-			<script src="assets/js/UIWidget.js"></script>
-			<script src="assets/js/InputWidget.js"></script>
-			<script src="assets/js/UIWidgetFactory.js"></script>
-			<script src="assets/js/HTMLElement.js"></script>			
-			<script src="assets/js/DateInputWidget.js"></script>
-			<script src="assets/js/EmailInputWidget.js"></script>
-			<script src="assets/js/NumberInputWidget.js"></script>
-			<script src="assets/js/PasswordInputWidget.js"></script>
-			<script src="assets/js/PasswordConfirmationInputWidget.js"></script>
-			<script src="assets/js/SwitchInputWidget.js"></script>
-			<script src="assets/js/TextInputWidget.js"></script>
-			<script src="assets/js/InputDescriptionWidget.js"></script>
-			<script src="assets/js/ButtonWidget.js"></script>
-			<script src="assets/js/NormalButtonWidget.js"></script>
-			<script src="assets/js/SubmitButtonWidget.js"></script>
-			<script src="assets/js/CancelButtonWidget.js"></script>
-			<script src="assets/js/FloatingActionButtonWidget.js"></script>
-			<script src="assets/js/FormWidget.js"></script>
-			<script src="assets/js/NavigationWidget.js"></script>
-
+			<script src="assets/js/factory/Product.js"></script>
+			<script src="assets/js/factory/Factory.js"></script>
+			<script src="assets/js/uiwidget/UIWidget.js"></script>
+			<script src="assets/js/uiwidget/InputWidget.js"></script>
+			<script src="assets/js/uiwidget/UIWidgetFactory.js"></script>
+			<script src="assets/js/uiwidget/HTMLElement.js"></script>			
+			<script src="assets/js/uiwidget/DateInputWidget.js"></script>
+			<script src="assets/js/uiwidget/EmailInputWidget.js"></script>
+			<script src="assets/js/uiwidget/NumberInputWidget.js"></script>
+			<script src="assets/js/uiwidget/PasswordInputWidget.js"></script>
+			<script src="assets/js/uiwidget/PasswordConfirmationInputWidget.js"></script>
+			<script src="assets/js/uiwidget/SwitchInputWidget.js"></script>
+			<script src="assets/js/uiwidget/TextInputWidget.js"></script>
+			<script src="assets/js/uiwidget/InputDescriptionWidget.js"></script>
+			<script src="assets/js/uiwidget/ButtonWidget.js"></script>
+			<script src="assets/js/uiwidget/NormalButtonWidget.js"></script>
+			<script src="assets/js/uiwidget/SubmitButtonWidget.js"></script>
+			<script src="assets/js/uiwidget/CancelButtonWidget.js"></script>
+			<script src="assets/js/uiwidget/FloatingActionButtonWidget.js"></script>
+			<script src="assets/js/uiwidget/FormWidget.js"></script>
+			<script src="assets/js/uiwidget/NavigationWidget.js"></script>
 			
-			<script src="assets/js/Model.js"></script>
-			<script src="assets/js/View.js"></script>
-			<script src="assets/js/FrontPageView.js"></script>
-			<script src="assets/js/FormView.js"></script>
-			<script src="assets/js/ListView.js"></script>
-			<script src="assets/js/SignUpView.js"></script>
-			<script src="assets/js/SignInView.js"></script>
-			<script src="assets/js/ObjectRegistry.js"></script>
-			<script src="assets/js/Email.js"></script>
-			<script src="assets/js/Password.js"></script>
-			<script src="assets/js/Person.js"></script>
-			<script src="assets/js/PersonView.js"></script>
-			<script src="assets/js/GuestListView.js"></script>
-			<script src="assets/js/Organization.js"></script>
-			<script src="assets/js/Event.js"></script>
-			<script src="assets/js/EventView.js"></script>
-			<script src="assets/js/EventListView.js"></script>
-			<script src="assets/js/Account.js"></script>
-			<script src="assets/js/AccountSettingsView.js"></script>
-			<script src="assets/js/AccountProfileView.js"></script>
-			<script src="assets/js/FourSquareSearch.js"></script>
-			<script src="assets/js/Controller.js"></script>
-			<script src="assets/js/Router.js"></script>
-			<script src="assets/js/ViewUpdateHandler.js"></script>
-			<script src="assets/js/ViewCancelHandler.js"></script>
-			<script src="assets/js/ViewCreateHandler.js"></script>
-			<script src="assets/js/ViewDeleteHandler.js"></script>
-			<script src="assets/js/ViewNavigateHandler.js"></script>
-			<script src="assets/js/ViewSelectHandler.js"></script>
-			<script src="assets/js/ViewSignInHandler.js"></script>
-			<script src="assets/js/ViewSubmitHandler.js"></script>
-			<script src="assets/js/ViewSubViewHandler.js"></script>
+			<script src="assets/js/model/Model.js"></script>
+			<script src="assets/js/model/ObjectRegistry.js"></script>
+			<script src="assets/js/model/Email.js"></script>
+			<script src="assets/js/model/Password.js"></script>
+			<script src="assets/js/model/Person.js"></script>
+			<script src="assets/js/model/Organization.js"></script>
+			<script src="assets/js/model/Event.js"></script>
+			
+			<script src="assets/js/view/View.js"></script>
+			<script src="assets/js/view/FrontPageView.js"></script>
+			<script src="assets/js/view/FormView.js"></script>
+			<script src="assets/js/view/ListView.js"></script>
+			<script src="assets/js/view/SignUpView.js"></script>
+			<script src="assets/js/view/SignInView.js"></script>
+			<script src="assets/js/view/PersonView.js"></script>
+			<script src="assets/js/view/GuestListView.js"></script>
+			<script src="assets/js/view/EventView.js"></script>
+			<script src="assets/js/view/EventListView.js"></script>
+			<script src="assets/js/model/Account.js"></script>
+			<script src="assets/js/view/AccountSettingsView.js"></script>
+			<script src="assets/js/view/AccountProfileView.js"></script>
+			
+			<script src="assets/js/util/FourSquareSearch.js"></script>
+			
+			<script src="assets/js/controller/Controller.js"></script>
+			<script src="assets/js/controller/Router.js"></script>
+			<script src="assets/js/controller/ViewUpdateHandler.js"></script>
+			<script src="assets/js/controller/ViewCancelHandler.js"></script>
+			<script src="assets/js/controller/ViewCreateHandler.js"></script>
+			<script src="assets/js/controller/ViewDeleteHandler.js"></script>
+			<script src="assets/js/controller/ViewNavigateHandler.js"></script>
+			<script src="assets/js/controller/ViewSelectHandler.js"></script>
+			<script src="assets/js/controller/ViewSignInHandler.js"></script>
+			<script src="assets/js/controller/ViewSubmitHandler.js"></script>
+			<script src="assets/js/controller/ViewSubViewHandler.js"></script>
 			
 			<script src="assets/js/app.js"></script>
-			<script src="assets/js/demodata.js"></script>
+			<script src="assets/js/util/demodata.js"></script>
 			<!-- @gulp-app-script-tags-end -->
 
 		<script>

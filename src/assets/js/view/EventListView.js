@@ -201,32 +201,6 @@ var app = app || {};
 
 				}.bind(this)
 			));
-
-			/*
-			container = this.containerElement(this.createWidget(
-
-				'HTMLElement', // outer div
-
-				{
-					element: 'div',			
-					
-					classList: ['row']
-				}
-			));
-
-			container.appendChild(this.createWidget(
-
-				'HTMLElement', // inner div
-				
-				{
-					element: 'div',			
-					
-					classList: ['col', 's12'],
-
-					innerHTML: 'No events have been added to this account yet.'
-				}
-			));
-			*/
 		}
 
 			

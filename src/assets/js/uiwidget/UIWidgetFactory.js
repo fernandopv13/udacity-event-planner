@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Generic factory for creating generic UI widgets.
+	/** @classdesc Generic factory for creating UI widgets.
 	*
 	* @constructor
 	*

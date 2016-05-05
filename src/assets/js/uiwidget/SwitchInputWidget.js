@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Creates, initializes and validates HTML password confirmation input fields. Use as singleton to conserve memory resources.
+	/** @classdesc Creates, initializes and validates Materialize-styled HTML password confirmation input fields. Use as singleton to conserve memory resources.
 	*
 	* @constructor
 	*

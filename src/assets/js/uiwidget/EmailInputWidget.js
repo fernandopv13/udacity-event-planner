@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class TextInputWidget extends InputWidget
+* public class EmailInputWidget extends InputWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Creates, initializes and validates HTML password confirmation input fields. Use as singleton to conserve memory resources.
+	/** @classdesc Creates, initializes and validates Materialize-styled HTML email input fields. Use as singleton to conserve memory resources.
 	*
 	* @constructor
 	*
@@ -17,10 +17,10 @@ var app = app || {};
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
-	* @return {TextInputWidget} Not supposed to be instantiated, except when creating singleton
+	* @return {EmailInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
 
-	module.TextInputWidget = function() {
+	module.EmailInputWidget = function() {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -28,7 +28,7 @@ var app = app || {};
 		
 			// Set temporary literals for use by parent class constructor
 
-			this.type = this.type || 'TextInputWidget';
+			this.type = this.type || 'EmailInputWidget';
 
 			
 			// Initialize instance members inherited from parent class
@@ -40,9 +40,9 @@ var app = app || {};
 	* Inherit from UIWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.TextInputWidget.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
+		module.EmailInputWidget.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
 
-		module.TextInputWidget.prototype.constructor = module.TextInputWidget // Reset constructor property
+		module.EmailInputWidget.prototype.constructor = module.EmailInputWidget // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -51,42 +51,40 @@ var app = app || {};
 
 		// Register with factory
 
-		module.UIWidgetFactory.instance().registerProduct(module.TextInputWidget);
+		module.UIWidgetFactory.instance().registerProduct(module.EmailInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-		/** Factory method for creating password fields for forms
+		/** Factory method for creating email fields for forms
 		
-		* @param {Object} JSON object literal containing specs of input to be created. See comments in code for an example.
+		* @param {Object} JSON object literal containing specs of date input to be created. Se comments in code for an example.
 		*
 		* @return {HTMLDivElement} The requested element
 		*
 		* @throws {ReferenceError} If no options are specified
 		*
-		* @throws {IllegalArgumentError} If datasource is not a number
-		*
-		* @todo Add support for non-HTML5 compliant browsers
+		* @throws {IllegalArgumentError} If datasource is not an instance of Email
 		*/
 
-		module.TextInputWidget.prototype.createProduct = function(obj_options) {
+		module.EmailInputWidget.prototype.createProduct = function(obj_options) {
 
 			/* Sample JSON specification object using all default features:
 
 			{
 				width: 's12',
 
-				id: 'text-test',
+				id: 'test-email',
 
-				label: 'Test Text',
+				label: 'Test Email',
 
 				required: true,
 
-				datasource: 'Some text', // String
+				datasource: new app.Email('test@server.domain'),
 
-				datalist: 'text-test-list', // id of datalist (optional)
+				errormessage: 'Please enter email',
 
 				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to DateInputWidget.prototype.validate)
 			}
@@ -97,14 +95,16 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
-			if (typeof obj_options.datasource !== 'undefined' && obj_options.datasource !== null && typeof obj_options.datasource !== 'string') {
+			if (typeof obj_options.datasource !== 'undefined' && obj_options.datasource !== null && obj_options.datasource.constructor !== module.Email) {
 
-				throw new IllegalArgumentError('Data source must be a String, or null');
+				throw new IllegalArgumentError('Data source must be instance of Email, or null');
 			}
-			
-			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;
 
+			var options = obj_options;
 
+			var createElement = module.HTMLElement.instance().createProduct;
+
+						
 			var outerDiv = createElement( // outer div
 			{
 				element: 'div',
@@ -126,11 +126,11 @@ var app = app || {};
 
 			var attributes = 
 			{
-				type: 'text',
+				type: 'email',
 				
 				id: options.id,
 				
-				value: options.datasource ? options.datasource : '',
+				value: options.datasource && options.datasource.address() ? options.datasource.address() : '',
 
 				'aria-labelledby': options.id + '-label',
 
@@ -139,26 +139,20 @@ var app = app || {};
 
 			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
 
-			if (options.datalist) {attributes.list = options.datalist;}
-
-			var classList = [];
-
-			if (options.required) {classList.push('validate');}
-
 			innerDiv.appendChild(createElement( // input
 			{
 				element: 'input',			
 				
 				attributes: attributes,
-				
-				classList: classList,
 
 				dataset:
 				{
-					customValidator: options.validator ? options.validator : (Modernizr && Modernizr.formvalidation ? '' : 'TextInputWidget.prototype.validate'),
+					customValidator: options.validator ? options.validator : 'EmailInputWidget.prototype.validate',
 
-					widgetclass: 'TextInputWidget'
-				}
+					widgetclass: 'EmailInputWidget'
+				},
+				
+				classList: ['validate']
 			}));
 			
 			
@@ -168,9 +162,9 @@ var app = app || {};
 				
 				attributes: {for: options.id, id: options.id + '-label'},
 				
-				classList: options.datasource ? ['form-label', 'active'] : ['form-label'],
+				classList: options.datasource && options.datasource.address() ? ['form-label', 'active'] : ['form-label'],
 				
-				dataset: {error: 'Please enter ' + options.label.toLowerCase()},
+				dataset: {error: 'Please enter email in format address@server.domain', success: 'Email is valid'},
 				
 				innerHTML: options.label
 			});
@@ -190,51 +184,49 @@ var app = app || {};
 
 			innerDiv.appendChild(labelElement);
 
-			if (options.datalist) { // datalist element
-
-				innerDiv.appendChild(createElement(
-				{
-					element: 'datalist',			
-					
-					attributes: {id: options.datalist}
-				}));
-			}
-
 			
-			return outerDiv;			
+			return outerDiv;
 		};
-		
+
 		
 		/*DEPRECATED: Handled by InputWidget
+		 Initializes email field (required by UIWidget) */
 
-		Initializes password field (required by UIWidget) */
-
-		//module.TextInputWidget.prototype.init = function(HTMLInputElement_e) {};
+		//module.EmailInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
-		/** Event handler for interactive validation of text input field.
-		*
-		* Fallback for browsers that don't support the HTML5 form validation API. 
+		/** Event handler for interactive validation of email field
 		*
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/
 
-		module.TextInputWidget.prototype.validate = function(HTMLInputElement_e) {
+		module.EmailInputWidget.prototype.validate = function(HTMLInputElement_e) {
 
-			var value = $(HTMLInputElement_e).val(),
+			/* Tried the HTML5 email validity constraint but found it too lax
+			*
+			* (it does not require a period or much else after the @), so rolling my own.
+			*
+			* See unit test for Email class using com_github_dominicsayers_isemail.tests for details.
+			*/
+
+			var testMail = new module.Email($(HTMLInputElement_e).val()),
 
 			isRequired = typeof $(HTMLInputElement_e).attr('required') !== 'undefined';
 
-			if (!isRequired || value !== '') { // true unless empty required field
+			if ($(HTMLInputElement_e).val() !== '') { // always validate email if it exists
 
-				//console.log(true);
+				return testMail.isValid();
+			}
 
+			else if (!isRequired) { // empty is OK if not required
+			
 				return true;
 			}
-			
-			//console.log(false);
 
-			return false; // default to false
+			else { // no entry, but required
+
+				return false;
+			}
 		};
 
 
@@ -247,25 +239,25 @@ var app = app || {};
 		* Treat as if private, though not possible to enforce in JS. Use static instance() method instead.
 		*/
 
-		module.TextInputWidget._instance = null;
+		module.EmailInputWidget._instance = null;
 
 
 		/** Gets an instance of the class for use as singleton (read-only) */
 
-		module.TextInputWidget.instance = function() {
+		module.EmailInputWidget.instance = function() {
 			
 			if (arguments.length === 0) {
 
-				if (typeof module.TextInputWidget._instance === 'undefined'
+				if (typeof module.EmailInputWidget._instance === 'undefined'
 
-				|| module.TextInputWidget._instance === null
+				|| module.EmailInputWidget._instance === null
 
-				|| module.TextInputWidget._instance.constructor !== module.TextInputWidget) {
+				|| module.EmailInputWidget._instance.constructor !== module.EmailInputWidget) {
 
-					module.TextInputWidget._instance = new module.TextInputWidget();
+					module.EmailInputWidget._instance = new module.EmailInputWidget();
 				}
 
-				return module.TextInputWidget._instance;
+				return module.EmailInputWidget._instance;
 			}
 
 			else {

@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Creates and initializes and validates HTML email input fields. Use as singleton to conserve memory resources.
+	/** @classdesc Creates and initializes and validates Materialize-styled HTML email input fields. Use as singleton to conserve memory resources.
 	*
 	* @constructor
 	*

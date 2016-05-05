@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class PasswordConfirmationInputWidget extends InputWidget
+* public class TextInputWidget extends InputWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Creates, initializes and validates HTML password confirmation input fields. Use as singleton to conserve memory resources.
+	/** @classdesc Creates, initializes and validates Materialize-styled HTML password confirmation input fields. Use as singleton to conserve memory resources.
 	*
 	* @constructor
 	*
@@ -17,10 +17,10 @@ var app = app || {};
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
-	* @return {PasswordConfirmationInputWidget} Not supposed to be instantiated, except when creating singleton
+	* @return {TextInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
 
-	module.PasswordConfirmationInputWidget = function() {
+	module.TextInputWidget = function() {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -28,7 +28,7 @@ var app = app || {};
 		
 			// Set temporary literals for use by parent class constructor
 
-			this.type = this.type || 'PasswordConfirmationInputWidget';
+			this.type = this.type || 'TextInputWidget';
 
 			
 			// Initialize instance members inherited from parent class
@@ -40,9 +40,9 @@ var app = app || {};
 	* Inherit from UIWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.PasswordConfirmationInputWidget.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
+		module.TextInputWidget.prototype = Object.create(module.InputWidget.prototype); // Set up inheritance
 
-		module.PasswordConfirmationInputWidget.prototype.constructor = module.PasswordConfirmationInputWidget // Reset constructor property
+		module.TextInputWidget.prototype.constructor = module.TextInputWidget // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.UIWidgetFactory.instance().registerProduct(module.PasswordConfirmationInputWidget);
+		module.UIWidgetFactory.instance().registerProduct(module.TextInputWidget);
 
 
 	/*----------------------------------------------------------------------------------------
@@ -71,22 +71,24 @@ var app = app || {};
 		* @todo Add support for non-HTML5 compliant browsers
 		*/
 
-		module.PasswordConfirmationInputWidget.prototype.createProduct = function(obj_options) {
+		module.TextInputWidget.prototype.createProduct = function(obj_options) {
 
 			/* Sample JSON specification object using all default features:
 
 			{
 				width: 's12',
 
-				id: 'test-password-confirmation',
+				id: 'text-test',
 
-				label: 'Test Password Confirmation',
+				label: 'Test Text',
 
 				required: true,
 
-				errormessage: 'Please confirm password',
+				datasource: 'Some text', // String
 
-				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to PasswordConfirmationInputWidget.prototype.validate)
+				datalist: 'text-test-list', // id of datalist (optional)
+
+				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to DateInputWidget.prototype.validate)
 			}
 			*/
 
@@ -95,19 +97,23 @@ var app = app || {};
 				throw new ReferenceError('Options not specified');
 			}
 
+			if (typeof obj_options.datasource !== 'undefined' && obj_options.datasource !== null && typeof obj_options.datasource !== 'string') {
+
+				throw new IllegalArgumentError('Data source must be a String, or null');
+			}
+			
 			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;
 
-			
+
 			var outerDiv = createElement( // outer div
 			{
 				element: 'div',
-
-				attributes: {id: options.id + '-parent'},
 				
-				classList: ['row', 'hidden']
+				classList: ['row']
 			});
-						
+
 			
+
 			var innerDiv = createElement( // inner div
 			{
 				element: 'div',			
@@ -124,33 +130,35 @@ var app = app || {};
 				
 				id: options.id,
 				
-				value: '',
-
-				'aria-required': options.required ? true : false,
+				value: options.datasource ? options.datasource : '',
 
 				'aria-labelledby': options.id + '-label',
 
-				role: 'textbox',
+				role: 'textbox'
+			}
 
-				tabindex: 0
-			};
+			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
 
-			if (options.required) {attributes.required = true;}
+			if (options.datalist) {attributes.list = options.datalist;}
+
+			var classList = [];
+
+			if (options.required) {classList.push('validate');}
 
 			innerDiv.appendChild(createElement( // input
 			{
 				element: 'input',			
 				
 				attributes: attributes,
+				
+				classList: classList,
 
 				dataset:
 				{
-					customValidator: options.validator ? options.validator : 'PasswordConfirmationInputWidget.prototype.validate',
+					customValidator: options.validator ? options.validator : (Modernizr && Modernizr.formvalidation ? '' : 'TextInputWidget.prototype.validate'),
 
-					widgetclass: 'PasswordConfirmationInputWidget'
-				},
-				
-				classList: ['validate']
+					widgetclass: 'TextInputWidget'
+				}
 			}));
 			
 			
@@ -160,55 +168,73 @@ var app = app || {};
 				
 				attributes: {for: options.id, id: options.id + '-label'},
 				
-				classList: ['form-label'],
+				classList: options.datasource ? ['form-label', 'active'] : ['form-label'],
 				
-				dataset: {error: options.errormessage ? options.errormessage : 'Please confirm password', success: 'Password confirmed'},
+				dataset: {error: 'Please enter ' + options.label.toLowerCase()},
 				
-				innerHTML: 'Confirm Password'
+				innerHTML: options.label
 			});
+
 			
-			labelElement.appendChild(createElement( // required field indicator
-			{
-				element: 'span',
+			if (options.required) {
 
-				classList: ['required-indicator'],
+				labelElement.appendChild(createElement( // required field indicator
+				{
+					element: 'span',
 
-				innerHTML: '*'
-			}));
+					classList: ['required-indicator'],
+
+					innerHTML: '*'
+				}));
+			}
 
 			innerDiv.appendChild(labelElement);
 
-			
-			return outerDiv;
-		};
+			if (options.datalist) { // datalist element
 
+				innerDiv.appendChild(createElement(
+				{
+					element: 'datalist',			
+					
+					attributes: {id: options.datalist}
+				}));
+			}
+
+			
+			return outerDiv;			
+		};
+		
 		
 		/*DEPRECATED: Handled by InputWidget
+
 		Initializes password field (required by UIWidget) */
 
-		//module.PasswordConfirmationInputWidget.prototype.init = function(View_v, str_id, obj_options) {};
+		//module.TextInputWidget.prototype.init = function(HTMLInputElement_e) {};
 
 		
-		/** Event handler for interactive validation of password confirmation field.
+		/** Event handler for interactive validation of text input field.
+		*
+		* Fallback for browsers that don't support the HTML5 form validation API. 
 		*
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/
 
-		module.PasswordConfirmationInputWidget.prototype.validate = function(HTMLInputElement_e) {
+		module.TextInputWidget.prototype.validate = function(HTMLInputElement_e) {
 
-			// Skips validation if password isn't 'dirty' (i.e. changed since the view loaded)
+			var value = $(HTMLInputElement_e).val(),
 
-			var pw_org = $('#' + HTMLInputElement_e.id.replace('-confirmation', '')).data('value'), // original pw
+			isRequired = typeof $(HTMLInputElement_e).attr('required') !== 'undefined';
 
-			pw = $('#' + HTMLInputElement_e.id.replace('-confirmation', '')).val(), // current password entry
+			if (!isRequired || value !== '') { // true unless empty required field
 
-			pw2 = $(HTMLInputElement_e).val(), // confirmation
+				//console.log(true);
 
-			ret = (pw === pw2 || pw === pw_org); // pw and confirmation match, or pw hasn't changed
+				return true;
+			}
 			
-			//console.log(ret); // debug
+			//console.log(false);
 
-			return ret;
+			return false; // default to false
 		};
 
 
@@ -221,25 +247,25 @@ var app = app || {};
 		* Treat as if private, though not possible to enforce in JS. Use static instance() method instead.
 		*/
 
-		module.PasswordConfirmationInputWidget._instance = null;
+		module.TextInputWidget._instance = null;
 
 
 		/** Gets an instance of the class for use as singleton (read-only) */
 
-		module.PasswordConfirmationInputWidget.instance = function() {
+		module.TextInputWidget.instance = function() {
 			
 			if (arguments.length === 0) {
 
-				if (typeof module.PasswordConfirmationInputWidget._instance === 'undefined'
+				if (typeof module.TextInputWidget._instance === 'undefined'
 
-				|| module.PasswordConfirmationInputWidget._instance === null
+				|| module.TextInputWidget._instance === null
 
-				|| module.PasswordConfirmationInputWidget._instance.constructor !== module.PasswordConfirmationInputWidget) {
+				|| module.TextInputWidget._instance.constructor !== module.TextInputWidget) {
 
-					module.PasswordConfirmationInputWidget._instance = new module.PasswordConfirmationInputWidget();
+					module.TextInputWidget._instance = new module.TextInputWidget();
 				}
 
-				return module.PasswordConfirmationInputWidget._instance;
+				return module.TextInputWidget._instance;
 			}
 
 			else {

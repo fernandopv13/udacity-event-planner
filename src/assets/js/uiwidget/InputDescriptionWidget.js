@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Creates descriptions for input fields. Use as singleton to conserve memory resources.
+	/** @classdesc Creates descriptions for Materialize-styled input fields. Use as singleton to conserve memory resources.
 	*
 	* @constructor
 	*

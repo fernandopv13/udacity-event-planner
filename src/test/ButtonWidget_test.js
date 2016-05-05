@@ -21,30 +21,5 @@ describe('Class ButtonWidget', function(){
 	});
 		
 		
-	describe('instance', function() {
-	
-
-		it('defines an abstract onClick() method', function() {
-
-			expect(app.ButtonWidget.prototype.onClick).toBeDefined();
-
-			expect(typeof app.ButtonWidget.prototype.onClick).toBe('function');
-		});
-
-
-		it('rejects attempt to invoke onClick() directly on the abstract class', function() {
-
-			try {
-
-				app.ButtonWidget.prototype.onClick.call();
-			}
-
-			catch(e) {
-
-				expect(e.name).toBe('AbstractMethodError');
-			}
-
-			expect(true).toBe(true);
-		});
-	});
+	//describe('instance', function() {});
 });
