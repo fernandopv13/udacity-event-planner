@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class FloatingActionButtonWidget extends UIWidget
+* public class FloatingActionButtonWidget extends ButtonWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -13,7 +13,7 @@ var app = app || {};
 	*
 	* @constructor
 	*
-	* @extends UIWidget
+	* @extends ButtonWidget
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
@@ -33,14 +33,14 @@ var app = app || {};
 			
 			// Initialize instance members inherited from parent class
 			
-			module.UIWidget.call(this);
+			module.ButtonWidget.call(this);
 	};
 
 	/*----------------------------------------------------------------------------------------
-	* Inherit from UIWidget
+	* Inherit from ButtonWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.FloatingActionButtonWidget.prototype = Object.create(module.UIWidget.prototype); // Set up inheritance
+		module.FloatingActionButtonWidget.prototype = Object.create(module.ButtonWidget.prototype); // Set up inheritance
 
 		module.FloatingActionButtonWidget.prototype.constructor = module.FloatingActionButtonWidget // Reset constructor property
 
@@ -127,7 +127,7 @@ var app = app || {};
 		};
 
 		
-		/* Initializes element (required by UIWidget) */
+		/* Initializes element (required by ButtonWidget) */
 
 		//module.FloatingActionButtonWidget.prototype.init = function() {};
 

@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class SubmitButtonWidget extends ButtonWidget
+* public class NormalButtonWidget extends UIWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -9,18 +9,18 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Creates submit buttons. Use as singleton to conserve memory resources.
+	/** @classdesc Creates a normal 'raised' Materialize button. Use as singleton to conserve memory resources.
 	*
 	* @constructor
 	*
-	* @extends ButtonWidget
+	* @extends UIWidget
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
-	* @return {SubmitButtonWidget} Not supposed to be instantiated, except when creating singleton
+	* @return {NormalButtonWidget} Not supposed to be instantiated, except when creating singleton
 	*/
 
-	module.SubmitButtonWidget = function() {
+	module.NormalButtonWidget = function() {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -28,21 +28,21 @@ var app = app || {};
 		
 			// Set temporary literals for use by parent class constructor
 
-			this.type = this.type || 'SubmitButtonWidget';
+			this.type = this.type || 'NormalButtonWidget';
 
 			
 			// Initialize instance members inherited from parent class
 			
-			module.ButtonWidget.call(this);
+			module.UIWidget.call(this);
 	};
 
 	/*----------------------------------------------------------------------------------------
-	* Inherit from ButtonWidget
+	* Inherit from UIWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.SubmitButtonWidget.prototype = Object.create(module.ButtonWidget.prototype); // Set up inheritance
+		module.NormalButtonWidget.prototype = Object.create(module.UIWidget.prototype); // Set up inheritance
 
-		module.SubmitButtonWidget.prototype.constructor = module.SubmitButtonWidget // Reset constructor property
+		module.NormalButtonWidget.prototype.constructor = module.NormalButtonWidget // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
@@ -51,7 +51,7 @@ var app = app || {};
 
 		// Register with factory
 
-		module.UIWidgetFactory.instance().registerProduct(module.SubmitButtonWidget);
+		module.UIWidgetFactory.instance().registerProduct(module.NormalButtonWidget);
 
 
 	/*----------------------------------------------------------------------------------------
@@ -62,21 +62,23 @@ var app = app || {};
 		*
 		* @param {Object} JSON object literal containing specs of element to be created. Se comments in code for an example.
 		*
-		* @return {SubmitButtonWidget} The requested button
+		* @return {NormalButtonWidget} The requested button
 		*
 		* @throws {ReferenceError} If no options are specified
 		*/
 
-		module.SubmitButtonWidget.prototype.createProduct = function(obj_options) {
+		module.NormalButtonWidget.prototype.createProduct = function(obj_options) {
 
 			/* Sample JSON specification object using all currently supported features:
 
 			{
-				id: 'submit-button'
+				id: 'normal-button'
 
 				label: 'Done',
 
 				icon: 'send',
+
+				classList: ['right'],
 
 				action: function() {}
 			}
@@ -89,34 +91,51 @@ var app = app || {};
 
 			var options = obj_options, createElement = module.HTMLElement.instance().createProduct;
 
-			var buttonElement = createElement({ // submit button
+			var buttonElement = createElement({ // button
 				
 				element: 'a',
 				
 				attributes: {id: options.id, role: 'button', tabindex: 0},
 				
-				classList: ['waves-effect', 'waves-light', 'btn'],
+				classList: (function() {
 
-				dataset: {widgetclass: 'SubmitButtonWidget'},
+						var list = ['waves-effect', 'waves-light', 'btn'];
+
+						if (options.classList) {
+
+							options.classList.forEach(function(cls) {
+
+								list.push(cls);
+							});
+						}
+
+						return list
+					})(),
+
+				dataset: {widgetclass: 'NormalButtonWidget'},
 
 				innerHTML: options.label
 			});
 			
 			
-			buttonElement.appendChild(createElement({ // 'send' icon
-				
-				element: 'i',
-				
-				classList: ['material-icons', 'right'],
-				
-				innerHTML: options.icon || 'send'
-			}));
+			if (options.icon) {
+
+				buttonElement.appendChild(createElement({ // optional icon
+					
+					element: 'i',
+					
+					classList: ['material-icons', 'right'],
+					
+					innerHTML: options.icon
+				}));
+			}
 			
+
 			if (options.action && typeof options.action === 'function') {
 			
 				$(buttonElement).on('mousedown', options.action);
 			}
-			
+
 			return buttonElement;
 		};
 
@@ -138,10 +157,11 @@ var app = app || {};
 		* @throws {IllegalArgumentError} If 'submit' property of View is not a function
 		*/
 
-		module.SubmitButtonWidget.prototype.init = function(View_v, str_id, obj_options) {
+		module.NormalButtonWidget.prototype.init = function(View_v, str_id, obj_options) {
 
 			// Attach generic event handler
 
+			/*
 			var fn = View_v.submit;
 
 			if (typeof fn !== 'undefined') {
@@ -161,7 +181,7 @@ var app = app || {};
 
 				throw new ReferenceError('View must support "submit()"" instance method');
 			}
-
+			*/
 			
 			// Call generic initializer in parent class
 
@@ -178,25 +198,25 @@ var app = app || {};
 		* Treat as if private, though not possible to enforce in JS. Use static instance() method instead.
 		*/
 
-		module.SubmitButtonWidget._instance = null;
+		module.NormalButtonWidget._instance = null;
 
 
 		/** Gets an instance of the class for use as singleton (read-only) */
 
-		module.SubmitButtonWidget.instance = function() {
+		module.NormalButtonWidget.instance = function() {
 			
 			if (arguments.length === 0) {
 
-				if (typeof module.SubmitButtonWidget._instance === 'undefined'
+				if (typeof module.NormalButtonWidget._instance === 'undefined'
 
-				|| module.SubmitButtonWidget._instance === null
+				|| module.NormalButtonWidget._instance === null
 
-				|| module.SubmitButtonWidget._instance.constructor !== module.SubmitButtonWidget) {
+				|| module.NormalButtonWidget._instance.constructor !== module.NormalButtonWidget) {
 
-					module.SubmitButtonWidget._instance = new module.SubmitButtonWidget();
+					module.NormalButtonWidget._instance = new module.NormalButtonWidget();
 				}
 
-				return module.SubmitButtonWidget._instance;
+				return module.NormalButtonWidget._instance;
 			}
 
 			else {

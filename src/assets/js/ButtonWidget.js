@@ -66,10 +66,4 @@ var app = app || {};
 		module.UIWidget.prototype.init(View_v, str_id, obj_options);
 	};
 
-
-	module.ButtonWidget.prototype.onClick = function(HTMLInputElement) {
-
-		throw new AbstractMethodError('onClick() must be realized by subclasses');
-	};
-
 })(app);

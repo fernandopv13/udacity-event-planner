@@ -69,7 +69,148 @@ var app = app || {};
 		var container; // shorthand reference to inherited temporary container element
 
 		this.elementOptions = {}; // temporary object holding JSON data used for initializing elements post-render
+
+
+		// Setup container div
+
+			container = this.containerElement(this.createWidget(
+
+					'HTMLElement', // div
+
+					{
+						element: 'div',			
+						
+						classList: ['row']
+					}
+			));
+
 		
+		// Add secondary nav ('back' arrow above list)
+
+			var navElement =  this.createWidget( // div
+
+				'HTMLElement', 
+
+				{
+					element: 'div',
+
+					attributes: {id: 'secondary-nav', role: 'navigation'},
+					
+					classList: ['secondary-nav']
+				}
+			);
+
+			this.elementOptions['secondary-nav'] =
+			{
+				listeners: 
+				{
+					mousedown:
+
+						function(nEvent) {
+							
+							 // Hack: work around iOS history weirdness causing back() to reload app
+							 // Spent ages trying to analyze the cause, to no avail, so settling for what works.
+							 // Too late to capture problem in Router.onPopState, so doing it here.
+							
+							if (module.device().isiOS() && module.controller.recentDeleted) {
+
+								history.pushState( // pushing a redundant state object seems to do the trick
+								{
+									className: 'EventView',
+
+									id: Event_e.id()
+								},
+
+									'', // title
+
+									'#!' // URL
+
+									+ 'Event'
+
+									+ '?id=' + Event_e.id()
+								);
+
+								module.controller.recentDeleted = false;
+
+								window.history.go(module.device().isChrome() ? -4: -2); // skip back to EventView (Chroms and Safari have different behaviours)
+							}
+
+							else { // normal operation in compliant browsers
+
+								window.history.back();
+
+								//$('#secondary-nav').off();
+							}
+
+						}.bind(this)
+				}
+			};
+
+			container.appendChild(navElement);
+
+
+			navElement.appendChild(this.createWidget( // icon
+
+				'HTMLElement',
+
+				{
+					element: 'i',
+
+					classList: ['material-icons', 'left'],
+
+					innerHTML: 'arrow_back'
+				}
+			));
+
+
+			navElement.appendChild(this.createWidget( // label
+
+				'HTMLElement',
+
+				{
+					element: 'span',
+
+					innerHTML: this.model() ? this.model().name() : ''
+				}
+			));
+		
+		
+		// Add list element		
+
+			var UlElement = this.createWidget(
+
+				'HTMLElement',
+
+				{
+					element: 'ul',
+
+					attributes: {role: 'list'},
+
+					classList: ['collection', 'with-header']
+				}
+			);
+
+			container.appendChild(UlElement);
+		
+		
+		// Add heading
+
+			UlElement.appendChild(this.createWidget(
+
+				'HTMLElement',
+
+				{
+					element: 'h4',
+
+					attributes: {role: 'heading'},
+
+					classList: ['collection-header'],
+
+					innerHTML: this.heading()
+				}
+			));
+
+
 		// List item builder
 
 			function renderListItem(Person_g, self) { // list item generator
@@ -190,10 +331,11 @@ var app = app || {};
 			return listElmnt;
 		}
 
-		
+
 		if (Event_e !== null && Event_e.guests().length > 0) { // list
 
 		
+			/*
 			// Setup container div
 
 				container = this.containerElement(this.createWidget(
@@ -333,7 +475,8 @@ var app = app || {};
 					}
 				));
 
-			
+			*/
+
 			// Build list
 						
 				Event_e.guests().forEach(function(guest) { // generate list items
@@ -343,9 +486,87 @@ var app = app || {};
 				}, this);
 		}
 
-		else { // default
+		else { // default: display 'no items' message and provide button to add item
 
-			container = this.containerElement(this.createWidget(
+			UlElement.appendChild(this.ssuper().prototype.createEmptyListMessage.call(
+
+				this,
+
+				'This event has no guests',
+
+				'Add guest',
+
+				function(nEvent) {
+
+					this.notifyObservers(this, new module.Person('Add Guest'), module.View.UIAction.CREATE);
+
+				}.bind(this)
+			));
+
+			/*
+			var listItem = this.createWidget(
+
+				'HTMLElement',
+				{
+					element: 'li',			
+					
+					classList: ['collection-item']
+				}
+			);
+
+			UlElement.appendChild(listItem);
+
+			var wrapperDiv = this.createWidget(
+
+				'HTMLElement',
+				{
+					element: 'div',
+					
+					classList: ['valign-wrapper']
+				}
+			);
+
+			listItem.appendChild(wrapperDiv);
+
+			wrapperDiv.appendChild(this.createWidget(
+
+				'HTMLElement',
+				{
+					element: 'div',
+
+					classList: ['col', 's6', 'valign'],
+
+					innerHTML: 'This event has no guests'
+				}
+			));
+
+			var spanElmt = this.createWidget(
+
+				'HTMLElement',
+				{
+					element: 'div',
+
+					classList: ['col', 's6', 'valign', 'right']
+				}
+			);
+
+			wrapperDiv.appendChild(spanElmt);
+
+			spanElmt.appendChild(this.createWidget(
+
+				'NormalButtonWidget',
+				{
+					id: 'create-guest-button',
+
+					label: 'Add Guest',
+
+					classList: ['valign', 'right']
+				}
+			));
+			*/
+
+		/*
+		container = this.containerElement(this.createWidget(
 
 				'HTMLElement', // outer div
 
@@ -368,10 +589,12 @@ var app = app || {};
 					innerHTML: 'No guests have been added to this event yet.'
 				}
 			));
+			*/
 		}
+		
 
 		
-		// Render to DOM
+		// Do common ListView rendering tasks and render to DOM
 
 			this.ssuper().prototype.render.call(this, Event_e);
 			

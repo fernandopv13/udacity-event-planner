@@ -20,11 +20,11 @@ var app = app || {};
 	*
 	* @return {ListView} Not supposed to be instantiated, except when extended by subclasses.
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*
 	*/
 
-	app.ListView = function(Function_modelClass, str_elementId, str_heading) {
+	module.ListView = function(Function_modelClass, str_elementId, str_heading) {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -37,14 +37,14 @@ var app = app || {};
 		
 		// Initializes instance members inherited from parent class
 		
-		app.View.call(this, Function_modelClass, str_elementId, str_heading);
+		module.View.call(this, Function_modelClass, str_elementId, str_heading);
 
 			
 		/*----------------------------------------------------------------------------------------
 		* Other object initialization (using parameter parsing/constructor 'polymorphism')
 		*---------------------------------------------------------------------------------------*/
 		
-		this.parentList().push(app.ListView);
+		this.parentList().push(module.ListView);
 			
 	};
 
@@ -53,35 +53,110 @@ var app = app || {};
 	* Inherit from View
 	*---------------------------------------------------------------------------------------*/	
 
-	app.ListView.prototype = Object.create(app.View.prototype); // Set up inheritance
+	module.ListView.prototype = Object.create(module.View.prototype); // Set up inheritance
 
-	app.ListView.prototype.constructor = app.ListView; // Reset constructor property
+	module.ListView.prototype.constructor = module.ListView; // Reset constructor property
 
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
+	/** Creates boilerplate code for message and 'add item' button for empty list.
+	*
+	* @param {String} message The message to be displayed to explain that the list is empty
+	*
+	* @param {String} label The label to be displayed on the 'add item' button
+	*
+	* @param {Function} action The action to be performed when the button is clicked
+	*/
+
+	module.ListView.prototype.createEmptyListMessage = function(str_message, str_label, fn_action) {
+
+		var listItem = this.createWidget(
+
+			'HTMLElement',
+			{
+				element: 'li',			
+				
+				classList: ['collection-item']
+			}
+		);
+
+		var wrapperDiv = this.createWidget(
+
+			'HTMLElement',
+			{
+				element: 'div',
+				
+				classList: ['valign-wrapper']
+			}
+		);
+
+		listItem.appendChild(wrapperDiv);
+
+		wrapperDiv.appendChild(this.createWidget(
+
+			'HTMLElement',
+			{
+				element: 'div',
+
+				classList: ['col', 's6', 'valign'],
+
+				innerHTML: str_message
+			}
+		));
+
+		var spanElmt = this.createWidget(
+
+			'HTMLElement',
+			{
+				element: 'div',
+
+				classList: ['col', 's6', 'valign', 'right']
+			}
+		);
+
+		wrapperDiv.appendChild(spanElmt);
+
+		spanElmt.appendChild(this.createWidget(
+
+			'NormalButtonWidget',
+			{
+				id: 'create-guest-button',
+
+				label: str_label,
+
+				classList: ['valign', 'right'],
+
+				action: fn_action
+			}
+		));
+
+		return listItem;
+	}
+
+
 	/** For now, simply passes the call up the inheritance chain.
 	*/
 
-	app.ListView.prototype.init = function() {
+	module.ListView.prototype.init = function() {
 
 		// Call parent to perform common post-render task(s)
 
-			app.View.prototype.init.call(this); // ssuper() refers to ListView, so call parent manually or enter infinite loop
+			module.View.prototype.init.call(this); // ssuper() refers to ListView, so call parent manually or enter infinite loop
 	}
 	
 
 	/** Captures tap/click in list and notifies observers (i.e. Controller) */
 
-	app.ListView.prototype.onSelect = function(nEvent, Model_m) {
+	module.ListView.prototype.onSelect = function(nEvent, Model_m) {
 
 		//console.log(arguments); //debug
 
 		//console.log('ListView onSelect() notifying controller');
 
-		this.notifyObservers(this, Model_m, app.View.UIAction.SELECT);
+		this.notifyObservers(this, Model_m, module.View.UIAction.SELECT);
 
 		//console.log('back in ListView onSelect()');
 	};
@@ -90,7 +165,7 @@ var app = app || {};
 	/** Does rendering tasks that are common to all ListViews (e.g. adding a "create" item action button)
 	*/
 
-	app.ListView.prototype.render = function(Model_m) {
+	module.ListView.prototype.render = function(Model_m) {
 
 		// Add floating 'Add' button to container
 
@@ -150,7 +225,7 @@ var app = app || {};
 
 		// Call parent to render to DOM
 
-			app.View.prototype.render.call(this, Model_m); // ssuper() refers to ListView, so call parent manually or enter infinite loop
+		module.View.prototype.render.call(this, Model_m); // ssuper() refers to ListView, so call parent manually or enter infinite loop
 	}
 	
 

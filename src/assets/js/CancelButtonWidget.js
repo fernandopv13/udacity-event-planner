@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class CancelButtonWidget extends UIWidget
+* public class CancelButtonWidget extends ButtonWidget
 ******************************************************************************/
 
 var app = app || {};
@@ -13,7 +13,7 @@ var app = app || {};
 	*
 	* @constructor
 	*
-	* @extends UIWidget
+	* @extends ButtonWidget
 	*
 	* @author Ulrik H. Gade, March 2016
 	*
@@ -33,14 +33,14 @@ var app = app || {};
 			
 			// Initialize instance members inherited from parent class
 			
-			module.UIWidget.call(this);
+			module.ButtonWidget.call(this);
 	};
 
 	/*----------------------------------------------------------------------------------------
-	* Inherit from UIWidget
+	* Inherit from ButtonWidget
 	*---------------------------------------------------------------------------------------*/	
 	
-		module.CancelButtonWidget.prototype = Object.create(module.UIWidget.prototype); // Set up inheritance
+		module.CancelButtonWidget.prototype = Object.create(module.ButtonWidget.prototype); // Set up inheritance
 
 		module.CancelButtonWidget.prototype.constructor = module.CancelButtonWidget // Reset constructor property
 
@@ -75,6 +75,8 @@ var app = app || {};
 				id: 'cancel-button'
 
 				label: 'Cancel',
+
+				action: function() {}
 			}
 			*/
 
@@ -98,6 +100,11 @@ var app = app || {};
 				innerHTML: options.label
 			});
 			
+			
+			if (options.action && typeof options.action === 'function') {
+			
+				$(buttonElement).on('mousedown', options.action);
+			}
 			
 			return buttonElement;
 		};
