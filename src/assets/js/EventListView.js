@@ -71,7 +71,41 @@ var app = app || {};
 		var container; // shorthand reference to inherited temporary container element
 
 		
- 		// List item builder
+ 		// Add list element
+
+			container = this.containerElement(this.createWidget(
+
+				'HTMLElement', // div
+				
+				{
+					element: 'ul',
+
+					attributes: {role: 'list'},
+
+					classList: ['collection', 'with-header']
+				}
+			));
+
+
+		// Add heading
+
+			container.appendChild(this.createWidget(
+
+				'HTMLElement',
+
+				{
+					element: 'h4',
+
+					classList: ['collection-header'],
+
+					attributes: {role: 'heading'},
+
+					innerHTML: this.heading()
+				}
+			));
+			
+		
+		// List item builder
 			
 			function renderListItem(Event_e, self) {
 
@@ -141,54 +175,34 @@ var app = app || {};
 			}
 
 		
- 		if (Account_a !== null) { // we have an account
+ 		if (Account_a !== null && Object.keys(Account_a.events()).length > 0) { // we have a non-empty account, so build event list
 
- 			// Add list element
+			var events = Account_a.events()
+				
+			for (var prop in events) {
 
-				container = this.containerElement(this.createWidget(
-
-					'HTMLElement', // div
-					
-					{
-						element: 'ul',
-
-						attributes: {role: 'list'},
-
-						classList: ['collection', 'with-header']
-					}
-				));
-
-
-			// Add heading
-
-				container.appendChild(this.createWidget(
-
-					'HTMLElement',
-
-					{
-						element: 'h4',
-
-						classList: ['collection-header'],
-
-						attributes: {role: 'heading'},
-
-						innerHTML: this.heading()
-					}
-				));
-
-			
-			// Build list
-			
-				var events = Account_a.events() // generate list items
-					
-				for (var prop in events) {
-
-					container.appendChild(renderListItem(events[prop], this));
-				}
+				container.appendChild(renderListItem(events[prop], this));
+			}
 		}
 
-		else { // default
+		else { // default: display 'no items' message and provide button to add item
 
+			container.appendChild(this.ssuper().prototype.createEmptyListMessage.call(
+
+				this,
+
+				'This account has no events yet',
+
+				'Add event',
+
+				function(nEvent) {
+
+					this.notifyObservers(this, new module.Event('Add Event'), module.View.UIAction.CREATE);
+
+				}.bind(this)
+			));
+
+			/*
 			container = this.containerElement(this.createWidget(
 
 				'HTMLElement', // outer div
@@ -212,6 +226,7 @@ var app = app || {};
 					innerHTML: 'No events have been added to this account yet.'
 				}
 			));
+			*/
 		}
 
 			
