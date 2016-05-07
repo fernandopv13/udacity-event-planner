@@ -123,9 +123,22 @@ var app = app || {};
 
 					&& clone.constructor === source.constructor) { // Model, source and clone are of the same type
 
-					// we are navigating to the view initiating the transaction, so update using clone, rather than source
+					// i.e. we are navigating to the view initiating the transaction, so update using clone, rather than source
 
 					Model_m = clone;
+				}
+
+				else { // assume we are cancelling the transaction, so clean up
+
+					//console.log('cancelling transaction'); // debug
+
+					void ctrl.selectedEvent(source);
+
+					void ctrl.sourceModel(null);
+
+					void ctrl.cloneModel(null);
+
+					void clone.delete(); 
 				}
 			}
 

@@ -16,7 +16,7 @@ var app = app || {};
 	*
 	* @extends ViewUpdateHandler
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 	module.ViewSignInHandler = function(Controller_c) {
@@ -93,7 +93,11 @@ var app = app || {};
 
 		if (account !== null) { // provided email and password match an account
 
-			this.notifyObservers(account, new module.EventListView()); // render/refresh the view in the background
+			this.notifyObservers(account, new module.EventListView()); // render/refresh the default view in the background
+
+			
+			// read in account data from localStorage (if available)
+
 
 			ctrl.onAccountSelected.call(ctrl, account); // set account and show view
 

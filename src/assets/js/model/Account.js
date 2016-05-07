@@ -152,7 +152,7 @@ var app = app || {};
 			
 			this.defaultLocation = function (obj_location) {
 			
-				if (arguments.length > 0) {
+				if (typeof obj_location !== 'undefined' && obj_location !== null) {
 
 					if (typeof obj_location === 'string' || obj_location.coords) {
 					

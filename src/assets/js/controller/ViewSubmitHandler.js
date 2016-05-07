@@ -86,7 +86,9 @@ var app = app || {};
 
 				void ctrl.sourceModel(null);
 
-				void ctrl.cloneModel(null); clone.delete(); 
+				void ctrl.cloneModel(null);
+
+				void clone.delete(); 
 			}
 		}
 

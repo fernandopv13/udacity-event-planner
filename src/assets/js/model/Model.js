@@ -190,12 +190,12 @@ var app = app || {}; // create a simple namespace for the module
 			}
 
 
-			// Register controller as observer of object (auto-skips if already registered)
+			// Register controller as observer of object (ignored if already registered)
 
 			this.registerObserver(module.controller);
 
 			
-			// Notify observers (i.e. controller)
+			// Notify observers (i.e. controller) of update to Model state
 
 			//console.log('Updated ' + this.className() + ', notifying controller'); // debug
 

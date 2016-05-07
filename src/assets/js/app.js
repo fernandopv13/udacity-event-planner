@@ -6,7 +6,7 @@
 * 
 *
 * Please see individual source files, and provided UML diagrams,
-* for further comments.
+* for further details.
 
 /******************************************************************************
 * public module app
@@ -18,12 +18,17 @@
 *
 * @return {Object} Top-level singleton (module) providing a simple, encapsulated namespace, as well as module-level functionality, for the app.
 *
-* @author Ulrik H. Gade, March 2016
+* @author Ulrik H. Gade, May 2016
 *
+* @todo Be more consistent about either using public attributes, or private attributes and public accessors
 */
 
 var app = (function(self) {
 	
+	/*----------------------------------------------------------------------------------------
+	* Private instance fields (encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+
 	var _device = new app.Device(),
 
 	_prefs = { // list of prefs, private so we can control access
@@ -43,6 +48,25 @@ var app = (function(self) {
 
 	_registry = []; // top level collection of collections of data model objects managed by the app
 	
+	
+	/*----------------------------------------------------------------------------------------
+	* Accessors
+	*---------------------------------------------------------------------------------------*/
+
+	/** Gets instance of Device utility class collecting data about device, browser and OS in one place */
+
+	self.device = function() {return _device;};
+
+	
+	/** Gets the app's ready state (experimental) */
+
+	self.ready = function() {return _ready;}; // public getter for app's ready state
+
+	
+	/*----------------------------------------------------------------------------------------
+	* public instance fields (non-encapsulated data members)
+	*---------------------------------------------------------------------------------------*/
+
 	self.controller = new self.Controller();
 
 	self.prefs = { // public accessors for preferences, using unified accessor pattern
@@ -88,7 +112,7 @@ var app = (function(self) {
 
 			if (arguments.length > 0) {
 
-				app.controller.selectedAccount().localStorageAllowed(bool_isAllowed);
+				void app.controller.selectedAccount().localStorageAllowed(bool_isAllowed);
 			}
 
 			return  app.controller.selectedAccount() ? app.controller.selectedAccount().localStorageAllowed() : false;
@@ -141,11 +165,10 @@ var app = (function(self) {
 		}
 	}
 		
-	self.ready = function() {return _ready;}; // public getter for app's ready state
-
+	
 	self.registry = { // allows serialization/deserialization of all the app's data in one fell swoop
 		
-		//ObjectRegistry class needs named class reference, so cannot be used with this anonymous module
+		//ObjectRegistry class needs named class reference, so cannot be used with anonymous app module
 		
 		add: function(obj) { _registry.push(obj);}, // later type check to only accept ObjectRegistry's
 		
@@ -173,22 +196,22 @@ var app = (function(self) {
 			
 			// Re-instantiate all objects of every class, and their registries
 			
-			for (var i = 0, len = localStorage.length, key, className, obj_json, objectClassName; i < len; i++) {
+			for (var i = 0, len = localStorage.length, key, className, obj_json, objectClassName; i < len; i++) { // iterate over stored items
 				
-				key = localStorage.key(i).split('.'); className = key[key.length - 2];
+				key = localStorage.key(i).split('.'); className = key[key.length - 2]; // parse class name
 				
-				if (className === 'ObjectRegistry') { // read in object registries
+				if (className === 'ObjectRegistry') { // read in item if it is an object registry
 					
-					obj_json = JSON.parse(localStorage.getItem(localStorage.key(i)));
+					obj_json = JSON.parse(localStorage.getItem(localStorage.key(i))); // parse to JSON
 				
-					objectClassName = obj_json._objectClassName;
+					objectClassName = obj_json._objectClassName; // get name of Model class
 					
-					app[objectClassName].registry = new app.ObjectRegistry(obj_json._id); // registry
+					app[objectClassName].registry = new app.ObjectRegistry(obj_json._id); // call constructor with single integer param to deserialize registry itself from local storage
 					
-					app[objectClassName].registry.readObjects(); // registry contents
+					app[objectClassName].registry.readObjects(); // deserialize registry contents from local storage
 				}
 				
-				// else throw new TypeError('...');
+				// else: silently ignore non-registry items in local storage
 			}
 		},
 		
@@ -210,12 +233,18 @@ var app = (function(self) {
 			
 			self.Organization.registry.onDeserialized();
 			
+			self.Password.registry.onDeserialized();
+
 			self.Person.registry.onDeserialized();
 		}
 	}
 	
-	self.device = function() {return _device;};
-	
+	/*----------------------------------------------------------------------------------------
+	* Other public instance methods
+	*---------------------------------------------------------------------------------------*/
+
+	/** Initializes the app on page load, then hands over run time control to the Controller */
+
 	self.init = function() {
 		
 		if (self.controller.observers().length > 0) { //DEPRECATED: ignore repeated firing of window.onload caused by e.g. navigating between views
@@ -232,24 +261,35 @@ var app = (function(self) {
 		$('#preloader').attr('aria-hidden', true); // later, investigate if this could do more of the work of hiding
 
 		
-		// Set up registries to track created objects
+		// Load account data from local storage, if available
 
-		self.registry.add(self.Account.registry);
-	
-		self.registry.add(self.Email.registry);
+			if (window.localStorage) {
+
+				self.registry.readObject();
+
+				self.registry.onDeserialized();
+			}
+
+			else {
+
+				Materialize.toast('Could not load account data. Please make sure you have enabled cookies and are not browsing in private mode', module.prefs.defaultToastDelay() + 1000);
+			}
+
+		// Set up registries to track created objects (readOject recreates registries so do this last)
+
+			self.registry.add(self.Account.registry);
 		
-		self.registry.add(self.Event.registry);
-		
-		self.registry.add(self.Organization.registry);
-		
-		self.registry.add(self.Password.registry);
+			self.registry.add(self.Email.registry);
+			
+			self.registry.add(self.Event.registry);
+			
+			self.registry.add(self.Organization.registry);
+			
+			self.registry.add(self.Password.registry);
 
-		self.registry.add(self.Person.registry);
+			self.registry.add(self.Person.registry);
 
-		//self.registry.readObject();
-
-		//self.registry.onDeserialized();
-
+				
 		self.controller.init();
 	};
 

@@ -106,11 +106,13 @@ var app = app || {};
 
 				void ctrl.selectedAccount(Model_n); // set new Account as selected
 
+				Model_n.update(Model_m, Model_n.id()); // save info entered when creating account
+
 				initModel(Model_m, Model_n, ctrl.views().eventListView); // do boilerplate initialization
 
-				void ctrl.newModel(null) // reset newModel
+				void ctrl.newModel(null) // clear newModel (account creation can't be rolled back)
 
-				ctrl.onAccountSelected.call(ctrl, Model_n); // show the View
+				ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View
 
 				Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
 

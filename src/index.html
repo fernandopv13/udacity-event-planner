@@ -25,19 +25,12 @@
 		<!-- Shared deletion confirmation modal dialog (later, create dynamically) -->
 
 			<div id="confirm-delete-modal" class="modal">
-
 				<div id="confirm-delete-modal-content" class="modal-content">
-
 					<h4 id="confirm-delete-modal-header">Delete Item</h4>
-
 					<p id="confirm-delete-modal-body">Deletion cannot be undone. Continue?</p>
-				
 				</div>
-				
 				<div class="modal-footer">
-					
 					<a href="#!" id="confirm-delete-modal-cancel" class="modal-action modal-close waves-effect waves-green btn-flat">No, keep it</a>
-
 					<a href="#!" id="confirm-delete-modal-ok" class="modal-action modal-close waves-effect waves-green btn-flat">OK, delete</a>
 
 				</div>
@@ -49,42 +42,28 @@
 
 			<div class="container" role="main"> 
 				
-				<!-- Preload spinner (hided on load) -->
-
+				<!-- Preload spinner (hide on load) -->
 				<div id="preloader" class="valign-wrapper" role="progressbar" style="height:160px;">
-					
 					<div class="valign" style="width:90%;text-align:center;">
-
 						<div>Loading the app...</div>
-
-						<div class="progress"><div class="indeterminate"></div></div>
-
+						<div class="progress">
+							<div class="indeterminate"></div>
+						</div>
 					</div>
-
 				</div>
 
 			<!-- Containers for dynamically populated main content views -->
-
 				<div id="front-page-view" class="row hidden" aria-hidden="true"></div>
-
 				<div id="sign-in-view" class="row hidden" aria-hidden="true"></div>
-
 				<div id="sign-up-view" class="row hidden" aria-hidden="true"></div>
-
 				<div id="sign-up-permissions-view" class="row hidden" aria-hidden="true"></div>
-
 				<div id="account-settings-view" class="row hidden" aria-hidden="true"></div>
-
 				<div id="account-profile-view" class="row hidden" aria-hidden="true"></div>
-
 				<div id="event-list-view" class="row hidden" aria-hidden="true"></div>
-
 				<div id="event-view" class="row hidden" aria-hidden="true"></div>
-
 				<div id="guest-list-view" class="row hidden" aria-hidden="true"></div>
-
 				<div id="guest-view" class="row hidden" aria-hidden="true"></div>
-							
+				<div id="modal-view"></div>
 			</div>
 
 		<!-- JavaScript library source files -->
@@ -160,6 +139,7 @@
 			<script src="assets/js/model/Account.js"></script>
 			<script src="assets/js/view/AccountSettingsView.js"></script>
 			<script src="assets/js/view/AccountProfileView.js"></script>
+			<script src="assets/js/view/ModalView.js"></script>
 			
 			<script src="assets/js/util/FourSquareSearch.js"></script>
 			
@@ -176,7 +156,7 @@
 			<script src="assets/js/controller/ViewSubViewHandler.js"></script>
 			
 			<script src="assets/js/app.js"></script>
-			<script src="assets/js/util/demodata.js"></script>
+			<!--script src="assets/js/util/demodata.js"></script-->
 			<!-- @gulp-app-script-tags-end -->
 
 		<script>

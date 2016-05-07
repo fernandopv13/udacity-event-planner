@@ -67,6 +67,9 @@ var app = app || {};
 		* @throws {ReferenceError} If no options are specified
 		*
 		* @todo Figure out why appending to the main container late in the code affects its contents earlier in the code, causing loss of  control over exact construction of DOM structure (really weird)
+		*
+		* @todo Figure out why activating dropdown menu items is very hard (but not impossible) on iOS (Safari/Chrome)
+
 		*/
 
 		module.NavigationWidget.prototype.createProduct = function(obj_options) {
@@ -407,13 +410,18 @@ var app = app || {};
 			
 			// Attach other event handlers
 
+				$(element).find('.brand-logo').on('mousedown', function(nEvent){ // link from brand logo to default view (EventListView)
+
+					// ViewNavigateHandler will cancel any transaction unless navigating back to the source of of the transaction
+
+					View_v.notifyObservers(new module.EventListView(), module.controller.selectedAccount(), module.View.UIAction.NAVIGATE);
+				});
+
 				$(element).find('#nav-delete-icon').hide(); // delete icon: only needed on FormViews, let them show it
 				
 				$(element).find('.button-collapse').sideNav(); // initialize Materialize 'hamburger' menu
 
 				$(element).find('.nav-menu-item').on('mousedown', function(nEvent) { // side nav and dropdown menu items
-
-					//console.log('menu item clicked/tapped'); //debug
 
 					$(element).find('.button-collapse').sideNav('hide');
 
@@ -426,7 +434,6 @@ var app = app || {};
 
 						console.log(e);
 					}
-
 				});
 
 

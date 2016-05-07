@@ -97,6 +97,21 @@ describe('Navigation', function(){
 		});
 		
 
+		it('navigates to main page (EventListView) when its logotype link is activated', function(done) {
+			
+			void testWindow.$('.brand-logo').trigger('mousedown');
+
+			setTimeout(function(){
+
+				expect(testApp.controller.currentView().constructor).toBe(testApp.EventListView);
+
+				done();
+
+			}, 250);
+
+			expect(true).toBe(true);
+		});
+		
 	afterAll(function() {
 
 		testWindow.close();
