@@ -12,8 +12,6 @@ var app = app || {};
 	*
 	* @constructor
 	*
-	* @extends FormView
-	*
 	* @param (String) elementId Id of the HTML DOM element the view is bound to
 	*
 	* @param (String) header Content for the modal header
@@ -33,11 +31,11 @@ var app = app || {};
 
 		this.className = 'ModalView';
 
-		this.ssuper = module.FormView;
+		this.ssuper = module.View;
 		
 		// Initialize instance members inherited from parent class
 		
-		module.FormView.call(this, module.Event, str_elementId, str_heading);
+		module.View.call(this, module.Event, str_elementId, str_heading);
 		
 
 		/*----------------------------------------------------------------------------------------
@@ -48,10 +46,10 @@ var app = app || {};
 	};
 
 	/*----------------------------------------------------------------------------------------
-	* Inherit from FormView
+	* Inherit from View
 	*---------------------------------------------------------------------------------------*/
 
-	module.ModalView.prototype = Object.create(module.FormView.prototype); // Set up inheritance
+	module.ModalView.prototype = Object.create(module.View.prototype); // Set up inheritance
 
 	module.ModalView.prototype.constructor = module.ModalView; // Reset constructor property
 
@@ -60,6 +58,16 @@ var app = app || {};
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
+
+	/** Closes modal dialog with no further action.
+	*
+	* Relies on Materialize leanModal so overriding default hide() method in View. 
+	*/
+
+	module.ModalView.prototype.hide = function() {
+
+		this.$renderContext().closeModal();
+	}
 
 
 	/** (Re)renders modal in UI
@@ -181,23 +189,33 @@ var app = app || {};
 
 		// Render to DOM
 
-			//console.log('generated element, calling FormView render()'); //debug
-
 			this.$renderContext().replaceWith(container);
-
-			//this.ssuper().prototype.render.call(this);
-
-			//console.log('back from FormView, initializing ModalView');
-
 		
 		// Do post-render initialization
 
 			this.$renderContext().leanModal();
-
-			//this.init(); // call init up parent class chain
-
-		//console.log('done initializing, exiting ModalView render()'); // debug
 	};
+
+
+	/** Opens modal dialog with whatever contents have been rendered to it most recently.
+	*
+	* Relies on Materialize leanModel so overriding default show() method in View. 
+	*/
+
+	module.ModalView.prototype.show = function() {
+
+		this.$renderContext().openModal(
+		{
+			/* options provided by Materialize CSS, (defaults are fine for now):
+			dismissible: true, // Modal can be dismissed by clicking outside of the modal
+			opacity: .5, // Opacity of modal background
+			in_duration: 300, // Transition in duration
+			out_duration: 200, // Transition out duration
+			ready: function() { alert('Ready'); }, // Callback for Modal open
+			complete: function() { alert('Closed'); } // Callback for Modal close
+			*/
+		});
+	}
 
 
 	/** Submits event form to controller if it passes all validations

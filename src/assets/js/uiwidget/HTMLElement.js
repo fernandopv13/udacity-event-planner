@@ -103,7 +103,7 @@ var app = app || {};
 					error: 'Please try again'
 				},
 				
-				innerHTML: 'Hello world',
+				innerHTML: 'Hello world', // accepts a string or an HTMLELement
 
 				listeners:
 				{
@@ -151,9 +151,17 @@ var app = app || {};
 				}
 			}
 			
-			if (options.innerHTML) {
+			if (options.innerHTML) { // accepts a string or an HTMLElement
 				
-				element.innerHTML = options.innerHTML;
+				if (typeof options.innerHTML === 'string') {
+
+					element.innerHTML = options.innerHTML;
+				}
+
+				else if (options.innerHTML instanceof HTMLElement) { // not sure how robust this is, but seems to work
+
+					element.appendChild(options.innerHTML);
+				}
 			}
 
 

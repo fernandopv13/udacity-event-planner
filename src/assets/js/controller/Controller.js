@@ -306,7 +306,9 @@ var app = app || {};
 
 						signInView: new module.SignInView('sign-in-view', 'Sign In'), // sign in view
 
-						signUpView: new module.SignUpView('sign-up-view', 'Sign Up') // sign in view
+						signUpView: new module.SignUpView('sign-up-view', 'Sign Up'), // sign in view
+
+						modalView: new module.ModalView('modal-view', '[Untitled]')
 					}
 
 					

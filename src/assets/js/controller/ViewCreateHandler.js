@@ -112,9 +112,85 @@ var app = app || {};
 
 				void ctrl.newModel(null) // clear newModel (account creation can't be rolled back)
 
-				ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View
+				var modal = module.controller.views()['modalView'];
 
-				Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
+				modal.render( // render new modal content
+				{
+					header: 'Set Up Permissions',
+
+					body: (function() {
+
+						var container = document.createElement('div');
+
+						container.appendChild(module.View.prototype.createWidget.call(
+
+							modal,
+
+							'HTMLElement',
+							{
+								element: 'p',
+
+								id: 'setup-intro',
+
+								innerHTML: 'Before you start using the app, please decide about these permissions.'
+							}
+						));
+
+						container.appendChild(module.View.prototype.createWidget.call(
+
+							modal,
+
+							'SwitchInputWidget',
+							{
+								width: 's12',
+
+								id: 'setup-localstorage',
+
+								label: 'Allow local storage'
+
+								//label: 'Allow app to store your account and event info on this device (required for the app to work.)'
+							}
+						));
+
+						container.appendChild(module.View.prototype.createWidget.call(
+
+							modal,
+
+							'SwitchInputWidget',
+							{
+								width: 's12',
+
+								id: 'setup-geolocation',
+
+								label: 'Allow geolocation'
+
+								//label: 'Allow app to access the location of this device (optional)'
+							}
+						));
+
+						/*
+						container.appendChild(module.View.prototype.createWidget.call(
+
+							modal,
+
+							'HTMLElement',
+							{
+								element: 'p',
+
+								innerHTML: 'You can '
+							}
+						));
+						*/
+
+						return container;
+					})()
+				});
+
+				modal.show();
+
+				//ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View
+
+				//Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
 
 				break;
 
