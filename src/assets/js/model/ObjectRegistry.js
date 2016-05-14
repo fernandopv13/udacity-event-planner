@@ -329,21 +329,44 @@ var app = app || {}; // create a simple namespace for the app
 		
 		
 		/** Reads (deserializes) registry contents from local storage.
-		* Doing this during registry instantiation would be neat, but it doesn't work.
+		*
+		* Clears and recreates object list from scratch to make sure every Model in storage is retrieved,
+		*
+		* whether or not the entire registry has been written out in one go. This should make storage
+		*
+		* robust against users leaving the app in ways that don't trigger a complete save
+		*
+		* (Models save themselves continously when changes are submitted).
+		*
+		* (Doing this during registry instantiation would be neat, but it doesn't work.)
 		*/
 		
 		this.readObjects = function() {
 			
-			// Retreive and re-instantiate registry contents (by calling constructor with the id).
+			// Retrieve and re-instantiate registry contents (by calling constructor with the id).
 			// Constructor automatically adds new instance to the registry.
 		
 			var objList = _objectList; // get a reference to the collection of object placeholders
 			
 			this.clear(); // clear out _objectList (else add() will refuse to add the actual objects b/c they have the same ids)
 			
+			/*
 			for (var prop in objList) { // call constructor with id to make it re-instantiate the object from storage
 				
 				void new app[objList[prop]._className](objList[prop]._id);
+			}
+			*/
+
+			for (var i = 0, len = localStorage.length, key, className, id, obj_json; i < len; i++) { // iterate over stored items
+				
+				key = localStorage.key(i).split('.'); className = key[key.length - 2]; // parse class name
+
+				if (className === _objectClassName) { // read in item if it is the correct type for this registry
+
+					id = JSON.parse(localStorage.getItem(localStorage.key(i)))._id; // get id
+
+					void new app[_objectClassName](id); // create new object
+				}
 			}
 		};
 		

@@ -183,7 +183,7 @@ var app = app || {}; // create a simple namespace for the app
 			* return {Array} A Person array
 			*/
 			
-			this.guests = function(arr_guests) { // only for use by readObject() when re-instantiating object
+			this.guests = function(arr_guests) { // setting only for use by readObject() when re-instantiating object
 				
 				if (arguments.length > 0) {
 				

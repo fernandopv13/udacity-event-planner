@@ -112,11 +112,11 @@ var app = app || {};
 
 				void ctrl.newModel(null) // clear newModel (account creation can't be rolled back)
 
-				var modal = module.controller.views()['modalView'];
+				var modal = module.controller.views().modalView;
 
 				modal.render( // render new modal content
 				{
-					header: 'Set Up Permissions',
+					header: 'First Time Setup',
 
 					body: (function() {
 
@@ -156,6 +156,19 @@ var app = app || {};
 
 							modal,
 
+							'InputDescriptionWidget',
+
+							{
+								datasource: 'Please allow the app to store your account and event details on this device. Otherwise, you will have to start over from scratch every time you come back to the app.',
+
+								divider: false
+							}
+						));
+
+						container.appendChild(module.View.prototype.createWidget.call(
+
+							modal,
+
 							'SwitchInputWidget',
 							{
 								width: 's12',
@@ -168,29 +181,48 @@ var app = app || {};
 							}
 						));
 
-						/*
 						container.appendChild(module.View.prototype.createWidget.call(
 
 							modal,
 
-							'HTMLElement',
-							{
-								element: 'p',
+							'InputDescriptionWidget',
 
-								innerHTML: 'You can '
+							{
+								datasource: 'Allowing geolocation will enable the app to suggest event venues and other useful information based on the location of this device (optional).',
+
+								divider: false
 							}
 						));
-						*/
 
 						return container;
 					})()
 				});
 
-				modal.show();
+				modal.show(
+				{
+					dismissible: false,
 
-				//ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View
+					complete: function() {
 
-				//Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
+						var acc = ctrl.selectedAccount();
+
+						void acc.geoLocationAllowed($('#setup-geolocation').prop('checked'));
+
+						if (acc.localStorageAllowed($('#setup-localstorage').prop('checked'))) {
+
+							void acc.writeObject();
+
+							Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
+						}
+
+						else {
+
+							Materialize.toast('Entered demo mode. Everything works but you will loose your data when leaving the app (allow local storage in account settings to change this)', 3 * module.prefs.defaultToastDelay());
+						}
+					}
+				});
+
+				ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View
 
 				break;
 

@@ -199,38 +199,45 @@ var app = app || {};
 
 	/** Opens modal dialog with whatever contents have been rendered to it most recently.
 	*
-	* Relies on Materialize leanModel so overriding default show() method in View. 
+	* Relies on Materialize leanModal so overriding default show() method in View. 
+	*
+	* @param {Object} options JSON object with the same attributes as Materialize leanModal. Optional.
 	*/
 
-	module.ModalView.prototype.show = function() {
+	module.ModalView.prototype.show = function(obj_options) {
 
-		this.$renderContext().openModal(
+		var id = this.$renderContext().attr('id');
+
+		$('#' + id).openModal( // workaround: calling openModal directly on $renderContext only displays overlay, but no modal
 		{
-			/* options provided by Materialize CSS, (defaults are fine for now):
-			dismissible: true, // Modal can be dismissed by clicking outside of the modal
-			opacity: .5, // Opacity of modal background
-			in_duration: 300, // Transition in duration
-			out_duration: 200, // Transition out duration
-			ready: function() { alert('Ready'); }, // Callback for Modal open
-			complete: function() { alert('Closed'); } // Callback for Modal close
-			*/
+			// Modal options with defaults provided by Materialize CSS:
+
+			dismissible: obj_options && typeof obj_options.dismissible !== 'undefined' ? obj_options.dismissible : true, // Modal can be dismissed by clicking outside of the modal
+			
+			opacity: obj_options && obj_options.opacity ? obj_options.opacity : 0.5, // Opacity of modal background
+
+			in_duration: obj_options && obj_options.in_duration ? obj_options.in_duration : 300, // Transition in duration
+
+			out_duration: obj_options && obj_options.out_duration ? obj_options.out_duration : 200, // Transition out duration
+
+			ready: obj_options && obj_options.ready ? obj_options.ready : function() {}, // Callback for Modal open
+
+			complete: obj_options && obj_options.complete ? obj_options.complete : function() {}, // Callback for Modal close
 		});
 	}
 
 
-	/** Submits event form to controller if it passes all validations
+	/** Dummy method to comply with View superclass.
 	*
-	* @return {Boolean} true if validation and is succesful, otherwise false
+	* Unlike other Views, ModalView is reused for multiple purposes, so 'submit' may have more than one meaning.
 	*
-	* @todo Fix host hack
+	* Pass in a 'complete' callback to the open() method instead (via the options object).
+	*
+	* @return {Boolean} true
 	*/
 
 	module.ModalView.prototype.submit = function(nEvent) {
 		
-		this.$renderContext().closeModal();
-
-		console.log(nEvent); // debug
-
 		return true;
 	};
 

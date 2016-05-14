@@ -20,7 +20,7 @@ var app = app || {};
 
 	* @throws Same errors as accessors for attribute values passed in, if invalid.
 	*
-	* @author Ulrik H. Gade, January 2016
+	* @author Ulrik H. Gade, May 2016
 	*
 	* @todo Move as many non-accessor methods as possible from the object itself to the function prototype.
 	*/
@@ -346,11 +346,19 @@ var app = app || {};
 			* @throws {IllegalArgumentError} If attempting to set events (collection is read-only)
 			*/
 			
-			this.events = function () {
+			this.events = function (obj_events) { // setting only for use by readObject() when re-instantiating object
 			
-				if (arguments.length !== 0) {
+				if (arguments.length > 0) {
 					
-					throw new IllegalArgumentError('Events collection is read-only')
+					for (var prop in obj_events) { // verify param
+						
+						if (obj_events[prop]._className !== 'Event' || typeof obj_events[prop]._id === 'undefined') {
+							
+							throw new IllegalArgumentError('Event list must be able to resolve into Event object map');
+						}
+					}
+					
+					_events = obj_events; // param verified, so set attribute
 				}
 
 				return _events;
@@ -412,6 +420,14 @@ var app = app || {};
 				if (_accountHolder && _accountHolder.constructor !== module.Person && _accountHolder._className === 'Person') {
 				
 					_accountHolder = module.Person.registry.getObjectById(_accountHolder._id);
+				}
+
+				for (var prop in _events) { // Re-reference event list
+					
+					if (_events[prop].constructor !== module.Event && _events[prop]._className === 'Event') {
+					
+						_events[prop] = module.Event.registry.getObjectById(_events[prop]._id);
+					}
 				}
 
 				return true;
@@ -479,7 +495,25 @@ var app = app || {};
 
 					_geoLocationAllowed: _geoLocationAllowed,
 
-					_localStorageAllowed: _localStorageAllowed
+					_localStorageAllowed: _localStorageAllowed,
+
+					_events: (function() {
+						
+						var events = [];
+
+						for (var event in _events) {
+
+							events.push(
+							{
+								_className: _events[event].className(),
+
+								_id: _events[event].id()
+							});
+						}
+
+						return events;
+
+					})()
 				};
 			};
 		
