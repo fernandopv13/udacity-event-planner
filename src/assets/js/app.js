@@ -183,7 +183,7 @@ var app = (function(self) {
 				
 				// loops don't work (registries' onDeserialized() don't see the objects), so going manual
 				
-				/*
+				/* DEPRECATED: Remove after verifying current code on iOS
 				self.Account.registry.onDeserialized();
 		
 				self.Email.registry.onDeserialized();
@@ -207,48 +207,111 @@ var app = (function(self) {
 				
 				// Re-instantiate all objects of every class
 
-				this.clear();
-				
-				for (var i = 0, len = localStorage.length, key, className, obj_json, objectClassName; i < len; i++) { // iterate over stored items
-					
-					key = localStorage.key(i).split('.'); className = key[key.length - 2]; // parse class name
-					
-					if (className === 'ObjectRegistry') { // read in item if it is an object registry
-						
-						obj_json = JSON.parse(localStorage.getItem(localStorage.key(i))); // parse to JSON
-					
-						objectClassName = obj_json._objectClassName; // get name of Model class
+				var backup = this.toJSON(); // store a backup of existing data in case reading from local storage fails
 
-						app[objectClassName].registry = new app.ObjectRegistry(obj_json._id); // call constructor with single integer param to deserialize registry itself from local storage
-						
-						app[objectClassName].registry.readObjects(); // deserialize registry contents from local storage
+				try { // read in data from local storage
 
-						//_registry.push(app[objectClassName].registry); // add to app registry
+					this.clear(); // clear app and Model registries
+					
+					for (var i = 0, len = localStorage.length, key, className, obj_json, objectClassName; i < len; i++) { // iterate over stored items
+						
+						key = localStorage.key(i).split('.'); className = key[key.length - 2]; // parse class name
+						
+						if (className === 'ObjectRegistry') { // read in item if it is an object registry
+							
+							obj_json = JSON.parse(localStorage.getItem(localStorage.key(i))); // parse to JSON
+						
+							objectClassName = obj_json._objectClassName; // get name of Model class
+
+							app[objectClassName].registry = new app.ObjectRegistry(obj_json._id); // call constructor with single integer param to deserialize registry itself from local storage
+							
+							app[objectClassName].registry.readObjects(); // deserialize registry contents from local storage
+
+							//_registry.push(app[objectClassName].registry); // add to app registry
+						}
+
+						// else: silently ignore non-registry items in local storage
 					}
 
-					// else: silently ignore non-registry items in local storage
+					// Re-establish app registry
+
+					['Account', 'Email', 'Event', 'Organization', 'Password', 'Person'].forEach(function(klass) {
+
+						_registry.push(self[klass].registry);
+					});
+
+					/* DEPRECATED: Remove after verifying current code on iOS
+					_registry.push(self.Account.registry);
+
+					_registry.push(self.Email.registry);
+
+					_registry.push(self.Event.registry);
+
+					_registry.push(self.Organization.registry);
+
+					_registry.push(self.Password.registry);
+
+					_registry.push(self.Person.registry);
+					*/
 				}
 
-				// Re-establish app registry
+				catch(e) { // reading failed, re-establish data from backup
+
+					console.log(e);
+
+					this.clear(); // clear all registries to avoid duplication
+
+					for (var prop in backup) { // iterative over every Model in backup
+
+						var json = backup[prop],
+
+						className = json._className;
+
+						if (className !== 'ObjectRegistry') { // skip object registries (already exist)
+
+							var obj = new self[className](); // create new Model object
+
+							for (var ix in json) { // copy data from backup into new object
+
+								var attr = ix.slice(1); // trim leading underscore
+
+								if (attr !== 'className' // skip attribute unless function other than className and id accessors
+
+									&& attr !== 'id'
+
+									&& typeof obj[attr] === 'function'
+
+									&& typeof json[ix] !== 'undefined') {
+
+									void obj[attr](json[ix]);
+								}
+							}
+						}
+					}
+
+					this.onDeserialized(); // re-establish object references
+				}
+
+				backup = null; // free up JSON object for garbage collection
+			},
+
+			toJSON: function() { // convert app data to JSON object using same format as that written to local storage (except not stringified)
+
+				var obj_json = {};
 
 				['Account', 'Email', 'Event', 'Organization', 'Password', 'Person'].forEach(function(klass) {
 
-					_registry.push(self[klass].registry);
+					var registry = self[klass].registry, objectList = registry.getObjectList();
+
+					obj_json[_prefs.localStoragePrefix  + 'ObjectRegistry.' + self[klass].registry.id()] = registry.toJSON();
+
+					for (var prop in objectList) {
+
+						obj_json[_prefs.localStoragePrefix + klass + '.' + objectList[prop].id()] = objectList[prop].toJSON();
+					}
 				});
 
-				/* DEPRECATED: Remove after verifying alternative on iOS
-				_registry.push(self.Account.registry);
-
-				_registry.push(self.Email.registry);
-
-				_registry.push(self.Event.registry);
-
-				_registry.push(self.Organization.registry);
-
-				_registry.push(self.Password.registry);
-
-				_registry.push(self.Person.registry);
-				*/
+				return obj_json;
 			},
 			
 			writeObject: function() { // write app data (in class registries) out to local storage

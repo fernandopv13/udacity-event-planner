@@ -156,7 +156,7 @@
 			<script src="assets/js/controller/ViewSubViewHandler.js"></script>
 			
 			<script src="assets/js/app.js"></script>
-			<!--script src="assets/js/util/demodata.js"></script-->
+			<script src="assets/js/util/demodata.js"></script>
 			<!-- @gulp-app-script-tags-end -->
 
 		<script>
@@ -164,6 +164,10 @@
 			window.onload = function() { // $(document).ready()) may fire too early, so going old school
 				
 				app.init();
+				
+				app.prefs.isLocalStorageAllowed(true);
+				localStorage.clear();
+				app.registry.writeObject();
 			};
 		</script>
 		
