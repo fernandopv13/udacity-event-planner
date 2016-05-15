@@ -15,7 +15,7 @@ var app = app || {};
 	*
 	* @extends InputWidget
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*
 	* @return {EmailInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
@@ -211,22 +211,30 @@ var app = app || {};
 
 			var testMail = new module.Email($(HTMLInputElement_e).val()),
 
-			isRequired = typeof $(HTMLInputElement_e).attr('required') !== 'undefined';
+			isRequired = typeof $(HTMLInputElement_e).attr('required') !== 'undefined',
+
+			ret = false;
 
 			if ($(HTMLInputElement_e).val() !== '') { // always validate email if it exists
 
-				return testMail.isValid();
+				ret = testMail.isValid();
 			}
 
 			else if (!isRequired) { // empty is OK if not required
 			
-				return true;
+				ret = true;
 			}
 
 			else { // no entry, but required
 
-				return false;
+				ret = false;
 			}
+
+			testMail.delete(); // destroy temporary helper object
+
+			testMail = null; // try to speed up garbage collection
+
+			return ret;
 		};
 
 

@@ -16,7 +16,7 @@ var app = app || {};
 	*
 	* @extends ViewUpdateHandler
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 	module.ViewCreateHandler = function(Controller_c) {
@@ -60,7 +60,7 @@ var app = app || {};
 
 	/** Handles 'create' user action in a View on behalf of a Controller.
 	*
-	* Creates a new Model of the requested type and opens it in its detail (form) view for editing.
+	* Creates a new Model of the requested type and (mostly) opens it in its detail (form) view for editing.
 	*
 	* Fully registers object in app up-front; relies on generic delete for reversal.
 	*
@@ -71,10 +71,6 @@ var app = app || {};
 	* @param {View} v The View spawning the notification
 	*
 	* @return {void}
-	*
-	* @todo Consolidate bolerplate actions in a single location
-	*
-	* @todo Increase coverage to account creation
 	*/
 
 	module.ViewCreateHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
@@ -86,7 +82,7 @@ var app = app || {};
 		
 		function initModel(Model_m, Model_new, View_new) { // do work common to all Model creations
 
-			Model_m.constructor.registry.remove(Model_m); // clear tmp object for garbage collection
+			Model_m.delete(); Model_m = null; // clear tmp object for garbage collection
 
 			ctrl.newModel(Model_new); // replace with new Model and store for future reference
 
@@ -102,127 +98,186 @@ var app = app || {};
 
 			case module.Account:
 
-				Model_n = new module.Account(); // create new Account
+				// check if account already exists
 
-				void ctrl.selectedAccount(Model_n); // set new Account as selected
+				var accounts = module.Account.registry.getObjectList(), account = null;
 
-				Model_n.update(Model_m, Model_n.id()); // save info entered when creating account
+				for (var ix in accounts) { // try to find a matching account
 
-				initModel(Model_m, Model_n, ctrl.views().eventListView); // do boilerplate initialization
+					if (accounts[ix].id() !== Model_m.id()) { // skip the temporary account passed from the sign in view
 
-				void ctrl.newModel(null) // clear newModel (account creation can't be rolled back)
+						if (accounts[ix].email() && accounts[ix].email().address() === Model_m.email().address()) { // emails match
 
-				var modal = module.controller.views().modalView;
+							account = accounts[ix];
 
-				modal.render( // render new modal content
-				{
-					header: 'First Time Setup',
-
-					body: (function() {
-
-						var container = document.createElement('div');
-
-						container.appendChild(module.View.prototype.createWidget.call(
-
-							modal,
-
-							'HTMLElement',
-							{
-								element: 'p',
-
-								id: 'setup-intro',
-
-								innerHTML: 'Before you start using the app, please decide about these permissions.'
-							}
-						));
-
-						container.appendChild(module.View.prototype.createWidget.call(
-
-							modal,
-
-							'SwitchInputWidget',
-							{
-								width: 's12',
-
-								id: 'setup-localstorage',
-
-								label: 'Allow local storage'
-
-								//label: 'Allow app to store your account and event info on this device (required for the app to work.)'
-							}
-						));
-
-						container.appendChild(module.View.prototype.createWidget.call(
-
-							modal,
-
-							'InputDescriptionWidget',
-
-							{
-								datasource: 'Please allow the app to store your account and event details on this device. Otherwise, you will have to start over from scratch every time you come back to the app.',
-
-								divider: false
-							}
-						));
-
-						container.appendChild(module.View.prototype.createWidget.call(
-
-							modal,
-
-							'SwitchInputWidget',
-							{
-								width: 's12',
-
-								id: 'setup-geolocation',
-
-								label: 'Allow geolocation'
-
-								//label: 'Allow app to access the location of this device (optional)'
-							}
-						));
-
-						container.appendChild(module.View.prototype.createWidget.call(
-
-							modal,
-
-							'InputDescriptionWidget',
-
-							{
-								datasource: 'Allowing geolocation will enable the app to suggest event venues and other useful information based on the location of this device (optional).',
-
-								divider: false
-							}
-						));
-
-						return container;
-					})()
-				});
-
-				modal.show(
-				{
-					dismissible: false,
-
-					complete: function() {
-
-						var acc = ctrl.selectedAccount();
-
-						void acc.geoLocationAllowed($('#setup-geolocation').prop('checked'));
-
-						if (acc.localStorageAllowed($('#setup-localstorage').prop('checked'))) {
-
-							void acc.writeObject();
-
-							Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
-						}
-
-						else {
-
-							Materialize.toast('Entered demo mode. Everything works but you will loose your data when leaving the app (allow local storage in account settings to change this)', 3 * module.prefs.defaultToastDelay());
+							break; // .. match found, so exit loop
 						}
 					}
-				});
+				}
 
-				ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View
+				if (account !== null) { // account exists, sign in or reject account creation
+					
+					if (Model_m.password().password() === account.password().password()) { // passwords match
+
+						View_v.ssuper().prototype.submit.call(View_v, Model_m, module.View.UIAction.SIGNIN);// pass request on to ViewSignInHandler
+					}
+
+					else { // wrong password
+
+						Materialize.toast('An account using this email already exists. Please enter another email and try again.', module.prefs.defaultToastDelay());
+					}
+
+					Model_m.delete(); // destroy temporary Model holding form data
+
+					Model_m = null; // try to accelerate garbage collection
+
+					break;
+				}
+
+				else { // create new account
+
+					Model_n = new module.Account(); // create new Account
+
+					void ctrl.selectedAccount(Model_n); // set new Account as selected
+
+					Model_n.update(Model_m, Model_n.id()); // save info entered when creating account
+
+					void module.Email.registry.add(Model_n.email()); // update() wipes email and pw from registries...
+
+					void module.Password.registry.add(Model_n.password()); // ... so add them back in
+
+					initModel(Model_m, Model_n, ctrl.views().eventListView); // do boilerplate initialization
+
+					void ctrl.newModel(null) // clear newModel (account creation can't be rolled back)
+
+					var modal = module.controller.views().modalView; // get reference to generic, multi-purpose popup (modal)
+
+					modal.render( // render new modal content
+					{
+						header: 'First Time Setup',
+
+						body: (function() {
+
+							var container = document.createElement('div');
+
+							container.appendChild(module.View.prototype.createWidget.call(
+
+								modal,
+
+								'HTMLElement',
+								{
+									element: 'p',
+
+									id: 'setup-intro',
+
+									innerHTML: 'Before you start using the app, please decide about these permissions.'
+								}
+							));
+
+							container.appendChild(module.View.prototype.createWidget.call(
+
+								modal,
+
+								'SwitchInputWidget',
+								{
+									width: 's12',
+
+									id: 'setup-localstorage',
+
+									label: 'Allow local storage'
+
+									//label: 'Allow app to store your account and event info on this device (required for the app to work.)'
+								}
+							));
+
+							container.appendChild(module.View.prototype.createWidget.call(
+
+								modal,
+
+								'InputDescriptionWidget',
+
+								{
+									datasource: 'Please allow the app to store your account and event details on this device. Otherwise, you will have to start over from scratch every time you come back to the app.',
+
+									divider: false
+								}
+							));
+
+							container.appendChild(module.View.prototype.createWidget.call(
+
+								modal,
+
+								'SwitchInputWidget',
+								{
+									width: 's12',
+
+									id: 'setup-geolocation',
+
+									label: 'Allow geolocation'
+
+									//label: 'Allow app to access the location of this device (optional)'
+								}
+							));
+
+							container.appendChild(module.View.prototype.createWidget.call(
+
+								modal,
+
+								'InputDescriptionWidget',
+
+								{
+									datasource: 'Allowing geolocation will enable the app to suggest event venues and other useful information based on the location of this device (optional).',
+
+									divider: false
+								}
+							));
+
+							container.appendChild(module.View.prototype.createWidget.call(
+
+								modal,
+
+								'HTMLElement',
+								{
+									element: 'p',
+
+									id: 'setup-outro',
+
+									innerHTML: 'You can change these choices at any time in the app\'s Account Settings.'
+								}
+							));
+
+							return container;
+						})()
+					});
+
+					modal.show(
+					{
+						dismissible: false, // prevent user from dismissing popup by tap/clicking outside it
+
+						complete: function() {
+
+							var acc = ctrl.selectedAccount();
+
+							void acc.geoLocationAllowed($('#setup-geolocation').prop('checked'));
+
+							if (acc.localStorageAllowed($('#setup-localstorage').prop('checked')) && window.localStorage) {
+
+								app.registry.writeObject(); // save all app data, incl. registries, to local storage
+
+								// on first login, registries have not yet been stored, and so later retrieval may fail unless done here
+
+								Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
+							}
+
+							else {
+
+								Materialize.toast('Entered demo mode. Everything works but you will loose your data when leaving the app (allow local storage in Account Settings to change this)', 3 * module.prefs.defaultToastDelay());
+							}
+						}
+					});
+
+					ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View
+				}
 
 				break;
 

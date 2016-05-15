@@ -205,7 +205,7 @@ var app = (function(self) {
 
 			readObject: function() { // read app data (in class registries) in from local storage
 				
-				// Re-instantiate all objects of every class
+				// Re-instantiate every object of every ObjectRegistry and Model class
 
 				var backup = this.toJSON(); // store a backup of existing data in case reading from local storage fails
 
@@ -322,7 +322,10 @@ var app = (function(self) {
 		
 				localStorage.clear(); // clear out any crud
 				
-				for (var i = 0, len = _registry.length; i < len; i++) {_registry[i].writeObject()}
+				for (var i = 0, len = _registry.length; i < len; i++) {
+
+					_registry[i].writeObject();
+				}
 			}
 		}
 	

@@ -665,31 +665,31 @@ var app = app || {};
 
 				// Update using accessors (for validation)
 
-				this.email(Account_a.email());
+				void this.email(Account_a.email());
 
-				this.password(Account_a.password());
+				void this.password(Account_a.password());
 
-				if (Account_a.accountHolder()) {this.accountHolder(Account_a.accountHolder());}
+				if (Account_a.accountHolder()) {void this.accountHolder(Account_a.accountHolder());}
 
-				this.defaultCapacity(Account_a.defaultCapacity());
+				void this.defaultCapacity(Account_a.defaultCapacity());
 
-				this.defaultLocation(Account_a.defaultLocation());
+				void this.defaultLocation(Account_a.defaultLocation());
 
-				this.geoLocationAllowed(Account_a.geoLocationAllowed());
+				void this.geoLocationAllowed(Account_a.geoLocationAllowed());
 
-				this.localStorageAllowed(Account_a.localStorageAllowed());
+				void this.localStorageAllowed(Account_a.localStorageAllowed());
 			
-				
+
 				// Do some housekeeping (calls method in parent class, i.e. Model)
 
 				this.ssuper().prototype.onUpdate.call(this, Account_a);
-
 				
 				return true;
 			}
 
 			return false; // this should never happen, keeping just in case
 		}
+
 
 	/*----------------------------------------------------------------------------------------
 	* Public class (static) members
@@ -702,4 +702,38 @@ var app = app || {};
 
 		module.Account.registry = new module.ObjectRegistry(module.Account, 'Account');
 
+		
+		/** Checks if account matching provided email exists
+		*
+		* @param {Email} email An email Model against whose address to check for an existing account
+		*
+		* @return {Account} The account matching the email, or null if no match
+		*
+		* @throws {IllegalArgumentError} If passing in param that is not an Email, or none
+		*/
+
+		module.Account.exists = function(Email_e) {
+
+			var accounts = module.Account.registry.getObjectList(), account = null;
+
+			if (arguments.length === 1 && Email_e.constructor === module.Email) {
+
+				for (var ix in accounts) { // try to find a matching account
+
+					if (accounts[ix].email() && accounts[ix].email().address() === Email_e.address()) { // emails match
+
+						account = accounts[ix];
+
+						break; // .. match found, so exit loop
+					}
+				}
+			}
+
+			else {
+
+				throw new IllegalArgumentError('Expected Email');
+			}
+
+			return account;
+		};
 })(app)

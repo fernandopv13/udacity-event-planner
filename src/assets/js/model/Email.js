@@ -20,7 +20,7 @@ var app = app || {}; // create a simple namespace for the app
 	*
 	* @throws Same errors as address accessor if passing in invalid data.
 	*
-	* @author Ulrik H. Gade, January 2016
+	* @author Ulrik H. Gade, May 2016
 	*
 	* @todo Move as many non-accessor methods as possible from the object itself to the function prototype.
 	*/

@@ -18,7 +18,7 @@ var app = app || {}; // create a simple namespace for the app
 	*
 	* @return {Event} An Event instance
 	*
-	* @author Ulrik H. Gade, April 2016
+	* @author Ulrik H. Gade, May 2016
 	*
 	* @todo Move as many non-accessor methods as possible from the object itself to the function prototype.
 	*/
@@ -721,6 +721,23 @@ var app = app || {}; // create a simple namespace for the app
 		}
 
 
+		/** Writes event to local storage, if available.
+		*
+		* Overrides method inherited from ISerializable to ensure info about the event collection
+		*
+		* in the containing Account, as well as about the event itself, is always up to date in storage.
+		*
+		* @return {void}
+		*
+		* @throws Same errors as ISerializable writeObject() (relies on this for error checking)
+		*/
+
+		module.Event.prototype.writeObject = function() {
+
+			module.ISerializable.prototype.default_writeObject.call(this); // do normal save of event itself
+
+			module.Account.registry.writeObject(); // save containing account (by way of registry to keep Model unaware of Controller)
+		};
 
 	/*----------------------------------------------------------------------------------------
 	* Public class (static) members

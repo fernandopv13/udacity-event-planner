@@ -16,7 +16,7 @@ var app = app || {};
 	*
 	* @extends View
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 	module.SignUpView = function(str_elementId, str_heading) {
@@ -71,23 +71,6 @@ var app = app || {};
 
 		$('#sign-up-password-hints').hide('fast');
 	}
-
-
-	/* Signs into the demo account */
-
-	/*DEPRECATED, delete after commit
-	module.SignUpView.prototype.openDemo = function(nEvent) {
-
-		var account = new module.Account();
-
-		account.email(new module.Email('demo@demo.demo'));
-
-		account.password(new module.Password('DEMO5%demo'));
-		
-		// Dispatch submission using function in parent class
-
-		this.ssuper().prototype.submit.call(this, account, module.View.UIAction.SIGNIN);
-	}*/
 
 
 	/** Renders sign in page.
@@ -481,9 +464,11 @@ var app = app || {};
 
 			var account = new module.Account();
 
-			account.email(new module.Email($('#sign-up-email').val()));
+			void account.email(new module.Email($('#sign-up-email').val()));
 
-			account.password(new module.Password($('#sign-up-password').val()));
+			app.Email.registry.getObjectList()
+
+			void account.password(new module.Password($('#sign-up-password').val()));
 
 			var accountHolder = new module.Person( // trying to keep it simple; don't scare users away before they have signed up!
 

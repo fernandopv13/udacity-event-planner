@@ -141,7 +141,9 @@ var app = app || {}; // create a simple namespace for the module
 
 			void this.constructor.registry.remove(this);
 
-			if (window.localStorage && module.prefs.isLocalStorageAllowed()) {this.removeObject();}
+			void module.controller.removeObserver(this);
+
+			if (window.localStorage && module.prefs.isLocalStorageAllowed()) {void this.removeObject();}
 		};
 
 
@@ -173,7 +175,9 @@ var app = app || {}; // create a simple namespace for the module
 
 			// Remove references to tmp object (to mark for garbage collection, preventing memory leak)
 
-			this.constructor.registry.remove(Model_obj);
+			//this.constructor.registry.remove(Model_obj);
+
+			Model_obj.delete();
 
 			Model_obj = undefined;
 			
@@ -183,6 +187,8 @@ var app = app || {}; // create a simple namespace for the module
 			var account = module.controller.selectedAccount();
 
 			if (account.localStorageAllowed() && window.localStorage) {
+
+				console.log('Writing ' + this.className()); // debug
 
 				this.writeObject();
 

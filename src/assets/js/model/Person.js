@@ -21,7 +21,7 @@ var app = app || {}; // create a simple namespace for the app
 	*
 	* @return {Person} A Person instance
 	*
-	* @author Ulrik H. Gade, December 2015/January 2016
+	* @author Ulrik H. Gade, May 2016
 	*
 	* @throws Same errors as parameter accessors if passing in invalid data.
 	*
@@ -445,7 +445,7 @@ var app = app || {}; // create a simple namespace for the app
 				
 				// Do some housekeeping (calls method in parent class)
 
-				this.ssuper().prototype.update.call(this, Person_p);
+				this.ssuper().prototype.onUpdate.call(this, Person_p);
 				
 
 				return true;
