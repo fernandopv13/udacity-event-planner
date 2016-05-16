@@ -706,9 +706,9 @@ var app = app || {};
 
 			module.ISerializable.prototype.default_writeObject.call(this); // do normal save of Account itself
 
-			this.email().writeObject(); // save email
+			if (this.email()) {this.email().writeObject();} // save email
 
-			this.password().writeObject(); // save password
+			if (this.password()) {this.password().writeObject();} // save password
 		};
 
 	/*----------------------------------------------------------------------------------------

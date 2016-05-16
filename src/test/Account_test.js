@@ -558,24 +558,26 @@ describe('class Account', function(){
 
 				// Copy data from temporary object
 
+				var json = tmpAccount.toJSON(); // update() destroys temporary Model, so copy its data first
+
 				testAccount.update (tmpAccount, id);
 
 
 				// Verify copy
 
-				expect(testAccount.email().id()).toEqual(tmpAccount.email().id());
+				expect(testAccount.email().id()).toEqual(json._email._id);
 
-				expect(testAccount.password().id()).toEqual(tmpAccount.password().id());
+				expect(testAccount.password().id()).toEqual(json._password._id);
 
-				expect(testAccount.accountHolder().id()).toEqual(tmpAccount.accountHolder().id());
+				expect(testAccount.accountHolder().id()).toEqual(json._accountHolder._id);
 
-				expect(testAccount.localStorageAllowed()).toEqual(tmpAccount.localStorageAllowed());
+				expect(testAccount.localStorageAllowed()).toEqual(json._localStorageAllowed);
 
-				expect(testAccount.localStorageAllowed()).toEqual(tmpAccount.geoLocationAllowed());
+				expect(testAccount.localStorageAllowed()).toEqual(json._geoLocationAllowed);
 
-				expect(testAccount.defaultCapacity()).toEqual(tmpAccount.defaultCapacity());
+				expect(testAccount.defaultCapacity()).toEqual(json._defaultCapacity);
 
-				expect(testAccount.defaultLocation()).toEqual(tmpAccount.defaultLocation());
+				expect(testAccount.defaultLocation()).toEqual(json._defaultLocation);
 
 
 				// Verify that temporary object has been removed from registry

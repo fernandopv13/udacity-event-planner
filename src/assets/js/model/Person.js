@@ -470,7 +470,7 @@ var app = app || {}; // create a simple namespace for the app
 
 			module.ISerializable.prototype.default_writeObject.call(this); // do normal save of Person itself
 
-			this.email().writeObject(); // save email
+			if (this.email()) {this.email().writeObject();} // save email
 		};
 
 

@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 	<head>
 		<title> Meetup Event Planner</title>
+		
 		<meta charset="utf-8">
-		<!--Let browser know the app is optimized for mobile-->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 		
-		<!--Import Google Icon Font used by Materialize-->
+		<!--Google Icon Font used by Materialize-->
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link href="http://fonts.googleapis.com/icon?family=Roboto" rel="stylesheet">
 		
-		<!--Import styles -->
 		<!-- build:css assets/css/app.css -->
 		<link rel="stylesheet" href="lib/bootstrap_v3.3.6/css/bootstrap.min.css"><!-- for bootstrap-datetimepicker -->
 		<link rel="stylesheet" href="lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.min.css">
@@ -66,7 +65,7 @@
 			<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
 			<!-- endbuild -->
 			
-		<!-- JavaScript app source files (will be concatenated and minified to single 'app.js' in build process) -->
+		<!-- JavaScript app source files -->
 			<!-- build:js assets/js/app.js -->
 			<script src="assets/js/util/Accessor.js"></script>
 			<script src="assets/js/util/Device.js"></script>
@@ -142,26 +141,27 @@
 			<!--script src="assets/js/util/demodata.js"></script-->
 			<!-- endbuild -->
 
-		<script>
-			
-			window.onload = function() { // $(document).ready()) may fire too early, so going old school
-				
-				app.init($('#container')[0]);
-				
-				/*
-				app.prefs.isLocalStorageAllowed(true);
-				localStorage.clear();
-				app.registry.writeObject();
-				*/
-			};
-		</script>
-		
-		<noscript>
-			
-			This app relies very heavily on scripted content running in the browser 'front-end'. You seem to have scripting disabled, or perhaps prefer not to enable it. Which is fine. But at this time the app is only available with scripting enabled. Sorry.
+		<!-- Load app when page is ready -->
 
-		</noscript>
+			<script>
+				
+				window.onload = function() { // $(document).ready()) may fire too early, so going old school
+					
+					app.init($('#container')[0]);
+					
+					/* DEPRECATED: For use when loading demo data
+					app.prefs.isLocalStorageAllowed(true);
+					localStorage.clear();
+					app.registry.writeObject();
+					*/
+				};
+			</script>
+			
+			<noscript>
+				
+				This app relies very heavily on scripted content running in the browser 'front-end'. You seem to have scripting disabled, or perhaps prefer not to enable it. Which is fine. But at this time the app is only available with scripting enabled. Sorry.
 
+			</noscript>
 
 	</body>
 

@@ -21,7 +21,7 @@ describe('class Person', function(){
 		
 		this.setAddress = function(str_address) {_address = str_address};
 	};
-	
+
 	
 	app.Organization = app.Organization || function(str_name) {
 			
@@ -31,9 +31,9 @@ describe('class Person', function(){
 		
 		this.name = function(){return _name};
 		
-		this.getHostName = function() {return _name}; //need to exist for IHost related unit tests to pass
+		this.getHostName = function() {return _name}; // need to exist for IHost related unit tests to pass
 		
-		this.setHostName = function(name) {_name = name}; //need to exist for IHost related unit tests to pass
+		this.setHostName = function(name) {_name = name}; // need to exist for IHost related unit tests to pass
 	};
 		
 	var testOrg = new app.Organization();

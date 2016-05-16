@@ -69,7 +69,8 @@ var app = app || {};
 		* @todo Figure out why appending to the main container late in the code affects its contents earlier in the code, causing loss of  control over exact construction of DOM structure (really weird)
 		*
 		* @todo Figure out why activating dropdown menu items is very hard (but not impossible) on iOS (Safari/Chrome)
-
+		*
+		* @todo Refactor to use generic, dynamically generated modal for delete popup, rather than hardcoding it in HTML
 		*/
 
 		module.NavigationWidget.prototype.createProduct = function(obj_options) {

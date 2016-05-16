@@ -33,15 +33,17 @@ describe('Class EventView', function(){
 			
 			testApp = testWindow.app;
 
-			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
+			var testCtrl = testApp.controller;
+			
+			app.testutil.resetTestData(testApp);
+			
+			var testAccount = testCtrl.selectedAccount(testApp.Account.registry.getObjectList()[0]);
 
-			testView = testApp.controller.views().eventView;
+			testView = testCtrl.views().eventView;
 
 			testElement = testView.$renderContext();
 
-			testEvent = testApp.data.events[0];
-
-			void testApp.controller.selectedEvent(testApp.data.events[0]);
+			testEvent = testCtrl.selectedEvent(testAccount.events()[0]);
 
 			void testView.model(testEvent);
 
