@@ -1,11 +1,61 @@
 /* Stylesheet for Meetup Event Planner project (app).
 * Part of assignment for Udacity Senior Web Developer Nanodegree.
 *
-* Adds a few apparent bug fixes and other customizations to the stock Materialize styles.
+* Mostly just replicates the stock materialize.scss file, so
+* all kudos go to the Materialize team.
 *
-* Author: Ulrik H. Gade, May 2016
+* Excludes some unnecessary materialize components to reduce file size,
+* and adds a few apparent bug fixes and other customizations.
+*
+* Author: Ulrik H. Gade, April 2016
  */
 
+
+// Import necessary materialize components
+
+@charset "UTF-8";
+
+// Mixins
+// @import "../../lib/materialize_v0.97.5/sass/components/prefixer";
+@import "../../lib/materialize_v0.97.5/sass/components/mixins";
+@import "../../lib/materialize_v0.97.5/sass/components/color";
+
+// Variables;
+@import "../../lib/materialize_v0.97.5/sass/components/variables";
+
+// Reset
+@import "../../lib/materialize_v0.97.5/sass/components/normalize";
+
+// Components
+@import "../../lib/materialize_v0.97.5/sass/components/global";
+@import "../../lib/materialize_v0.97.5/sass/components/icons-material-design";
+@import "../../lib/materialize_v0.97.5/sass/components/grid";
+@import "../../lib/materialize_v0.97.5/sass/components/navbar";
+@import "../../lib/materialize_v0.97.5/sass/components/roboto";
+@import "../../lib/materialize_v0.97.5/sass/components/typography";
+//@import "../../lib/materialize_v0.97.5/sass/components/cards";
+@import "../../lib/materialize_v0.97.5/sass/components/toast";
+//@import "../../lib/materialize_v0.97.5/sass/components/tabs";
+//@import "../../lib/materialize_v0.97.5/sass/components/tooltip";
+@import "../../lib/materialize_v0.97.5/sass/components/buttons";
+@import "../../lib/materialize_v0.97.5/sass/components/dropdown";
+@import "../../lib/materialize_v0.97.5/sass/components/waves";
+@import "../../lib/materialize_v0.97.5/sass/components/modal";
+//@import "../../lib/materialize_v0.97.5/sass/components/collapsible";
+//@import "../../lib/materialize_v0.97.5/sass/components/chips";
+@import "../../lib/materialize_v0.97.5/sass/components/materialbox";
+@import "../../lib/materialize_v0.97.5/sass/components/form";
+//@import "../../lib/materialize_v0.97.5/sass/components/table_of_contents";
+@import "../../lib/materialize_v0.97.5/sass/components/sideNav";
+@import "../../lib/materialize_v0.97.5/sass/components/preloader";
+//@import "../../lib/materialize_v0.97.5/sass/components/slider";
+//@import "../../lib/materialize_v0.97.5/sass/components/carousel";
+//@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.scss";
+//@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.date.scss";
+//@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.time.scss";
+
+
+// Add app-specific customizations and bug fixes
 
 /*{border: 1px solid blue;}*/ // debug
 

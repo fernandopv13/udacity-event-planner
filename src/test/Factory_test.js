@@ -201,11 +201,11 @@ describe('Class Factory', function(){
 
 		it('can register a product with the factory', function() {
 			
-			expect(abstractFactory.products()['Product']).not.toBeDefined();
+			expect(abstractFactory.products().Product).not.toBeDefined();
 
 			abstractFactory.registerProduct(Product);
 
-			expect(abstractFactory.products()['Product']).toBe(Product);
+			expect(abstractFactory.products().Product).toBe(Product);
 		});
 
 
@@ -226,11 +226,11 @@ describe('Class Factory', function(){
 
 		it('rejects attempt to register a product more than once', function() {
 			
-			expect(abstractFactory.products()['Product']).not.toBeDefined();
+			expect(abstractFactory.products().Product).not.toBeDefined();
 
 			abstractFactory.registerProduct(Product);
 
-			expect(abstractFactory.products()['Product']).toBe(Product);
+			expect(abstractFactory.products().Product).toBe(Product);
 
 			try {
 
@@ -248,11 +248,11 @@ describe('Class Factory', function(){
 		
 		it('exposes an inheritable registerProduct() method to concrete factories (i.e. derived classes)', function() {
 			
-			expect(concreteFactory.products()['ConcreteProductOne']).not.toBeDefined();
+			expect(concreteFactory.products().ConcreteProductOne).not.toBeDefined();
 
 			concreteFactory.registerProduct(ConcreteProductOne);
 
-			expect(concreteFactory.products()['ConcreteProductOne']).toBe(ConcreteProductOne);
+			expect(concreteFactory.products().ConcreteProductOne).toBe(ConcreteProductOne);
 		});
 
 
@@ -274,11 +274,11 @@ describe('Class Factory', function(){
 		
 		it('its derived classes reject attempt to register a product more than once', function() {
 			
-			expect(concreteFactory.products()['ConcreteProductOne']).not.toBeDefined();
+			expect(concreteFactory.products().ConcreteProductOne).not.toBeDefined();
 
 			concreteFactory.registerProduct(ConcreteProductOne);
 
-			expect(concreteFactory.products()['ConcreteProductOne']).toBe(ConcreteProductOne);
+			expect(concreteFactory.products().ConcreteProductOne).toBe(ConcreteProductOne);
 
 			try {
 
@@ -296,17 +296,17 @@ describe('Class Factory', function(){
 
 		it('can unregister a product from the factory', function() { // depends on app.Product, activate when ready
 			
-			expect(abstractFactory.products()['Product']).not.toBeDefined();
+			expect(abstractFactory.products().Product).not.toBeDefined();
 
 			expect(abstractFactory.removeProduct(Product)).toBe(null);
 
 			abstractFactory.registerProduct(Product);
 
-			expect(abstractFactory.products()['Product']).toBe(Product);
+			expect(abstractFactory.products().Product).toBe(Product);
 
 			expect(abstractFactory.removeProduct(Product)).toBe(Product);
 
-			expect(abstractFactory.products()['Product']).not.toBeDefined();
+			expect(abstractFactory.products().Product).not.toBeDefined();
 		});
 
 
@@ -328,17 +328,17 @@ describe('Class Factory', function(){
 
 		it('exposes an inheritable removeProduct() method to concrete factories (i.e. derived classes)', function() {
 			
-			expect(concreteFactory.products()['ConcreteProductOne']).not.toBeDefined();
+			expect(concreteFactory.products().ConcreteProductOne).not.toBeDefined();
 
 			expect(concreteFactory.removeProduct(ConcreteProductOne)).toBe(null);
 
 			concreteFactory.registerProduct(ConcreteProductOne);
 
-			expect(concreteFactory.products()['ConcreteProductOne']).toBe(ConcreteProductOne);
+			expect(concreteFactory.products().ConcreteProductOne).toBe(ConcreteProductOne);
 
 			expect(concreteFactory.removeProduct(ConcreteProductOne)).toBe(ConcreteProductOne);
 
-			expect(concreteFactory.products()['ConcreteProductOne']).not.toBeDefined();
+			expect(concreteFactory.products().ConcreteProductOne).not.toBeDefined();
 		});
 
 

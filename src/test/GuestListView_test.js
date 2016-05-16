@@ -24,13 +24,13 @@ describe('class GuestListView', function(){
 
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testDoc = testWindow.document;
 			
 			testApp = testWindow.app;
 
-			testView = testApp.controller.views()['guestListView'];
+			testView = testApp.controller.views().guestListView;
 
 			testElement = testView.$renderContext();
 

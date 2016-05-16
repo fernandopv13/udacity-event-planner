@@ -24,13 +24,13 @@ describe('Class AccountSettingsView', function(){
 		
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testDoc = testWindow.document;
 			
 			testApp = testWindow.app;
 
-			testView = testApp.controller.views()['accountSettingsView'];
+			testView = testApp.controller.views().accountSettingsView;
 
 			testElement = testView.$renderContext();
 

@@ -24,7 +24,7 @@ describe('Class PersonView', function(){
 
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testDoc = testWindow.document;
 		
@@ -32,7 +32,7 @@ describe('Class PersonView', function(){
 
 			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
 
-			testView = testApp.controller.views()['guestView'];
+			testView = testApp.controller.views().guestView;
 
 			testElement = testView.$renderContext();
 

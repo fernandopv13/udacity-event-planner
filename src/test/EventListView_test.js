@@ -24,13 +24,13 @@ describe('class EventListView', function(){
 
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testDoc = testWindow.document;
 			
 			testApp = testWindow.app;
 
-			testView = testApp.controller.views()['eventListView'];
+			testView = testApp.controller.views().eventListView;
 
 			testApp.controller.onAccountSelected(testApp.data.accounts[0]);
 

@@ -246,7 +246,7 @@ describe('class Controller', function(){
 
 				// output signature: nofityObservers(Model, View)
 
-				testController.views()['eventView'].render(new app.Event());
+				testController.views().eventView.render(new app.Event());
 
 				testController.update(new app.Event());
 

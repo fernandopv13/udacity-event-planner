@@ -27,7 +27,7 @@ describe('Class EventView', function(){
 
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testDoc = testWindow.document;
 			
@@ -35,7 +35,7 @@ describe('Class EventView', function(){
 
 			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
 
-			testView = testApp.controller.views()['eventView'];
+			testView = testApp.controller.views().eventView;
 
 			testElement = testView.$renderContext();
 

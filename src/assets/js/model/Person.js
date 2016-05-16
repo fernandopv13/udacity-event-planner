@@ -455,6 +455,25 @@ var app = app || {}; // create a simple namespace for the app
 		}
 
 
+		/** Writes Person to local storage, if available.
+		*
+		* Overrides method inherited from ISerializable to ensure any changes to the Person's email
+		*
+		* as well as the person itself, is always up to date in storage.
+		*
+		* @return {void}
+		*
+		* @throws Same errors as ISerializable writeObject() (relies on this for error checking)
+		*/
+
+		module.Person.prototype.writeObject = function() {
+
+			module.ISerializable.prototype.default_writeObject.call(this); // do normal save of Person itself
+
+			this.email().writeObject(); // save email
+		};
+
+
 	/*----------------------------------------------------------------------------------------
 	* Public class (static) members
 	*---------------------------------------------------------------------------------------*/

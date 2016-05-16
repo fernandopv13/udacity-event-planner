@@ -22,7 +22,7 @@ describe('class ViewDeleteHandler', function(){
 		
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testApp = testWindow.app;
 
@@ -38,7 +38,7 @@ describe('class ViewDeleteHandler', function(){
 
 			testApp.controller.onAccountSelected(testAccount);
 
-			testView = testApp.controller.views()['eventListView'];
+			testView = testApp.controller.views().eventListView;
 
 			testElement = testView.$renderContext();
 

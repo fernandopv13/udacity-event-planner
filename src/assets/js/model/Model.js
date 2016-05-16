@@ -188,8 +188,6 @@ var app = app || {}; // create a simple namespace for the module
 
 			if (account.localStorageAllowed() && window.localStorage) {
 
-				console.log('Writing ' + this.className()); // debug
-
 				this.writeObject();
 
 				//console.log(JSON.parse(localStorage.getItem(module.prefs.localStoragePrefix() + this.className() + '.' + this.id())));

@@ -26,13 +26,13 @@ describe('Class SignInView', function(){
 
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testDoc = testWindow.document;
 		
 			testApp = testWindow.app;
 
-			testView = testApp.controller.views()['signInView'];
+			testView = testApp.controller.views().signInView;
 
 			testElement = testView.$renderContext();
 
@@ -92,7 +92,7 @@ describe('Class SignInView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update(null, new testApp.SignInView);
+			testView.update(null, new testApp.SignInView());
 			
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});

@@ -333,22 +333,29 @@ var app = (function(self) {
 	* Other public instance methods
 	*---------------------------------------------------------------------------------------*/
 
-	/** Initializes the app on page load, then hands over run time control to the Controller */
+	/** Initializes the app on page load, then hands over run time control to the Controller.
+	*
+	* @param {HTMLElement} renderContext The element to which the app will render its content
+	*
+	* @return {void}
+	*/
 
-	self.init = function() {
-		
-		if (self.controller.observers().length > 0) { //DEPRECATED: ignore repeated firing of window.onload caused by e.g. navigating between views
+	self.init = function(HTMLElement_renderContext) {
 
-			return;
-		}
+		//DEPRECATED: ignore repeated firing of window.onload caused by e.g. navigating between views
+
+			if (self.controller.observers().length > 0) {
+
+				return;
+			}
 
 		// Hide progress indicator
 
-		$('#preloader').hide('fast');
+			$('#preloader').hide('fast');
 
-		$('#preloader').addClass('hidden');
+			$('#preloader').addClass('hidden');
 
-		$('#preloader').attr('aria-hidden', true); // later, investigate if this could do more of the work of hiding
+			$('#preloader').attr('aria-hidden', true); // later, investigate if this could do more of the work of hiding
 
 		
 		// Load account data from local storage, if available
@@ -368,10 +375,11 @@ var app = (function(self) {
 
 				Materialize.toast('Could not load account data. Please make sure you have enabled cookies and are not browsing in private mode', module.prefs.defaultToastDelay() + 1000);
 			}
+		
+		
+		// Initialize controller
 
-			// register Model registries
-
-		self.controller.init();
+			self.controller.init(HTMLElement_renderContext);
 	};
 
 	return self;

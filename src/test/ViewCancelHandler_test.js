@@ -22,7 +22,7 @@ describe('class ViewCancelHandler', function(){
 		
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testApp = testWindow.app;
 

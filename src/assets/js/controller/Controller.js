@@ -1,4 +1,4 @@
-'use strict'; // Not in functions to make it easier to remove by build process
+//'use strict'; // Not in functions to make it easier to remove by build process (cconfuses jshint so leaving it out for now)
 
 var app = app || {};
 
@@ -281,11 +281,44 @@ var app = app || {};
 			*
 			* Creates the views required by the app, and presents the initial view.
 			*
+			* @param {HTMLElement} renderContext The element to which the app will render its content
+			*
 			* @return {void}
 			*/
 
-			this.init = function() {
+			this.init = function(HTMLElement_renderContext) {
 
+				// Add divs for views to render context
+
+					var ids = ['account-profile-view', 'account-settings-view', 'event-list-view', 'event-view', 'front-page-view', 'guest-list-view', 'guest-view', 'sign-in-view', 'sign-up-view'],
+
+					createElement = app.HTMLElement.instance().createProduct;
+
+					ids.forEach(function(id) {
+
+						$(HTMLElement_renderContext).append(createElement(
+						{
+							element: 'div',
+
+							attributes:
+							{
+								id: id,
+
+								'aria-hidden': true
+							},
+
+							classList: ['row', 'hidden']
+						}));
+					});
+
+					$(HTMLElement_renderContext).append(createElement(
+					{
+						element: 'div',
+
+						attributes: {id: 'modal-view'}
+					}));
+
+				
 				// Create views
 
 					_views =
@@ -308,7 +341,7 @@ var app = app || {};
 
 						signUpView: new module.SignUpView('sign-up-view', 'Sign Up'), // sign in view
 
-						modalView: new module.ModalView('modal-view', '[Untitled]')
+						modalView: new module.ModalView('modal-view', '[Untitled]') // generic modal popup
 					}
 
 					
@@ -374,8 +407,6 @@ var app = app || {};
 
 
 				// Bootstrap UI by loading the front page
-
-					//void (new module.View()).renderNavigation('Meetup Planner');
 
 					_views.frontPageView.render();
 
@@ -447,7 +478,7 @@ var app = app || {};
 
 							//console.log([Model_m, View_v]);
 
-							this.notifyObservers(Model_m, View_v);	
+							this.notifyObservers(Model_m, View_v); // this syntax trips up jshint in strict mode, not sure why
 						}
 
 						//else: fail silently (not all models are bound to a view, and that's OK)

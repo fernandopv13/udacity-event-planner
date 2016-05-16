@@ -23,7 +23,7 @@ describe('Class AccountProfileView', function(){
 
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testDoc = testWindow.document;
 		
@@ -33,7 +33,7 @@ describe('Class AccountProfileView', function(){
 
 			void testApp.controller.selectedAccount(testAccount);
 
-			testView = testApp.controller.views()['accountProfileView'];
+			testView = testApp.controller.views().accountProfileView;
 
 			testElement = testView.$renderContext();
 

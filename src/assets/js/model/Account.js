@@ -691,6 +691,26 @@ var app = app || {};
 		}
 
 
+		/** Writes Account to local storage, if available.
+		*
+		* Overrides method inherited from ISerializable to ensure any changes to the Account's email
+		*
+		* and password, as well as the Account itself, are always up to date in storage.
+		*
+		* @return {void}
+		*
+		* @throws Same errors as ISerializable writeObject() (relies on this for error checking)
+		*/
+
+		module.Account.prototype.writeObject = function() {
+
+			module.ISerializable.prototype.default_writeObject.call(this); // do normal save of Account itself
+
+			this.email().writeObject(); // save email
+
+			this.password().writeObject(); // save password
+		};
+
 	/*----------------------------------------------------------------------------------------
 	* Public class (static) members
 	*---------------------------------------------------------------------------------------*/

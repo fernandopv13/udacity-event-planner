@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 	<head>
+		
 		<title> Meetup Event Planner</title>
 		<meta charset="utf-8">
-		<!--Let browser know the app is optimized for mobile-->
+		<!--Let browser know app is optimized for mobile-->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 		
 		<!--Import Google Icon Font used by Materialize-->
@@ -10,12 +11,13 @@
 		<link href="http://fonts.googleapis.com/icon?family=Roboto" rel="stylesheet">
 		
 		<!--Import styles -->
-		<!-- build:css assets/css/app.css -->
+		<!-- @gulp-app-style-tags-begin -->
 		<link rel="stylesheet" href="lib/bootstrap_v3.3.6/css/bootstrap.min.css"><!-- for bootstrap-datetimepicker -->
 		<link rel="stylesheet" href="lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.min.css">
-		<link type="text/css" rel="stylesheet" href="assets/css/materialize.css" media="screen">
-		<link rel="stylesheet" href="assets/css/app.css" media="screen"/>
-		<!-- endbuild -->
+		<!--link type="text/css" rel="stylesheet" href="assets/css/materialize.css" media="screen"/-->
+		<link rel="stylesheet" href="assets/css/app.css" media="screen"/><!-- Concatenated to include Materialize.css -->
+		<!-- @gulp-app-style-tags-end -->
+
 	</head>
 
 	<body>
@@ -35,9 +37,11 @@
 
 			</div>
 
+		
 		<!-- Page content -->
 
-			<div class="container" id="container" role="main">
+			<div class="container" role="main"> 
+				
 				<!-- Preload spinner (hide on load) -->
 				<div id="preloader" class="valign-wrapper" role="progressbar" style="height:160px;">
 					<div class="valign" style="width:90%;text-align:center;">
@@ -47,14 +51,27 @@
 						</div>
 					</div>
 				</div>
+
+			<!-- Containers for dynamically populated main content views -->
+				<div id="front-page-view" class="row hidden" aria-hidden="true"></div>
+				<div id="sign-in-view" class="row hidden" aria-hidden="true"></div>
+				<div id="sign-up-view" class="row hidden" aria-hidden="true"></div>
+				<div id="sign-up-permissions-view" class="row hidden" aria-hidden="true"></div>
+				<div id="account-settings-view" class="row hidden" aria-hidden="true"></div>
+				<div id="account-profile-view" class="row hidden" aria-hidden="true"></div>
+				<div id="event-list-view" class="row hidden" aria-hidden="true"></div>
+				<div id="event-view" class="row hidden" aria-hidden="true"></div>
+				<div id="guest-list-view" class="row hidden" aria-hidden="true"></div>
+				<div id="guest-view" class="row hidden" aria-hidden="true"></div>
+				<div id="modal-view"></div>
 			</div>
 
 		<!-- JavaScript library source files -->
-			<!-- build:js lib/lib.js -->
 			<!--script type="text/javascript" src="test/util/firebug-lite/build/firebug-lite-debug.js"></script--><!-- Debug: shows JavaScript console on mobile devices -->
 			<script src="lib/polyfills/Object.js"></script>
 			<script src="lib/polyfills/Array.js"></script>
 			<script src="lib/polyfills/Storage.js"></script>
+			
 			<script src="lib/jquery-2.2.2.min.js"></script>
 			<script src="lib/jquery.browser.min.js"></script>
 			<script src="lib/bootstrap_v3.3.6/js/bootstrap.min.js"></script><!-- for bootstrap-datetimepicker (minimal bs install) -->
@@ -63,11 +80,11 @@
 			<script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script>
 			<!--script src="lib/materialize_v0.97.5/js/bin/materialize.min.js"></script-->
 			<script src="lib/materialize.min.js"></script>
+			
 			<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
-			<!-- endbuild -->
 			
 		<!-- JavaScript app source files (will be concatenated and minified to single 'app.js' in build process) -->
-			<!-- build:js assets/js/app.js -->
+			<!-- @gulp-app-script-tags-begin -->
 			<script src="assets/js/util/Accessor.js"></script>
 			<script src="assets/js/util/Device.js"></script>
 			<script src="assets/js/util/Error.js"></script>
@@ -140,13 +157,13 @@
 			
 			<script src="assets/js/app.js"></script>
 			<!--script src="assets/js/util/demodata.js"></script-->
-			<!-- endbuild -->
+			<!-- @gulp-app-script-tags-end -->
 
 		<script>
 			
 			window.onload = function() { // $(document).ready()) may fire too early, so going old school
 				
-				app.init($('#container')[0]);
+				app.init();
 				
 				/*
 				app.prefs.isLocalStorageAllowed(true);

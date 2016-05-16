@@ -24,13 +24,13 @@ describe('Class SignUpView', function(){
 		
 		setTimeout(function() {
 
-			testWindow.app.controller.views()['frontPageView'].hide(5);
+			testWindow.app.controller.views().frontPageView.hide(5);
 
 			testDoc = testWindow.document;
 			
 			testApp = testWindow.app;
 
-			testView = testApp.controller.views()['signUpView'];
+			testView = testApp.controller.views().signUpView;
 
 			testElement = testView.$renderContext();
 
@@ -91,7 +91,7 @@ describe('Class SignUpView', function(){
 
 			expect(testView.$renderContext().children().length).toBe(0);
 
-			testView.update(null, new testApp.SignUpView);
+			testView.update(null, new testApp.SignUpView());
 			
 			expect(testView.$renderContext().children().length).toBeGreaterThan(0);
 		});
