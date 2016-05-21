@@ -20,7 +20,9 @@ describe('Class PersonView', function(){
 		
 		//testWindow = window.open('../index.html'); // test on development version of app
 
-		testWindow = window.open('../../build/index.html'); // test on production version of app
+		//testWindow = window.open('../../build/index.html'); // test on production version of app
+
+		testWindow = window.open(app.testutil.testTarget);
 
 		setTimeout(function() {
 
@@ -30,15 +32,19 @@ describe('Class PersonView', function(){
 		
 			testApp = testWindow.app;
 
-			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
+			app.testutil.resetTestData(testApp);
+
+			void testApp.controller.selectedAccount(testApp.Account.registry.getObjectById(0));
 
 			testView = testApp.controller.views().guestView;
 
 			testElement = testView.$renderContext();
 
-			void testApp.controller.selectedEvent(testApp.data.events[0]);
+			void testApp.controller.selectedEvent(testApp.Event.registry.getObjectById(0));
 
-			testPerson = testApp.data.people[0];
+			testPerson = testApp.Person.registry.getObjectById(0);
+
+			void testApp.controller.registerObserver(testPerson);
 
 			void testApp.controller.selectedGuest(testPerson);
 

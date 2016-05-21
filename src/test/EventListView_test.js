@@ -20,7 +20,9 @@ describe('class EventListView', function(){
 
 		//testWindow = window.open('../index.html'); // test on development version of app
 
-		testWindow = window.open('../../build/index.html'); // test on production version of app
+		//testWindow = window.open('../../build/index.html'); // test on production version of app
+
+		testWindow = window.open(app.testutil.testTarget);
 
 		setTimeout(function() {
 
@@ -30,13 +32,15 @@ describe('class EventListView', function(){
 			
 			testApp = testWindow.app;
 
+			app.testutil.resetTestData(testApp);
+			
 			testView = testApp.controller.views().eventListView;
 
-			testApp.controller.onAccountSelected(testApp.data.accounts[0]);
+			testApp.controller.onAccountSelected(testApp.Account.registry.getObjectById(0));
 
 			testElement = testView.$renderContext();
 
-			testAccount = testApp.data.accounts[0];
+			testAccount = testApp.controller.selectedAccount();
 
 			done();
 

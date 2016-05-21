@@ -19,7 +19,9 @@ describe('Class AccountProfileView', function(){
 		
 		//testWindow = window.open('../index.html'); // test on development version of app
 
-		testWindow = window.open('../../build/index.html'); // test on production version of app
+		//testWindow = window.open('../../build/index.html'); // test on production version of app
+
+		testWindow = window.open(app.testutil.testTarget);
 
 		setTimeout(function() {
 
@@ -29,7 +31,11 @@ describe('Class AccountProfileView', function(){
 		
 			testApp = testWindow.app;
 
-			testAccount = testApp.data.accounts[0];
+			app.testutil.resetTestData(testApp);
+
+			testAccount = testApp.Account.registry.getObjectById(0);
+
+			void testApp.controller.registerObserver(testAccount);
 
 			void testApp.controller.selectedAccount(testAccount);
 
@@ -38,6 +44,8 @@ describe('Class AccountProfileView', function(){
 			testElement = testView.$renderContext();
 
 			testPerson = testAccount.accountHolder() || testAccount.accountHolder(new testApp.Person());
+
+			void testApp.controller.registerObserver(testPerson);
 
 			void testView.model(testPerson);
 

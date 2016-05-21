@@ -7,7 +7,7 @@
 
 */
 
-describe('class Person', function(){
+describe('Class Person', function(){
 	
 	// Set up some mocks
 	

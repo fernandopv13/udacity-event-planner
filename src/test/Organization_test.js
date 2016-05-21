@@ -7,7 +7,7 @@
 
 */
 
-describe('class Organization', function(){
+describe('Class Organization', function(){
 	
 	it('implements the IHost interface', function() { //uses InterfaceTester.js
 			

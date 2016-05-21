@@ -9,7 +9,7 @@ testing, without adding to the production code.
 var app = app || {};
 
 
-describe('class ObjectRegistry', function(){
+describe('Class ObjectRegistry', function(){
 	
 	it('implements the ISerializable interface', function() {
 		

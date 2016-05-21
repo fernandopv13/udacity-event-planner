@@ -23,7 +23,9 @@ describe('Class EventView', function(){
 		
 		//testWindow = window.open('../index.html'); // test on development version of app
 
-		testWindow = window.open('../../build/index.html'); // test on production version of app
+		//testWindow = window.open('../../build/index.html'); // test on production version of app
+
+		testWindow = window.open(app.testutil.testTarget);
 
 		setTimeout(function() {
 
@@ -45,7 +47,7 @@ describe('Class EventView', function(){
 
 			testEvent = testCtrl.selectedEvent(testAccount.events()[0]);
 
-			void testView.model(testEvent);
+			void testCtrl.registerObserver(testView.model(testEvent));
 
 			done();
 
@@ -328,7 +330,7 @@ describe('Class EventView', function(){
 
 				done();
 
-			}, 1000); // allow some time for the list generation to respond
+			}, 2000); // allow some time for the list generation to respond
 
 			expect(true).toBe(true);
 		});
@@ -477,7 +479,7 @@ describe('Class EventView', function(){
 
 
 			expect(app.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(true);
-			
+
 			testWindow.$('#event-form-submit').trigger('mousedown');
 
 

@@ -688,23 +688,23 @@ var app = app || {}; // create a simple namespace for the app
 
 				// Update using accessors (for validation)
 
-				this.name(Event_e.name());
+				void this.name(Event_e.name());
 
-				this.type(Event_e.type());
+				void this.type(Event_e.type());
 
 				if (Event_e.start() && Event_e.end()) {this.start(null);this.end(null);} // don't compare to existing data if supplied valid replacements
 
-				this.start(Event_e.start() ? Event_e.start() : null);
+				void this.start(Event_e.start() ? Event_e.start() : null);
 
-				this.end(Event_e.end() ? Event_e.end() : null);
+				void this.end(Event_e.end() ? Event_e.end() : null);
 
-				if (Event_e.location()) {this.location(Event_e.location());}
+				if (Event_e.location()) {void this.location(Event_e.location());}
 
-				this.description(Event_e.description());
+				void this.description(Event_e.description());
 
-				this.capacity(Event_e.capacity());
+				void this.capacity(Event_e.capacity());
 
-				this.host(Event_e.host());
+				void this.host(Event_e.host());
 
 				while (this.guests().length > 0) {void this.guests().shift();} // empty guest list
 

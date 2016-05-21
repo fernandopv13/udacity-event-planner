@@ -7,7 +7,7 @@
 
 */
 
-describe('class Accessor', function(){
+describe('Class Accessor', function(){
 	
 	function TestClass() {
 

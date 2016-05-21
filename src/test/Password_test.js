@@ -7,7 +7,7 @@
 
 */
 
-describe('class Password', function(){
+describe('Class Password', function(){
 	
 	var testPassword;
 		

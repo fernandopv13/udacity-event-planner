@@ -20,7 +20,9 @@ describe('Class AccountSettingsView', function(){
 		
 		//testWindow = window.open('../index.html'); // test on development version of app
 
-		testWindow = window.open('../../build/index.html'); // test on production version of app
+		//testWindow = window.open('../../build/index.html'); // test on production version of app
+
+		testWindow = window.open(app.testutil.testTarget);
 		
 		setTimeout(function() {
 
@@ -30,13 +32,17 @@ describe('Class AccountSettingsView', function(){
 			
 			testApp = testWindow.app;
 
+			app.testutil.resetTestData(testApp);
+
 			testView = testApp.controller.views().accountSettingsView;
 
 			testElement = testView.$renderContext();
 
-			testAccount = testApp.data.accounts[0];
+			testAccount = testApp.Account.registry.getObjectById(0);
 
-			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
+			void testApp.controller.registerObserver(testAccount);
+
+			void testApp.controller.selectedAccount(testAccount);
 
 			void testView.model(testAccount);
 
@@ -254,7 +260,7 @@ describe('Class AccountSettingsView', function(){
 		});
 
 
-		it('submits form when the "Done" button is activated if all fields valididate', function() {
+		xit('submits form when the "Done" button is activated if all fields valididate', function() {
 			
 			void testView.model().email().address('');
 

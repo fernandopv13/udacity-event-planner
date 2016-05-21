@@ -7,7 +7,7 @@
 
 */
 
-describe('class View', function(){
+describe('Class View', function(){
 	
 	
 	it('implements the IInterfaceable interface', function() {

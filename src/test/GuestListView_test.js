@@ -20,7 +20,9 @@ describe('class GuestListView', function(){
 		
 		//testWindow = window.open('../index.html'); // test on development version of app
 
-		testWindow = window.open('../../build/index.html'); // test on production version of app
+		//testWindow = window.open('../../build/index.html'); // test on production version of app
+
+		testWindow = window.open(app.testutil.testTarget);
 
 		setTimeout(function() {
 
@@ -30,15 +32,17 @@ describe('class GuestListView', function(){
 			
 			testApp = testWindow.app;
 
+			app.testutil.resetTestData(testApp);
+			
 			testView = testApp.controller.views().guestListView;
 
 			testElement = testView.$renderContext();
 
-			testEvent = testApp.data.events[0];
+			testEvent = testApp.Event.registry.getObjectById(0);
 
 			void testApp.controller.selectedEvent(testEvent);
 
-			void testApp.controller.selectedAccount(testApp.data.accounts[0]);
+			void testApp.controller.selectedAccount(testApp.Account.registry.getObjectById(0));
 
 			done();
 
@@ -180,13 +184,15 @@ describe('class GuestListView', function(){
 
 				setTimeout(function() { // allow some time for the view to load
 						
-						testElement.find('.collection-item').first().trigger('click');
+					console.log(testApp.controller.currentView());
 
-						//testWindow.console.log(testApp.controller.currentView().className());
+					testElement.find('.collection-item').first().trigger('click');
 
-						expect(testApp.controller.currentView().constructor).toBe(testApp.PersonView);
+					//testWindow.console.log(testApp.controller.currentView().className());
 
-						done();
+					expect(testApp.controller.currentView().constructor).toBe(testApp.PersonView);
+
+					done();
 
 				}, 25);
 			}

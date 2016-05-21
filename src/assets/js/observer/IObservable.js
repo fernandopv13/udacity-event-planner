@@ -51,11 +51,9 @@ var app = app || {}; // create a simple namespace for the module
 
 	module.IObservable.prototype.default_notifyObservers = function() {
 
-		//console.log(this);
-
 		var args = arguments;
 
-		//console.log(args); // debug
+		//console.log(args.length); // debug
 
 		switch (args.length) { // can't figure out a more generic approach, so basic manual branching will have to do for now
 
@@ -78,8 +76,6 @@ var app = app || {}; // create a simple namespace for the module
 				break;
 
 			case 2:
-
-				//console.log('IObservable: ' + (args[0] && args[0].className ? args[0].className() : args[0]) + ', ' + (args[1] && args[1].className ? args[1].className() : args[1]))
 
 				this.observers().forEach(function(observer) {
 

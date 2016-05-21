@@ -22,7 +22,9 @@ describe('Class SignInView', function(){
 		
 		//testWindow = window.open('../index.html'); // test on development version of app
 
-		testWindow = window.open('../../build/index.html'); // test on production version of app
+		//testWindow = window.open('../../build/index.html'); // test on production version of app
+
+		testWindow = window.open(app.testutil.testTarget);
 
 		setTimeout(function() {
 
@@ -31,7 +33,9 @@ describe('Class SignInView', function(){
 			testDoc = testWindow.document;
 		
 			testApp = testWindow.app;
-
+			
+			app.testutil.resetTestData(testApp);
+			
 			testView = testApp.controller.views().signInView;
 
 			testElement = testView.$renderContext();

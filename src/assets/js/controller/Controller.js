@@ -371,7 +371,7 @@ var app = app || {};
 					}.bind(this)); // make sure 'this' references controller correctly within loop
 
 
-				// Set up a router to manage the browser's history
+				// Set up a Router to manage the browser's history
 
 					_router = new module.Router();
 

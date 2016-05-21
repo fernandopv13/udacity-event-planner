@@ -16,7 +16,7 @@ var app = app || {};
 	*
 	* @extends ViewUpdateHandler
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 	module.ViewSubmitHandler = function(Controller_c) {

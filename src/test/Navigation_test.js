@@ -18,7 +18,9 @@ describe('Navigation', function(){
 
 		//testWindow = window.open('../index.html'); // test on development version of app
 
-		testWindow = window.open('../../build/index.html'); // test on production version of app
+		//testWindow = window.open('../../build/index.html'); // test on production version of app
+
+		testWindow = window.open(app.testutil.testTarget);
 
 		setTimeout(function() {
 
@@ -28,11 +30,15 @@ describe('Navigation', function(){
 			
 			testApp = testWindow.app;
 
+			app.testutil.resetTestData(testApp);
+
 			testView = testApp.controller.views().eventListView;
 
 			testElement = testView.$renderContext();
 
-			testAccount = testApp.data.accounts[0];
+			testAccount = testApp.controller.selectedAccount(testApp.Account.registry.getObjectList()[0]);
+
+			void testApp.controller.registerObserver(testView.model(testAccount));
 
 			void testApp.controller.selectedAccount(testAccount);
 

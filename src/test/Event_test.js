@@ -17,7 +17,7 @@ function TestObserver() {
 }
 
 
-describe('class Event', function(){
+describe('Class Event', function(){
 	
 	var testEvent, testOrg, testPerson, testObserver;
 	

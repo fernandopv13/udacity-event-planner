@@ -762,12 +762,16 @@ var app = app || {};
 
 			this.ssuper().prototype.submit.call(this, val);
 
+			console.log('submit succceeded');
+
 			return true;
 		}
 
 		// else
 
 		Materialize.updateTextFields(); // make sure validation errors are shown
+
+		console.log('submit failed');
 
 		return false;
 	};

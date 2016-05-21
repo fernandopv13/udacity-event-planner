@@ -23,7 +23,7 @@ function TestObserver() {
 }
 
 
-describe('class Account', function(){
+describe('Class Account', function(){
 	
 	app.Email = app.Email || function() {};
 		

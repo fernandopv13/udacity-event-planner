@@ -38,7 +38,7 @@ app.testutil.resetTestData = function(testApp) {
 
 	app.registry.writeObject();
 
-	// Load test data from local into testApp
+	// Load test data from local storage into testApp
 
 	testApp.registry.clear();
 

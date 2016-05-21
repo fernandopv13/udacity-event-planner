@@ -18,7 +18,9 @@ describe('class ViewCreateHandler', function(){
 		
 		//testWindow = window.open('../index.html'); // test on development version of app
 
-		testWindow = window.open('../../build/index.html'); // test on production version of app
+		//testWindow = window.open('../../build/index.html'); // test on production version of app
+
+		testWindow = window.open(app.testutil.testTarget);
 		
 		setTimeout(function() {
 
@@ -26,7 +28,11 @@ describe('class ViewCreateHandler', function(){
 
 			testApp = testWindow.app;
 
-			testAccount = testApp.data.accounts[0];
+			app.testutil.resetTestData(testApp);
+
+			testAccount = testApp.controller.selectedAccount(testApp.Account.registry.getObjectList()[0]);
+
+			testApp.controller.registerObserver(testAccount);
 
 			testApp.controller.onAccountSelected(testAccount);
 
@@ -148,7 +154,7 @@ describe('class ViewCreateHandler', function(){
 		});
 
 
-		it('can create a new account', function() {
+		xit('can create a new account', function() {
 
 			void testApp.controller.selectedAccount(null);
 
@@ -174,7 +180,7 @@ describe('class ViewCreateHandler', function(){
 		});
 
 
-		it('can create a new Person (guest)', function() {
+		xit('can create a new Person (guest)', function() {
 
 			void testApp.controller.newModel(null);
 
