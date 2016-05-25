@@ -239,7 +239,9 @@ var app = app || {};
 
 					id: 'sign-up-password-confirmation',
 
-					label: 'Confirm Password'
+					label: 'Confirm Password',
+
+					required: true
 				}
 			));
 

@@ -190,6 +190,27 @@ describe('Class SignUpView', function(){
 			expect(el.data('customValidator')).toBe('PasswordInputWidget.prototype.validate');
 		});
 
+		it('displays a required password confirmation field after a password has been entered', function() {
+			
+			var el = $(testElement).find('#sign-up-password-confirmation');
+
+			expect(el.length).toBe(1);
+
+			expect(el.attr('required')).toBe('required');
+
+			expect(el.data('customValidator')).toBe('PasswordConfirmationInputWidget.prototype.validate');
+
+			expect(testWindow.$('#sign-up-password-confirmation-parent').hasClass('hidden')).toBe(true);
+
+			testWindow.$('#sign-up-password').val('fasASAS1231!');
+
+			testWindow.$('#sign-up-password').blur();
+
+			expect(testWindow.$('#sign-up-password-confirmation-parent').hasClass('hidden')).toBe(false);
+
+			testWindow.$('#sign-up-password').val('');
+		});
+
 
 		it('displays an optional name field', function() {
 			
@@ -242,6 +263,7 @@ describe('Class SignUpView', function(){
 			expect($(el).hasClass('btn')).toBe(true);
 		});
 
+	
 	// Test UI behaviours
 
 		it('will not sign in if there are validation errors in any form fields', function() {
@@ -297,6 +319,35 @@ describe('Class SignUpView', function(){
 			expect(testAccount.accountHolder().jobTitle()).toBe('Samurai');
 
 			expect(testAccount.accountHolder().birthday().valueOf()).toBe(12175200000);
+		});
+
+		it('displays a modal first time setup dialog after signing in', function(){
+
+			// Later, move this to the ViewCreateHandler test
+
+			var modal = testWindow.$('#modal-view');
+
+			expect(modal.css('display')).toBe('block'); // modal is open
+
+			expect(modal.find('h4').length).toBe(1); // heading
+
+			expect(modal.find('h4').text()).toBe('First Time Setup');
+
+			expect(modal.find('#setup-localstorage').attr('type')).toBe('checkbox'); // local storage switch (checkbox)
+
+			expect(modal.find('#setup-localstorage').prop('checked')).toBe(false); // defaults to off/unchecked
+
+			expect(modal.find('#setup-geolocation').attr('type')).toBe('checkbox'); // geolocation switch (checkbox)
+
+			expect(modal.find('#setup-geolocation').prop('checked')).toBe(false); // defaults to off
+
+			expect(modal.find('#modal-ok').prop('tagName')).toBe('A'); // OK button
+
+			expect(modal.find('#modal-ok').text()).toBe('OK');
+
+			expect(modal.find('#modal-cancel').prop('tagName')).toBe('A'); // Cancel button
+
+			expect(modal.find('#modal-cancel').text()).toBe('Cancel');
 		});
 
 

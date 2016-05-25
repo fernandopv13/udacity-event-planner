@@ -72,8 +72,6 @@ var app = app || {};
 
 	module.ViewDeleteHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		console.log(arguments);
-
 		var ctrl = this.controller(), name;
 		
 		

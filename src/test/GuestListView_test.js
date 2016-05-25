@@ -184,8 +184,6 @@ describe('class GuestListView', function(){
 
 				setTimeout(function() { // allow some time for the view to load
 						
-					console.log(testApp.controller.currentView());
-
 					testElement.find('.collection-item').first().trigger('click');
 
 					//testWindow.console.log(testApp.controller.currentView().className());
