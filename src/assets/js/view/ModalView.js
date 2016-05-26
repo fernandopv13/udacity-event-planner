@@ -138,6 +138,7 @@ var app = app || {};
 				}
 			));
 
+		
 		// Add footer (OK/Cancel buttons)
 
 			var footerDiv = this.createWidget( // wrapper
@@ -189,11 +190,7 @@ var app = app || {};
 
 		// Render to DOM
 
-			this.$renderContext().replaceWith(container);
-		
-		// Do post-render initialization
-
-			this.$renderContext().leanModal();
+			this.$renderContext().html($(container).children());
 	};
 
 
@@ -227,7 +224,7 @@ var app = app || {};
 	}
 
 
-	/** Dummy method to comply with View superclass.
+	/** Dummy method to comply with abstract View superclass.
 	*
 	* Unlike other Views, ModalView is reused for multiple purposes, so 'submit' may have more than one meaning.
 	*

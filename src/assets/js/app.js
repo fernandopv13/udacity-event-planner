@@ -35,6 +35,8 @@ var app = (function(self) {
 
 		_prefs = { // list of prefs, private so we can control access
 			
+			defaultValidationError: 'Some info seems to be missing. Please try again',
+
 			defaultEventCapacity: 50,
 
 			defaultToastDelay: 4000, // in ms
@@ -106,6 +108,14 @@ var app = (function(self) {
 			},
 
 			
+			/** Displays default form validation error message (toast) */
+
+			defaultValidationError: function() {
+
+				return _prefs.defaultValidationError;
+			},
+
+
 			/** Gets or sets permission to store data locally */
 			
 			isLocalStorageAllowed: function(bool_isAllowed) {

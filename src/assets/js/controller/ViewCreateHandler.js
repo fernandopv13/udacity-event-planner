@@ -152,131 +152,135 @@ var app = app || {};
 
 					var modal = module.controller.views().modalView; // get reference to generic, multi-purpose popup (modal)
 
-					modal.render( // render new modal content
-					{
-						header: 'First Time Setup',
+					ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View (hides all other Views, so do before modal)
 
-						body: (function() {
+					setTimeout(function(){ // show first time setup modal (wait for default View to render, or its animation may interfere)
 
-							var container = document.createElement('div');
+						modal.render(
+						{
+							header: 'First Time Setup',
 
-							container.appendChild(module.View.prototype.createWidget.call(
+							body: (function() {
 
-								modal,
+								var container = document.createElement('div');
 
-								'HTMLElement',
-								{
-									element: 'p',
+								container.appendChild(module.View.prototype.createWidget.call(
 
-									id: 'setup-intro',
+									modal,
 
-									innerHTML: 'Before you start using the app, please decide about these permissions.'
+									'HTMLElement',
+									{
+										element: 'p',
+
+										id: 'setup-intro',
+
+										innerHTML: 'Before you start using the app, please decide about these permissions.'
+									}
+								));
+
+								container.appendChild(module.View.prototype.createWidget.call(
+
+									modal,
+
+									'SwitchInputWidget',
+									{
+										width: 's12',
+
+										id: 'setup-localstorage',
+
+										label: 'Allow local storage'
+
+										//label: 'Allow app to store your account and event info on this device (required for the app to work.)'
+									}
+								));
+
+								container.appendChild(module.View.prototype.createWidget.call(
+
+									modal,
+
+									'InputDescriptionWidget',
+
+									{
+										datasource: 'Please allow the app to store your account and event details on this device. Otherwise, you will have to start over from scratch every time you come back to the app.',
+
+										divider: false
+									}
+								));
+
+								container.appendChild(module.View.prototype.createWidget.call(
+
+									modal,
+
+									'SwitchInputWidget',
+									{
+										width: 's12',
+
+										id: 'setup-geolocation',
+
+										label: 'Allow geolocation'
+
+										//label: 'Allow app to access the location of this device (optional)'
+									}
+								));
+
+								container.appendChild(module.View.prototype.createWidget.call(
+
+									modal,
+
+									'InputDescriptionWidget',
+
+									{
+										datasource: 'Allowing geolocation will enable the app to suggest event venues and other useful information based on the location of this device (optional).',
+
+										divider: false
+									}
+								));
+
+								container.appendChild(module.View.prototype.createWidget.call(
+
+									modal,
+
+									'HTMLElement',
+									{
+										element: 'p',
+
+										id: 'setup-outro',
+
+										innerHTML: 'You can change these choices at any time in the app\'s Account Settings.'
+									}
+								));
+
+								return container;
+							})()
+						});
+
+						modal.show(
+						{
+							dismissible: false, // prevent user from dismissing popup by tap/clicking outside it
+
+							complete: function() {
+
+								var acc = ctrl.selectedAccount();
+
+								void acc.geoLocationAllowed($('#setup-geolocation').prop('checked'));
+
+								if (acc.localStorageAllowed($('#setup-localstorage').prop('checked')) && window.localStorage) {
+
+									app.registry.writeObject(); // save all app data, incl. registries, to local storage
+
+									// on first login, registries have not yet been stored, and so later retrieval may fail unless done here
+
+									Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
 								}
-							));
 
-							container.appendChild(module.View.prototype.createWidget.call(
+								else {
 
-								modal,
-
-								'SwitchInputWidget',
-								{
-									width: 's12',
-
-									id: 'setup-localstorage',
-
-									label: 'Allow local storage'
-
-									//label: 'Allow app to store your account and event info on this device (required for the app to work.)'
+									Materialize.toast('Entered demo mode. Everything works but you will loose your data when leaving the app (allow local storage in Account Settings to change this)', 3 * module.prefs.defaultToastDelay());
 								}
-							));
-
-							container.appendChild(module.View.prototype.createWidget.call(
-
-								modal,
-
-								'InputDescriptionWidget',
-
-								{
-									datasource: 'Please allow the app to store your account and event details on this device. Otherwise, you will have to start over from scratch every time you come back to the app.',
-
-									divider: false
-								}
-							));
-
-							container.appendChild(module.View.prototype.createWidget.call(
-
-								modal,
-
-								'SwitchInputWidget',
-								{
-									width: 's12',
-
-									id: 'setup-geolocation',
-
-									label: 'Allow geolocation'
-
-									//label: 'Allow app to access the location of this device (optional)'
-								}
-							));
-
-							container.appendChild(module.View.prototype.createWidget.call(
-
-								modal,
-
-								'InputDescriptionWidget',
-
-								{
-									datasource: 'Allowing geolocation will enable the app to suggest event venues and other useful information based on the location of this device (optional).',
-
-									divider: false
-								}
-							));
-
-							container.appendChild(module.View.prototype.createWidget.call(
-
-								modal,
-
-								'HTMLElement',
-								{
-									element: 'p',
-
-									id: 'setup-outro',
-
-									innerHTML: 'You can change these choices at any time in the app\'s Account Settings.'
-								}
-							));
-
-							return container;
-						})()
-					});
-
-					modal.show(
-					{
-						dismissible: false, // prevent user from dismissing popup by tap/clicking outside it
-
-						complete: function() {
-
-							var acc = ctrl.selectedAccount();
-
-							void acc.geoLocationAllowed($('#setup-geolocation').prop('checked'));
-
-							if (acc.localStorageAllowed($('#setup-localstorage').prop('checked')) && window.localStorage) {
-
-								app.registry.writeObject(); // save all app data, incl. registries, to local storage
-
-								// on first login, registries have not yet been stored, and so later retrieval may fail unless done here
-
-								Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
 							}
+						});
 
-							else {
-
-								Materialize.toast('Entered demo mode. Everything works but you will loose your data when leaving the app (allow local storage in Account Settings to change this)', 3 * module.prefs.defaultToastDelay());
-							}
-						}
-					});
-
-					ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View
+					}, 250);
 				}
 
 				break;

@@ -20,7 +20,7 @@ var app = app || {};
 	*
 	* @return {FormView} Not supposed to be instantiated, except when extended by subclasses.
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 	module.FormView = function(Function_modelClass, str_elementId, str_heading) {
@@ -68,7 +68,52 @@ var app = app || {};
 
 	module.FormView.prototype.delete = function(nEvent) {
 
-		this.notifyObservers(this, this.model(), module.View.UIAction.DELETE);
+		var modal = module.controller.views().modalView, // get reference to generic, multi-purpose popup (modal)
+
+		type = app.controller.currentView().model().className(); // get class name of object to be deleted
+
+		modal.render( // render modal content
+		{
+			header: 'Delete ' + type.toLowerCase(),
+
+			body: (function() {
+
+				var container = document.createElement('div');
+
+				container.appendChild(module.View.prototype.createWidget.call(
+
+					modal,
+
+					'HTMLElement',
+					{
+						element: 'p',
+
+						id: 'delete-intro',
+
+						innerHTML: 'Deletion cannot be undone. Continue?'
+					}
+				));
+
+				return container;
+			})(),
+
+			cancel_label: 'No, keep it',
+
+			ok_label: 'OK, delete'
+		});
+
+		
+		$('#modal-ok').mousedown(function(nEvent) { // modal OK button behaviour
+
+			this.notifyObservers(this, this.model(), module.View.UIAction.DELETE);
+
+		}.bind(this));
+
+
+		modal.show(
+		{
+			dismissible: true // allow user to dismiss popup by tap/clicking outside it
+		});
 	};
 
 
@@ -124,26 +169,11 @@ var app = app || {};
 
 			$('#nav-delete-icon').mousedown(function(nEvent) { // set up delete icon to open modal
 
-				$('#confirm-delete-modal').openModal();
-			});
-
-			/*DEPRECATED: Handled automatically by materialize,js
-			$('#confirm-delete-modal-cancel').mousedown(function(nEvent) { // modal cancel behaviour
-
-				$('#confirm-delete-modal').closeModal();
-
-			}.bind(this));
-			*/
-
-
-			$('#confirm-delete-modal-ok').mousedown(function(nEvent) { // modal OK behaviour
-
-				//$('#confirm-delete-modal').closeModal(); //DEPRECATED: Handled automatically by materialize,js
-
 				this.delete();
-
+				
 			}.bind(this));
 
+			
 			$('#nav-delete-icon').parent().removeClass('hidden'); // show delete icon
 
 			$('#nav-delete-icon').show('slow');

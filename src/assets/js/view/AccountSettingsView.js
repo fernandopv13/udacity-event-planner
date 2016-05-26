@@ -460,6 +460,10 @@ var app = app || {};
 			return true;
 		}
 
+		//else
+
+		Materialize.toast(module.prefs.defaultValidationError(), module.prefs.defaultToastDelay());
+
 		return false;
 	};
 

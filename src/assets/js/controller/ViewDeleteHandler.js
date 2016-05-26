@@ -125,7 +125,7 @@ var app = app || {};
 
 				ctrl.currentView(ctrl.views().eventListView, ctrl.selectedAccount()); // show the view
 
-				//Materialize.toast('Event was deleted', module.prefs.defaultToastDelay());
+				Materialize.toast('Event was deleted', module.prefs.defaultToastDelay());
 
 				break;
 
@@ -142,6 +142,8 @@ var app = app || {};
 				ctrl.recentDeleted = true;
 
 				window.history.go(module.device().isiOS() && module.device().isSafari() ? -2 : -1); // navigate back to guest list (working around strange iOS Safari bug)
+
+				Materialize.toast('Guest was removed from event', module.prefs.defaultToastDelay());
 
 				break;
 		}

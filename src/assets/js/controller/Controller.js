@@ -20,7 +20,7 @@ var app = app || {};
 	*
 	* @constructor
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*
 	* @todo flesh out views() getter
 	*/
@@ -315,7 +315,9 @@ var app = app || {};
 					{
 						element: 'div',
 
-						attributes: {id: 'modal-view'}
+						attributes: {id: 'modal-view'},
+
+						classList: ['modal']
 					}));
 
 				

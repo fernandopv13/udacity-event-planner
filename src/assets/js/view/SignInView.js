@@ -302,7 +302,7 @@ var app = app || {};
 
 							$('#sign-in-email').val('demo@demo.demo');
 
-							$('#sign-in-password').val('DEMO5%demo');
+							$('#sign-in-password').val('demo5%DEMO');
 
 							this.submit(nEvent);
 
@@ -344,6 +344,10 @@ var app = app || {};
 
 			return true;
 		}
+
+		//else
+
+		Materialize.toast(module.prefs.defaultValidationError(), module.prefs.defaultToastDelay());
 
 		return false;
 	}

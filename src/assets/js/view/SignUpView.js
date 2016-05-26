@@ -497,7 +497,7 @@ var app = app || {};
 
 		//else
 
-		Materialize.toast('Some info seems to be missing. Please try again', module.prefs.defaultToastDelay());
+		Materialize.toast(module.prefs.defaultValidationError(), module.prefs.defaultToastDelay());
 
 		return false;
 	}

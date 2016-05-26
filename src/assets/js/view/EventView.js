@@ -771,7 +771,7 @@ var app = app || {};
 
 		Materialize.updateTextFields(); // make sure validation errors are shown
 
-		console.log('submit failed');
+		Materialize.toast(module.prefs.defaultValidationError(), module.prefs.defaultToastDelay());
 
 		return false;
 	};

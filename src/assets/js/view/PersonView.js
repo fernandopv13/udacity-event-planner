@@ -380,7 +380,9 @@ var app = app || {};
 			return true;
 		}
 
-		Materialize.toast('Some info seems to be missing. Please try again.', 4000);
+		//else
+
+		Materialize.toast(module.prefs.defaultValidationError(), module.prefs.defaultToastDelay());
 
 		return false;
 	};
