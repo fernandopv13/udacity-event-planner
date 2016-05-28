@@ -79,21 +79,24 @@ var app = app || {};
 
 				var container = document.createElement('div');
 
-				container.appendChild(module.View.prototype.createWidget.call(
-
-					this,
+				container.appendChild(self.createWidget(
 
 					'HTMLElement',
 					{
-						element: 'p',
+						element: 'img',
 
-						//id: 'about-intro',
+						attributes:
+						{
+							src: 'assets/img/ulrik.jpg',
 
-						innerHTML: 'This app was created by Ulrik H. Gade as an exercise in user-friendly front-end form design for my Senior Web Developer Nanodegree Course at Udacity.com in early 2016.'
+							alt: 'Ulrik H. Gade'
+						},
+
+						classList: ['circle', 'about-portrait']
 					}
 				));
 
-				container.appendChild(module.View.prototype.createWidget.call(
+				container.appendChild(self.createWidget.call(
 
 					this,
 
@@ -103,11 +106,42 @@ var app = app || {};
 
 						//id: 'about-intro',
 
-						innerHTML: 'However, it has also evolved into a more involved experiment with cross-browser/platform, "classical" object-oriented programming in JavaScript.'
+						innerHTML: 'Hi, I\'m Ulrik H. Gade.'
+					}
+				));
+
+				
+				container.appendChild(self.createWidget.call(
+
+					this,
+
+					'HTMLElement',
+					{
+						element: 'p',
+
+						//id: 'about-intro',
+
+						innerHTML: 'I created this app in early 2016 as an exercise in user-friendly front-end form design for my Senior Web Developer Nanodegree Course at Udacity.com.'
+					}
+				));
+
+				
+
+				container.appendChild(self.createWidget.call(
+
+					this,
+
+					'HTMLElement',
+					{
+						element: 'p',
+
+						//id: 'about-intro',
+
+						innerHTML: 'I also used the app to experiment with cross-browser/platform, "classical" object-oriented programming in JavaScript. This ended up getting quite involved.'
 					}
 				));
 				
-				container.appendChild(module.View.prototype.createWidget.call(
+				container.appendChild(self.createWidget.call(
 
 					this,
 
@@ -117,7 +151,35 @@ var app = app || {};
 
 						//id: 'about-intro',
 
-						innerHTML: 'Please see the Readme file and the other documentation in my Github repo for more technical details.'
+						innerHTML: 'Please see the source code, Readme file and the other documentation in my Github repo for more technical details.'
+					}
+				));
+
+				container.appendChild(self.createWidget.call(
+
+					this,
+
+					'HTMLElement',
+					{
+						element: 'p',
+
+						//id: 'about-intro',
+
+						innerHTML: 'Or, if you\'re not into the techie stuff, just have fun with the app.'
+					}
+				));
+
+				container.appendChild(self.createWidget.call(
+
+					this,
+
+					'HTMLElement',
+					{
+						element: 'p',
+
+						//id: 'about-intro',
+
+						innerHTML: 'But don\'t use it for anything serious: this is a student project, not a commercial-grade service.'
 					}
 				));
 
@@ -125,7 +187,7 @@ var app = app || {};
 
 			}.bind(this))(),
 
-			ok: 'OK'
+			ok: 'OK, got it'
 		});
 	};
 

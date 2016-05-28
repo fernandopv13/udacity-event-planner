@@ -124,16 +124,24 @@ var app = app || {};
 
 						//console.log('Setting current view to ' + View_v.className()); // debug
 
-						for (var view in _views) {
-
-							_views[view].hide('fast');  // hide all views
-						}
-
 						_currentView = View_v; // set current view
 
-						_currentView.show('slow'); // show current view
-						
-						_router.onViewChange(View_v); // update browser history
+						if (View_v && View_v.isInstanceOf(module.ModalView)) { // show modal
+
+							_currentView.show('fast');
+						}
+
+						else { // show main view
+
+							for (var view in _views) {
+
+								_views[view].hide('fast');  // hide all views
+							}
+
+							_currentView.show('slow'); // show current view
+							
+							_router.onViewChange(View_v); // update browser history
+						}
 					}
 
 					else {

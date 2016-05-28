@@ -93,9 +93,14 @@ var app = app || {};
 
 				switch (View_v.constructor) {
 
-					case module.AccountSettingsView:
+					case module.AboutView:
 
-						Model_m = ctrl.selectedAccount();
+						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
+
+						setTimeout( // wait for the drawer close animation to complete, or it will also hide the popup
+
+							function() {ctrl.currentView(view, Model_m)}, 300  // show the view
+						);
 
 						break;
 
@@ -105,11 +110,29 @@ var app = app || {};
 
 							|| ctrl.selectedAccount().accountHolder(new module.Person())
 
+						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
+
+						ctrl.currentView(view, Model_m); // show the view
+
 						break;
 
-					//case module.SignOutView
+					case module.AccountSettingsView:
 
-					//case module.AboutView
+						Model_m = ctrl.selectedAccount();
+
+						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
+
+						ctrl.currentView(view, Model_m); // show the view
+
+						break;
+
+					case module.SignInView:
+
+						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
+
+						ctrl.currentView(view, Model_m); // show the view
+
+						break;
 
 					default:
 
@@ -140,11 +163,11 @@ var app = app || {};
 
 					void clone.delete(); 
 				}
+
+				this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
+
+				ctrl.currentView(view, Model_m); // show the view
 			}
-
-			this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
-
-			ctrl.currentView(view, Model_m); // show the view
 		}
 
 		else {
