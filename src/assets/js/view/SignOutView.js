@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class AboutView extends ModalView
+* public class SignOutView extends ModalView
 ******************************************************************************/
 
 var app = app || {};
@@ -21,7 +21,7 @@ var app = app || {};
 	* @author Ulrik H. Gade, May 2016
 	*/
 
-	module.AboutView = function(str_elementId, str_heading) {
+	module.SignOutView = function(str_elementId, str_heading) {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -29,7 +29,7 @@ var app = app || {};
 		
 		// Set temporary literals for use by parent class constructor
 
-		this.className = 'AboutView';
+		this.className = 'SignOutView';
 
 		this.ssuper = module.ModalView;
 		
@@ -42,16 +42,16 @@ var app = app || {};
 		* Other initialization
 		*---------------------------------------------------------------------------------------*/
 
-		this.parentList().push(module.AboutView);
+		this.parentList().push(module.SignOutView);
 	};
 
 	/*----------------------------------------------------------------------------------------
 	* Inherit from ModalView
 	*---------------------------------------------------------------------------------------*/
 
-	module.AboutView.prototype = Object.create(module.ModalView.prototype); // Set up inheritance
+	module.SignOutView.prototype = Object.create(module.ModalView.prototype); // Set up inheritance
 
-	module.AboutView.prototype.constructor = module.AboutView; // Reset constructor property
+	module.SignOutView.prototype.constructor = module.SignOutView; // Reset constructor property
 
 
 
@@ -67,64 +67,18 @@ var app = app || {};
 	* @return void
 	 */
 
-	module.AboutView.prototype.render = function(obj_options) {
+	module.SignOutView.prototype.render = function(obj_options) {
 	
 		var self = this;
 
 		this.ssuper().prototype.render.call(this, 
 		{
-			header: 'About Meetup Planner',
+			header: 'Sign Out',
 
 			body: (function() {
 
 				var container = document.createElement('div');
 
-				container.appendChild(self.createWidget(
-
-					'HTMLElement',
-					{
-						element: 'img',
-
-						attributes:
-						{
-							src: 'assets/img/ulrik.jpg',
-
-							alt: 'Ulrik H. Gade'
-						},
-
-						classList: ['circle', 'about-portrait']
-					}
-				));
-
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						//id: 'about-intro',
-
-						innerHTML: 'Hi, I\'m Ulrik H. Gade.'
-					}
-				));
-
-				
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						//id: 'about-intro',
-
-						innerHTML: 'I created this app in early 2016 as an exercise in user-friendly front-end form design for my Senior Web Developer Nanodegree Course at Udacity.com.'
-					}
-				));
-
 				
 
 				container.appendChild(self.createWidget.call(
@@ -135,11 +89,17 @@ var app = app || {};
 					{
 						element: 'p',
 
-						//id: 'about-intro',
-
-						innerHTML: 'I also used the app to experiment with cross-browser/platform, "classical" object-oriented programming in JavaScript. This ended up getting as involved as it was educational.'
+						innerHTML: 'Sign out from the app?'
 					}
 				));
+
+				
+				var storageMsg = module.controller.selectedAccount().localStorageAllowed() ?
+
+				'Your events and account info will still be here when you sign back in.' :
+
+				'You will loose all your event and account info. Allow "Local Storage" in Account Settings before you sign out to change this.';
+
 				
 				container.appendChild(self.createWidget.call(
 
@@ -149,45 +109,18 @@ var app = app || {};
 					{
 						element: 'p',
 
-						//id: 'about-intro',
-
-						innerHTML: 'Please see the source code, Readme file and the other documentation in my Github repo for more technical details.'
+						innerHTML: storageMsg
 					}
 				));
 
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						//id: 'about-intro',
-
-						innerHTML: 'Or, if you\'re not into the techie stuff, just have fun with the app.'
-					}
-				));
-
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						//id: 'about-intro',
-
-						innerHTML: 'But don\'t use it for anything serious: this is a study project, not a commercial-grade service.'
-					}
-				));
-
+				
 				return container;
 
 			}.bind(this))(),
 
-			ok: 'OK, got it'
+			ok: 'Sign Out',
+
+			cancel: 'Stay signed in'
 		});
 	};
 

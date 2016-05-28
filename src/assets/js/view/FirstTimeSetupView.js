@@ -1,7 +1,7 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class AboutView extends ModalView
+* public class FirstTimeSetupView extends ModalView
 ******************************************************************************/
 
 var app = app || {};
@@ -21,7 +21,7 @@ var app = app || {};
 	* @author Ulrik H. Gade, May 2016
 	*/
 
-	module.AboutView = function(str_elementId, str_heading) {
+	module.FirstTimeSetupView = function(str_elementId, str_heading) {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -29,7 +29,7 @@ var app = app || {};
 		
 		// Set temporary literals for use by parent class constructor
 
-		this.className = 'AboutView';
+		this.className = 'FirstTimeSetupView';
 
 		this.ssuper = module.ModalView;
 		
@@ -42,16 +42,16 @@ var app = app || {};
 		* Other initialization
 		*---------------------------------------------------------------------------------------*/
 
-		this.parentList().push(module.AboutView);
+		this.parentList().push(module.FirstTimeSetupView);
 	};
 
 	/*----------------------------------------------------------------------------------------
 	* Inherit from ModalView
 	*---------------------------------------------------------------------------------------*/
 
-	module.AboutView.prototype = Object.create(module.ModalView.prototype); // Set up inheritance
+	module.FirstTimeSetupView.prototype = Object.create(module.ModalView.prototype); // Set up inheritance
 
-	module.AboutView.prototype.constructor = module.AboutView; // Reset constructor property
+	module.FirstTimeSetupView.prototype.constructor = module.FirstTimeSetupView; // Reset constructor property
 
 
 
@@ -67,13 +67,13 @@ var app = app || {};
 	* @return void
 	 */
 
-	module.AboutView.prototype.render = function(obj_options) {
+	module.FirstTimeSetupView.prototype.render = function(obj_options) {
 	
 		var self = this;
 
 		this.ssuper().prototype.render.call(this, 
 		{
-			header: 'About Meetup Planner',
+			header: 'First Time Setup',
 
 			body: (function() {
 
@@ -83,112 +83,91 @@ var app = app || {};
 
 					'HTMLElement',
 					{
-						element: 'img',
+						element: 'p',
 
-						attributes:
-						{
-							src: 'assets/img/ulrik.jpg',
+						id: 'setup-intro',
 
-							alt: 'Ulrik H. Gade'
-						},
-
-						classList: ['circle', 'about-portrait']
+						innerHTML: 'Before you start using the app, please decide about these permissions.'
 					}
 				));
 
-				container.appendChild(self.createWidget.call(
+				container.appendChild(self.createWidget(
 
-					this,
+					'SwitchInputWidget',
+					{
+						width: 's12',
+
+						id: 'setup-localstorage',
+
+						label: 'Allow local storage'
+
+						//label: 'Allow app to store your account and event info on this device (required for the app to work.)'
+					}
+				));
+
+				container.appendChild(self.createWidget(
+
+					'InputDescriptionWidget',
+
+					{
+						datasource: 'Please allow the app to store your account and event details on this device. Otherwise, you will have to start over from scratch every time you come back to the app.',
+
+						divider: false
+					}
+				));
+
+				container.appendChild(self.createWidget(
+
+					'SwitchInputWidget',
+					{
+						width: 's12',
+
+						id: 'setup-geolocation',
+
+						label: 'Allow geolocation'
+
+						//label: 'Allow app to access the location of this device (optional)'
+					}
+				));
+
+				container.appendChild(self.createWidget(
+
+					'InputDescriptionWidget',
+
+					{
+						datasource: 'Allowing geolocation will enable the app to suggest event venues and other useful information based on the location of this device (optional).',
+
+						divider: false
+					}
+				));
+
+				container.appendChild(self.createWidget(
 
 					'HTMLElement',
 					{
 						element: 'p',
 
-						//id: 'about-intro',
+						id: 'setup-outro',
 
-						innerHTML: 'Hi, I\'m Ulrik H. Gade.'
-					}
-				));
-
-				
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						//id: 'about-intro',
-
-						innerHTML: 'I created this app in early 2016 as an exercise in user-friendly front-end form design for my Senior Web Developer Nanodegree Course at Udacity.com.'
-					}
-				));
-
-				
-
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						//id: 'about-intro',
-
-						innerHTML: 'I also used the app to experiment with cross-browser/platform, "classical" object-oriented programming in JavaScript. This ended up getting as involved as it was educational.'
-					}
-				));
-				
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						//id: 'about-intro',
-
-						innerHTML: 'Please see the source code, Readme file and the other documentation in my Github repo for more technical details.'
-					}
-				));
-
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						//id: 'about-intro',
-
-						innerHTML: 'Or, if you\'re not into the techie stuff, just have fun with the app.'
-					}
-				));
-
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						//id: 'about-intro',
-
-						innerHTML: 'But don\'t use it for anything serious: this is a study project, not a commercial-grade service.'
+						innerHTML: 'You can change these choices at any time in the app\'s Account Settings.'
 					}
 				));
 
 				return container;
+			})(),
 
-			}.bind(this))(),
+			ok: 'OK',
 
-			ok: 'OK, got it'
+			cancel: 'Cancel'
 		});
+	};
+
+	
+	/** Displays modal in UI and provides handler for data entered in modal */	
+
+	module.FirstTimeSetupView.prototype.show = function(obj_options) {
+
+		this.ssuper().prototype.show.call(this, obj_options);
 	};
 
 })(app);

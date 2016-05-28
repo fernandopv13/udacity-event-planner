@@ -150,114 +150,14 @@ var app = app || {};
 
 					void ctrl.newModel(null) // clear newModel (account creation can't be rolled back)
 
-					var modal = module.controller.views().modalView; // get reference to generic, multi-purpose popup (modal)
+					var modal = module.controller.views().firstTimeSetupView; // get reference to generic, multi-purpose popup (modal)
 
-					ctrl.onAccountSelected.call(ctrl, Model_n); // show the default View (hides all other Views, so do before modal)
+					ctrl.onAccountSelected.call(ctrl, Model_n, // set account and show default View
 
-					setTimeout(function(){ // show first time setup modal (wait for default View to render, or its animation may interfere)
-
-						modal.render(
-						{
-							header: 'First Time Setup',
-
-							body: (function() {
-
-								var container = document.createElement('div');
-
-								container.appendChild(module.View.prototype.createWidget.call(
-
-									modal,
-
-									'HTMLElement',
-									{
-										element: 'p',
-
-										id: 'setup-intro',
-
-										innerHTML: 'Before you start using the app, please decide about these permissions.'
-									}
-								));
-
-								container.appendChild(module.View.prototype.createWidget.call(
-
-									modal,
-
-									'SwitchInputWidget',
-									{
-										width: 's12',
-
-										id: 'setup-localstorage',
-
-										label: 'Allow local storage'
-
-										//label: 'Allow app to store your account and event info on this device (required for the app to work.)'
-									}
-								));
-
-								container.appendChild(module.View.prototype.createWidget.call(
-
-									modal,
-
-									'InputDescriptionWidget',
-
-									{
-										datasource: 'Please allow the app to store your account and event details on this device. Otherwise, you will have to start over from scratch every time you come back to the app.',
-
-										divider: false
-									}
-								));
-
-								container.appendChild(module.View.prototype.createWidget.call(
-
-									modal,
-
-									'SwitchInputWidget',
-									{
-										width: 's12',
-
-										id: 'setup-geolocation',
-
-										label: 'Allow geolocation'
-
-										//label: 'Allow app to access the location of this device (optional)'
-									}
-								));
-
-								container.appendChild(module.View.prototype.createWidget.call(
-
-									modal,
-
-									'InputDescriptionWidget',
-
-									{
-										datasource: 'Allowing geolocation will enable the app to suggest event venues and other useful information based on the location of this device (optional).',
-
-										divider: false
-									}
-								));
-
-								container.appendChild(module.View.prototype.createWidget.call(
-
-									modal,
-
-									'HTMLElement',
-									{
-										element: 'p',
-
-										id: 'setup-outro',
-
-										innerHTML: 'You can change these choices at any time in the app\'s Account Settings.'
-									}
-								));
-
-								return container;
-							})(),
-
-							ok: 'OK',
-
-							cancel: 'Cancel'
-						});
-
+						function(){ // show first time setup modal when default View has rendered
+					
+						modal.render();
+						
 						modal.show(
 						{
 							dismissible: false, // prevent user from dismissing popup by tap/clicking outside it
@@ -283,8 +183,7 @@ var app = app || {};
 								}
 							}
 						});
-
-					}, 500);
+					})
 				}
 
 				break;

@@ -113,10 +113,14 @@ var app = app || {};
 			*
 			* @return {View} The current view, or null
 			*
+			* @param {Function} done Callback to run when view change has completed (optional)
+			*
 			* @throws {IllegalArgumentError} If attempting to set a view that is not a View, or null
+
+			* @todo Find more robust solution for first time setup modal workaround
 			*/
 			
-			this.currentView = function (View_v, Model_m) {
+			this.currentView = function (View_v, Model_m, fn_done) {
 			
 				if (arguments.length > 0) { // setting
 
@@ -124,22 +128,30 @@ var app = app || {};
 
 						//console.log('Setting current view to ' + View_v.className()); // debug
 
-						_currentView = View_v; // set current view
-
 						if (View_v && View_v.isInstanceOf(module.ModalView)) { // show modal
 
-							_currentView.show('fast');
+							View_v.show('fast');
 						}
 
 						else { // show main view
 
-							for (var view in _views) {
+							for (var view in _views) {  // hide all (other) views
 
-								_views[view].hide('fast');  // hide all views
+								if (!_views[view].isInstanceOf(module.ModalView)) { // workaround to ensure that first time setup modal does not get unintentionally hidden
+
+									_views[view].hide(1);
+								}
 							}
 
-							_currentView.show('slow'); // show current view
-							
+							_currentView = View_v; // set current view
+
+							_currentView.show( // show current view
+							{
+								duration: 'slow',
+
+								done: fn_done
+							});
+
 							_router.onViewChange(View_v); // update browser history
 						}
 					}
@@ -238,9 +250,11 @@ var app = app || {};
 			* and displaying the Account to the user.
 			*
 			* @param {Account} a The selected Account
+			*
+			* @param {Function} done Callback to run when view change has completed (optional)
 			*/
 
-			this.onAccountSelected = function(Account_a) { // temporary adapter while transitioning to the Strategy pattern
+			this.onAccountSelected = function(Account_a, fn_done) { // temporary adapter while transitioning to the Strategy pattern
 
 				this.selectedEvent(null);
 
@@ -248,7 +262,7 @@ var app = app || {};
 
 				this.selectedAccount(Account_a);
 
-				this.currentView(_views.eventListView, this.selectedAccount());
+				this.currentView(_views.eventListView, this.selectedAccount(), fn_done);
 			};
 
 
@@ -351,7 +365,11 @@ var app = app || {};
 
 						modalView: new module.ModalView('modal-view', '[Untitled]'), // generic modal popup
 
-						aboutView: new module.AboutView('modal-view') // 'about' modal popup
+						firstTimeSetupView: new module.FirstTimeSetupView('modal-view'), // 'Sign Out' modal popup
+
+						aboutView: new module.AboutView('modal-view'), // 'About' modal popup
+
+						signOutView: new module.SignOutView('modal-view') // 'Sign Out' modal popup
 					}
 
 					

@@ -40,7 +40,7 @@ var app = app || {}; // create a simple namespace for the module
 	*
 	* @return {View} Not supposed to be instantiated, except when extended by subclasses. But subclasses need to be able to call constructor when setting up inheritance.
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 
@@ -65,6 +65,8 @@ var app = app || {}; // create a simple namespace for the module
 			_containerElement, // temporary container holding elements while generating View, gets rendered to $renderContext
 
 			_$renderContext = $('#' + str_elementId), // the HTML element the view will render itself into when updated (set in realizing classes)
+
+			_ready, // flag indicating whether view show() animation has completed
 			
 			_super = (this.ssuper ? this.ssuper : Object); // reference to immediate parent class (by function) if provided by subclass, otherwise Object
 		
@@ -168,6 +170,18 @@ var app = app || {}; // create a simple namespace for the module
 			this.$renderContext = new module.Accessor(_$renderContext, false);
 			
 			
+			/** Gets or sets the View's ready flag (indicating whether show() animation has completed)
+			*
+			* @param {Boolean} ready The status of the flag
+			*
+			* @return {Boolean} ready The status of the flag
+			*
+			* @throws {IllegalArgumentError} If trying to set a ready flag that is not a Boolean
+			*/
+			
+			this.ready = new module.Accessor(_ready, false, 'boolean');
+			
+
 			/** Gets a reference to the object's parent (by function reference) in the class inheritance hierarchy (the topmost class is Object)
 			*
 			* @return {Function} ssuper The parent class
@@ -204,23 +218,25 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.UIAction = {
 
-			SIGNIN: 0,
+			CANCEL: 0,
 
-			CANCEL: 1,
+			CREATE: 1,
 
-			CREATE: 2,
+			DELETE: 2,
 
-			DELETE: 3,
+			NAVIGATE: 3,
 
-			NAVIGATE: 4,
+			SELECT: 4,
 
-			SELECT: 5,
+			SIGNIN: 5,
 
-			SUBMIT: 6,
+			SIGNOUT: 6,
 
-			SUBVIEW: 7,
+			SUBMIT: 7,
 
-			TEST: 8
+			SUBVIEW: 8,
+
+			TEST: 9
 		}
 
 
@@ -282,6 +298,8 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.prototype.hide = function(obj_options) {
 
+			void this.ready(false);
+
 			this.$renderContext().hide(obj_options ? obj_options : 'fast');
 
 			this.$renderContext().addClass('hidden');
@@ -310,9 +328,20 @@ var app = app || {}; // create a simple namespace for the module
 
 				//console.log('Generating navbar'); // debug
 
-				var exclusions = [module.FrontPageView, module.SignInView, module.SignUpView];
+				var excluded = false;
 
-				if (exclusions.indexOf(this.constructor) < 0) { // view not excluded from having nav bar
+				[module.FrontPageView, module.SignInView, module.SignUpView, module.ModalView].forEach(function(klass) {
+
+					if (this.isInstanceOf(klass)) {
+
+						excluded = true;
+					}
+
+				}.bind(this));
+
+				if (!excluded) { // view not excluded from having nav bar
+
+				//if (exclusions.indexOf(this.constructor) < 0) { // view not excluded from having nav bar
 
 					if ($('#nav-main').length === 0) { // nav bar not already in DOM
 
@@ -485,7 +514,20 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.prototype.show = function(obj_options) {
 
-			this.$renderContext().show(obj_options ? obj_options : 'slow');
+			void this.ready(false);
+
+			this.$renderContext().show(
+			{
+				duration: obj_options && obj_options.duration ? obj_options.duration : 'slow',
+
+				done: function() {
+
+					void this.ready(true);
+
+					if (obj_options && obj_options.done) {obj_options.done();}
+				
+				}.bind(this)
+			});
 
 			this.$renderContext().removeClass('hidden');
 

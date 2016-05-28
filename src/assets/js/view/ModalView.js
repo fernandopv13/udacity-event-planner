@@ -217,11 +217,11 @@ var app = app || {};
 			
 			opacity: obj_options && obj_options.opacity ? obj_options.opacity : 0.5, // Opacity of modal background
 
-			in_duration: obj_options && obj_options.in_duration ? obj_options.in_duration : 300, // Transition in duration
+			in_duration: obj_options && obj_options.duration ? obj_options.duration : 300, // Transition in duration
 
 			out_duration: obj_options && obj_options.out_duration ? obj_options.out_duration : 200, // Transition out duration
 
-			ready: obj_options && obj_options.ready ? obj_options.ready : function() {}, // Callback for Modal open
+			ready: obj_options && obj_options.done ? obj_options.done : function(){}, // Callback for Modal open
 
 			complete: obj_options && obj_options.complete ? obj_options.complete : function() {}, // Callback for Modal close
 		});
