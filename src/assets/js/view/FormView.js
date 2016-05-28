@@ -97,9 +97,9 @@ var app = app || {};
 				return container;
 			})(),
 
-			cancel_label: 'No, keep it',
+			cancel: 'No, keep it',
 
-			ok_label: 'OK, delete'
+			ok: 'OK, delete'
 		});
 
 		

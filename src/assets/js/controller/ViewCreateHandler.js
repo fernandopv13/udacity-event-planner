@@ -251,7 +251,11 @@ var app = app || {};
 								));
 
 								return container;
-							})()
+							})(),
+
+							ok: 'OK',
+
+							cancel: 'Cancel'
 						});
 
 						modal.show(
@@ -275,12 +279,12 @@ var app = app || {};
 
 								else {
 
-									Materialize.toast('Entered demo mode. Everything works but you will loose your data when leaving the app (allow local storage in Account Settings to change this)', 3 * module.prefs.defaultToastDelay());
+									Materialize.toast('Entered demo mode. Everything works but you will loose your data when leaving the app (go to Account Settings to change this).', 3 * module.prefs.defaultToastDelay());
 								}
 							}
 						});
 
-					}, 250);
+					}, 500);
 				}
 
 				break;

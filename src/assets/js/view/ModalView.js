@@ -29,9 +29,9 @@ var app = app || {};
 		
 		// Set temporary literals for use by parent class constructor
 
-		this.className = 'ModalView';
+		this.className = this.className ? this.className : 'ModalView';
 
-		this.ssuper = module.View;
+		this.ssuper = this.ssuper ? this.ssuper : module.View;
 		
 		// Initialize instance members inherited from parent class
 		
@@ -78,8 +78,6 @@ var app = app || {};
 	 */
 
 	module.ModalView.prototype.render = function(obj_options) {
-
-		//console.log('entering ModalView render()'); // debug
 
 		var container; // shorthand reference to inherited temporary container element
 			
@@ -155,37 +153,43 @@ var app = app || {};
 
 			container.appendChild(footerDiv);
 
-			footerDiv.appendChild(this.createWidget( // cancel button
+			if (obj_options.cancel) {
 
-				'HTMLElement',
-				{
-					element: 'a',
+				footerDiv.appendChild(this.createWidget( // cancel button
+				
+					'HTMLElement',
+					{
+						element: 'a',
 
-					attributes: {href: '#!', id: 'modal-cancel'},
+						attributes: {href: '#!', id: 'modal-cancel'},
 
-					classList: ['modal-action', 'modal-close', 'waves-effect', 'waves-green', 'btn-flat'],
+						classList: ['modal-action', 'modal-close', 'waves-effect', 'waves-green', 'btn-flat'],
 
-					innerHTML: obj_options && obj_options.cancel_label ? obj_options.cancel_label : 'Cancel'
-				}
-			));
+						innerHTML: obj_options.cancel
+					}
+				));
+			}
 
-			var OKbutton = this.createWidget( // OK button
+			if (obj_options.ok) {
 
-				'HTMLElement',
-				{
-					element: 'a',
+				var OKbutton = this.createWidget( // OK button
 
-					attributes: {href: '#!', id: 'modal-ok'},
+					'HTMLElement',
+					{
+						element: 'a',
 
-					classList: ['modal-action', 'modal-close', 'waves-effect', 'waves-green', 'btn-flat'],
+						attributes: {href: '#!', id: 'modal-ok'},
 
-					innerHTML: obj_options && obj_options.ok_label ? obj_options.ok_label : 'OK'
-				}
-			);
+						classList: ['modal-action', 'modal-close', 'waves-effect', 'waves-green', 'btn-flat'],
 
-			$(OKbutton).on('mousedown', this.submit.bind(this)); // attach custom OK event handler
+						innerHTML: obj_options.ok
+					}
+				);
 
-			footerDiv.appendChild(OKbutton);
+				$(OKbutton).on('mousedown', this.submit.bind(this)); // attach custom OK event handler
+
+				footerDiv.appendChild(OKbutton);
+			}
 
 
 		// Render to DOM
@@ -224,7 +228,7 @@ var app = app || {};
 	}
 
 
-	/** Dummy method to comply with abstract View superclass.
+	/** Dummy method to comply with abstract FormView superclass.
 	*
 	* Unlike other Views, ModalView is reused for multiple purposes, so 'submit' may have more than one meaning.
 	*

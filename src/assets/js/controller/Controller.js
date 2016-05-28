@@ -53,8 +53,6 @@ var app = app || {};
 
 			_views; // collection of views we need to keep track of
 
-
-		
 		/*----------------------------------------------------------------------------------------
 		* Accessors for private instance fields
 		*---------------------------------------------------------------------------------------*/
@@ -343,7 +341,9 @@ var app = app || {};
 
 						signUpView: new module.SignUpView('sign-up-view', 'Sign Up'), // sign in view
 
-						modalView: new module.ModalView('modal-view', '[Untitled]') // generic modal popup
+						modalView: new module.ModalView('modal-view', '[Untitled]'), // generic modal popup
+
+						aboutView: new module.AboutView('modal-view') // 'about' modal popup
 					}
 
 					

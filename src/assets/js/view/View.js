@@ -67,7 +67,7 @@ var app = app || {}; // create a simple namespace for the module
 			_$renderContext = $('#' + str_elementId), // the HTML element the view will render itself into when updated (set in realizing classes)
 			
 			_super = (this.ssuper ? this.ssuper : Object); // reference to immediate parent class (by function) if provided by subclass, otherwise Object
-			
+		
 			
 		/*----------------------------------------------------------------------------------------
 		* Accessors for private instance fields (dependency injection enables access for subclasses)
