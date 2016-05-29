@@ -665,9 +665,9 @@ var app = app || {};
 
 				// Update using accessors (for validation)
 
-				void this.email(Account_a.email());
+				if (Account_a.email()) {void this.email(Account_a.email());}
 
-				void this.password(Account_a.password());
+				if (Account_a.password()) {void this.password(Account_a.password());}
 
 				if (Account_a.accountHolder()) {void this.accountHolder(Account_a.accountHolder());}
 

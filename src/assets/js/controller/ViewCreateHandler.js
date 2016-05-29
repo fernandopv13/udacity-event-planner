@@ -156,34 +156,13 @@ var app = app || {};
 
 						function(){ // show first time setup modal when default View has rendered
 					
-						modal.render();
-						
-						modal.show(
-						{
-							dismissible: false, // prevent user from dismissing popup by tap/clicking outside it
+							void modal.model(ctrl.selectedAccount());
 
-							complete: function() {
-
-								var acc = ctrl.selectedAccount();
-
-								void acc.geoLocationAllowed($('#setup-geolocation').prop('checked'));
-
-								if (acc.localStorageAllowed($('#setup-localstorage').prop('checked')) && window.localStorage) {
-
-									app.registry.writeObject(); // save all app data, incl. registries, to local storage
-
-									// on first login, registries have not yet been stored, and so later retrieval may fail unless done here
-
-									Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
-								}
-
-								else {
-
-									Materialize.toast('Entered demo mode. Everything works but you will loose your data when leaving the app (go to Account Settings to change this).', 3 * module.prefs.defaultToastDelay());
-								}
-							}
-						});
-					})
+							modal.render();
+							
+							modal.show();
+						}
+					)
 				}
 
 				break;

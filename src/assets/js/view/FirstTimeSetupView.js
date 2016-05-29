@@ -59,6 +59,49 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
+	/** Submits any entries made by the user into the form to the controller, which then decides what to do.
+	*
+	* Only reacts to taps/clicks on the modal's "OK" button (regardless of labelling). Other forms popup of dismissal are simply ignored.
+	*
+	* @param {nEvent} n Native browser event spawned by the tap/click
+	*
+	* @return {void}
+	*/
+
+	module.FirstTimeSetupView.prototype.complete = function(nEvent) {
+
+		if (nEvent && nEvent.currentTarget.id === 'modal-ok') { // user selected 'OK' button in modal
+
+			var $modal = $(nEvent.currentTarget.parentNode.parentNode), 
+
+			Model_m = new module.Account(),
+
+			localStorageAllowed = $modal.find('#setup-localstorage').prop('checked');
+
+			void Model_m.localStorageAllowed(localStorageAllowed);
+
+			void Model_m.geoLocationAllowed($modal.find('#setup-geolocation').prop('checked'));
+
+			this.submit(Model_m, module.View.UIAction.SUBMIT);
+
+			$('#nav-delete-icon').hide(1); // workaround: update to account causes update to AccountSettingsView, which causes the delete icon to display
+
+			if (localStorageAllowed && window.localStorage) {
+
+				app.registry.writeObject(); // save all app data, incl. registries, to local storage
+
+				// on first login, registries have not yet been stored, and so later retrieval may fail unless done here
+
+				Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
+			}
+
+			else {
+
+				Materialize.toast('In demo mode. Everything works but you will loose your data when leaving the app (go to Account Settings to change this).', 3 * module.prefs.defaultToastDelay());
+			}
+		}
+	};
+	
 	
 	/** (Re)renders modal into DOM
 	*
@@ -163,9 +206,15 @@ var app = app || {};
 	};
 
 	
-	/** Displays modal in UI and provides handler for data entered in modal */	
+	/** Displays modal in UI and provides handler for data entered in modal (own submit() unless overriden in passed in options) */	
 
 	module.FirstTimeSetupView.prototype.show = function(obj_options) {
+
+		obj_options = obj_options || {};
+
+		obj_options.dismissible = false; // prevent user from dismissing popup by tap/clicking outside it
+
+		obj_options.complete = obj_options.complete ? obj_options.complete.bind(this) : this.complete.bind(this);
 
 		this.ssuper().prototype.show.call(this, obj_options);
 	};

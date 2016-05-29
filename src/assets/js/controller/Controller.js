@@ -111,9 +111,9 @@ var app = app || {};
 			*
 			* @param {Model} m the Model we want displayed in the new current view, or null
 			*
-			* @return {View} The current view, or null
-			*
 			* @param {Function} done Callback to run when view change has completed (optional)
+			*
+			* @return {View} The current view, or null
 			*
 			* @throws {IllegalArgumentError} If attempting to set a view that is not a View, or null
 
@@ -130,7 +130,7 @@ var app = app || {};
 
 						if (View_v && View_v.isInstanceOf(module.ModalView)) { // show modal
 
-							View_v.show('fast');
+							View_v.show({duration: 'fast'});
 						}
 
 						else { // show main view
@@ -421,6 +421,8 @@ var app = app || {};
 
 						new module.ViewSignInHandler(this),
 
+						new module.ViewSignOutHandler(this),
+
 						new module.ViewSubmitHandler(this),
 
 						new module.ViewSubViewHandler(this)
@@ -652,6 +654,8 @@ var app = app || {};
 				
 
 				var args = arguments, ret = false, strategies = [_update, __update, ___update, ____update];
+
+				//console.log(args);
 
 				//console.log('entering controller.update()'); // debug
 

@@ -505,7 +505,7 @@ var app = app || {}; // create a simple namespace for the module
 		*
 		* Uses jQuery.show().
 		*
-		* @param Same as jQuery.show()
+		* @param Same as jQuery.show(), including optional done() Callback to run when view change has completed
 		*
 		* @return {void}
 		*

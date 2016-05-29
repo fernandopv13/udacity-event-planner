@@ -31,11 +31,11 @@ var app = app || {};
 
 		this.className = this.className ? this.className : 'ModalView';
 
-		this.ssuper = this.ssuper ? this.ssuper : module.View;
+		this.ssuper = this.ssuper ? this.ssuper : module.FormView;
 		
 		// Initialize instance members inherited from parent class
 		
-		module.View.call(this, module.Event, str_elementId, str_heading);
+		module.FormView.call(this, module.Event, str_elementId, str_heading);
 		
 
 		/*----------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ var app = app || {};
 	* Inherit from View
 	*---------------------------------------------------------------------------------------*/
 
-	module.ModalView.prototype = Object.create(module.View.prototype); // Set up inheritance
+	module.ModalView.prototype = Object.create(module.FormView.prototype); // Set up inheritance
 
 	module.ModalView.prototype.constructor = module.ModalView; // Reset constructor property
 
@@ -186,8 +186,6 @@ var app = app || {};
 					}
 				);
 
-				$(OKbutton).on('mousedown', this.submit.bind(this)); // attach custom OK event handler
-
 				footerDiv.appendChild(OKbutton);
 			}
 
@@ -202,7 +200,7 @@ var app = app || {};
 	*
 	* Relies on Materialize leanModal so overriding default show() method in View. 
 	*
-	* @param {Object} options JSON object with the same attributes as Materialize leanModal. Optional.
+	* @param {Object} options JSON object with the same attributes as Materialize leanModal (optional)
 	*/
 
 	module.ModalView.prototype.show = function(obj_options) {
@@ -221,25 +219,10 @@ var app = app || {};
 
 			out_duration: obj_options && obj_options.out_duration ? obj_options.out_duration : 200, // Transition out duration
 
-			ready: obj_options && obj_options.done ? obj_options.done : function(){}, // Callback for Modal open
+			ready: obj_options && obj_options.done ? obj_options.done : null, // Callback for Modal open
 
-			complete: obj_options && obj_options.complete ? obj_options.complete : function() {}, // Callback for Modal close
+			complete: obj_options && obj_options.complete ? obj_options.complete : null // Callback for Modal close
 		});
 	}
-
-
-	/** Dummy method to comply with abstract FormView superclass.
-	*
-	* Unlike other Views, ModalView is reused for multiple purposes, so 'submit' may have more than one meaning.
-	*
-	* Pass in a 'complete' callback to the open() method instead (via the options object).
-	*
-	* @return {Boolean} true
-	*/
-
-	module.ModalView.prototype.submit = function(nEvent) {
-		
-		return true;
-	};
 
 })(app);

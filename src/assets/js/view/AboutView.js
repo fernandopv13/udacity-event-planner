@@ -121,7 +121,7 @@ var app = app || {};
 
 						//id: 'about-intro',
 
-						innerHTML: 'I created this app in early 2016 as an exercise in user-friendly front-end form design for my Senior Web Developer Nanodegree Course at Udacity.com.'
+						innerHTML: 'I created this app in early 2016 as an exercise in user-friendly front-end form design for my Senior Web Developer Nanodegree course at Udacity.com.'
 					}
 				));
 
@@ -137,7 +137,7 @@ var app = app || {};
 
 						//id: 'about-intro',
 
-						innerHTML: 'I also used the app to experiment with cross-browser/platform, "classical" object-oriented programming in JavaScript. This ended up getting as involved as it was educational.'
+						innerHTML: 'I also used the app to experiment with cross-browser/platform, "classical" object-oriented programming in JavaScript, as well as modern build and testing tools. This ended up getting as involved as it was educational.'
 					}
 				));
 				

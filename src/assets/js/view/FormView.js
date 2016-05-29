@@ -163,26 +163,27 @@ var app = app || {};
 
 		// Setup delete button and modal
 			
-			//console.log('back from View init(), setting up modal');
+			if (this.isInstanceOf(module.ModalView) !== true) { // skip modals
 
-			$('#nav-delete-icon, #confirm-delete-modal-cancel, #confirm-delete-modal-ok').off(); // reset event handlers
+				$('#nav-delete-icon, #confirm-delete-modal-cancel, #confirm-delete-modal-ok').off(); // reset event handlers
 
-			$('#nav-delete-icon').mousedown(function(nEvent) { // set up delete icon to open modal
+				$('#nav-delete-icon').mousedown(function(nEvent) { // set up delete icon to open modal
 
-				this.delete();
+					this.delete();
+					
+				}.bind(this));
+
 				
-			}.bind(this));
+				$('#nav-delete-icon').parent().removeClass('hidden'); // show delete icon
 
-			
-			$('#nav-delete-icon').parent().removeClass('hidden'); // show delete icon
-
-			$('#nav-delete-icon').show('slow');
+				$('#nav-delete-icon').show('slow');
+			}
 
 			//console.log('exiting FormView init()');
 	};
 
 
-	/** Submits entries made by the user into the form to the controller, with the purpose of updating of the Model */
+	/** Submits entries made by the user into the form to the controller, with the purpose of updating the Model */
 
 	module.FormView.prototype.submit = function(Model_m, int_UIaction) {
 
