@@ -84,7 +84,7 @@ var app = app || {};
 
 			this.submit(Model_m, module.View.UIAction.SUBMIT);
 
-			$('#nav-delete-icon').hide(1); // workaround: update to account causes update to AccountSettingsView, which causes the delete icon to display
+			//$('#nav-delete-icon').hide(1); // workaround: update to account causes update to AccountSettingsView, which causes the delete icon to display
 
 			if (localStorageAllowed && window.localStorage) {
 

@@ -532,6 +532,13 @@ var app = app || {}; // create a simple namespace for the module
 			this.$renderContext().removeClass('hidden');
 
 			this.$renderContext().attr('aria-hidden', false); // later, investigate if this could do more of the work of showing
+
+			if (!this.isInstanceOf(module.ModalView) && this.isInstanceOf(module.FormView)) { // show delete icon on forms
+
+				$('#nav-delete-icon').parent().removeClass('hidden');
+
+				$('#nav-delete-icon').show('slow');
+			}
 		}
 
 

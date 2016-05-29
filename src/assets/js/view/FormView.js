@@ -174,9 +174,9 @@ var app = app || {};
 				}.bind(this));
 
 				
-				$('#nav-delete-icon').parent().removeClass('hidden'); // show delete icon
+				//$('#nav-delete-icon').parent().removeClass('hidden'); // show delete icon
 
-				$('#nav-delete-icon').show('slow');
+				//$('#nav-delete-icon').show('slow');
 			}
 
 			//console.log('exiting FormView init()');

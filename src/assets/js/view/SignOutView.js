@@ -131,7 +131,7 @@ var app = app || {};
 
 		obj_options = obj_options || {};
 
-		obj_options.complete = obj_options.complete ? obj_options.complete : this.submit.bind(this);
+		obj_options.complete = obj_options.complete ? obj_options.complete.bind(this) : this.complete.bind(this);
 
 		this.ssuper().prototype.show.call(this, obj_options);
 	};
@@ -146,7 +146,7 @@ var app = app || {};
 	* @return {void}
 	*/
 
-	module.SignOutView.prototype.submit = function(nEvent) {
+	module.SignOutView.prototype.complete = function(nEvent) {
 
 		if (nEvent && nEvent.currentTarget.id === 'modal-ok') { //user selected 'OK' button in modal
 
