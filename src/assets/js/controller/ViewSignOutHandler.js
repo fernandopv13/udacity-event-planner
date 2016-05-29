@@ -58,9 +58,9 @@ var app = app || {};
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Handles 'sign in' user action in a View on behalf of a Controller.
+	/** Handles 'sign out' user action in a View on behalf of a Controller.
 	*
-	* Takes a new Model of the requested type and opens it in its detail (form) view for editing.
+	* Saves data to local storage (if available), signs out and re-loads the front page.
 	*
 	* @param {int} UIAction An integer representing the user action to respond to
 	*
@@ -73,11 +73,18 @@ var app = app || {};
 
 	module.ViewSignOutHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		console.log('executing...');
+		var ctrl = this.controller(), account = ctrl.selectedAccount();
 
-		var ctrl = this.controller();
+		if (account.localStorageAllowed()) { // save state
 
-		Materialize.toast(
+			void module.registry.writeObject();
+		}
+
+		void ctrl.selectedAccount(null); // log out
+
+		this.notifyObservers(new module.FrontPageView(), null, module.View.UIAction.NAVIGATE); // load front page
+
+		Materialize.toast( // display sign out confirmation message
 
 			'Sign out complete. Thanks for visiting Meetup Planner.',
 

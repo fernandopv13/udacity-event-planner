@@ -89,7 +89,7 @@ var app = app || {};
 
 		if (view) {
 
-			if (Model_m === null) { // parse Model matching navbar menuitems
+			if (Model_m === null) { // parse Model matching navbar menuitems, or Views that are not associated with a Model
 
 				switch (View_v.constructor) {
 
@@ -119,6 +119,16 @@ var app = app || {};
 					case module.AccountSettingsView:
 
 						Model_m = ctrl.selectedAccount();
+
+						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
+
+						ctrl.currentView(view, Model_m); // show the view
+
+						break;
+
+					case module.FrontPageView:
+
+						Model_m = null;
 
 						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
 

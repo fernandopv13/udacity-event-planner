@@ -59,7 +59,23 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-	
+	/** Submits any entries made by the user into the form to the controller, which then decides what to do.
+	*
+	* Only reacts to taps/clicks on the modal's "OK" button (regardless of labelling). Other forms popup of dismissal are simply ignored.
+	*
+	* @param {nEvent} n Native browser event spawned by the tap/click
+	*
+	* @return {void}
+	*/
+
+	module.SignOutView.prototype.complete = function(nEvent) {
+
+		if (nEvent && nEvent.currentTarget.id === 'modal-ok') { //user selected 'OK' button in modal
+
+			this.ssuper().prototype.submit.call(this, new module.Account(), module.View.UIAction.SIGNOUT);
+		}
+	};
+
 	/** (Re)renders modal into DOM
 	*
 	* @param {Object} options JSON object containing (optional) header and body content, and custom 'OK' event handler
@@ -135,23 +151,5 @@ var app = app || {};
 
 		this.ssuper().prototype.show.call(this, obj_options);
 	};
-
-
-	/** Submits any entries made by the user into the form to the controller, which then decides what to do.
-	*
-	* Only reacts to taps/clicks on the modal's "OK" button (regardless of labelling). Other forms popup of dismissal are simply ignored.
-	*
-	* @param {nEvent} n Native browser event spawned by the tap/click
-	*
-	* @return {void}
-	*/
-
-	module.SignOutView.prototype.complete = function(nEvent) {
-
-		if (nEvent && nEvent.currentTarget.id === 'modal-ok') { //user selected 'OK' button in modal
-
-			this.ssuper().prototype.submit.call(this, new module.Account(), module.View.UIAction.SIGNOUT);
-		}
-	};
-
+	
 })(app);
