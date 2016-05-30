@@ -72,6 +72,8 @@ var app = app || {};
 
 		if (nEvent && nEvent.currentTarget.id === 'modal-ok') { //user selected 'OK' button in modal
 
+			console.log('deleting...'); // debug
+
 			//this.ssuper().prototype.submit.call(this, new module.Account(), module.View.UIAction.SIGNOUT);
 		}
 	};

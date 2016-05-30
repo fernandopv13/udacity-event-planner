@@ -190,9 +190,14 @@ var app = app || {};
 
 	module.SignOutView.prototype.show = function(obj_options) {
 
-		obj_options = obj_options || {};
+		var self = this, options = obj_options || {};
 
-		obj_options.complete = obj_options.complete ? obj_options.complete.bind(this) : this.complete.bind(this);
+		$.extend(options,
+		{
+			dismissible: false, // prevent user from dismissing popup by tap/clicking outside it
+
+			complete: options.complete ? options.complete.bind(self) : self.complete.bind(self)
+		});
 
 		this.ssuper().prototype.show.call(this, obj_options);
 	};

@@ -304,13 +304,16 @@ var app = app || {};
 
 	module.FirstTimeSetupView.prototype.show = function(obj_options) {
 
-		obj_options = obj_options || {};
+		var self = this, options = obj_options || {};
 
-		obj_options.dismissible = false; // prevent user from dismissing popup by tap/clicking outside it
+		$.extend(options,
+		{
+			dismissible: false, // prevent user from dismissing popup by tap/clicking outside it
 
-		obj_options.complete = obj_options.complete ? obj_options.complete.bind(this) : this.complete.bind(this);
+			complete: options.complete ? options.complete.bind(self) : self.complete.bind(self)
+		});
 
-		this.ssuper().prototype.show.call(this, obj_options);
+		this.ssuper().prototype.show.call(this, options);
 	};
 
 })(app);
