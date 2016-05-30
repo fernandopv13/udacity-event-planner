@@ -192,6 +192,8 @@ var app = app || {};
 
 		// Render to DOM
 
+			console.log(container); // debug
+
 			this.$renderContext().html($(container).children());
 	};
 

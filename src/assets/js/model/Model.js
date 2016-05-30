@@ -42,11 +42,11 @@ var app = app || {}; // create a simple namespace for the module
 		* Private instance fields (encapsulated data members)
 		*---------------------------------------------------------------------------------------*/
 
-		var _className = (this.className ? this.className : 'Model'), // name of this view class (override by subclass constructor, if provided )
+		var _className = (this.className ? this.className : 'Model'), // name of this Model class (override by subclass constructor, if provided )
 
 		_id = (this.id >= 0 ? this.id: undefined), // (int) Unique object ID obtained from object class' registry
 
-		_observers = [], // Array of IObservers receiving updates from this view, required in order to implement IObservable
+		_observers = [], // Array of IObservers receiving updates from this Model, required in order to implement IObservable
 
 		_parentList = [module.IInterfaceable, module.IObservable, module.IObserver, module.ISerializable, module.Model, this.constructor], // list of interfaces implemented by this class (by function reference)
 		
@@ -54,7 +54,6 @@ var app = app || {}; // create a simple namespace for the module
 
 		_super = (this.ssuper ? this.ssuper : Object); // reference to immediate parent class (by function) if provided by subclass, otherwise Object 
 
-		
 		
 		/*----------------------------------------------------------------------------------------
 		* Accessors for private instance fields (dependency injection enables access for subclasses)

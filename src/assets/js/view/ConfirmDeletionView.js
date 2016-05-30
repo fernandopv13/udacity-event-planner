@@ -1,14 +1,14 @@
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
-* public class SignOutView extends ModalView
+* public class ConfirmDeletionView extends ModalView
 ******************************************************************************/
 
 var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc View class for generic modal dialog (popup) with customizable header and body content.
+	/** @classdesc View class for generic confirm deletion modal dialog (popup) with customizable header and body content.
 	*
 	* @constructor
 	*
@@ -21,7 +21,7 @@ var app = app || {};
 	* @author Ulrik H. Gade, May 2016
 	*/
 
-	module.SignOutView = function(str_elementId, str_heading) {
+	module.ConfirmDeletionView = function(str_elementId, str_heading) {
 
 		/*----------------------------------------------------------------------------------------
 		* Call (chain) parent class constructor
@@ -29,7 +29,7 @@ var app = app || {};
 		
 		// Set temporary literals for use by parent class constructor
 
-		this.className = 'SignOutView';
+		this.className = 'ConfirmDeletionView';
 
 		this.ssuper = module.ModalView;
 		
@@ -42,16 +42,16 @@ var app = app || {};
 		* Other initialization
 		*---------------------------------------------------------------------------------------*/
 
-		this.parentList().push(module.SignOutView);
+		this.parentList().push(module.ConfirmDeletionView);
 	};
 
 	/*----------------------------------------------------------------------------------------
 	* Inherit from ModalView
 	*---------------------------------------------------------------------------------------*/
 
-	module.SignOutView.prototype = Object.create(module.ModalView.prototype); // Set up inheritance
+	module.ConfirmDeletionView.prototype = Object.create(module.ModalView.prototype); // Set up inheritance
 
-	module.SignOutView.prototype.constructor = module.SignOutView; // Reset constructor property
+	module.ConfirmDeletionView.prototype.constructor = module.ConfirmDeletionView; // Reset constructor property
 
 
 
@@ -68,11 +68,11 @@ var app = app || {};
 	* @return {void}
 	*/
 
-	module.SignOutView.prototype.complete = function(nEvent) {
+	module.ConfirmDeletionView.prototype.complete = function(nEvent) {
 
 		if (nEvent && nEvent.currentTarget.id === 'modal-ok') { //user selected 'OK' button in modal
 
-			this.ssuper().prototype.submit.call(this, new module.Account(), module.View.UIAction.SIGNOUT);
+			//this.ssuper().prototype.submit.call(this, new module.Account(), module.View.UIAction.SIGNOUT);
 		}
 	};
 
@@ -83,13 +83,13 @@ var app = app || {};
 	* @return void
 	 */
 
-	module.SignOutView.prototype.render = function(obj_options) {
+	module.ConfirmDeletionView.prototype.render = function(obj_options) {
 	
 		var self = this, options = obj_options || {};
 
 		$.extend(options,
 		{
-			header: 'Sign Out',
+			header: 'Delete',
 
 			body: (function() {
 
@@ -101,98 +101,31 @@ var app = app || {};
 					{
 						element: 'p',
 
-						innerHTML: 'Sign out from the app?'
+						id: 'delete-intro',
+
+						innerHTML: 'Deletion cannot be undone. Continue?'
 					}
 				));
 
-				var storageMsg = module.controller.selectedAccount().localStorageAllowed() ?
-
-				'Your events and account info will still be here when you sign back in.' :
-
-				'You will loose all your event and account info. Allow "Local Storage" in Account Settings before you sign out to change this.';
-				
-				container.appendChild(self.createWidget(
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						innerHTML: storageMsg
-					}
-				));
-				
 				return container;
-
 			})(),
 
-			cancel: 'Stay signed in',
+			cancel: 'No, keep it',
 
-			ok: 'Sign out'
+			ok: 'OK, delete'
 		});
 
 		this.ssuper().prototype.render.call(this, options);
-
-		/*DEPRECATED
-		this.ssuper().prototype.render.call(this, 
-		{
-			header: 'Sign Out',
-
-			body: (function() {
-
-				var container = document.createElement('div');
-
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						innerHTML: 'Sign out from the app?'
-					}
-				));
-
-				
-				var storageMsg = module.controller.selectedAccount().localStorageAllowed() ?
-
-				'Your events and account info will still be here when you sign back in.' :
-
-				'You will loose all your event and account info. Allow "Local Storage" in Account Settings before you sign out to change this.';
-
-				
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						innerHTML: storageMsg
-					}
-				));
-
-				
-				return container;
-
-			}.bind(this))(),
-
-			ok: 'Sign Out',
-
-			cancel: 'Stay signed in'
-		});
-		*/
 	};
 
 
 	/** Displays modal in UI and provides handler for data entered in modal (own submit() unless overriden in passed in options) */	
 
-	module.SignOutView.prototype.show = function(obj_options) {
+	module.ConfirmDeletionView.prototype.show = function(obj_options) {
 
-		obj_options = obj_options || {};
+		//obj_options = obj_options || {};
 
-		obj_options.complete = obj_options.complete ? obj_options.complete.bind(this) : this.complete.bind(this);
+		//obj_options.complete = obj_options.complete ? obj_options.complete.bind(this) : this.complete.bind(this);
 
 		this.ssuper().prototype.show.call(this, obj_options);
 	};

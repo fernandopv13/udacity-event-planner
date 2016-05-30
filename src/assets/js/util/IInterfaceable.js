@@ -30,6 +30,10 @@ var app = app || {}; // create a simple namespace for the app
 		
 		/** Determines if realizing class implements the interface passed in (by function reference).
 		*
+		* This is not supported by the native instanceof operator because JS does not support
+		*
+		* multiple inheritance.
+		*
 		* @abstract
 		*
 		* @param {Function} interface The interface we wish to determine whether the class implements

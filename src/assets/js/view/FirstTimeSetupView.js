@@ -112,8 +112,101 @@ var app = app || {};
 
 	module.FirstTimeSetupView.prototype.render = function(obj_options) {
 	
-		var self = this;
+		var self = this, options = obj_options || {};
 
+		$.extend(options,
+		{
+			header: 'First Time Setup',
+
+			body: (function() {
+
+				var container = document.createElement('div');
+
+				container.appendChild(self.createWidget(
+
+					'HTMLElement',
+					{
+						element: 'p',
+
+						id: 'setup-intro',
+
+						innerHTML: 'Before you start using the app, please decide about these permissions.'
+					}
+				));
+
+				container.appendChild(self.createWidget(
+
+					'SwitchInputWidget',
+					{
+						width: 's12',
+
+						id: 'setup-localstorage',
+
+						label: 'Allow local storage'
+
+						//label: 'Allow app to store your account and event info on this device (required for the app to work.)'
+					}
+				));
+
+				container.appendChild(self.createWidget(
+
+					'InputDescriptionWidget',
+
+					{
+						datasource: 'Please allow the app to store your account and event details on this device. Otherwise, you will have to start over from scratch every time you come back to the app.',
+
+						divider: false
+					}
+				));
+
+				container.appendChild(self.createWidget(
+
+					'SwitchInputWidget',
+					{
+						width: 's12',
+
+						id: 'setup-geolocation',
+
+						label: 'Allow geolocation'
+
+						//label: 'Allow app to access the location of this device (optional)'
+					}
+				));
+
+				container.appendChild(self.createWidget(
+
+					'InputDescriptionWidget',
+
+					{
+						datasource: 'Allowing geolocation will enable the app to suggest event venues and other useful information based on the location of this device (optional).',
+
+						divider: false
+					}
+				));
+
+				container.appendChild(self.createWidget(
+
+					'HTMLElement',
+					{
+						element: 'p',
+
+						id: 'setup-outro',
+
+						innerHTML: 'You can change these choices at any time in the app\'s Account Settings.'
+					}
+				));
+
+				return container;
+			})(),
+
+			cancel: 'Cancel',
+
+			ok: 'OK'
+		});
+
+		this.ssuper().prototype.render.call(this, options);
+
+		/*DEPRECATED
 		this.ssuper().prototype.render.call(this, 
 		{
 			header: 'First Time Setup',
@@ -203,6 +296,7 @@ var app = app || {};
 
 			cancel: 'Cancel'
 		});
+		*/
 	};
 
 	

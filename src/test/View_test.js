@@ -1,6 +1,6 @@
 'use strict';
 
-/* Jasmine.js unit test suite for View.js interface in meetup even planner application
+/* Jasmine.js unit test suite for abstract View.js class in meetup even planner application
 *
 *  This suite is designed to be able to be run as independently as possible from other tests
 *  and/or functionality. UI and other integration testing is done seperately.

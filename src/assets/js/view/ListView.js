@@ -32,7 +32,11 @@ var app = app || {};
 		
 		// Set temporary literal for use by parent class constructor (unless already defined in calling class)
 
-		if (!this.className) {this.className = 'ListView';}
+		//if (!this.className) {this.className = 'ListView';}
+
+		this.className =  this.className ? this.className : 'ListView';
+
+		this.ssuper = this.ssuper ? this.ssuper : module.View;
 
 		
 		// Initializes instance members inherited from parent class

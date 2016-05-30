@@ -33,7 +33,7 @@
 			</div>
 
 		<!-- JavaScript library source files -->
-			<!-- build:js lib/lib.js -->
+		<!-- build:js lib/lib.js -->
 			<!--script type="text/javascript" src="test/util/firebug-lite/build/firebug-lite-debug.js"></script--><!-- Debug: shows JavaScript console on mobile devices -->
 			<script src="lib/polyfills/Object.js"></script>
 			<script src="lib/polyfills/Array.js"></script>
@@ -45,46 +45,44 @@
 			<script src="lib/moment.js_V2.12.0/min/moment-with-locales.min.js"></script><!-- for bootstrap-datetimepicker -->
 			<script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script>
 			
-			<!-- Materialize component libraries (in order of sample gulpfile) -->
-			<script src="lib/materialize_v0.97.5/js/initial.js"></script>
-			<script src="lib/materialize_v0.97.5/js/jquery.easing.1.3.js"></script>
-			<script src="lib/materialize_v0.97.5/js/animation.js"></script>
-			<script src="lib/materialize_v0.97.5/js/velocity.min.js"></script>
-			<script src="lib/materialize_v0.97.5/js/hammer.min.js"></script>
-			<script src="lib/materialize_v0.97.5/js/jquery.hammer.js"></script>
-			<script src="lib/materialize_v0.97.5/js/global.js"></script>
-			<!--script src="lib/materialize_v0.97.5/js/collapsible.js"></script-->
-			<script src="lib/materialize_v0.97.5/js/dropdown.js"></script>
-			<!--script src="lib/materialize_v0.97.5/js/leanModal.js"></script-->
-			<script src="assets/js/util/Materialize-leanModal-override.js"></script>
-			<!--script src="lib/materialize_v0.97.5/js/materialbox.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/parallax.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/tabs.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/tooltip.js"></script-->
-			<script src="lib/materialize_v0.97.5/js/waves.js"></script>
-			<script src="lib/materialize_v0.97.5/js/toasts.js"></script>
-			<script src="lib/materialize_v0.97.5/js/sideNav.js"></script>
-			<!--script src="lib/materialize_v0.97.5/js/scrollspy.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/forms.js"></script-->
-			<script src="assets/js/util/Materialize-forms-override.js"></script>
-			<!--script src="lib/materialize_v0.97.5/js/slider.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/cards.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/chips.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/pushpin.js"></script-->
-			<script src="lib/materialize_v0.97.5/js/buttons.js"></script>
-			<!--script src="lib/materialize_v0.97.5/js/transitions.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/scrollFire.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/date_picker/picker.js"></script-->
-			<!--script src="lib/materialize_v0.97.5/js/date_picker/picker.date.js"></script-->
-			<script src="lib/materialize_v0.97.5/js/character_counter.js"></script>
-			<!--script src="lib/materialize_v0.97.5/js/carousel.js"></script-->
-
-			<!--script src="lib/materialize.min.js"></script-->
-			<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
-			<!-- endbuild -->
+			<!-- Materialize component libraries (in order of sample gulpfile, using only what's necessary) -->
+				<script src="lib/materialize_v0.97.5/js/initial.js"></script>
+				<script src="lib/materialize_v0.97.5/js/jquery.easing.1.3.js"></script>
+				<script src="lib/materialize_v0.97.5/js/animation.js"></script>
+				<script src="lib/materialize_v0.97.5/js/velocity.min.js"></script>
+				<script src="lib/materialize_v0.97.5/js/hammer.min.js"></script>
+				<script src="lib/materialize_v0.97.5/js/jquery.hammer.js"></script>
+				<script src="lib/materialize_v0.97.5/js/global.js"></script>
+				<!--script src="lib/materialize_v0.97.5/js/collapsible.js"></script-->
+				<script src="lib/materialize_v0.97.5/js/dropdown.js"></script>
+				<!--script src="lib/materialize_v0.97.5/js/leanModal.js"></script-->
+				<script src="assets/js/util/Materialize-leanModal-override.js"></script>
+				<!--script src="lib/materialize_v0.97.5/js/materialbox.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/parallax.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/tabs.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/tooltip.js"></script-->
+				<script src="lib/materialize_v0.97.5/js/waves.js"></script>
+				<script src="lib/materialize_v0.97.5/js/toasts.js"></script>
+				<script src="lib/materialize_v0.97.5/js/sideNav.js"></script>
+				<!--script src="lib/materialize_v0.97.5/js/scrollspy.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/forms.js"></script-->
+				<script src="assets/js/util/Materialize-forms-override.js"></script>
+				<!--script src="lib/materialize_v0.97.5/js/slider.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/cards.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/chips.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/pushpin.js"></script-->
+				<script src="lib/materialize_v0.97.5/js/buttons.js"></script>
+				<!--script src="lib/materialize_v0.97.5/js/transitions.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/scrollFire.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/date_picker/picker.js"></script-->
+				<!--script src="lib/materialize_v0.97.5/js/date_picker/picker.date.js"></script-->
+				<script src="lib/materialize_v0.97.5/js/character_counter.js"></script>
+				<!--script src="lib/materialize_v0.97.5/js/carousel.js"></script-->
+				<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
+		<!-- endbuild -->
 			
 		<!-- JavaScript app source files -->
-			<!-- build:js assets/js/app.js -->
+		<!-- build:js assets/js/app.js -->
 			<script src="assets/js/util/Accessor.js"></script>
 			<script src="assets/js/util/Device.js"></script>
 			<script src="assets/js/util/Error.js"></script>
@@ -141,6 +139,7 @@
 			<script src="assets/js/view/AccountProfileView.js"></script>
 			<script src="assets/js/view/ModalView.js"></script>
 			<script src="assets/js/view/AboutView.js"></script>
+			<script src="assets/js/view/ConfirmDeletionView.js"></script>
 			<script src="assets/js/view/FirstTimeSetupView.js"></script>
 			<script src="assets/js/view/SignOutView.js"></script>
 			
@@ -161,7 +160,7 @@
 			
 			<script src="assets/js/app.js"></script>
 			<!--script src="assets/js/util/demodata.js"></script-->
-			<!-- endbuild -->
+		<!-- endbuild -->
 
 		<!-- Load app when page is ready -->
 
