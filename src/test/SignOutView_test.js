@@ -131,7 +131,7 @@ describe('Class SignOutView', function(){
 
 					done();
 
-				}, 300);
+				}, 500);
 			});
 
 		

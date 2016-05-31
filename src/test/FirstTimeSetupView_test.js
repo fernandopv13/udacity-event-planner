@@ -131,7 +131,7 @@ describe('Class FirstTimeSetupView', function(){
 
 					done();
 
-				}, 300);
+				}, 500);
 			});
 
 		

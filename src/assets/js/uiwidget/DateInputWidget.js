@@ -15,7 +15,7 @@ var app = app || {};
 	*
 	* @extends InputWidget
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*
 	* @return {DateInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
@@ -106,7 +106,9 @@ var app = app || {};
 
 				errormessage: 'Please enter date'
 
-				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to DateInputWidget.prototype.validate)
+				validator: 'Class.prototype.validationMethod', // method used for custom validation (optional, defaults to DateInputWidget.prototype.validate)
+
+				dateonly: true // flag indicating preference for straight date picker w/o the time component (optional, used when selecting e.g. birthdays with native iOS widgets)
 			}
 			*/
 
@@ -144,7 +146,7 @@ var app = app || {};
 
 			var attributes = 
 			{
-				type: 'datetime-local',
+				type: app.device().isiOS() && options.dateonly ? 'date' : 'datetime-local', // using native widgets on iOS, the base date picker is more usable for e.g. birthdays
 				
 				id: options.id,
 				
@@ -209,19 +211,6 @@ var app = app || {};
 			}
 
 			innerDiv.appendChild(labelElement);
-
-			
-			/*
-			innerDiv.appendChild(this.createElement( // custom error div
-			{	
-				element: 'div',			
-				
-				attributes: {id: str_dateId + '-error'},
-				
-				classList: ['custom-validate']
-			}));
-			*/
-			
 			
 			return outerDiv;
 		};
@@ -379,11 +368,7 @@ var app = app || {};
 
 			// Call generic initializer in parent class
 
-			//console.log('calling InputWidget init()');
-
 			module.InputWidget.prototype.init(View_v, str_id, obj_options);
-
-			//console.log('back from InputWidget, exiting DateInputWidget init()');
 		};
 
 	
@@ -473,7 +458,7 @@ var app = app || {};
 
 				date = !isNaN(date) ? new Date(date): null;
 			}
-
+			
 			return date;
 		}
 

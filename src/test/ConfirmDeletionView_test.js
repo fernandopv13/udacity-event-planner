@@ -131,7 +131,7 @@ describe('Class ConfirmDeletionView', function(){
 
 					done();
 
-				}, 300);
+				}, 500);
 			});
 
 		

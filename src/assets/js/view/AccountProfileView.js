@@ -242,7 +242,9 @@ var app = app || {};
 
 						required: false,
 
-						datasource: Person_p.birthday() || null
+						datasource: Person_p.birthday() || null,
+
+						dateonly: true
 					}
 				));
 

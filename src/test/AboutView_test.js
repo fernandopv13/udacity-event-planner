@@ -114,7 +114,7 @@ describe('Class AboutView', function(){
 
 					done();
 
-				}, 300);
+				}, 500);
 			});
 
 		

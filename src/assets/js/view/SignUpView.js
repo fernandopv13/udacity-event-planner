@@ -296,7 +296,9 @@ var app = app || {};
 
 					label: 'Your Birthday',
 
-					required: false
+					required: false,
+
+					dateonly: true
 				}
 			));
 
