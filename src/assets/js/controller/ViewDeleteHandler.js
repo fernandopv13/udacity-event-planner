@@ -57,7 +57,9 @@ var app = app || {};
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Handles 'delete' user action in View on behalf of Controller.
+	/** Handles 'delete' user action in View on behalf of Controller. Asks user for confirmation
+	*
+	* before going ahead with deletion.
 	* 
 	* @param {int} UIAction An integer representing the user action to respond to
 	*
@@ -74,7 +76,7 @@ var app = app || {};
 
 		var self = this, ctrl = this.controller(), name, modal = ctrl.views().confirmDeletionView;
 
-		function deleteModel (Model_m) { // do work common to deleting most model types
+		function deleteModel (Model_m) { // helper function doing work common to deleting most model types
 
 			void ctrl.removeObserver(Model_m); // unregister observer relationships
 
@@ -89,7 +91,7 @@ var app = app || {};
 			Model_m.delete(); // call Model's delete() method
 		}
 
-		function doDelete() { // main function executed only if user confirms deletion (in popup)
+		function doDelete() { // main function executed if user confirms deletion (in popup)
 	
 			switch (Model_m.constructor) { // do type specfic cleanup and notification
 
@@ -103,7 +105,7 @@ var app = app || {};
 
 					deleteModel(Model_m);
 
-					this.notifyObservers(null, ctrl.views().frontPageView); // render/refresh FrontPageView in the background
+					self.notifyObservers(null, ctrl.views().frontPageView); // render/refresh FrontPageView in the background
 
 					ctrl.currentView(ctrl.views().frontPageView, null) // show FrontPageView
 
@@ -119,7 +121,7 @@ var app = app || {};
 
 					deleteModel(Model_m); // unregister and delete
 
-					this.notifyObservers(ctrl.selectedAccount(), ctrl.views().eventListView); // render/refresh EventListView in the background
+					self.notifyObservers(ctrl.selectedAccount(), ctrl.views().eventListView); // render/refresh EventListView in the background
 
 					ctrl.currentView(ctrl.views().eventListView, ctrl.selectedAccount()); // show the view
 
@@ -135,7 +137,7 @@ var app = app || {};
 
 					void ctrl.newModel(null); // remove reference to model if it was just created
 
-					this.notifyObservers(ctrl.selectedEvent(), ctrl.views().guestListView); // render/refresh guestListView in the background
+					self.notifyObservers(ctrl.selectedEvent(), ctrl.views().guestListView); // render/refresh guestListView in the background
 
 					ctrl.recentDeleted = true;
 
@@ -159,10 +161,10 @@ var app = app || {};
 
 				if (nEvent && nEvent.currentTarget.id === 'modal-ok') { // user selected 'OK' button in modal
 
-					doDelete(); // go ahead with deletion
+					doDelete.call(self); // go ahead with deletion
 				}
 
-				// else: do nothing when popup closes
+				// else: do nothing if user cancelled popup
 
 			}.bind(self)
 		});

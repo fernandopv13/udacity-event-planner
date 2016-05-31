@@ -9,7 +9,7 @@
 		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link href="http://fonts.googleapis.com/icon?family=Roboto" rel="stylesheet">
 		
-		<!-- build:css assets/css/app.css -->
+		<!-- build:css assets/css/app.css --><!-- App and library stylesheets -->
 		<link rel="stylesheet" href="lib/bootstrap_v3.3.6/css/bootstrap.min.css"><!-- for bootstrap-datetimepicker -->
 		<link rel="stylesheet" href="lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.min.css">
 		<link type="text/css" rel="stylesheet" href="assets/css/materialize.css" media="screen">
@@ -21,7 +21,7 @@
 		<!-- Page content -->
 
 			<div class="container" id="container" role="main">
-				<!-- Preload spinner (hide on load) -->
+				<!-- Plain HTML preload spinner (dynamically hidden if app loads succesfully) -->
 				<div id="preloader" class="valign-wrapper" role="progressbar" style="height:160px;">
 					<div class="valign" style="width:90%;text-align:center;">
 						<div>Loading the app...</div>
@@ -32,8 +32,7 @@
 				</div>
 			</div>
 
-		<!-- JavaScript library source files -->
-		<!-- build:js lib/lib.js -->
+		<!-- build:js lib/lib.js --><!-- JavaScript library source files -->
 			<!--script type="text/javascript" src="test/util/firebug-lite/build/firebug-lite-debug.js"></script--><!-- Debug: shows JavaScript console on mobile devices -->
 			<script src="lib/polyfills/Object.js"></script>
 			<script src="lib/polyfills/Array.js"></script>
@@ -81,8 +80,7 @@
 				<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
 		<!-- endbuild -->
 			
-		<!-- JavaScript app source files -->
-		<!-- build:js assets/js/app.js -->
+		<!-- build:js assets/js/app.js --><!-- JavaScript app source files -->
 			<script src="assets/js/util/Accessor.js"></script>
 			<script src="assets/js/util/Device.js"></script>
 			<script src="assets/js/util/Error.js"></script>

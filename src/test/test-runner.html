@@ -3,6 +3,16 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Meetup Event Planner Unit Test Runner</title>
+
+		<!--Google Icon Font used by Materialize-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="http://fonts.googleapis.com/icon?family=Roboto" rel="stylesheet">
+		
+		<!-- App and library stylesheets -->
+		<link rel="stylesheet" href="../lib/bootstrap_v3.3.6/css/bootstrap.min.css"><!-- for bootstrap-datetimepicker -->
+		<link rel="stylesheet" href="../lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.min.css">
+		<link type="text/css" rel="stylesheet" href="../assets/css/materialize.css" media="screen">
+		<link rel="stylesheet" href="../assets/css/app.css" media="screen"/>
 	</head>
 
 	<body>
@@ -15,8 +25,6 @@
 			<script src="jasmine-2.4.0/boot.js"></script>
 			<!---script type="text/javascript" src="util/firebug-lite/build/firebug-lite-debug.js"></script--><!-- Debug: shows JavaScript console on mobile devices -->
 
-			
-		
 		<!-- Library source files -->
 			<script src="../lib/polyfills/Object.js"></script>
 			<script src="../lib/polyfills/Array.js"></script>
@@ -196,6 +204,12 @@
 			<script src="FormView_test.js"></script>
 			<script src="ListView_test.js"></script>
 			<script src="ModalView_test.js"></script>
+			
+			<script src="AboutView_test.js"></script>
+			<script src="ConfirmDeletionView_test.js"></script>
+			<script src="FirstTimeSetupView_test.js"></script>
+			<script src="SignOutView_test.js"></script>
+			
 			<!--
 			<script src="FrontPageView_test.js"></script>
 			<script src="SignUpView_test.js"></script>
@@ -210,10 +224,6 @@
 			-->
 			
 			<!-- TODO:
-			<script src="AboutView_test.js"></script>
-			<script src="ConfirmDeletionView_test.js"></script>
-			<script src="FirstTimeSetupView_test.js"></script>
-			<script src="SignOutView_test.js"></script>
 			<script src="ViewCancelHandler_test.js"></script>
 			<script src="ViewCreateHandler_test.js"></script>
 			<script src="ViewUpdateHandler_test.js"></script>

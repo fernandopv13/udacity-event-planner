@@ -762,8 +762,6 @@ var app = app || {};
 
 			this.ssuper().prototype.submit.call(this, val);
 
-			console.log('submit succceeded');
-
 			return true;
 		}
 

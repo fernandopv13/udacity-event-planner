@@ -68,69 +68,9 @@ var app = app || {};
 
 	module.FormView.prototype.delete = function(nEvent) {
 
-		// Just dispatch a DELETE notification, leaving Controller (ViewDeleteHandler) to take care of the rest
+		// Just dispatch a DELETE notification, leaving Controller to take care of the details
 
 		this.notifyObservers(this, this.model(), module.View.UIAction.DELETE);
-
-		/*
-		var modal = module.controller.views().confirmDeletionView, // get reference to generic, multi-purpose popup (modal)
-
-		type = app.controller.currentView().model().className(); // get class name of object to be deleted
-
-		void modal.model(this.model());
-
-		modal.render();
-
-		modal.show(
-		{
-			dismissible: true // allow user to dismiss popup by tap/clicking outside it
-		});
-		*/
-
-		/*DEPRECATED
-		modal.render( // render modal content
-		{
-			header: 'Delete ' + type.toLowerCase(),
-
-			body: (function() {
-
-				var container = document.createElement('div');
-
-				container.appendChild(module.View.prototype.createWidget.call(
-
-					modal,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						id: 'delete-intro',
-
-						innerHTML: 'Deletion cannot be undone. Continue?'
-					}
-				));
-
-				return container;
-			})(),
-
-			cancel: 'No, keep it',
-
-			ok: 'OK, delete'
-		});
-
-		
-		$('#modal-ok').mousedown(function(nEvent) { // modal OK button behaviour
-
-			this.notifyObservers(this, this.model(), module.View.UIAction.DELETE);
-
-		}.bind(this));
-
-
-		modal.show(
-		{
-			dismissible: true // allow user to dismiss popup by tap/clicking outside it
-		});
-		*/
 	};
 
 
@@ -159,10 +99,7 @@ var app = app || {};
 	module.FormView.prototype.hide = function(obj_speed) {
 
 		// Call parent to perform common hide task(s)
-
-			module.View.prototype.hide.call(this, obj_speed); // ssuper() refers to FormView, so call parent manually or enter infinite loop
-
-		//$('#nav-delete-icon').hide(5); // not working; hides in newly rendered forms(!?!?)
+		module.View.prototype.hide.call(this, obj_speed); // ssuper() refers to FormView, so call parent manually or enter infinite loop
 	}
 
 
@@ -172,8 +109,6 @@ var app = app || {};
 	module.FormView.prototype.init = function() {
 
 		// Call parent to perform common post-render task(s)
-
-			//console.log('in FormView init(), calling View init()');// debug
 
 			module.View.prototype.init.call(this); // ssuper() refers to FormView, so call parent manually or enter infinite loop
 
@@ -189,14 +124,7 @@ var app = app || {};
 					this.delete();
 					
 				}.bind(this));
-
-				
-				//$('#nav-delete-icon').parent().removeClass('hidden'); // show delete icon
-
-				//$('#nav-delete-icon').show('slow');
 			}
-
-			//console.log('exiting FormView init()');
 	};
 
 

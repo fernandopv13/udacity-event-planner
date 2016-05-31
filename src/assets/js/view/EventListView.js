@@ -179,8 +179,6 @@ var app = app || {};
 
 			var events = Account_a.events()
 				
-			console.log(events);
-
 			for (var prop in events) {
 
 				container.appendChild(renderListItem(events[prop], this));

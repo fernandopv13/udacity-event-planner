@@ -135,58 +135,6 @@ var app = app || {};
 		});
 
 		this.ssuper().prototype.render.call(this, options);
-
-		/*DEPRECATED
-		this.ssuper().prototype.render.call(this, 
-		{
-			header: 'Sign Out',
-
-			body: (function() {
-
-				var container = document.createElement('div');
-
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						innerHTML: 'Sign out from the app?'
-					}
-				));
-
-				
-				var storageMsg = module.controller.selectedAccount().localStorageAllowed() ?
-
-				'Your events and account info will still be here when you sign back in.' :
-
-				'You will loose all your event and account info. Allow "Local Storage" in Account Settings before you sign out to change this.';
-
-				
-				container.appendChild(self.createWidget.call(
-
-					this,
-
-					'HTMLElement',
-					{
-						element: 'p',
-
-						innerHTML: storageMsg
-					}
-				));
-
-				
-				return container;
-
-			}.bind(this))(),
-
-			ok: 'Sign Out',
-
-			cancel: 'Stay signed in'
-		});
-		*/
 	};
 
 

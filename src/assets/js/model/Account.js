@@ -449,22 +449,17 @@ var app = app || {};
 
 				if (obj_event.constructor === module.Event) {
 
-					_events.forEach(function(event, ix) {
+					for (var prop in _events) {
 
-						if (event.id() === obj_event.id()) {
-						
-							console.log(event.id());
+						if (_events[prop].id() === obj_event.id()) {
 
-							console.log(_events);
-
-							_events.splice(ix, 1); // remove the event from the collection
-
-							console.log(_events);
+							delete _events[prop];
 
 							ret = true;
-						}
 
-					}.bind(this));
+							break;
+						}
+					}
 
 					if (!ret) {
 

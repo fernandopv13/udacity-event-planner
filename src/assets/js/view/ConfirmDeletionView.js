@@ -63,7 +63,7 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Submits any entries made by the user into the form to the controller, which then decides what to do.
+	/** Delegates delete request to the Controller, which then decides what to do.
 	*
 	* Only reacts to taps/clicks on the modal's "OK" button (regardless of labelling). Other forms of popup dismissal are simply ignored.
 	*
@@ -82,7 +82,7 @@ var app = app || {};
 
 	/** (Re)renders modal into DOM
 	*
-	* @param {Object} options JSON object containing (optional) header and body content, and custom 'OK' event handler
+	* @param {Object} options JSON object containing optional header and body content, and 'OK' event handler
 	*
 	* @return void
 	 */

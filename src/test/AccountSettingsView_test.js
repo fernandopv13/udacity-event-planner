@@ -194,7 +194,6 @@ describe('Class AccountSettingsView', function(){
 			expect(el.attr('type')).toBe('number');
 
 			expect(el.attr('required')).not.toBeDefined();
-
 		});
 
 
@@ -205,7 +204,6 @@ describe('Class AccountSettingsView', function(){
 			expect(el.attr('type')).toBe('checkbox');
 
 			expect(el.is('input')).toBe(true);
-
 		});
 
 
@@ -216,7 +214,6 @@ describe('Class AccountSettingsView', function(){
 			expect(el.attr('type')).toBe('checkbox');
 
 			expect(el.is('input')).toBe(true);
-
 		});
 
 
