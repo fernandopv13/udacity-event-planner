@@ -25,7 +25,7 @@ describe('Class ObjectRegistry', function(){
 	});
 	
 	
-	describe('ObjectRegistry instance', function() {
+	describe('instance', function() {
 		
 		// Set up some mocks
 		

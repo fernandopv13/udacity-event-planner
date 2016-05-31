@@ -10,13 +10,17 @@ var app = app || {};
 
 	/** @classdesc View class for generic confirm deletion modal dialog (popup) with customizable header and body content.
 	*
+	* @requires jQuery
+	*
+	* @extends ModalView
+	*
 	* @constructor
 	*
-	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	* @param {String} elementId Id of the HTML DOM element the view is bound to
 	*
-	* @param (String) header Content for the modal header
+	* @param {String} header Content for the modal header
 	*
-	* @param (String) body Content for the modal body
+	* @param {String} body Content for the modal body
 	*
 	* @author Ulrik H. Gade, May 2016
 	*/
@@ -61,7 +65,7 @@ var app = app || {};
 
 	/** Submits any entries made by the user into the form to the controller, which then decides what to do.
 	*
-	* Only reacts to taps/clicks on the modal's "OK" button (regardless of labelling). Other forms popup of dismissal are simply ignored.
+	* Only reacts to taps/clicks on the modal's "OK" button (regardless of labelling). Other forms of popup dismissal are simply ignored.
 	*
 	* @param {nEvent} n Native browser event spawned by the tap/click
 	*
@@ -72,9 +76,7 @@ var app = app || {};
 
 		if (nEvent && nEvent.currentTarget.id === 'modal-ok') { //user selected 'OK' button in modal
 
-			console.log('deleting...'); // debug
-
-			//this.ssuper().prototype.submit.call(this, new module.Account(), module.View.UIAction.SIGNOUT);
+			this.notifyObservers(this, this.model(), module.View.UIAction.DELETE);
 		}
 	};
 
@@ -87,11 +89,11 @@ var app = app || {};
 
 	module.ConfirmDeletionView.prototype.render = function(obj_options) {
 	
-		var self = this, options = obj_options || {};
+		var self = this, options = obj_options || {}, type = this.model() ? this.model().className() : 'Item';
 
 		$.extend(options,
 		{
-			header: 'Delete',
+			header: 'Delete ' + type,
 
 			body: (function() {
 
@@ -121,15 +123,18 @@ var app = app || {};
 	};
 
 
-	/** Displays modal in UI and provides handler for data entered in modal (own submit() unless overriden in passed in options) */	
+	/** Displays modal in UI and provides handler for data entered in modal (own complete() unless overriden in passed in options) */	
 
 	module.ConfirmDeletionView.prototype.show = function(obj_options) {
 
-		//obj_options = obj_options || {};
+		var self = this, options = obj_options || {};
 
-		//obj_options.complete = obj_options.complete ? obj_options.complete.bind(this) : this.complete.bind(this);
+		$.extend(options, 
+		{
+			complete: options.complete ? options.complete.bind(self) : self.complete.bind(self)
+		});
 
-		this.ssuper().prototype.show.call(this, obj_options);
+		this.ssuper().prototype.show.call(this, options);
 	};
 	
 })(app);

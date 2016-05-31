@@ -18,7 +18,7 @@ var app = app || {};
 	*
 	* @param (String) heading Content for the list heading
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 	module.AccountProfileView = function(str_elementId, str_heading) {
@@ -70,25 +70,21 @@ var app = app || {};
 
 	module.AccountProfileView.prototype.render = function(Person_p) {
 
-		var container; // shorthand reference to inherited temporary container element
-		
+		// Set up container div
+			
+		var container = this.containerElement(this.createWidget( // shorthand reference to inherited temporary container element
+
+			'HTMLElement', // div
+
+			{
+				element: 'div',			
+				
+				classList: ['row']
+			}
+		));
 		
 		if (Person_p) { // account holder exists
-			
-			// Set up container div
-			
-				container = this.containerElement(this.createWidget(
-
-					'HTMLElement', // div
-
-					{
-						element: 'div',			
-						
-						classList: ['row']
-					}
-				));
-
-
+		
 			// Add heading
 				
 				container.appendChild(this.createWidget(

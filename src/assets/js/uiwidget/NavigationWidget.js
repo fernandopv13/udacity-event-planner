@@ -426,9 +426,11 @@ var app = app || {};
 
 					$(element).find('.button-collapse').sideNav('hide');
 
+					var view = $(nEvent.target).data('view');
+
 					try { // fail silently if menu item doesn't work
 
-						View_v.notifyObservers(new module[$(nEvent.target).data('view')](), null, module.View.UIAction.NAVIGATE);//.target.href.split('!')[1]); // parse the URL partial after #!
+						View_v.notifyObservers(new module[view](), null, module.View.UIAction.NAVIGATE);//.target.href.split('!')[1]); // parse the URL partial after #!
 					}
 
 					catch(e) {

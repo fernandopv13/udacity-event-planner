@@ -7,14 +7,8 @@
 
 */
 
-describe('Class Factory', function(){
+describe('Abstract class Factory', function(){
 	
-	it('can create a new instance', function() {
-			
-			expect((new app.Factory()).constructor).toBe(app.Factory);
-	});
-		
-		
 	// Set up some mocks
 
 	var Product = app.Product || function() { // abstract base class

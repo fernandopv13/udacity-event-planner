@@ -7,14 +7,8 @@
 
 */
 
-describe('Class Product', function(){
+describe('Abstract class Product', function(){
 	
-	it('can create a new instance', function() {
-			
-			expect((new app.Product()).constructor).toBe(app.Product);
-	});
-		
-		
 	// Set up some mocks
 
 	var ConcreteProductOne = function() { // extends Product

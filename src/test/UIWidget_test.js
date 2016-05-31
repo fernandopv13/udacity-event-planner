@@ -7,7 +7,7 @@
 
 */
 
-describe('Class UIWidget', function(){
+describe('Abstract class UIWidget', function(){
 	
 	it('inherits from Product', function() {
 
@@ -15,12 +15,6 @@ describe('Class UIWidget', function(){
 	});
 
 
-	it('can create a new instance', function() {
-			
-			expect((new app.UIWidget()).constructor).toBe(app.UIWidget);
-	});
-		
-		
 	// Set up some mocks
 
 	var ConcreteProduct = function() { // extends UIWidget

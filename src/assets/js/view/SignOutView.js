@@ -10,13 +10,17 @@ var app = app || {};
 
 	/** @classdesc View class for generic modal dialog (popup) with customizable header and body content.
 	*
+	* @requires jQuery
+	*
+	* @extends ModalView
+	*
 	* @constructor
 	*
-	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	* @param {String} elementId Id of the HTML DOM element the view is bound to
 	*
-	* @param (String) header Content for the modal header
+	* @param {String} header Content for the modal header
 	*
-	* @param (String) body Content for the modal body
+	* @param {String} body Content for the modal body
 	*
 	* @author Ulrik H. Gade, May 2016
 	*/
@@ -186,7 +190,7 @@ var app = app || {};
 	};
 
 
-	/** Displays modal in UI and provides handler for data entered in modal (own submit() unless overriden in passed in options) */	
+	/** Displays modal in UI and provides handler for data entered in modal (own complete() unless overriden in passed in options) */	
 
 	module.SignOutView.prototype.show = function(obj_options) {
 

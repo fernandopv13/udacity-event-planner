@@ -18,7 +18,7 @@ var app = app || {};
 	*
 	* @constructor
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*
 	* @todo Add unit testing (of rendering in browser)
 	*/
@@ -179,6 +179,8 @@ var app = app || {};
 
 			var events = Account_a.events()
 				
+			console.log(events);
+
 			for (var prop in events) {
 
 				container.appendChild(renderListItem(events[prop], this));

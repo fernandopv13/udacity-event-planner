@@ -7,7 +7,7 @@
 
 */
 
-describe('Class InputWidget', function(){
+describe('Abstract class InputWidget', function(){
 	
 	it('inherits from UIWidget', function() {
 
@@ -15,12 +15,6 @@ describe('Class InputWidget', function(){
 	});
 
 
-	it('can create a new instance', function() {
-			
-			expect((new app.InputWidget()).constructor).toBe(app.InputWidget);
-	});
-		
-		
 	describe('instance', function() {
 	
 

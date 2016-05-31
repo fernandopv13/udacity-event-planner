@@ -77,7 +77,7 @@ var app = app || {};
 
 		var ctrl = this.controller(), clone = ctrl.cloneModel(), source = ctrl.sourceModel(), view, views = ctrl.views();
 
-		for (var prop in views) { // search for (existing) view matching the request
+		for (var prop in views) { // find view matching the request
 
 			if (views[prop].constructor === View_v.constructor) {
 
@@ -89,87 +89,7 @@ var app = app || {};
 
 		if (view) {
 
-			if (Model_m === null) { // parse Model matching navbar menuitems, or Views that are not associated with a Model
-
-				switch (View_v.constructor) {
-
-					case module.AboutView:
-
-						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
-
-						setTimeout( // wait for the drawer close animation to complete, or it will also hide the popup
-
-							function() {ctrl.currentView(view, Model_m)}, 300  // show the view
-						);
-
-						break;
-
-					case module.AccountProfileView:
-
-						Model_m = ctrl.selectedAccount().accountHolder()
-
-							|| ctrl.selectedAccount().accountHolder(new module.Person())
-
-						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
-
-						ctrl.currentView(view, Model_m); // show the view
-
-						break;
-
-					case module.AccountSettingsView:
-
-						Model_m = ctrl.selectedAccount();
-
-						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
-
-						ctrl.currentView(view, Model_m); // show the view
-
-						break;
-
-					case module.FrontPageView:
-
-						Model_m = null;
-
-						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
-
-						ctrl.currentView(view, Model_m); // show the view
-
-						break;
-
-					case module.SignInView:
-
-						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
-
-						ctrl.currentView(view, Model_m); // show the view
-
-						break;
-
-					case module.SignUpView:
-
-						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
-
-						ctrl.currentView(view, Model_m); // show the view
-
-						break;
-
-					case module.SignOutView:
-
-						this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
-
-						setTimeout( // wait for the drawer close animation to complete, or it will also hide the popup
-
-							function() {ctrl.currentView(view, Model_m)}, 300  // show the view
-						);
-
-						break;
-
-					default:
-
-						console.log('Navigation selection not supported');
-				}
-			}
-
-			else if (clone !== null && source !== null) { // a transaction is in progress
+			if (clone !== null && source !== null) { // a transaction is in progress
 
 				if (Model_m !== null && Model_m.constructor === clone.constructor
 
@@ -196,6 +116,37 @@ var app = app || {};
 				this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
 
 				ctrl.currentView(view, Model_m); // show the view
+			}
+
+			else { // navigate to view
+			
+				if (Model_m === null) { // try to match view with model, if missing (e.g. when called from navbar item)
+
+					Model_m = (
+					{
+						AccountProfileView: ctrl.selectedAccount() ? ctrl.selectedAccount().accountHolder() : null,
+
+						AccountSettingsView: ctrl.selectedAccount() ? ctrl.selectedAccount() : null
+					
+					})[view.className()] || null;
+				}
+
+				if ([module.AboutView, module.SignOutView].indexOf(View_v.constructor) > -1) { // open modals called from navbar
+
+					this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
+
+					setTimeout( // wait for the drawer close animation to complete, or it will also hide the popup
+
+						function() {ctrl.currentView(view, Model_m)}, 300  // show the view
+					);
+				}
+
+				else { // open any other view
+
+					this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
+
+					ctrl.currentView(view, Model_m); // show the view
+				}
 			}
 		}
 

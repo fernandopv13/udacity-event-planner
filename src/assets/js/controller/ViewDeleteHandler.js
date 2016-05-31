@@ -16,7 +16,7 @@ var app = app || {};
 	*
 	* @extends ViewUpdateHandler
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 	module.ViewDeleteHandler = function(Controller_c) {
@@ -72,9 +72,8 @@ var app = app || {};
 
 	module.ViewDeleteHandler.prototype.execute = function(int_UIAction, Model_m, View_v) {
 
-		var ctrl = this.controller(), name;
-		
-		
+		var self = this, ctrl = this.controller(), name, modal = ctrl.views().confirmDeletionView;
+
 		function deleteModel (Model_m) { // do work common to deleting most model types
 
 			void ctrl.removeObserver(Model_m); // unregister observer relationships
@@ -90,65 +89,85 @@ var app = app || {};
 			Model_m.delete(); // call Model's delete() method
 		}
 
-		
-		switch (Model_m.constructor) { // do type specfic cleanup and notification
+		function doDelete() { // main function executed only if user confirms deletion (in popup)
+	
+			switch (Model_m.constructor) { // do type specfic cleanup and notification
 
-			case module.Account:
+				case module.Account:
 
-				void ctrl.selectedAccount(null);
+					void ctrl.selectedAccount(null);
 
-				void ctrl.selectedEvent(null);
+					void ctrl.selectedEvent(null);
 
-				void ctrl.selectedGuest(null);
+					void ctrl.selectedGuest(null);
 
-				deleteModel(Model_m);
+					deleteModel(Model_m);
 
-				this.notifyObservers(null, ctrl.views().frontPageView); // render/refresh FrontPageView in the background
+					this.notifyObservers(null, ctrl.views().frontPageView); // render/refresh FrontPageView in the background
 
-				ctrl.currentView(ctrl.views().frontPageView, null) // show FrontPageView
+					ctrl.currentView(ctrl.views().frontPageView, null) // show FrontPageView
 
-				Materialize.toast('Account was deleted. Sorry to see you go.', module.prefs.defaultToastDelay());
+					Materialize.toast('Account was deleted. Sorry to see you go.', module.prefs.defaultToastDelay());
 
-				break;
+					break;
 
-			case module.Event:
+				case module.Event:
 
-				//name = Model_m.name() ? Model_m.name() : 'Untitled event';
+					ctrl.selectedAccount().removeEvent(Model_m); // remove from account
 
-				ctrl.selectedAccount().removeEvent(Model_m); // remove from account
+					if (ctrl.selectedEvent() && ctrl.selectedEvent().id() === Model_m.id()) {void ctrl.selectedEvent(null);} // reset selected guest in controller
 
-				if (ctrl.selectedEvent() && ctrl.selectedEvent().id() === Model_m.id()) {void ctrl.selectedEvent(null);} // reset selected guest in controller
+					deleteModel(Model_m); // unregister and delete
 
-				deleteModel(Model_m); // unregister and delete
+					this.notifyObservers(ctrl.selectedAccount(), ctrl.views().eventListView); // render/refresh EventListView in the background
 
-				this.notifyObservers(ctrl.selectedAccount(), ctrl.views().eventListView); // render/refresh EventListView in the background
+					ctrl.currentView(ctrl.views().eventListView, ctrl.selectedAccount()); // show the view
 
-				ctrl.currentView(ctrl.views().eventListView, ctrl.selectedAccount()); // show the view
+					Materialize.toast('Event was deleted', module.prefs.defaultToastDelay());
 
-				Materialize.toast('Event was deleted', module.prefs.defaultToastDelay());
+					break;
 
-				break;
+				case module.Person: // remove from event but don't delete
 
-			case module.Person: // remove from event but don't delete
+					void ctrl.selectedEvent().removeGuest(Model_m); // remove from event (but keep in account)
 
-				void ctrl.selectedEvent().removeGuest(Model_m); // remove from event (but keep in account)
+					if (ctrl.selectedGuest() && ctrl.selectedGuest().id() === Model_m.id()) {void ctrl.selectedGuest(null);} // reset selected guest in controller
 
-				if (ctrl.selectedGuest() && ctrl.selectedGuest().id() === Model_m.id()) {void ctrl.selectedGuest(null);} // reset selected guest in controller
+					void ctrl.newModel(null); // remove reference to model if it was just created
 
-				void ctrl.newModel(null); // remove reference to model if it was just created
+					this.notifyObservers(ctrl.selectedEvent(), ctrl.views().guestListView); // render/refresh guestListView in the background
 
-				this.notifyObservers(ctrl.selectedEvent(), ctrl.views().guestListView); // render/refresh guestListView in the background
+					ctrl.recentDeleted = true;
 
-				ctrl.recentDeleted = true;
+					window.history.go(module.device().isiOS() && module.device().isSafari() ? -2 : -1); // navigate back to guest list (working around strange iOS Safari bug)
 
-				window.history.go(module.device().isiOS() && module.device().isSafari() ? -2 : -1); // navigate back to guest list (working around strange iOS Safari bug)
+					Materialize.toast('Guest was removed from event', module.prefs.defaultToastDelay());
 
-				Materialize.toast('Guest was removed from event', module.prefs.defaultToastDelay());
-
-				break;
+					break;
+			}
 		}
 
-		//window.history.back();
+		void modal.model(Model_m);
+
+		modal.render();
+
+		modal.show( // request confirmation before deletion
+		{
+			dismissible: true, // allow user to dismiss popup by tap/clicking outside it
+
+			complete: function(nEvent) {
+
+				if (nEvent && nEvent.currentTarget.id === 'modal-ok') { // user selected 'OK' button in modal
+
+					doDelete(); // go ahead with deletion
+				}
+
+				// else: do nothing when popup closes
+
+			}.bind(self)
+		});
+
+		return;
 	};
 
 })(app);

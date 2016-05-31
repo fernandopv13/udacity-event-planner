@@ -23,7 +23,7 @@ describe('Interface IInterfaceable', function(){
 	});
 	
 
-	it('can mix default methods from an interface into a custom class', function() {
+	it('can mix default methods from an interface into a realizing class', function() {
 
 		function TestInterface() {}
 
@@ -44,7 +44,7 @@ describe('Interface IInterfaceable', function(){
 	});
 
 
-	it('respects local overrides when mixing default methods from an interface into a custom class', function() {
+	it('respects local overrides when mixing default methods from an interface into a realizing class', function() {
 
 		function TestInterface() {}
 

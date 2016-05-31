@@ -68,10 +68,26 @@ var app = app || {};
 
 	module.FormView.prototype.delete = function(nEvent) {
 
-		var modal = module.controller.views().modalView, // get reference to generic, multi-purpose popup (modal)
+		// Just dispatch a DELETE notification, leaving Controller (ViewDeleteHandler) to take care of the rest
+
+		this.notifyObservers(this, this.model(), module.View.UIAction.DELETE);
+
+		/*
+		var modal = module.controller.views().confirmDeletionView, // get reference to generic, multi-purpose popup (modal)
 
 		type = app.controller.currentView().model().className(); // get class name of object to be deleted
 
+		void modal.model(this.model());
+
+		modal.render();
+
+		modal.show(
+		{
+			dismissible: true // allow user to dismiss popup by tap/clicking outside it
+		});
+		*/
+
+		/*DEPRECATED
 		modal.render( // render modal content
 		{
 			header: 'Delete ' + type.toLowerCase(),
@@ -114,6 +130,7 @@ var app = app || {};
 		{
 			dismissible: true // allow user to dismiss popup by tap/clicking outside it
 		});
+		*/
 	};
 
 

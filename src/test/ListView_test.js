@@ -7,7 +7,7 @@
 
 */
 
-describe('Class ListView', function(){
+describe('Abstract class ListView', function(){
 	
 	var testListView, testView;
 

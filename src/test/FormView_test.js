@@ -7,7 +7,7 @@
 
 */
 
-describe('Class FormView', function(){
+describe('Abstract class FormView', function(){
 	
 	
 	var testFormView, testView;

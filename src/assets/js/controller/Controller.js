@@ -365,9 +365,11 @@ var app = app || {};
 
 						modalView: new module.ModalView('modal-view', '[Untitled]'), // generic modal popup
 
-						firstTimeSetupView: new module.FirstTimeSetupView('modal-view'), // 'Sign Out' modal popup
-
 						aboutView: new module.AboutView('modal-view'), // 'About' modal popup
+
+						confirmDeletionView: new module.ConfirmDeletionView('modal-view'), // 'Confirm Delete' modal popup
+
+						firstTimeSetupView: new module.FirstTimeSetupView('modal-view'), // 'Sign Out' modal popup
 
 						signOutView: new module.SignOutView('modal-view') // 'Sign Out' modal popup
 					}

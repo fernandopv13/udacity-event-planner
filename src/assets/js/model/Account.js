@@ -445,14 +445,28 @@ var app = app || {};
 			
 			this.removeEvent = function (obj_event) {
 			
+				var ret = false;
+
 				if (obj_event.constructor === module.Event) {
 
-					if (_events[obj_event.id()]) {
-					
-						delete _events[obj_event.id()];
-					}
+					_events.forEach(function(event, ix) {
 
-					else {
+						if (event.id() === obj_event.id()) {
+						
+							console.log(event.id());
+
+							console.log(_events);
+
+							_events.splice(ix, 1); // remove the event from the collection
+
+							console.log(_events);
+
+							ret = true;
+						}
+
+					}.bind(this));
+
+					if (!ret) {
 
 						throw new ReferenceError('Event not found in account');
 					}
@@ -560,7 +574,7 @@ var app = app || {};
 				
 				if (Password_p) {this.password(Password_p);}
 
-				if (Person_accountHolder) {this.accountHolder(Person_accountHolder);}
+				void this.accountHolder(Person_accountHolder || new module.Person());
 			}
 
 

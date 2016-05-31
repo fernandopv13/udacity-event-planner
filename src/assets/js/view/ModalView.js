@@ -12,11 +12,11 @@ var app = app || {};
 	*
 	* @constructor
 	*
-	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	* @param {String} elementId Id of the HTML DOM element the view is bound to
 	*
-	* @param (String) header Content for the modal header
+	* @param {String} header Content for the modal header
 	*
-	* @param (String) body Content for the modal body
+	* @param {String} body Content for the modal body
 	*
 	* @author Ulrik H. Gade, May 2016
 	*/

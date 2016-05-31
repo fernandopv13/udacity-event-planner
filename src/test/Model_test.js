@@ -7,7 +7,7 @@
 
 */
 
-describe('Class Model', function(){
+describe('Abstract class Model', function(){
 	
 	
 	it('can be instantiated', function() {
