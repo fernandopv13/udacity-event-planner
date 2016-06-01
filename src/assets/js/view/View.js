@@ -213,7 +213,7 @@ var app = app || {}; // create a simple namespace for the module
 
 
 	/*----------------------------------------------------------------------------------------
-	* Public class (static) fields
+	* Public class (static) members
 	*---------------------------------------------------------------------------------------*/
 
 		module.View.UIAction = {
@@ -334,7 +334,10 @@ var app = app || {}; // create a simple namespace for the module
 
 				var excluded = false;
 
-				[module.FrontPageView, module.SignInView, module.SignUpView, module.ModalView].forEach(function(klass) {
+				[
+					module.FrontPageView, module.SignInView, module.SignUpView, module.ModalView
+
+				].forEach(function(klass) {
 
 					if (this.isInstanceOf(klass)) {
 

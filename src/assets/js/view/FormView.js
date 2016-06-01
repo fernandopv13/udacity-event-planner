@@ -99,6 +99,7 @@ var app = app || {};
 	module.FormView.prototype.hide = function(obj_speed) {
 
 		// Call parent to perform common hide task(s)
+		
 		module.View.prototype.hide.call(this, obj_speed); // ssuper() refers to FormView, so call parent manually or enter infinite loop
 	}
 

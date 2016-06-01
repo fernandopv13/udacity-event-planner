@@ -107,9 +107,11 @@ var app = app || {};
 
 					self.notifyObservers(null, ctrl.views().frontPageView); // render/refresh FrontPageView in the background
 
-					ctrl.currentView(ctrl.views().frontPageView, null) // show FrontPageView
+					//ctrl.currentView(ctrl.views().frontPageView, null) // show FrontPageView
 
 					Materialize.toast('Account was deleted. Sorry to see you go.', module.prefs.defaultToastDelay());
+
+					history.go(0); // reload app to try and avoid complications with back navigation
 
 					break;
 
@@ -129,7 +131,7 @@ var app = app || {};
 
 					break;
 
-				case module.Person: // remove from event but don't delete
+				case module.Person: // assume we're removing a guest from an event; don't delete
 
 					void ctrl.selectedEvent().removeGuest(Model_m); // remove from event (but keep in account)
 
@@ -149,26 +151,36 @@ var app = app || {};
 			}
 		}
 
-		void modal.model(Model_m);
+		if (Model_m instanceof module.Person && View_v instanceof module.AccountProfileView) {
 
-		modal.render();
+			// skip directly to deleting account, so as to not show two successive popups
 
-		modal.show( // request confirmation before deletion
-		{
-			dismissible: true, // allow user to dismiss popup by tap/clicking outside it
+			this.notifyObservers(View_v, ctrl.selectedAccount(), module.View.UIAction.DELETE);
+		}
 
-			complete: function(nEvent) {
+		else { // proceed normally
+		
+			void modal.model(Model_m);
 
-				if (nEvent && nEvent.currentTarget.id === 'modal-ok') { // user selected 'OK' button in modal
+			modal.render();
 
-					doDelete.call(self); // go ahead with deletion
-				}
+			modal.show( // request confirmation before deletion
+			{
+				dismissible: true, // allow user to dismiss popup by tap/clicking outside it
 
-				// else: do nothing if user cancelled popup
+				complete: function(nEvent) {
 
-			}.bind(self)
-		});
+					if (nEvent && nEvent.currentTarget.id === 'modal-ok') { // user selected 'OK' button in modal
 
+						doDelete.call(self); // go ahead with deletion
+					}
+
+					// else: do nothing if user cancelled popup
+
+				}.bind(self)
+			});
+		}
+		
 		return;
 	};
 

@@ -418,7 +418,7 @@ var app = app || {};
 					View_v.notifyObservers(new module.EventListView(), module.controller.selectedAccount(), module.View.UIAction.NAVIGATE);
 				});
 
-				$(element).find('#nav-delete-icon').hide(); // delete icon: only needed on FormViews, let them show it
+				$(element).find('#nav-delete-icon').hide(); // delete icon: only needed on non-modal FormViews, let them show it
 				
 				$(element).find('.button-collapse').sideNav(); // initialize Materialize 'hamburger' menu
 
