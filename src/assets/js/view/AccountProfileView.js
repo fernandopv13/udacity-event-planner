@@ -357,20 +357,17 @@ var app = app || {};
 
 			var person = new module.Person($('#account-profile-name').val());
 
-			person.jobTitle($('#account-profile-jobtitle').val());
+			void person.jobTitle($('#account-profile-jobtitle').val());
 
-			person.email($('#account-profile-email').val() !== '' ? new module.Email($('#account-profile-email').val()) : null);
+			void person.email($('#account-profile-email').val() !== '' ? new module.Email($('#account-profile-email').val()) : null);
 			
-			person.employer($('#account-profile-employer').val() !== '' ? new module.Organization($('#account-profile-employer').val()) : null); //hack
+			void person.employer($('#account-profile-employer').val() !== '' ? new module.Organization($('#account-profile-employer').val()) : null); //hack
 
-			person.birthday($('#account-profile-birthday').val() !== '' ? new Date($('#account-profile-birthday').val()) : null);
+			//person.birthday($('#account-profile-birthday').val() !== '' ? new Date($('#account-profile-birthday').val()) : null);
+
+			void person.birthday(module.DateInputWidget.instance().value($('#account-profile-birthday')))
 			
-			this.ssuper().prototype.submit.call(
-
-				this,
-				
-				person
-			);
+			this.ssuper().prototype.submit.call(this, person);
 			
 			return true;
 		}

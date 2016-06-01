@@ -375,7 +375,9 @@ var app = app || {};
 
 					new module.Email($('#guest-email').val()),
 
-					$('#guest-birthday').val() ? new Date($('#guest-birthday').val()) : null
+					//$('#guest-birthday').val() ? new Date($('#guest-birthday').val()) : null
+
+					module.DateInputWidget.instance().value($('#guest-birthday'))
 				)
 			);
 			

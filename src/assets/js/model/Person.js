@@ -73,7 +73,7 @@ var app = app || {}; // create a simple namespace for the app
 
 		/** Gets or sets the person's birthday
 		*
-		* @description Takes a single parameter when setting: either a Date object or a valid date string.
+		* @description Takes a single parameter when setting: either a Date object or a valid date string, or null
 		*
 		* @param {Date} start The date of the person's birth (Date representation)
 		*
@@ -86,9 +86,9 @@ var app = app || {}; // create a simple namespace for the app
 			
 			if (arguments.length !== 0) {
 				
-				if (date_birthday !== null) {
+				//if (date_birthday !== null) {
 					
-					if (date_birthday.constructor === Date) { // date as Date; default form
+					if (date_birthday === null || date_birthday.constructor === Date) { // date as Date; default form
 						
 						_birthday = date_birthday;
 					}
@@ -102,7 +102,7 @@ var app = app || {}; // create a simple namespace for the app
 						
 						throw new TypeError('Birthday must be Date');
 					}
-				} // silently ignore null
+				//} // silently ignore null
 			}
 			
 			return _birthday;

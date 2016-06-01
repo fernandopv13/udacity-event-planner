@@ -569,7 +569,7 @@ var app = app || {};
 				
 				if (Password_p) {this.password(Password_p);}
 
-				void this.accountHolder(Person_accountHolder || new module.Person());
+				if(Person_accountHolder) {void this.accountHolder(Person_accountHolder);}
 			}
 
 
@@ -678,8 +678,6 @@ var app = app || {};
 
 				if (Account_a.password()) {void this.password(Account_a.password());}
 
-				if (Account_a.accountHolder()) {void this.accountHolder(Account_a.accountHolder());}
-
 				void this.defaultCapacity(Account_a.defaultCapacity());
 
 				void this.defaultLocation(Account_a.defaultLocation());
@@ -688,7 +686,19 @@ var app = app || {};
 
 				void this.localStorageAllowed(Account_a.localStorageAllowed());
 			
+				if (Account_a.accountHolder()) {// update account holder with info from submission, if any
 
+					/*
+					if (!this.accountHolder()) { // create accountHolder if none exists
+
+						void this.accountHolder(new app.Person());
+					}
+					*/
+
+					this.accountHolder().update(Account_a.accountHolder(), this.accountHolder().id());
+				}
+
+								
 				// Do some housekeeping (calls method in parent class, i.e. Model)
 
 				this.ssuper().prototype.onUpdate.call(this, Account_a);

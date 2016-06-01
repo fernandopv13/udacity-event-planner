@@ -138,6 +138,8 @@ var app = app || {};
 
 					Model_n = new module.Account(); // create new Account
 
+					void Model_n.accountHolder(ctrl.registerMutualObserver(new module.Person())); // add account holder
+
 					void ctrl.selectedAccount(Model_n); // set new Account as selected
 
 					Model_n.update(Model_m, Model_n.id()); // save info entered when creating account

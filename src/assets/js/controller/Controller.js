@@ -379,6 +379,8 @@ var app = app || {};
 
 					for (var prop in _views) {
 
+						//this.registerMutualObserver(_views[prop]);
+
 						this.registerObserver(_views[prop]);
 
 						_views[prop].registerObserver(module.controller);
@@ -392,6 +394,8 @@ var app = app || {};
 						var objList = klass.registry.getObjectList();
 
 						for (var prop in objList) {
+
+							//this.registerMutualObserver(objList[prop]);							
 
 							this.registerObserver(objList[prop]);
 
@@ -697,6 +701,65 @@ var app = app || {};
 				}
 			}
 	};
+
+	/*----------------------------------------------------------------------------------------
+	* Public instance methods (on prototype)
+	*---------------------------------------------------------------------------------------*/
+
+	/** Registers IObservable as mutual observer of Controller.
+	*
+	* Used at app initialization, and whenever IObservable is created, e.g. a new Model
+	*
+	* @param {IObservable} object The IObservable to register as mutual observer of controller
+	*
+	* @return {Iobservable} object The IObservable passed in, now properly registered
+	*
+	* @throws {IllegalArgumentError} If supplied with parameter that is not an instance of IObservable
+	*/
+
+	module.Controller.prototype.registerMutualObserver = function(IObservable_o) {
+
+		if (IObservable_o && IObservable_o.isInstanceOf && IObservable_o.isInstanceOf(module.IObservable)) {
+
+			this.registerObserver(IObservable_o);
+
+			IObservable_o.registerObserver(this);
+		}
+
+		else {
+
+			throw new IllegalArgumentError('Expected IObservable');
+		}
+
+		return IObservable_o;
+	}
+
+
+	/** Removes mutual observer of Controller.
+	*
+	* @param {IObservable} object The IObservable to remove as mutual observer of controller
+	*
+	* @return {Iobservable} object The IObservable passed in, now removed as mutual observer
+	*
+	* @throws {IllegalArgumentError} If supplied with parameter that is not an instance of IObservable
+	*/
+
+	module.Controller.prototype.removeMutualObserver = function(IObservable_o) {
+
+		if (IObservable_o && IObservable_o.isInstanceOf && IObservable_o.isInstanceOf(module.IObservable)) {
+
+			this.removeObserver(IObservable_o);
+
+			IObservable_o.removeObserver(this);
+		}
+
+		else {
+
+			throw new IllegalArgumentError('Expected IObservable');
+		}
+
+		return IObservable_o;
+	}
 
 	/*----------------------------------------------------------------------------------------
 	Mix in default methods from implemented interfaces, unless overridden by class or ancestor

@@ -470,11 +470,9 @@ var app = app || {};
 
 			void account.email(new module.Email($('#sign-up-email').val()));
 
-			app.Email.registry.getObjectList()
-
 			void account.password(new module.Password($('#sign-up-password').val()));
 
-			var accountHolder = new module.Person( // trying to keep it simple; don't scare users away before they have signed up!
+			void account.accountHolder(new module.Person( // trying to keep it simple; don't scare users away before they have signed up!
 
 				$('#sign-up-name').val(),
 
@@ -484,12 +482,12 @@ var app = app || {};
 
 				null,
 
-				new Date($('#sign-up-birthday').val())
-			)
+				//new Date($('#sign-up-birthday').val() || null)
 
-			void account.accountHolder(accountHolder);
+				module.DateInputWidget.instance().value($('#sign-up-birthday'))
+			));
 
-			
+
 			// Dispatch submission using function in parent class
 
 			this.ssuper().prototype.submit.call(this, account, module.View.UIAction.CREATE);

@@ -450,12 +450,7 @@ var app = app || {};
 
 			account.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
 			
-			this.ssuper().prototype.submit.call(
-
-				this,
-				
-				account
-			);
+			this.ssuper().prototype.submit.call(this, account);
 			
 			return true;
 		}
