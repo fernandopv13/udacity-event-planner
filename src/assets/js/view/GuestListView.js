@@ -54,6 +54,8 @@ var app = app || {};
 
 	module.GuestListView.prototype.constructor = module.GuestListView; //Reset constructor property
 
+	module.View.children.push(module.GuestListView); // Add to list of derived classes
+
 
 	/*----------------------------------------------------------------------------------------
 	* Publicinstance methods (on prototype)

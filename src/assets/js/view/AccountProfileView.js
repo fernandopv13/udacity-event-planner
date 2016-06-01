@@ -54,6 +54,8 @@ var app = app || {};
 
 	module.AccountProfileView.prototype.constructor = module.AccountProfileView; //Reset constructor property
 
+	module.View.children.push(module.AccountProfileView); // Add to list of derived classes
+
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)

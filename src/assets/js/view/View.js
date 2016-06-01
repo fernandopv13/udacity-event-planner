@@ -216,6 +216,13 @@ var app = app || {}; // create a simple namespace for the module
 	* Public class (static) members
 	*---------------------------------------------------------------------------------------*/
 
+		/** Basic array of concrete child classes, by function reference. Used to simplify Controller init(). */
+
+		module.View.children = [];
+
+		
+		/** Constants representing UI actions, matching ViewUpdateHandlers */
+
 		module.View.UIAction = {
 
 			CANCEL: 0,

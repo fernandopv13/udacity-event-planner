@@ -57,6 +57,7 @@ var app = app || {};
 
 	module.ConfirmDeletionView.prototype.constructor = module.ConfirmDeletionView; // Reset constructor property
 
+	module.View.children.push(module.ConfirmDeletionView); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------

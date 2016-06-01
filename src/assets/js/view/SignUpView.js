@@ -54,6 +54,7 @@ var app = app || {};
 
 	module.SignUpView.prototype.constructor = module.SignUpView; //Reset constructor property
 
+	module.View.children.push(module.SignUpView); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------

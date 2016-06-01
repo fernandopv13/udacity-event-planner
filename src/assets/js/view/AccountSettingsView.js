@@ -54,6 +54,7 @@ var app = app || {};
 
 	module.AccountSettingsView.prototype.constructor = module.AccountSettingsView; //Reset constructor property
 
+	module.View.children.push(module.AccountSettingsView); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------

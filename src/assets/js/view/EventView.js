@@ -63,7 +63,7 @@ var app = app || {};
 
 	module.EventView.prototype.constructor = module.EventView; // Reset constructor property
 
-
+	module.View.children.push(module.EventView); // Add to list of derived classes
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)

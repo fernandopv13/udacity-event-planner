@@ -51,7 +51,7 @@ var app = app || {};
 
 			_sourceModel = null, // the top-level source model when conducting multi-view transaction
 
-			_views; // collection of views we need to keep track of
+			_views = {}; // collection of views we need to keep track of
 
 		/*----------------------------------------------------------------------------------------
 		* Accessors for private instance fields
@@ -308,6 +308,7 @@ var app = app || {};
 
 			this.init = function(HTMLElement_renderContext) {
 
+				/*DEPRECATED
 				// Add divs for views to render context
 
 					var ids = ['account-profile-view', 'account-settings-view', 'event-list-view', 'event-view', 'front-page-view', 'guest-list-view', 'guest-view', 'sign-in-view', 'sign-up-view'],
@@ -339,7 +340,6 @@ var app = app || {};
 
 						classList: ['modal']
 					}));
-
 				
 				// Create views
 
@@ -374,15 +374,72 @@ var app = app || {};
 						signOutView: new module.SignOutView('modal-view') // 'Sign Out' modal popup
 					}
 
-					
 				// Register views and controller as mutual observers
 
 					for (var prop in _views) {
 
 						this.registerMutualObserver(_views[prop]);
 					}
+				*/
 					
 
+				// Initialize views
+
+					var heading, id, view;
+
+					module.View.children.forEach(function(Fn) { // run through list of concrete View classes
+
+						// Create view and add to collection
+
+						view = new Fn();
+
+						_views[view.className().charAt(0).toLowerCase() + view.className().slice(1)] = view; // convert first letter to lower case
+
+						
+						// Generate div
+
+						id = view.className().replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase(); // convert camel case to hyphenated lower case
+
+						$(HTMLElement_renderContext).append(app.HTMLElement.instance().createProduct(
+						{
+							element: 'div',
+
+							attributes:
+							{
+								id: id,
+
+								'aria-hidden': view instanceof module.ModalView ? false : true
+							},
+
+							classList: view instanceof module.ModalView ? ['modal'] : ['row', 'hidden']
+						}));
+
+
+						// Set some defaults
+
+						void view.$renderContext($('#' + id)); // render context
+
+						void view.heading(view.className().replace(/([a-zA-Z])(?=[A-Z])/g, '$1 ').split(' View')[0]); // convert camel case to individual words, skip trailing "View"
+
+
+						// Register view and controller as mutual observers
+
+						this.registerMutualObserver(view);
+
+					}.bind(this));
+
+
+					// Change some generic defaults
+
+					void _views.eventView.heading('Edit Event');
+
+					void _views.eventListView.heading('My Events');
+
+					void _views.frontPageView.heading('Welcome to Meetup Planner');
+
+					void _views.personView.heading('Edit Guest');
+
+				
 				// Register models and controller as mutual observers
 
 					[module.Account, module.Event, module.Organization, module.Person].forEach(function(klass){
@@ -404,7 +461,7 @@ var app = app || {};
 					window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
 
 				
-				// Register (concrete) ViewUpdateHandlers and controller as mutual observers
+				// Initialize concrete ViewUpdateHandlers (register as mutual observers)
 
 					/*
 					[

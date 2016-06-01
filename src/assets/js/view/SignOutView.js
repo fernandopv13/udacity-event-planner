@@ -57,6 +57,7 @@ var app = app || {};
 
 	module.SignOutView.prototype.constructor = module.SignOutView; // Reset constructor property
 
+	module.View.children.push(module.SignOutView); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------

@@ -54,6 +54,8 @@ var app = app || {};
 
 	module.PersonView.prototype.constructor = module.PersonView; //Reset constructor property
 
+	module.View.children.push(module.PersonView); // Add to list of derived classes
+
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (on prototype)

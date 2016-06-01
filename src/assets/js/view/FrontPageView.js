@@ -52,6 +52,8 @@ var app = app || {};
 
 	module.FrontPageView.prototype.constructor = module.FrontPageView; //Reset constructor property
 
+	module.View.children.push(module.FrontPageView); // Add to list of derived classes
+
 
 
 	/*----------------------------------------------------------------------------------------

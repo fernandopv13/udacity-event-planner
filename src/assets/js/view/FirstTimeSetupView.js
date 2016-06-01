@@ -57,6 +57,7 @@ var app = app || {};
 
 	module.FirstTimeSetupView.prototype.constructor = module.FirstTimeSetupView; // Reset constructor property
 
+	module.View.children.push(module.FirstTimeSetupView); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------
