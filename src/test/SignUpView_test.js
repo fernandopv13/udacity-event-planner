@@ -323,33 +323,14 @@ describe('Class SignUpView', function(){
 
 		it('displays a modal first time setup dialog after signing in', function(done){
 
-			// Later, move this to the ViewCreateHandler test
+			// Just check that the correct modal is visible; the FirstTimeSetupView test takes care of the details
+			// Later, maybe move this to the ViewCreateHandler test
 
-			setTimeout(function(){ // wait for modal to render
+			setTimeout(function(){ // wait for modal to render/animate in
 
-				var modal = testWindow.$('#modal-view');
+				expect(testWindow.$('#modal-view').css('display')).toBe('block');
 
-				expect(modal.css('display')).toBe('block'); // modal is open
-
-				expect(modal.find('h4').length).toBe(1); // heading
-
-				expect(modal.find('h4').text()).toBe('First Time Setup');
-
-				expect(modal.find('#setup-localstorage').attr('type')).toBe('checkbox'); // local storage switch (checkbox)
-
-				expect(modal.find('#setup-localstorage').prop('checked')).toBe(false); // defaults to off/unchecked
-
-				expect(modal.find('#setup-geolocation').attr('type')).toBe('checkbox'); // geolocation switch (checkbox)
-
-				expect(modal.find('#setup-geolocation').prop('checked')).toBe(false); // defaults to off
-
-				expect(modal.find('#modal-ok').prop('tagName')).toBe('A'); // OK button
-
-				expect(modal.find('#modal-ok').text()).toBe('OK');
-
-				expect(modal.find('#modal-cancel').prop('tagName')).toBe('A'); // Cancel button
-
-				expect(modal.find('#modal-cancel').text()).toBe('Cancel');
+				expect(testWindow.$('#modal-view').find('h4').text()).toBe('First Time Setup');
 
 				done();
 

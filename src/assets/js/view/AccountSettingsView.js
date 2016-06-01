@@ -436,21 +436,33 @@ var app = app || {};
 
 			var account = new module.Account();
 
-			account.email(new module.Email($('#account-settings-email').val()));
+			void account.email(new module.Email($('#account-settings-email').val()));
 
-			account.password(new module.Password($('#account-settings-password').val()));
+			void account.password(new module.Password($('#account-settings-password').val()));
 
 			// leaving source.accountHolder undefined causes Account update() to skip it, leaving the original intact
 
-			account.defaultCapacity(parseInt($('#account-settings-capacity').val()));
+			void account.defaultCapacity(parseInt($('#account-settings-capacity').val()));
 
-			account.defaultLocation($('#account-settings-location').val());
+			void account.defaultLocation($('#account-settings-location').val());
 
-			account.geoLocationAllowed($('#account-settings-geolocation').prop('checked'));
+			void account.geoLocationAllowed($('#account-settings-geolocation').prop('checked'));
 
-			account.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
-			
+			var localStorageWasAllowed = account.localStorageAllowed();
+
+			void account.localStorageAllowed($('#account-settings-localstorage').prop('checked'));
+
 			this.ssuper().prototype.submit.call(this, account);
+			
+			if (account.localStorageAllowed() && !localStorageWasAllowed) { // ls changed to allowed
+
+				this.notifyObservers(this, this.model(), module.View.UIAction.SAVE);
+			}
+
+			else if (!account.localStorageAllowed()) { // ls (changed to) not allowed
+
+				this.notifyObservers(this, this.model(), module.View.UIAction.UNSAVE);
+			}
 			
 			return true;
 		}

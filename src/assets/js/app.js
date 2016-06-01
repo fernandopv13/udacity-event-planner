@@ -186,27 +186,6 @@ var app = (function(self) {
 
 			onDeserialized: function() { // re-establish references between objects after they have been read in
 			
-				//_registry.forEach(function(reg, self) {console.log(reg.objectClassName());reg.onDeserialized()});
-				
-				//for (var i = 0, len = _registry.length; i < len; i++) {_registry[i].onDeserialized();}
-				
-				
-				// loops don't work (registries' onDeserialized() don't see the objects), so going manual
-				
-				/* DEPRECATED: Remove after verifying current code on iOS
-				self.Account.registry.onDeserialized();
-		
-				self.Email.registry.onDeserialized();
-				
-				self.Event.registry.onDeserialized();
-				
-				self.Organization.registry.onDeserialized();
-				
-				self.Password.registry.onDeserialized();
-
-				self.Person.registry.onDeserialized();
-				*/
-
 				['Account', 'Email', 'Event', 'Organization', 'Password', 'Person'].forEach(function(klass) {
 
 					self[klass].registry.onDeserialized();
@@ -249,20 +228,6 @@ var app = (function(self) {
 
 						_registry.push(self[klass].registry);
 					});
-
-					/* DEPRECATED: Remove after verifying current code on iOS
-					_registry.push(self.Account.registry);
-
-					_registry.push(self.Email.registry);
-
-					_registry.push(self.Event.registry);
-
-					_registry.push(self.Organization.registry);
-
-					_registry.push(self.Password.registry);
-
-					_registry.push(self.Person.registry);
-					*/
 				}
 
 				catch(e) { // reading failed, re-establish data from backup
@@ -303,6 +268,18 @@ var app = (function(self) {
 				}
 
 				backup = null; // free up JSON object for garbage collection
+			},
+
+			removeObject: function() { // remove app data (in class registries) from local storage (not working)
+				
+				if (!window.localStorage) {throw new ReferenceError('localStorage not available');}
+		
+				if (!app.prefs.isLocalStorageAllowed()) {throw new IllegalAccessError('Use of local storage not allowed by user');}
+		
+				for (var i = 0, len = _registry.length; i < len; i++) {
+
+					_registry[i].removeObject();
+				}
 			},
 
 			toJSON: function() { // convert app data to JSON object using same format as that written to local storage (except not stringified)

@@ -521,7 +521,7 @@ describe('Class Account', function(){
 					
 					new app.Password('abcd!2EFGH'),
 					
-					new app.Person('Test Person')
+					new app.Person('Tmp Test Person')
 				);
 
 				tmpAccount.localStorageAllowed(true);
@@ -556,11 +556,11 @@ describe('Class Account', function(){
 					expect(testAccount.defaultLocation()).not.toEqual(tmpAccount.defaultLocation());
 
 
-				// Copy data from temporary object
+				// Copy data from temporary object (update() destroys temporary Model, so copy its data first)
 
-				var json = tmpAccount.toJSON(); // update() destroys temporary Model, so copy its data first
+				var json = tmpAccount.toJSON(), tmpName = tmpAccount.accountHolder().name();
 
-				testAccount.update (tmpAccount, id);
+				testAccount.update(tmpAccount, id);
 
 
 				// Verify copy
@@ -569,7 +569,9 @@ describe('Class Account', function(){
 
 				expect(testAccount.password().id()).toEqual(json._password._id);
 
-				expect(testAccount.accountHolder().id()).toEqual(json._accountHolder._id);
+				expect(testAccount.accountHolder().id()).not.toEqual(json._accountHolder._id);
+
+				expect(testAccount.accountHolder().name()).toEqual(tmpName);
 
 				expect(testAccount.localStorageAllowed()).toEqual(json._localStorageAllowed);
 

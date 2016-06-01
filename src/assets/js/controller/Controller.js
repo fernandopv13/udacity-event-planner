@@ -380,10 +380,6 @@ var app = app || {};
 					for (var prop in _views) {
 
 						this.registerMutualObserver(_views[prop]);
-
-						//this.registerObserver(_views[prop]);
-
-						//_views[prop].registerObserver(module.controller);
 					}
 					
 
@@ -395,11 +391,7 @@ var app = app || {};
 
 						for (var prop in objList) {
 
-							this.registerMutualObserver(objList[prop]);							
-
-							//this.registerObserver(objList[prop]);
-
-							//objList[prop].registerObserver(this);
+							this.registerMutualObserver(objList[prop]);
 						}
 
 					}.bind(this)); // make sure 'this' references controller correctly within loop
@@ -423,6 +415,8 @@ var app = app || {};
 
 						new module.ViewNavigateHandler(this),
 
+						new module.ViewSaveHandler(this),
+
 						new module.ViewSelectHandler(this),
 
 						new module.ViewSignInHandler(this),
@@ -431,15 +425,13 @@ var app = app || {};
 
 						new module.ViewSubmitHandler(this),
 
-						new module.ViewSubViewHandler(this)
+						new module.ViewSubViewHandler(this),
+
+						new module.ViewUnSaveHandler(this)
 					
 					].forEach(function(handler) {
 
 						this.registerMutualObserver(handler);
-
-						//this.registerObserver(handler);
-
-						//handler.registerObserver(this);
 
 					}, this);
 
@@ -719,6 +711,7 @@ var app = app || {};
 	* @throws {IllegalArgumentError} If supplied with parameter that is not an instance of IObservable
 	*/
 
+	/*
 	module.Controller.prototype.registerMutualObserver = function(IObservable_o) {
 
 		if (IObservable_o && IObservable_o.isInstanceOf && IObservable_o.isInstanceOf(module.IObservable)) {
@@ -735,6 +728,7 @@ var app = app || {};
 
 		return IObservable_o;
 	}
+	*/
 
 
 	/** Removes mutual observer of Controller.
@@ -746,6 +740,7 @@ var app = app || {};
 	* @throws {IllegalArgumentError} If supplied with parameter that is not an instance of IObservable
 	*/
 
+	/*
 	module.Controller.prototype.removeMutualObserver = function(IObservable_o) {
 
 		if (IObservable_o && IObservable_o.isInstanceOf && IObservable_o.isInstanceOf(module.IObservable)) {
@@ -762,6 +757,7 @@ var app = app || {};
 
 		return IObservable_o;
 	}
+	*/
 
 	/*----------------------------------------------------------------------------------------
 	Mix in default methods from implemented interfaces, unless overridden by class or ancestor

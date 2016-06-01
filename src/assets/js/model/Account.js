@@ -49,21 +49,21 @@ var app = app || {};
 		* Private instance fields (encapsulated data members)
 		*---------------------------------------------------------------------------------------*/
 		
-		var _email,
-		
-		_password,
+			var _email,
+			
+			_password,
 
-		_accountHolder,
+			_accountHolder,
 
-		_events = {},
+			_events = {},
 
-		_localStorageAllowed = false,
+			_localStorageAllowed = false,
 
-		_geoLocationAllowed = false,
+			_geoLocationAllowed = false,
 
-		_defaultCapacity = 50,
+			_defaultCapacity = 50,
 
-		_defaultLocation;
+			_defaultLocation;
 
 		
 		
@@ -569,7 +569,7 @@ var app = app || {};
 				
 				if (Password_p) {this.password(Password_p);}
 
-				if(Person_accountHolder) {void this.accountHolder(Person_accountHolder);}
+				if (Person_accountHolder) {void this.accountHolder(Person_accountHolder);}
 			}
 
 
@@ -688,12 +688,7 @@ var app = app || {};
 			
 				if (Account_a.accountHolder()) {// update account holder with info from submission, if any
 
-					/*
-					if (!this.accountHolder()) { // create accountHolder if none exists
-
-						void this.accountHolder(new app.Person());
-					}
-					*/
+					// this is a bit incoherent with updating the other complex object attributes, but will do for now
 
 					this.accountHolder().update(Account_a.accountHolder(), this.accountHolder().id());
 				}

@@ -228,15 +228,19 @@ var app = app || {}; // create a simple namespace for the module
 
 			SELECT: 4,
 
-			SIGNIN: 5,
+			SAVE: 5,
 
-			SIGNOUT: 6,
+			SIGNIN: 6,
 
-			SUBMIT: 7,
+			SIGNOUT: 7,
 
-			SUBVIEW: 8,
+			SUBMIT: 8,
 
-			TEST: 9
+			SUBVIEW: 9,
+
+			TEST: 10,
+
+			UNSAVE: 10
 		}
 
 

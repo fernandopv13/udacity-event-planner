@@ -126,6 +126,32 @@ var app = app || {}; // create a simple namespace for the module
 	};
 
 
+	/** Registers IObservable as mutual observer. Used e.g. when creating new MVC collaborators.
+	*
+	* @param {IObservable} object The IObservable to register as mutual observer
+	*
+	* @return {Iobservable} object The IObservable passed in, now mutually registered
+	*
+	* @throws {IllegalArgumentError} If supplied with parameter that is not an instance of IObservable
+	*/
+
+	module.IObservable.prototype.default_registerMutualObserver = function(IObservable_o) {
+
+		if (IObservable_o && IObservable_o.isInstanceOf && IObservable_o.isInstanceOf(module.IObservable)) {
+
+			this.registerObserver(IObservable_o);
+
+			IObservable_o.registerObserver(this);
+		}
+
+		else {
+
+			throw new IllegalArgumentError('Expected IObservable');
+		}
+
+		return IObservable_o;
+	}
+
 	/** Registers observer
 	*
 	* @param {IObserver} Object implementing IObserver interface
@@ -191,5 +217,32 @@ var app = app || {}; // create a simple namespace for the module
 
 		return IObserver_o; // remove succesfull
 	};
+
+
+	/** Removes mutual observer
+	*
+	* @param {IObservable} object The IObservable to remove as mutual observer
+	*
+	* @return {Iobservable} object The IObservable passed in, now removed as mutual observer
+	*
+	* @throws {IllegalArgumentError} If supplied with parameter that is not an instance of IObservable
+	*/
+
+	module.IObservable.prototype.default_removeMutualObserver = function(IObservable_o) {
+
+		if (IObservable_o && IObservable_o.isInstanceOf && IObservable_o.isInstanceOf(module.IObservable)) {
+
+			this.removeObserver(IObservable_o);
+
+			IObservable_o.removeObserver(this);
+		}
+
+		else {
+
+			throw new IllegalArgumentError('Expected IObservable');
+		}
+
+		return IObservable_o;
+	}
 
 })(app);
