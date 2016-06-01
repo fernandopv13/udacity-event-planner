@@ -239,9 +239,23 @@ describe('Class SignUpView', function(){
 		});
 
 
+		/*
 		it('displays an optional job title field', function() {
 			
 			var el = $(testElement).find('#sign-up-jobtitle');
+
+			expect(el.length).toBe(1);
+
+			expect(el.attr('type')).toBe('text');
+
+			expect(el.attr('required')).not.toBeDefined();
+
+		});
+		*/
+
+		it('displays an optional location field', function() {
+			
+			var el = $(testElement).find('#sign-up-location');
 
 			expect(el.length).toBe(1);
 

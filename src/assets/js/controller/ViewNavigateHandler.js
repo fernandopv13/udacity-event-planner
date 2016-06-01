@@ -52,6 +52,7 @@ var app = app || {};
 
 	module.ViewNavigateHandler.prototype.constructor = module.ViewNavigateHandler; //Reset constructor property
 
+	module.ViewUpdateHandler.children.push(module.ViewNavigateHandler); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------

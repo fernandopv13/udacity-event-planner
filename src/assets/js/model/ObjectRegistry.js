@@ -211,7 +211,9 @@ var app = app || {}; // create a simple namespace for the app
 
 			this.add = function(obj) {
 				
-				if (obj.constructor === _objectConstructor) {
+				//if (obj.constructor === _objectConstructor) {
+
+				if (obj instanceof _objectConstructor) {
 					
 					if (obj.id && typeof obj.id === 'function' && obj.id() === parseInt(obj.id()) && obj.id() > -1) {
 				

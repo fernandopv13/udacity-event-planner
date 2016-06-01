@@ -406,6 +406,7 @@ var app = app || {};
 				
 				// Register (concrete) ViewUpdateHandlers and controller as mutual observers
 
+					/*
 					[
 						new module.ViewCancelHandler(this),
 
@@ -431,9 +432,11 @@ var app = app || {};
 
 						new module.ViewUnSaveHandler(this)
 					
-					].forEach(function(handler) {
+					]*/
 
-						this.registerMutualObserver(handler);
+					module.ViewUpdateHandler.children.forEach(function(Fn) {
+
+						this.registerMutualObserver(new Fn(this));
 
 					}, this);
 

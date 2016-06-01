@@ -52,6 +52,7 @@ var app = app || {};
 
 	module.ViewCancelHandler.prototype.constructor = module.ViewCancelHandler; //Reset constructor property
 
+	module.ViewUpdateHandler.children.push(module.ViewCancelHandler); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------

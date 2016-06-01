@@ -52,6 +52,7 @@ var app = app || {};
 
 	module.ViewSelectHandler.prototype.constructor = module.ViewSelectHandler; //Reset constructor property
 
+	module.ViewUpdateHandler.children.push(module.ViewSelectHandler); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------

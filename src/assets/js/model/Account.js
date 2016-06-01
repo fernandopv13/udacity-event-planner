@@ -31,18 +31,18 @@ var app = app || {};
 		* Call (chain) parent class constructor
 		*---------------------------------------------------------------------------------------*/
 		
-		// Set temporary literals to be used as defaults by, and replaced with, accessors by parent class constructor.
+			// Set temporary literals to be used as defaults by, and replaced with, accessors by parent class constructor.
 
-		this.className = 'Account';
+			this.className = 'Account';
 
-		this.id = (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) ? arguments[0] : this.constructor.registry.getNextId();
+			this.id = (arguments.length === 1 && parseInt(arguments[0]) === arguments[0]) ? arguments[0] : this.constructor.registry.getNextId();
+				
+			this.ssuper = module.Model;
+
 			
-		this.ssuper = module.Model;
-
-		
-		/** Initialize instance members inherited from parent class */
-		
-		module.Model.call(this);
+			/** Initialize instance members inherited from parent class */
+			
+			module.Model.call(this);
 		
 		
 		/*----------------------------------------------------------------------------------------

@@ -52,6 +52,8 @@ var app = app || {};
 
 	module.ViewSubmitHandler.prototype.constructor = module.ViewSubmitHandler; //Reset constructor property
 
+	module.ViewUpdateHandler.children.push(module.ViewSubmitHandler); // Add to list of derived classes
+
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)

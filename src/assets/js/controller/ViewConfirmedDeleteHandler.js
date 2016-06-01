@@ -52,6 +52,8 @@ var app = app || {};
 
 	module.ViewConfirmedDeleteHandler.prototype.constructor = module.ViewConfirmedDeleteHandler; //Reset constructor property
 
+	module.ViewUpdateHandler.children.push(module.ViewConfirmedDeleteHandler); // Add to list of derived classes
+
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)

@@ -52,6 +52,7 @@ var app = app || {};
 
 	module.ViewSignInHandler.prototype.constructor = module.ViewSignInHandler; //Reset constructor property
 
+	module.ViewUpdateHandler.children.push(module.ViewSignInHandler); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------

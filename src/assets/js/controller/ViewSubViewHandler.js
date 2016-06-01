@@ -52,6 +52,8 @@ var app = app || {};
 
 	module.ViewSubViewHandler.prototype.constructor = module.ViewSubViewHandler; //Reset constructor property
 
+	module.ViewUpdateHandler.children.push(module.ViewSubViewHandler); // Add to list of derived classes
+
 
 	/*----------------------------------------------------------------------------------------
 	* Public instance methods (beyond accessors)

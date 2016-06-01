@@ -52,6 +52,7 @@ var app = app || {};
 
 	module.ViewSaveHandler.prototype.constructor = module.ViewSaveHandler; //Reset constructor property
 
+	module.ViewUpdateHandler.children.push(module.ViewSaveHandler); // Add to list of derived classes
 
 
 	/*----------------------------------------------------------------------------------------
