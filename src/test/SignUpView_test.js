@@ -292,7 +292,9 @@ describe('Class SignUpView', function(){
 
 			testWindow.$('#sign-up-birthday').val('05/22/1970');
 
-			testWindow.$('#sign-up-jobtitle').val('Samurai');
+			//testWindow.$('#sign-up-jobtitle').val('Samurai');
+
+			testWindow.$('#sign-up-location').val('Helsinki');
 
 
 			
@@ -316,7 +318,9 @@ describe('Class SignUpView', function(){
 
 			expect(testAccount.accountHolder().name()).toBe('Nosuko-san');
 
-			expect(testAccount.accountHolder().jobTitle()).toBe('Samurai');
+			//expect(testAccount.accountHolder().jobTitle()).toBe('Samurai');
+
+			expect(testAccount.defaultLocation()).toBe('Helsinki');
 
 			expect(testAccount.accountHolder().birthday().valueOf()).toBe(12175200000);
 		});

@@ -303,8 +303,28 @@ var app = app || {};
 			));
 
 
+		// Add location field
+
+			formElement.appendChild(this.createWidget(
+
+				'TextInputWidget',
+
+				{
+					width:'s12',
+
+					id: 'sign-up-location',
+
+					label: 'Your Location',
+
+					datasource: null,
+
+					required: false
+				}
+			));
+
 		// Add job title field
 
+			/*
 			formElement.appendChild(this.createWidget(
 
 				'TextInputWidget',
@@ -321,6 +341,7 @@ var app = app || {};
 					required: false
 				}
 			));
+			*/
 			
 
 		// Add sign-up button
@@ -472,13 +493,15 @@ var app = app || {};
 
 			void account.password(new module.Password($('#sign-up-password').val()));
 
+			void account.defaultLocation($('#sign-up-location').val());
+
 			void account.accountHolder(new module.Person( // trying to keep it simple; don't scare users away before they have signed up!
 
 				$('#sign-up-name').val(),
 
 				null,
 
-				$('#sign-up-jobtitle').val(),
+				null, //$('#sign-up-jobtitle').val(),
 
 				null,
 

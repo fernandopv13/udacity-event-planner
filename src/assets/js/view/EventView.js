@@ -914,27 +914,15 @@ var app = app || {};
 
 		if (position) {// position is defined
 
-			//new module.FourSquareSearch($(window).width() > 1024 || $(window).height() > 1024 ? 20 : 50).execute(function(venues) { // get venues (max on mobile, fewer in desktop)
-
 			module.prefs.locationSearchProvider().execute(function(venues) { // get venues (max on mobile, fewer in desktop)
 
 				if (venues !== null) { // search succeeded
 
 					var list = [];
 
-					//var $listElmnt = $('#suggested-locations'), optionElmnt;
-
-					//$listElmnt.empty();
-
 					venues.forEach(function(venue) { // build suggest list
 
 						void list.push(venue.name + (venue.location.address ? ' (' + venue.location.address + ')' : ''));
-
-						//optionElmnt = document.createElement('option');
-
-						//optionElmnt.value = venue.name + (venue.location.address ? ' (' + venue.location.address + ')' : '');
-
-						//$listElmnt.append(optionElmnt);
 					})
 
 					module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
