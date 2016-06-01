@@ -379,11 +379,11 @@ var app = app || {};
 
 					for (var prop in _views) {
 
-						//this.registerMutualObserver(_views[prop]);
+						this.registerMutualObserver(_views[prop]);
 
-						this.registerObserver(_views[prop]);
+						//this.registerObserver(_views[prop]);
 
-						_views[prop].registerObserver(module.controller);
+						//_views[prop].registerObserver(module.controller);
 					}
 					
 
@@ -395,11 +395,11 @@ var app = app || {};
 
 						for (var prop in objList) {
 
-							//this.registerMutualObserver(objList[prop]);							
+							this.registerMutualObserver(objList[prop]);							
 
-							this.registerObserver(objList[prop]);
+							//this.registerObserver(objList[prop]);
 
-							objList[prop].registerObserver(this);
+							//objList[prop].registerObserver(this);
 						}
 
 					}.bind(this)); // make sure 'this' references controller correctly within loop
@@ -435,9 +435,11 @@ var app = app || {};
 					
 					].forEach(function(handler) {
 
-						this.registerObserver(handler);
+						this.registerMutualObserver(handler);
 
-						handler.registerObserver(this);
+						//this.registerObserver(handler);
+
+						//handler.registerObserver(this);
 
 					}, this);
 

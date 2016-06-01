@@ -86,9 +86,11 @@ var app = app || {};
 
 			ctrl.newModel(Model_new); // replace with new Model and store for future reference
 
-			ctrl.registerObserver(Model_new); // register new Model and controller as mutual observers
+			//ctrl.registerObserver(Model_new); // register new Model and controller as mutual observers
 
-			Model_new.registerObserver(ctrl);
+			//Model_new.registerObserver(ctrl);
+
+			ctrl.registerMutualObserver(Model_new); // register new Model and controller as mutual observers
 
 			self.notifyObservers(Model_new, View_new); // render/refresh the view in the background
 		}
@@ -138,7 +140,7 @@ var app = app || {};
 
 					Model_n = new module.Account(); // create new Account
 
-					void Model_n.accountHolder(ctrl.registerMutualObserver(new module.Person())); // add account holder
+					void Model_n.accountHolder(ctrl.registerMutualObserver(new module.Person())); // add account holder and set up as mutual observer
 
 					void ctrl.selectedAccount(Model_n); // set new Account as selected
 

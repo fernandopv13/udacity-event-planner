@@ -43,7 +43,7 @@ var app = app || {};
 
 		_observers = [], // Array of IObservers receiving updates from this view, required in order to implement IObservable
 
-		_parentList = [module.IInterfaceable, module.IObserver, module.ViewUpdateHandler], // list of interfaces implemented by this class (by function reference)
+		_parentList = [module.IInterfaceable, module.IObservable, module.IObserver, module.ViewUpdateHandler], // list of interfaces implemented by this class (by function reference)
 
 		_super = (this.ssuper ? this.ssuper : Object), // reference to immediate parent class (by function) if provided by subclass, otherwise Object
 
