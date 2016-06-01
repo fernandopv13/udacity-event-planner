@@ -70,7 +70,7 @@ var app = app || {};
 
 		// Just dispatch a DELETE notification, leaving Controller to take care of the details
 
-		this.notifyObservers(this, this.model(), module.View.UIAction.DELETE);
+		this.notifyObservers(this, this.model(), module.View.UIAction.CONFIRMEDDELETE);
 	};
 
 

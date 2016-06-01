@@ -1,4 +1,4 @@
-//'use strict'; // Not in functions to make it easier to remove by build process (cconfuses jshint so leaving it out for now)
+//'use strict'; // Not in functions to make it easier to remove by build process (confuses jshint so leaving it out for now)
 
 var app = app || {};
 
@@ -408,6 +408,8 @@ var app = app || {};
 
 					[
 						new module.ViewCancelHandler(this),
+
+						new module.ViewConfirmedDeleteHandler(this),
 
 						new module.ViewCreateHandler(this),
 

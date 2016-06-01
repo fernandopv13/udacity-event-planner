@@ -220,27 +220,29 @@ var app = app || {}; // create a simple namespace for the module
 
 			CANCEL: 0,
 
-			CREATE: 1,
+			CONFIRMEDDELETE: 1,
 
-			DELETE: 2,
+			CREATE: 2,
 
-			NAVIGATE: 3,
+			DELETE: 3,
 
-			SELECT: 4,
+			NAVIGATE: 4,
 
-			SAVE: 5,
+			SELECT: 5,
 
-			SIGNIN: 6,
+			SAVE: 6,
 
-			SIGNOUT: 7,
+			SIGNIN: 7,
 
-			SUBMIT: 8,
+			SIGNOUT: 8,
 
-			SUBVIEW: 9,
+			SUBMIT: 9,
 
-			TEST: 10,
+			SUBVIEW: 10,
 
-			UNSAVE: 10
+			TEST: 11,
+
+			UNSAVE: 12
 		}
 
 
