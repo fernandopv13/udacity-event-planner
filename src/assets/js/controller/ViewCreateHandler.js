@@ -204,7 +204,7 @@ var app = app || {};
 
 					void ctrl.selectedGuest(Model_n); // set new person as selected
 
-					initModel(Model_m, Model_n, ctrl.views().guestView); // do boilerplate initialization
+					initModel(Model_m, Model_n, ctrl.views().personView); // do boilerplate initialization
 
 					ctrl.onGuestSelected.call(ctrl, Model_n); // show the view
 				}

@@ -36,7 +36,7 @@ describe('Class PersonView', function(){
 
 			void testApp.controller.selectedAccount(testApp.Account.registry.getObjectById(0));
 
-			testView = testApp.controller.views().guestView;
+			testView = testApp.controller.views().personView;
 
 			testElement = testView.$renderContext();
 

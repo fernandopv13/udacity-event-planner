@@ -53,7 +53,9 @@ var app = app || {}; // create a simple namespace for the module
 
 		var args = arguments;
 
-		//console.log(args.length); // debug
+		//console.log(this);
+
+		//console.log(args); // debug
 
 		switch (args.length) { // can't figure out a more generic approach, so basic manual branching will have to do for now
 

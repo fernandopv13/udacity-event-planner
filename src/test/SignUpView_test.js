@@ -346,9 +346,9 @@ describe('Class SignUpView', function(){
 
 			setTimeout(function(){ // wait for modal to render/animate in
 
-				expect(testWindow.$('#modal-view').css('display')).toBe('block');
+				expect(testWindow.$('#first-time-setup-view').css('display')).toBe('block');
 
-				expect(testWindow.$('#modal-view').find('h4').text()).toBe('First Time Setup');
+				expect(testWindow.$('#first-time-setup-view').find('h4').text()).toBe('First Time Setup');
 
 				done();
 

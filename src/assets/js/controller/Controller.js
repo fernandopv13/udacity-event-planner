@@ -289,7 +289,7 @@ var app = app || {};
 
 				void this.selectedGuest(Person_g);
 				
-				this.currentView(_views.guestView, this.selectedGuest(Person_g));
+				this.currentView(_views.personView, this.selectedGuest(Person_g));
 			};
 
 
@@ -383,7 +383,7 @@ var app = app || {};
 				*/
 					
 
-				// Initialize views
+				// Views
 
 					var heading, id, view;
 
@@ -424,7 +424,7 @@ var app = app || {};
 
 						// Register view and controller as mutual observers
 
-						this.registerMutualObserver(view);
+						void this.registerMutualObserver(view);
 
 					}.bind(this));
 
@@ -440,7 +440,9 @@ var app = app || {};
 					void _views.personView.heading('Edit Guest');
 
 				
-				// Register models and controller as mutual observers
+				// Models
+
+					// Register Models that are matched by FormViews as mutual observers
 
 					[module.Account, module.Event, module.Organization, module.Person].forEach(function(klass){
 
@@ -451,45 +453,12 @@ var app = app || {};
 							this.registerMutualObserver(objList[prop]);
 						}
 
-					}.bind(this)); // make sure 'this' references controller correctly within loop
-
-
-				// Set up a Router to manage the browser's history
-
-					_router = new module.Router();
-
-					window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
-
+					}.bind(this));
 				
-				// Initialize concrete ViewUpdateHandlers (register as mutual observers)
+				
+				// ViewUpdateHandlers
 
-					/*
-					[
-						new module.ViewCancelHandler(this),
-
-						new module.ViewConfirmedDeleteHandler(this),
-
-						new module.ViewCreateHandler(this),
-
-						new module.ViewDeleteHandler(this),
-
-						new module.ViewNavigateHandler(this),
-
-						new module.ViewSaveHandler(this),
-
-						new module.ViewSelectHandler(this),
-
-						new module.ViewSignInHandler(this),
-
-						new module.ViewSignOutHandler(this),
-
-						new module.ViewSubmitHandler(this),
-
-						new module.ViewSubViewHandler(this),
-
-						new module.ViewUnSaveHandler(this)
-					
-					]*/
+					// Register concrete handlers as mutual observers
 
 					module.ViewUpdateHandler.children.forEach(function(Fn) {
 
@@ -498,7 +467,18 @@ var app = app || {};
 					}, this);
 
 
-				// Bootstrap UI by loading the front page
+				// Router
+
+					// Manages the browser's history
+
+					_router = new module.Router();
+
+					window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
+
+
+				// UI
+
+					// Bootstrap UI by loading the front page
 
 					_views.frontPageView.render();
 
