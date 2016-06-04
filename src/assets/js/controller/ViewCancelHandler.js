@@ -85,6 +85,8 @@ var app = app || {};
 
 		else {
 
+			//console.log('Taking a step back...'); // debug
+
 			window.history.back();
 		}
 	};

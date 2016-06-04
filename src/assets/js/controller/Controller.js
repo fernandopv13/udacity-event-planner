@@ -111,7 +111,7 @@ var app = app || {};
 			*
 			* @param {Model} m the Model we want displayed in the new current view, or null
 			*
-			* @param {Function} done Callback to run when view change has completed (optional)
+			* @param {Object} options JSON object passing on options to the View's show() method
 			*
 			* @return {View} The current view, or null
 			*
@@ -120,7 +120,7 @@ var app = app || {};
 			* @todo Find more robust solution for first time setup modal workaround
 			*/
 			
-			this.currentView = function (View_v, Model_m, fn_done) {
+			this.currentView = function (View_v, Model_m, obj_options) {
 			
 				if (arguments.length > 0) { // setting
 
@@ -128,13 +128,19 @@ var app = app || {};
 
 						//console.log('Setting current view to ' + View_v.className()); // debug
 
-						if (View_v && View_v.isInstanceOf(module.ModalView)) { // show modal
+						obj_options = obj_options || {};
 
-							View_v.show({duration: 'fast'});
+						if (View_v && View_v.isInstanceOf(module.ModalView)) { // show modal; do not add to browser history
+
+							obj_options.duration = obj_options.duration || 'fast';
+
+							View_v.render();
+
+							View_v.show(obj_options);
 						}
 
 						else { // show main view
-
+						
 							for (var view in _views) {  // hide all (other) views
 
 								if (!_views[view].isInstanceOf(module.ModalView)) { // workaround to ensure that first time setup modal does not get unintentionally hidden
@@ -145,13 +151,10 @@ var app = app || {};
 
 							_currentView = View_v; // set current view
 
-							_currentView.show( // show current view
-							{
-								duration: 'slow',
+							obj_options.duration = obj_options.duration || 'slow'; // set defaults
 
-								done: fn_done
-							});
-
+							_currentView.show(obj_options); // show current view
+							
 							_router.onViewChange(View_v); // update browser history
 						}
 					}
@@ -407,7 +410,9 @@ var app = app || {};
 
 					_views.frontPageView.render();
 
-					_views.frontPageView.show();
+					void this.currentView(_views.frontPageView, null);
+
+					//_views.frontPageView.show();
 			};
 
 			

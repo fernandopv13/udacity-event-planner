@@ -222,6 +222,21 @@ var app = app || {};
 			ready: obj_options && obj_options.done ? obj_options.done : null, // Callback for Modal open
 
 			complete: obj_options && obj_options.complete ? obj_options.complete : null // Callback for Modal close
+
+			/*complete: function(obj_options) {
+
+				if (history.state === null) { // clean up redundant history entry somehow created when closing leanModal
+
+					console.log('popping redundant null entry');
+
+					history.back();
+				}
+
+				if (obj_options.complete) {
+
+					obj_options.complete();
+				}
+			}*/
 		});
 	}
 

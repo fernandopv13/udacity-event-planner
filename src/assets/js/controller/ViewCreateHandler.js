@@ -158,14 +158,14 @@ var app = app || {};
 					var modal = module.controller.views().firstTimeSetupView; // get reference to generic, multi-purpose popup (modal)
 
 					ctrl.onAccountSelected.call(ctrl, Model_n, // set account and show default View
-
-						function(){ // show first time setup modal when default View has rendered
+					{
+						done: function(){ // show first time setup modal when default View has rendered
 					
 							void modal.model(ctrl.selectedAccount());
 
 							modal.render();
 							
-							modal.show(
+							modal.show( // save preferences set in modal to account, give user feedback on app state
 							{
 								complete: function(nEvent) { // respond to user 'OK'ing' modal
 
@@ -173,17 +173,21 @@ var app = app || {};
 
 										var $modal = $(nEvent.currentTarget.parentNode.parentNode), 
 
-										Model_m = new module.Account(),
+										//Model_m = new module.Account(),
 
-										localStorageAllowed = $modal.find('#setup-localstorage').prop('checked');
+										localStorageAllowed = ctrl.selectedAccount().localStorageAllowed($modal.find('#setup-localstorage').prop('checked'));
 
-										void Model_m.localStorageAllowed(localStorageAllowed);
+										//void Model_m.localStorageAllowed(localStorageAllowed);
 
-										void Model_m.geoLocationAllowed($modal.find('#setup-geolocation').prop('checked'));
+										// set account attributes directly to avoid undesired side effects (e.g. ViewSubmitHandler causes back nav)
 
-										this.submit(Model_m, module.View.UIAction.SUBMIT); // update account with data entered in popup
+										void ctrl.selectedAccount().geoLocationAllowed($modal.find('#setup-geolocation').prop('checked'));
 
-										ctrl.currentView().show(5); // re-display: Model update triggers View update which causes View to hide by default
+										//void Model_m.geoLocationAllowed($modal.find('#setup-geolocation').prop('checked'));
+
+										//this.submit(Model_m, module.View.UIAction.SUBMIT); // update account with data entered in popup
+
+										//ctrl.currentView().show(5); // re-display: update causes View under popup to hide
 
 										if (localStorageAllowed && window.localStorage) {
 
@@ -202,7 +206,7 @@ var app = app || {};
 								}
 							})
 						}
-					)
+					})
 				}
 
 				break;

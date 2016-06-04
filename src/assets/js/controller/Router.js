@@ -41,52 +41,61 @@ var app = app || {};
 
 	module.Router.prototype.onPopState = function(PopStateEvent_e) {
 
-		if (typeof PopStateEvent_e !== 'undefined' && PopStateEvent_e !== null ) { // ignore state if undefined/null (several causes, none of which important, e.g. closing popup)
+		console.log(PopStateEvent_e);
 
-			if (PopStateEvent_e.state && PopStateEvent_e.state.className) { // we're still in the app
+		if (PopStateEvent_e.state === null) { // ignore redudant calls from closing ModalViews
 
-				var className = PopStateEvent_e.state.className,
+			console.log('ignoring redundant null request');
 
-				id = parseInt(PopStateEvent_e.state.id);
+			if (history.state === null) { // clean out redunant null entries in browser history
 
-				console.log('popping ' + className); // debug
+				console.log('removing redundant null entry');
 
-				//if (className === )
-
-				switch (className) { // use the MVC protocol to simulate an update from a view
-
-					case 'EventListView':
-
-						module.controller.update(new module.EventListView(), module.Account.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
-
-						break;
-
-					case 'EventView':
-
-						module.controller.update(new module.EventView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
-
-						break;
-
-					case 'GuestListView':
-
-						module.controller.update(new module.GuestListView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
-
-						break;
-
-					case 'PersonView':
-
-						module.controller.update(new module.PersonView(), module.Person.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
-
-						break;
-
-					default: // includes AccountProfileView and AccountSettingsView
-
-						module.controller.update(new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, module.View.UIAction.NAVIGATE);
-				}
+				history.back();
 			}
+
+			//throw new IllegalArgumentError('Cannot navigate to ' + PopStateEvent_e.state);
 		}
 
-		// else: users is about to back out of the app
+		else { // navigate to requested View
+
+			var className = PopStateEvent_e.state.className,
+
+			id = parseInt(PopStateEvent_e.state.id);
+
+			console.log('popping ' + className); // debug
+
+			switch (className) { // use the MVC protocol to simulate an update from a view
+
+				case 'EventListView':
+
+					module.controller.update(new module.EventListView(), module.Account.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
+
+					break;
+
+				case 'EventView':
+
+					module.controller.update(new module.EventView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
+
+					break;
+
+				case 'GuestListView':
+
+					module.controller.update(new module.GuestListView(), module.Event.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
+
+					break;
+
+				case 'PersonView':
+
+					module.controller.update(new module.PersonView(), module.Person.registry.getObjectById(id), module.View.UIAction.NAVIGATE);
+
+					break;
+
+				default: // includes AccountProfileView and AccountSettingsView
+
+					module.controller.update(new app[className](), app[className].registry ? app[className].registry.getObjectById(id): null, module.View.UIAction.NAVIGATE);
+			}
+		}
 	}
 
 
@@ -106,7 +115,7 @@ var app = app || {};
 
 				if (!history.state || history.state.className !== className) { // don't set state if navigating back
 
-					console.log('pushing ' + className); // debug
+					//console.log('pushing ' + className); // debug
 
 					history.pushState( // state object
 					{
@@ -123,6 +132,8 @@ var app = app || {};
 
 						+ '?id=' + id // add model object id
 					);
+
+					console.log('pushed ' + history.state.className);
 				}
 			}
 
