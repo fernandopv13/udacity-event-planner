@@ -165,7 +165,42 @@ var app = app || {};
 
 							modal.render();
 							
-							modal.show();
+							modal.show(
+							{
+								complete: function(nEvent) { // respond to user 'OK'ing' modal
+
+									if (nEvent && nEvent.currentTarget.id === 'modal-ok') { // user selected 'OK' button in modal
+
+										var $modal = $(nEvent.currentTarget.parentNode.parentNode), 
+
+										Model_m = new module.Account(),
+
+										localStorageAllowed = $modal.find('#setup-localstorage').prop('checked');
+
+										void Model_m.localStorageAllowed(localStorageAllowed);
+
+										void Model_m.geoLocationAllowed($modal.find('#setup-geolocation').prop('checked'));
+
+										this.submit(Model_m, module.View.UIAction.SUBMIT); // update account with data entered in popup
+
+										ctrl.currentView().show(5); // re-display: Model update triggers View update which causes View to hide by default
+
+										if (localStorageAllowed && window.localStorage) {
+
+											app.registry.writeObject(); // save all app data, incl. registries, to local storage
+
+											// on first login, registries have not yet been stored, and so later retrieval may fail unless done here
+
+											Materialize.toast('Success, your account is ready for you to enjoy.', module.prefs.defaultToastDelay());
+										}
+
+										else {
+
+											Materialize.toast('In demo mode. Everything works but you will loose your data when leaving the app (go to Account Settings to change this).', 3 * module.prefs.defaultToastDelay());
+										}
+									}
+								}
+							})
 						}
 					)
 				}

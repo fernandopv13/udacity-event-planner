@@ -80,7 +80,7 @@
 				<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
 		<!-- endbuild -->
 			
-		<!-- build:js assets/js/app.js --><!-- JavaScript app source files (source order matters) -->
+		<!-- build:js assets/js/app.js --><!-- JavaScript app source files (in required source order) -->
 			
 			<!-- Utils, polyfills and generic interfaces -->
 				<script src="assets/js/util/Accessor.js"></script>
@@ -178,13 +178,8 @@
 				window.onload = function() { // $(document).ready()) may fire too early, so going old school
 					
 					app.init($('#container')[0]);
-					
-					/* DEPRECATED: For use when loading demo data
-					app.prefs.isLocalStorageAllowed(true);
-					localStorage.clear();
-					app.registry.writeObject();
-					*/
 				};
+
 			</script>
 			
 			<noscript>

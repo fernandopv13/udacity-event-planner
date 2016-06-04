@@ -143,7 +143,9 @@ var app = app || {};
 
 				ctrl.recentDeleted = true;
 
-				window.history.go(module.device().isiOS() && module.device().isSafari() ? -2 : -1); // navigate back to guest list (working around strange iOS Safari bug)
+				window.history.back();
+
+				//window.history.go(module.device().isiOS() ? -2 : -1); // navigate back to guest list (working around strange iOS Safari/Chrome bug)
 
 				Materialize.toast('Guest was removed from event', module.prefs.defaultToastDelay());
 
