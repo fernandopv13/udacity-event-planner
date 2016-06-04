@@ -308,95 +308,20 @@ var app = app || {};
 
 			this.init = function(HTMLElement_renderContext) {
 
-				/*DEPRECATED
-				// Add divs for views to render context
-
-					var ids = ['account-profile-view', 'account-settings-view', 'event-list-view', 'event-view', 'front-page-view', 'guest-list-view', 'guest-view', 'sign-in-view', 'sign-up-view'],
-
-					createElement = app.HTMLElement.instance().createProduct;
-
-					ids.forEach(function(id) {
-
-						$(HTMLElement_renderContext).append(createElement(
-						{
-							element: 'div',
-
-							attributes:
-							{
-								id: id,
-
-								'aria-hidden': true
-							},
-
-							classList: ['row', 'hidden']
-						}));
-					});
-
-					$(HTMLElement_renderContext).append(createElement(
-					{
-						element: 'div',
-
-						attributes: {id: 'modal-view'},
-
-						classList: ['modal']
-					}));
-				
-				// Create views
-
-					_views =
-					{
-						accountSettingsView: new module.AccountSettingsView('account-settings-view', 'Account Settings'), // account settings form (email, password and prefs)
-
-						accountProfileView: new module.AccountProfileView('account-profile-view', 'Account Profile'), // account holder profile
-
-						eventListView: new module.EventListView('event-list-view', 'My Events'), // event list
-
-						eventView: new module.EventView('event-view', 'Edit Event'), // event form
-
-						frontPageView: new module.FrontPageView('front-page-view', 'Welcome to Meetup Planner'), // front page view
-
-						guestListView: new module.GuestListView('guest-list-view', 'Guest List'), // guest list
-
-						guestView: new module.PersonView('guest-view', 'Edit Guest'), // guest form
-
-						signInView: new module.SignInView('sign-in-view', 'Sign In'), // sign in view
-
-						signUpView: new module.SignUpView('sign-up-view', 'Sign Up'), // sign in view
-
-						modalView: new module.ModalView('modal-view', '[Untitled]'), // generic modal popup
-
-						aboutView: new module.AboutView('modal-view'), // 'About' modal popup
-
-						confirmDeletionView: new module.ConfirmDeletionView('modal-view'), // 'Confirm Delete' modal popup
-
-						firstTimeSetupView: new module.FirstTimeSetupView('modal-view'), // 'Sign Out' modal popup
-
-						signOutView: new module.SignOutView('modal-view') // 'Sign Out' modal popup
-					}
-
-				// Register views and controller as mutual observers
-
-					for (var prop in _views) {
-
-						this.registerMutualObserver(_views[prop]);
-					}
-				*/
-					
-
 				// Views
 
 					var heading, id, view;
 
 					module.View.children.forEach(function(Fn) { // run through list of concrete View classes
 
-						// Create view and add to collection
+						// Create view object and add to collection
 
 						view = new Fn();
 
 						_views[view.className().charAt(0).toLowerCase() + view.className().slice(1)] = view; // convert first letter to lower case
 
 						
-						// Generate div
+						// Add div to render context
 
 						id = view.className().replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase(); // convert camel case to hyphenated lower case
 
@@ -429,7 +354,7 @@ var app = app || {};
 					}.bind(this));
 
 
-					// Change some generic defaults
+					// Override some generic defaults
 
 					void _views.eventView.heading('Edit Event');
 
@@ -742,64 +667,7 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Registers IObservable as mutual observer of Controller.
-	*
-	* Used at app initialization, and whenever IObservable is created, e.g. a new Model
-	*
-	* @param {IObservable} object The IObservable to register as mutual observer of controller
-	*
-	* @return {Iobservable} object The IObservable passed in, now properly registered
-	*
-	* @throws {IllegalArgumentError} If supplied with parameter that is not an instance of IObservable
-	*/
-
-	/*
-	module.Controller.prototype.registerMutualObserver = function(IObservable_o) {
-
-		if (IObservable_o && IObservable_o.isInstanceOf && IObservable_o.isInstanceOf(module.IObservable)) {
-
-			this.registerObserver(IObservable_o);
-
-			IObservable_o.registerObserver(this);
-		}
-
-		else {
-
-			throw new IllegalArgumentError('Expected IObservable');
-		}
-
-		return IObservable_o;
-	}
-	*/
-
-
-	/** Removes mutual observer of Controller.
-	*
-	* @param {IObservable} object The IObservable to remove as mutual observer of controller
-	*
-	* @return {Iobservable} object The IObservable passed in, now removed as mutual observer
-	*
-	* @throws {IllegalArgumentError} If supplied with parameter that is not an instance of IObservable
-	*/
-
-	/*
-	module.Controller.prototype.removeMutualObserver = function(IObservable_o) {
-
-		if (IObservable_o && IObservable_o.isInstanceOf && IObservable_o.isInstanceOf(module.IObservable)) {
-
-			this.removeObserver(IObservable_o);
-
-			IObservable_o.removeObserver(this);
-		}
-
-		else {
-
-			throw new IllegalArgumentError('Expected IObservable');
-		}
-
-		return IObservable_o;
-	}
-	*/
+	// none so far
 
 	/*----------------------------------------------------------------------------------------
 	Mix in default methods from implemented interfaces, unless overridden by class or ancestor

@@ -72,7 +72,7 @@
 		
 		<!-- App source files -->
 			
-			<!-- Utils and interfaces-->
+			<!-- Utils, polyfills and interfaces-->
 				
 				<script src="../assets/js/util/Accessor.js"></script>
 				<script src="../assets/js//util/Device.js"></script>
@@ -83,6 +83,8 @@
 				<script src="../assets/js/observer/IObservable.js"></script>
 				<script src="../assets/js/observer/IObserver.js"></script>
 				<script src="../assets/js/model/ISerializable.js"></script>
+				
+				<script src="../assets/js/util/FoursquareSearch.js"></script>
 			
 			<!-- UI widgets -->
 			
@@ -138,9 +140,7 @@
 				<script src="../assets/js/view/ConfirmDeletionView.js"></script>
 				<script src="../assets/js/view/FirstTimeSetupView.js"></script>
 				<script src="../assets/js/view/SignOutView.js"></script>
-			
-			<script src="../assets/js/util/FoursquareSearch.js"></script>
-			
+				
 			<!-- MVC Controller and its delegates -->
 
 				<script src="../assets/js/controller/Router.js"></script>
@@ -165,100 +165,101 @@
 			
 		<!-- Jasmine.js (unit) test suites -->
 			
-			<script src="util/TestObserver.js"></script>
-			<script src="util/TestModel.js"></script>
-			<script src="util/TestView.js"></script>
-			<script src="util/testdata.js"></script>
-			<script src="util/testutils.js"></script>
-			<script>
-				app.testutil.testTarget = '../index.html'; // test on development version of app
-				//app.testutil.testTarget = '../../build/index.html'; // test on production version of app
-			</script>
-			<script src="Device_test.js"></script>
-			<script src="Storage_test.js"></script>
+			<!-- Utils, polyfills and interfaces -->
+				<script src="util/TestObserver.js"></script>
+				<script src="util/TestModel.js"></script>
+				<script src="util/TestView.js"></script>
+				<script src="util/testdata.js"></script>
+				<script src="util/testutils.js"></script>
+				<script>
+					app.testutil.testTarget = '../index.html'; // test on development version of app
+					//app.testutil.testTarget = '../../build/index.html'; // test on production version of app
+				</script>
+				<script src="Device_test.js"></script>
+				<script src="Storage_test.js"></script>
 
-			<script src="IInterfaceable_test.js"></script>
-			<script src="IHost_test.js"></script>
-			<script src="IObserver_test.js"></script>
-			<script src="IObservable_test.js"></script>
-			<script src="ISerializable_test.js"></script>
-			<script src="ObjectRegistry_test.js"></script>
-			<script src="Accessor_test.js"></script>
+				<script src="IInterfaceable_test.js"></script>
+				<script src="IHost_test.js"></script>
+				<script src="IObserver_test.js"></script>
+				<script src="IObservable_test.js"></script>
+				<script src="ISerializable_test.js"></script>
+				<script src="ObjectRegistry_test.js"></script>
+				<script src="Accessor_test.js"></script>
+				<script src="FourSquareSearch_test.js"></script>
 
-			<script src="Product_test.js"></script>
-			<script src="Factory_test.js"></script>
-			<script src="UIWidget_test.js"></script>
-			<script src="HTMLElement_test.js"></script>
-			<script src="InputWidget_test.js"></script>
-			<script src="DateInputWidget_test.js"></script>
-			<script src="EmailInputWidget_test.js"></script>
-			<script src="NumberInputWidget_test.js"></script>
-			<script src="PasswordInputWidget_test.js"></script>
-			<script src="PasswordConfirmationInputWidget_test.js"></script>
-			<script src="SwitchInputWidget_test.js"></script>
-			<script src="TextInputWidget_test.js"></script>
-			<script src="InputDescriptionWidget_test.js"></script>
-			<script src="ButtonWidget_test.js"></script>
-			<script src="CancelButtonWidget_test.js"></script>
-			<script src="SubmitButtonWidget_test.js"></script>
-			<script src="FloatingActionButtonWidget_test.js"></script>
-			<script src="NavigationWidget_test.js"></script>
-			<script src="FormWidget_test.js"></script>
-			<script src="UIWidgetFactory_test.js"></script>
+			<!-- UIWidgets -->
+				<script src="Product_test.js"></script>
+				<script src="Factory_test.js"></script>
+				<script src="UIWidget_test.js"></script>
+				<script src="HTMLElement_test.js"></script>
+				<script src="InputWidget_test.js"></script>
+				<script src="DateInputWidget_test.js"></script>
+				<script src="EmailInputWidget_test.js"></script>
+				<script src="NumberInputWidget_test.js"></script>
+				<script src="PasswordInputWidget_test.js"></script>
+				<script src="PasswordConfirmationInputWidget_test.js"></script>
+				<script src="SwitchInputWidget_test.js"></script>
+				<script src="TextInputWidget_test.js"></script>
+				<script src="InputDescriptionWidget_test.js"></script>
+				<script src="ButtonWidget_test.js"></script>
+				<script src="CancelButtonWidget_test.js"></script>
+				<script src="SubmitButtonWidget_test.js"></script>
+				<script src="FloatingActionButtonWidget_test.js"></script>
+				<script src="NavigationWidget_test.js"></script>
+				<script src="FormWidget_test.js"></script>
+				<script src="UIWidgetFactory_test.js"></script>
 			
-			<script src="Model_test.js"></script>
-			<script src="util/Email_tests.js"></script>
-			<script src="Email_test.js"></script>
-			<script src="Password_test.js"></script>
-			<script src="Organization_test.js"></script>
-			<script src="Person_test.js"></script>
-			<script src="Account_test.js"></script>
-			<script src="Event_test.js"></script>
+			<!-- MVC Models -->
+				<script src="Model_test.js"></script>
+				<script src="util/Email_tests.js"></script>
+				<script src="Email_test.js"></script>
+				<script src="Password_test.js"></script>
+				<script src="Organization_test.js"></script>
+				<script src="Person_test.js"></script>
+				<script src="Account_test.js"></script>
+				<script src="Event_test.js"></script>
 
+			<!-- MVC abstract Views -->
+				<script src="View_test.js"></script>
+				<script src="FormView_test.js"></script>
+				<script src="ListView_test.js"></script>
+				<script src="ModalView_test.js"></script>
 			
-			<!-- Abstract Views -->
-			<script src="View_test.js"></script>
-			<script src="FormView_test.js"></script>
-			<script src="ListView_test.js"></script>
-			<script src="ModalView_test.js"></script>
+			<!-- MVC concrete Views -->
+				<script src="AboutView_test.js"></script>
+				<script src="ConfirmDeletionView_test.js"></script>
+				<script src="FirstTimeSetupView_test.js"></script>
+				<script src="SignOutView_test.js"></script>
+				<script src="FrontPageView_test.js"></script>
+				<script src="SignUpView_test.js"></script>
+				<script src="SignInView_test.js"></script>
+				<script src="EventListView_test.js"></script>
+				<script src="EventView_test.js"></script>
+				<script src="GuestListView_test.js"></script>
+				<script src="PersonView_test.js"></script>
+				<script src="AccountProfileView_test.js"></script>
+				<script src="AccountSettingsView_test.js"></script>
+				<script src="Navigation_test.js"></script>
+				<!--
+				-->
 			
-			
-			<!-- Concrete Views -->
-			<script src="AboutView_test.js"></script>
-			<script src="ConfirmDeletionView_test.js"></script>
-			<script src="FirstTimeSetupView_test.js"></script>
-			<script src="SignOutView_test.js"></script>
-			<script src="FrontPageView_test.js"></script>
-			<script src="SignUpView_test.js"></script>
-			<script src="SignInView_test.js"></script>
-			<script src="EventListView_test.js"></script>
-			<script src="EventView_test.js"></script>
-			<script src="GuestListView_test.js"></script>
-			<script src="PersonView_test.js"></script>
-			<script src="AccountProfileView_test.js"></script>
-			<script src="AccountSettingsView_test.js"></script>
-			<script src="Navigation_test.js"></script>
-			<!--
-			
-			-->
-			
-			<!-- TODO:
-			<script src="ViewCancelHandler_test.js"></script>
-			<script src="ViewCreateHandler_test.js"></script>
-			<script src="ViewUpdateHandler_test.js"></script>
-			<script src="ViewDeleteHandler_test.js"></script>
-			<script src="ViewNavigateHandler_test.js"></script>
-			<script src="ViewSaveHandler_test.js"></script>
-			<script src="ViewSelectHandler_test.js"></script>
-			<script src="ViewSignInHandler_test.js"></script>
-			<script src="ViewSignOutHandler_test.js"></script>
-			<script src="ViewSubmitHandler_test.js"></script>
-			-->
-			<!--script src="FourSquareSearch_test.js"></script--> <!-- Don't hit FS unnecessarily while developing other test suites-->
-			<!--
-			<script src="Router_test.js"></script>
-			<script src="Controller_test.js"></script>
-			-->
+			<!-- MVC Controller and its delegates -->
+				<!-- TODO:
+				<script src="ViewCancelHandler_test.js"></script>
+				<script src="ViewCreateHandler_test.js"></script>
+				<script src="ViewUpdateHandler_test.js"></script>
+				<script src="ViewDeleteHandler_test.js"></script>
+				<script src="ViewNavigateHandler_test.js"></script>
+				<script src="ViewSaveHandler_test.js"></script>
+				<script src="ViewSelectHandler_test.js"></script>
+				<script src="ViewSignInHandler_test.js"></script>
+				<script src="ViewSignOutHandler_test.js"></script>
+				<script src="ViewSubmitHandler_test.js"></script>
+				-->
+				<!--
+				<script src="Router_test.js"></script>
+				<script src="Controller_test.js"></script>
+				-->
 		
 
 	</body>

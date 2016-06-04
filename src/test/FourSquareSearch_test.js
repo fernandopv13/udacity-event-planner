@@ -33,7 +33,7 @@ describe('Class FourSquareSearch', function(){
 		
 	describe('FourSquareSearch instance', function() {
 		
-		var testSearch, testResults, detailedVenue;
+		var testSearch, testResults, location, detailedVenue;
 		
 		beforeEach(function(done) {
 			
@@ -43,7 +43,16 @@ describe('Class FourSquareSearch', function(){
 			*  app functionality with our mocks, if already defined.
 			*/
 			
-			app.defaultLocation = app.defaultLocation || {lat: function() {return 55.668228},lng: function() {return 12.5525604}};
+			location =
+			{
+				coords:
+				{
+
+					latitude: 55.668228,
+
+					longitude: 12.5525604
+				}
+			};
 		
 			//app.GoogleMapMarker = app.GoogleMapMarker || function() {return {};};
 			
@@ -67,7 +76,8 @@ describe('Class FourSquareSearch', function(){
 					testResults = results;
 					
 					done();
-				});
+
+				}, location);
 			}
 			
 			else if (!detailedVenue) {
