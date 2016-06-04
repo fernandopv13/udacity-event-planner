@@ -144,13 +144,24 @@ var app = app || {};
 			outerDiv.appendChild(innerDiv);
 
 
+			var value = options.datasource ?
+			(
+				options.dateonly ? 
+
+				options.datasource.toISOString().split('T')[0] : // plain date doesn't like seconds (iOS)
+
+				options.datasource.toISOString().replace('Z', '') // datetime-local doesn't like trailing Z
+
+			) : '';
+
+			
 			var attributes = 
 			{
 				type: app.device().isiOS() && options.dateonly ? 'date' : 'datetime-local', // using native widgets on iOS, the base date picker is more usable for e.g. birthdays
 				
 				id: options.id,
 				
-				value: options.datasource ? options.datasource.toISOString().replace('Z', '') : '',
+				value: value, //options.datasource ? options.datasource.toISOString().replace('Z', '') : '',
 
 				//readonly: true,
 
@@ -159,6 +170,7 @@ var app = app || {};
 				role: 'textbox'
 			}
 
+			
 			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
 
 			
@@ -166,7 +178,7 @@ var app = app || {};
 
 			if(options.required) {classList.push('validate');}
 
-			var dataset = {value: options.datasource ? options.datasource.toISOString().replace('Z', '') : ''};
+			var dataset = {value: value};
 
 			dataset.customValidator = options.validator ? options.validator : 'DateInputWidget.prototype.validate';
 
