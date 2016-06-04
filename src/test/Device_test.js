@@ -102,6 +102,25 @@ describe('Class Device', function(){
 		});
 
 
+		it('can tell if device runs Linux', function() {
+			
+			expect(testDevice.isLinux()).toBeDefined();
+		});
+
+
+		
+		it('can tell if device runs MacOS', function() {
+			
+			expect(testDevice.isMacOS()).toBeDefined();
+		});
+
+		
+		it('can tell if device runs Windows', function() {
+			
+			expect(testDevice.isWindows()).toBeDefined();
+		});
+		
+		
 		it('can tell if browser is Google Chrome', function() {
 			
 			expect(testDevice.isChrome()).toBeDefined();

@@ -13,7 +13,7 @@ var app = app || {}; // Create a simple namespace for the app
 	*
 	* @constructor
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 	module.Device = function() { // Constructor
@@ -65,22 +65,6 @@ var app = app || {}; // Create a simple namespace for the app
 	*---------------------------------------------------------------------------------------*/
 
 	/**
-	* Gets whether browser is Safari or not
-	*
-	* @return {Boolean} true if browser is Safari, otherwise false
-	*/
-	
-	module.Device.prototype.isSafari = function() {
-
-		return /safari/i.test(navigator.userAgent.toLowerCase())
-
-				&& !/chrome/i.test(navigator.userAgent.toLowerCase()) // chrome also reports as Safari
-
-				&& !/crios/i.test(navigator.userAgent.toLowerCase());
-	}
-
-
-	/**
 	* Gets whether device runs Android or not
 	*
 	* @return {Boolean} true if device runs Android, otherwise false
@@ -128,6 +112,30 @@ var app = app || {}; // Create a simple namespace for the app
 	};
 
 
+	/**
+	* Gets whether device runs Linux or not
+	*
+	* @return {Boolean} true if device runs Linux, otherwise false
+	*/
+	
+	module.Device.prototype.isLinux = function() {
+
+		return navigator.platform.toLowerCase().indexOf('linux') !== -1;
+	}
+
+
+	/**
+	* Gets whether device runs MacOS or not
+	*
+	* @return {Boolean} true if device runs MacOS, otherwise false
+	*/
+	
+	module.Device.prototype.isMacOS = function() {
+
+		return navigator.platform.toLowerCase().indexOf('mac') !== -1;
+	}
+
+
 	/** Gets whether device is mobile (phone or tablet) or not
 	*
 	* @return {Boolean} true if mobile, else false
@@ -169,6 +177,68 @@ var app = app || {}; // Create a simple namespace for the app
 	module.Device.prototype.isPortrait = function () {
 		
 		return this.orientation() === 'portrait';
+	};
+
+
+	/**
+	* Gets whether browser is Safari or not
+	*
+	* @return {Boolean} true if browser is Safari, otherwise false
+	*/
+	
+	module.Device.prototype.isSafari = function() {
+
+		return /safari/i.test(navigator.userAgent.toLowerCase())
+
+				&& !/chrome/i.test(navigator.userAgent.toLowerCase()) // chrome also reports as Safari
+
+				&& !/crios/i.test(navigator.userAgent.toLowerCase());
+	}
+
+
+	/**
+	* Gets whether device runs Windows or not
+	*
+	* @return {Boolean} true if device runs Windows, otherwise false
+	*/
+	
+	module.Device.prototype.isWindows = function() {
+
+		return navigator.platform.toLowerCase().indexOf('win') !== -1;
+	}
+
+
+	/** Converts Device to JSON. Mostly needed to ease debugging on non-desktops (less typing).
+	*
+	* @return {Object} JSON object literal representation of Device's internal state
+	*/
+	
+	module.Device.prototype.toJSON = function () {
+		
+		return {
+
+			android: this.isAndroid(),
+
+			chrome: this.isChrome(),
+
+			iOS: this.isiOS(),
+
+			landscape: this.isLandscape(),
+
+			linux: this.isLinux(),
+
+			mac: this.isMacOS(),
+
+			mobile: this.isMobile(),
+
+			orientation: this.orientation(),
+
+			portrait: this.isPortrait(),
+
+			safari: this.isSafari(),
+
+			windows: this.isWindows()
+		}
 	};
 
 })(app);
