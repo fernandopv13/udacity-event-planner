@@ -179,7 +179,7 @@ var app = app || {};
 		{
 			//dismissible: false, // prevent user from dismissing popup by tap/clicking outside it
 
-			complete: options.complete ? options.complete.bind(self) : null//self.complete.bind(self)
+			complete: options.complete ? options.complete.bind(self) : (self.complete ? self.complete.bind(self) : null)
 		});
 
 		this.ssuper().prototype.show.call(this, options);

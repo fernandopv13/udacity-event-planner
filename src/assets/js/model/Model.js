@@ -56,7 +56,7 @@ var app = app || {}; // create a simple namespace for the module
 
 		
 		/*----------------------------------------------------------------------------------------
-		* Accessors for private instance fields (dependency injection enables access for subclasses)
+		* Accessors for private instance fields (accessible to subclasses)
 		*---------------------------------------------------------------------------------------*/
 
 			/** Gets name of the Model's class (read-only).
@@ -143,19 +143,6 @@ var app = app || {}; // create a simple namespace for the module
 			void module.controller.removeObserver(this);
 
 			if (window.localStorage && module.prefs.isLocalStorageAllowed()) {void this.removeObject();}
-		};
-
-
-		/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference).
-		*
-		* See IInterfaceable for further documentation.
-		*
-		* @todo Now that the parent list is publicly available, this should be able to rely on the/a default method in IInterfaceable
-		*/
-
-		module.Model.prototype.isInstanceOf = function (func_interface) {
-			
-			return this.parentList().indexOf(func_interface) > -1;
 		};
 
 

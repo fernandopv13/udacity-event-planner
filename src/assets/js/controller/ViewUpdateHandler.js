@@ -139,19 +139,6 @@ var app = app || {};
 		}
 
 
-		/** Returns true if class is or extends the class, or implements the interface, passed in (by function reference).
-		*
-		* See IInterfaceable for further documentation.
-		*
-		* @todo Now that the parent list is publicly available, this should be able to rely on the/a default method in IInterfaceable
-		*/
-
-		module.ViewUpdateHandler.prototype.isInstanceOf = function (func_interface) {
-			
-			return this.parentList().indexOf(func_interface) > -1;
-		};
-
-
 		/** Calls the method doing the detailed work required when a Controller receives an update notification from a View.
 		*
 		* See execute() method in subclasses for further details.

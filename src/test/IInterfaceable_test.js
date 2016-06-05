@@ -70,6 +70,15 @@ describe('Interface IInterfaceable', function(){
 	});
 
 	
+	it('provides a default isInstanceOf method', function(){
+
+		expect(app.IInterfaceable.prototype.default_isInstanceOf).toBeDefined();
+
+		expect(typeof app.IInterfaceable.prototype.default_isInstanceOf).toBe('function');
+	});
+
+
+	/*
 	it('defines an isInstanceOf() method signature', function() {
 			
 		// verify that method signature exists
@@ -94,4 +103,5 @@ describe('Interface IInterfaceable', function(){
 			expect(e.name).toBe('AbstractMethodError');
 		}
 	});
+	*/
 });

@@ -111,7 +111,12 @@ describe('Class FirstTimeSetupView', function(){
 
 				testModal.render();
 
-				testModal.show({duration: 5});
+				testModal.show(
+				{
+					complete: function() {},
+
+					duration: 5
+				});
 
 				expect(testModal.$renderContext().css('display')).toBe('block');
 

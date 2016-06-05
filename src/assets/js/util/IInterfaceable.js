@@ -17,9 +17,7 @@ var app = app || {}; // create a simple namespace for the app
 	*
 	* @throws {InstantiationError} If attempting to instantiate interface
 	*
-	* @author Ulrik H. Gade, March 2016
-	*
-	* @todo Add default isInstanceOf() method
+	* @author Ulrik H. Gade, May 2016
 	*/
 
 	module.IInterfaceable = function() {
@@ -28,6 +26,8 @@ var app = app || {}; // create a simple namespace for the app
 		* Method signatures
 		*---------------------------------------------------------------------------------------*/
 		
+		// none so far
+
 		/** Determines if realizing class implements the interface passed in (by function reference).
 		*
 		* This is not supported by the native instanceof operator because JS does not support
@@ -43,10 +43,12 @@ var app = app || {}; // create a simple namespace for the app
 		* @throws {AbstractMethodError} If attempting to invoke directly on interface itself.
 		*/
 
+		/*
 		module.IInterfaceable.prototype.isInstanceOf = function(IInterfaceable) {
 			
 			throw new AbstractMethodError('Method signature "isInstanceOf()" must be realized in implementing classes');
 		};
+		*/
 
 		
 		/*----------------------------------------------------------------------------------------
@@ -60,7 +62,31 @@ var app = app || {}; // create a simple namespace for the app
 	* Default methods (must be defined outside main function/class body)
 	*---------------------------------------------------------------------------------------*/
 
-	// none so far
+		/** Determines if object implements the class passed in (by function reference).
+		*
+		* Extends the native instanceof operator to support multiple inheritance from our home grown "Interfaces".
+		*
+		* Relies on realizing classes prodiving a parentList() method returning an array of implemented interfaces (by function reference).
+		*
+		* @param {Function} class The class or 'interface' we wish to determine whether the object implements
+		*
+		* @return {Boolean} True if object implements class/interface, otherwise false
+		*
+		* @throws {IllegalArgumentError} If type of supplied parameter is other than Function
+		*/
+		
+		module.IInterfaceable.prototype.default_isInstanceOf = function (func_class) {
+
+		if (typeof func_class === 'function') {
+
+			return this instanceof func_class || this.parentList().indexOf(func_class) > -1;
+		}
+
+		else {
+
+			throw new IllegalArgumentError('Expected Function (i.e. class or interface');
+		}
+	};
 
 
 	/*----------------------------------------------------------------------------------------

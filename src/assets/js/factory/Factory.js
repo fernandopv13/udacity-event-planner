@@ -36,7 +36,7 @@ var app = app || {};
 
 
 		/*----------------------------------------------------------------------------------------
-		* Accessors for private instance fields (dependency injection enables access for subclasses)
+		* Accessors for private instance fields (accessible to subclasses)
 		*---------------------------------------------------------------------------------------*/
 
 			/** Gets the collection of Products registered with this Factory (the property is read-only, but the collection is mutable)

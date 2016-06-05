@@ -32,7 +32,7 @@ var app = app || {};
 
 
 		/*----------------------------------------------------------------------------------------
-		* Accessors for private instance fields (dependency injection enables access for subclasses)
+		* Accessors for private instance fields (accessible to subclasses)
 		*---------------------------------------------------------------------------------------*/
 
 			/** Gets the type name of the product (case-insensitive)
