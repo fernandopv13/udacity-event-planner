@@ -15,7 +15,7 @@ describe('Class AccountProfileView', function(){
 	
 	var testAccount, testApp, testDoc, testElement, testPerson, testView, testWindow;
 	
-	beforeAll(function(done){
+	beforeAll(function(done) {
 		
 		//testWindow = window.open('../index.html'); // test on development version of app
 
@@ -257,13 +257,15 @@ describe('Class AccountProfileView', function(){
 
 		it('will not submit the form if there are validation errors in any fields', function() {
 			
+			void testApp.controller.currentView(testApp.controller.views().accountProfileView);
+
 			testWindow.$('#account-profile-name').val('');
 
 			expect(app.FormWidget.instance().validate(testWindow.$('#account-profile-form'))).toBe(false);
 
 			testWindow.$('#account-profile-form-submit').trigger('mousedown');
 
-			expect(testApp.controller.currentView()).not.toBeDefined();
+			expect(testApp.controller.currentView()).toBe(testApp.controller.views().accountProfileView);
 		});
 
 
@@ -319,7 +321,9 @@ describe('Class AccountProfileView', function(){
 
 		xit('discards entries and navigates out of form if "Cancel" button is activated', function() {
 
+			testWindow.$('#account-profile-cancel').trigger('mousedown');
 
+			expect(testApp.controller.currentView()).not.toBe(testApp.controller.views().accountProfileView);
 		});
 
 	afterAll(function() {

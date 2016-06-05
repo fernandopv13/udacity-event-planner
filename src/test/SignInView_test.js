@@ -210,6 +210,8 @@ describe('Class SignInView', function(){
 
 		it('will not sign in if there are validation errors in any form fields', function() {
 			
+			void testApp.controller.currentView(testApp.controller.views().signInView);
+
 			$(testElement).find('#sign-in-email').val('not valid');
 
 			$(testElement).find('#sign-in-password').val('not valid');
@@ -218,7 +220,9 @@ describe('Class SignInView', function(){
 
 			testWindow.$('#sign-in-submit').trigger('mousedown');
 
-			expect(testApp.controller.currentView()).not.toBeDefined();
+			expect(testApp.controller.currentView()).toBe(testApp.controller.views().signInView);
+
+			//expect(testApp.controller.currentView()).not.toBeDefined();
 		});
 
 

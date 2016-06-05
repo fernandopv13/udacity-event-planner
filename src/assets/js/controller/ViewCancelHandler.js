@@ -1,3 +1,4 @@
+
 'use strict'; // Not in functions to make it easier to remove by build process
 
 /**********************************************************************************************

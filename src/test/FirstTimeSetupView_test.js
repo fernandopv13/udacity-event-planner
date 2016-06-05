@@ -51,14 +51,6 @@ describe('Class FirstTimeSetupView', function(){
 
 		// Test generic View features
 
-			it('provides a complete() method', function() {
-
-				expect(typeof testModal.complete).toBe('function');
-
-				expect(testModal.render).not.toEqual((new app.ModalView()).render);
-			});
-			
-
 			it('overrides its parent\'s render() method', function() {
 
 				expect(typeof testModal.render).toBe('function');

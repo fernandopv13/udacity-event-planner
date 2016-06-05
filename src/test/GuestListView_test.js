@@ -178,7 +178,9 @@ describe('class GuestListView', function(){
 
 				&& (navigator.userAgent.indexOf('Safari') === -1 || navigator.userAgent.indexOf('Chrome') > -1) ) { // skip Safari
 
-				expect(testApp.controller.currentView()).not.toBeDefined();
+				void testApp.controller.currentView(testApp.controller.views().guestListView);
+
+				//expect(testApp.controller.currentView()).not.toBeDefined();
 
 				testElement.find('.collection-item').first().trigger('click');
 

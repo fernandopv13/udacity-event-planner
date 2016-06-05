@@ -171,23 +171,15 @@ var app = app || {};
 
 									if (nEvent && nEvent.currentTarget.id === 'modal-ok') { // user selected 'OK' button in modal
 
-										var $modal = $(nEvent.currentTarget.parentNode.parentNode), 
+										// set account attributes directly to avoid undesired side effects
 
-										//Model_m = new module.Account(),
+										//(e.g. ViewSubmitHandler causes back nav, Model submit() causes re-render and hide of View)
+
+										var $modal = $(nEvent.currentTarget.parentNode.parentNode), 
 
 										localStorageAllowed = ctrl.selectedAccount().localStorageAllowed($modal.find('#setup-localstorage').prop('checked'));
 
-										//void Model_m.localStorageAllowed(localStorageAllowed);
-
-										// set account attributes directly to avoid undesired side effects (e.g. ViewSubmitHandler causes back nav)
-
 										void ctrl.selectedAccount().geoLocationAllowed($modal.find('#setup-geolocation').prop('checked'));
-
-										//void Model_m.geoLocationAllowed($modal.find('#setup-geolocation').prop('checked'));
-
-										//this.submit(Model_m, module.View.UIAction.SUBMIT); // update account with data entered in popup
-
-										//ctrl.currentView().show(5); // re-display: update causes View under popup to hide
 
 										if (localStorageAllowed && window.localStorage) {
 

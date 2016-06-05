@@ -282,13 +282,17 @@ describe('Class SignUpView', function(){
 
 		it('will not sign in if there are validation errors in any form fields', function() {
 			
+			void testApp.controller.currentView(testApp.controller.views().signUpView);
+
 			testWindow.$('#sign-up-email').val('');
 
 			expect(app.FormWidget.instance().validate(testWindow.$('#sign-up-form'))).toBe(false);
 
 			testWindow.$('#sign-up-submit').trigger('mousedown');
 
-			expect(testApp.controller.currentView()).not.toBeDefined();
+			expect(testApp.controller.currentView()).toBe(testApp.controller.views().signUpView);
+
+			//expect(testApp.controller.currentView()).not.toBeDefined();
 		});
 
 
@@ -342,7 +346,7 @@ describe('Class SignUpView', function(){
 		it('displays a modal first time setup dialog after signing in', function(done){
 
 			// Just check that the correct modal is visible; the FirstTimeSetupView test takes care of the details
-			// Later, maybe move this to the ViewCreateHandler test
+			// Move this to the ViewCreateHandler test when avaialble
 
 			setTimeout(function(){ // wait for modal to render/animate in
 

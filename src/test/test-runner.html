@@ -171,10 +171,7 @@
 				<script src="util/TestView.js"></script>
 				<script src="util/testdata.js"></script>
 				<script src="util/testutils.js"></script>
-				<script>
-					app.testutil.testTarget = '../index.html'; // test on development version of app
-					//app.testutil.testTarget = '../../build/index.html'; // test on production version of app
-				</script>
+				
 				<script src="Device_test.js"></script>
 				<script src="Storage_test.js"></script>
 
@@ -183,10 +180,18 @@
 				<script src="IObserver_test.js"></script>
 				<script src="IObservable_test.js"></script>
 				<script src="ISerializable_test.js"></script>
+				
 				<script src="ObjectRegistry_test.js"></script>
 				<script src="Accessor_test.js"></script>
+				
 				<script src="FourSquareSearch_test.js"></script>
 
+			<!-- Test target (i.e. src or build) -->
+				<script>
+					app.testutil.testTarget = '../index.html'; // test on development version of app
+					//app.testutil.testTarget = '../../build/index.html'; // test on production version of app
+				</script>
+				
 			<!-- UIWidgets -->
 				<script src="Product_test.js"></script>
 				<script src="Factory_test.js"></script>
@@ -227,19 +232,19 @@
 			
 			<!-- MVC concrete Views -->
 				<script src="AboutView_test.js"></script>
-				<script src="ConfirmDeletionView_test.js"></script>
-				<script src="FirstTimeSetupView_test.js"></script>
-				<script src="SignOutView_test.js"></script>
-				<script src="FrontPageView_test.js"></script>
-				<script src="SignUpView_test.js"></script>
-				<script src="SignInView_test.js"></script>
-				<script src="EventListView_test.js"></script>
-				<script src="EventView_test.js"></script>
-				<script src="GuestListView_test.js"></script>
-				<script src="PersonView_test.js"></script>
 				<script src="AccountProfileView_test.js"></script>
 				<script src="AccountSettingsView_test.js"></script>
+				<script src="ConfirmDeletionView_test.js"></script>
+				<script src="EventListView_test.js"></script>
+				<script src="EventView_test.js"></script>
+				<script src="FirstTimeSetupView_test.js"></script>
+				<script src="FrontPageView_test.js"></script>
+				<script src="GuestListView_test.js"></script>
+				<script src="PersonView_test.js"></script>
 				<script src="Navigation_test.js"></script>
+				<script src="SignInView_test.js"></script>
+				<script src="SignOutView_test.js"></script>
+				<script src="SignUpView_test.js"></script>
 				<!--
 				-->
 			

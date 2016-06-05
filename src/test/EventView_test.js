@@ -362,13 +362,15 @@ describe('Class EventView', function(){
 
 		it('will not submit the form if there are validation errors in any fields', function() {
 			
+			void testApp.controller.currentView(testApp.controller.views().eventView);
+
 			testWindow.$('#event-name').val('');
 
 			expect(app.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(false);
 
 			testWindow.$('#event-form-submit').trigger('mousedown');
 
-			expect(testApp.controller.currentView()).not.toBeDefined();
+			expect(testApp.controller.currentView()).toBe(testApp.controller.views().eventView);
 		});
 
 

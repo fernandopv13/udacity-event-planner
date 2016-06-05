@@ -20,7 +20,7 @@ var app = app || {};
 	*
 	* @constructor
 	*
-	* @author Ulrik H. Gade, May 2016
+	* @author Ulrik H. Gade, June 2016
 	*/
 
 	module.Router = function() {
@@ -41,20 +41,38 @@ var app = app || {};
 
 	module.Router.prototype.onPopState = function(PopStateEvent_e) {
 
-		console.log(PopStateEvent_e);
+		//console.log(PopStateEvent_e);
 
-		if (PopStateEvent_e.state === null) { // ignore redudant calls from closing ModalViews
+		if (PopStateEvent_e.state === null) { // ignore redudant calls from closing ModalViews in some browsers
 
-			console.log('ignoring redundant null request');
+			//console.log('ignoring redundant null request');
 
 			if (history.state === null) { // clean out redunant null entries in browser history
 
-				console.log('removing redundant null entry');
+				if (!(module.device().isiOS() && module.device().isChrome())) { // work around apparent bug in iOS Chrome
 
-				history.back();
+					// When popping a null entry, iOS Chrome seems to also pop the next item on the stack, causing
+
+					// the browser to navigate too far back (e.g. so we're taken back to sign in right after signing in!).
+
+					// Skipping this step means it will sometimes be necessary to activate navigation twice (e.g. form submit) 
+
+					// before it takes effect. There seems to be no way around this compromise without resorting to
+
+					// 3rd party polyfills (e.g. History.js), which I would rather avoid in this project (nned to wrap it up).
+
+					//console.log('removing redundant null entry');
+
+					history.back();
+				}
+
+				/*
+				else {
+
+					console.log('skipping iOS Chrome');
+				}
+				*/
 			}
-
-			//throw new IllegalArgumentError('Cannot navigate to ' + PopStateEvent_e.state);
 		}
 
 		else { // navigate to requested View
@@ -63,7 +81,7 @@ var app = app || {};
 
 			id = parseInt(PopStateEvent_e.state.id);
 
-			console.log('popping ' + className); // debug
+			//console.log('popping ' + className); // debug
 
 			switch (className) { // use the MVC protocol to simulate an update from a view
 
@@ -133,8 +151,15 @@ var app = app || {};
 						+ '?id=' + id // add model object id
 					);
 
-					console.log('pushed ' + history.state.className);
+					//console.log('pushed ' + history.state.className);
 				}
+
+				/*
+				else {
+
+					console.log('ignoring ' + (history.state ? history.state.className : history.state));
+				}
+				*/
 			}
 
 			catch(e) {

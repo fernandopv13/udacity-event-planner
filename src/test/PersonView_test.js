@@ -250,13 +250,17 @@ describe('Class PersonView', function(){
 
 		it('will not submit the form if there are validation errors in any fields', function() {
 			
+			void testApp.controller.currentView(testApp.controller.views().personView);
+
 			testWindow.$('#guest-name').val('');
 
 			expect(app.FormWidget.instance().validate(testWindow.$('#guest-form'))).toBe(false);
 
 			testWindow.$('#guest-form-submit').trigger('mousedown');
 
-			expect(testApp.controller.currentView()).not.toBeDefined();
+			expect(testApp.controller.currentView()).toBe(testApp.controller.views().personView);
+
+			//expect(testApp.controller.currentView()).not.toBeDefined();
 		});
 
 

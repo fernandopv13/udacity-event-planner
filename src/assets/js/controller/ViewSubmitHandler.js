@@ -98,10 +98,7 @@ var app = app || {};
 
 		void ctrl.newModel(null); // reset newModel, if not null (i.e. when saving freshly created model)
 
-		//if (!View_v.isInstanceOf(module.ModalView)) { // modals are not included in history management
-
-			window.history.back(); // go one step back in browser history
-		//}
+		window.history.back(); // go one step back in browser history
 	};
 
 })(app);
