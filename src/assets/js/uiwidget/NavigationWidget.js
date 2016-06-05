@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Creates and initializes and validates Materialize-styled HTML email input fields. Use as singleton to conserve memory resources.
+	/** @classdesc Creates and initializes and validates Materialize-styled navigation UI. Use as singleton to conserve memory resources.
 	*
 	* @constructor
 	*
@@ -60,7 +60,7 @@ var app = app || {};
 
 		/** Factory method for creating main navigation bar in views that require it
 		
-		* @param {Object} JSON object literal containing specs of date input to be created. Se comments in code for an example.
+		* @param {Object} JSON object literal containing specs of date input to be created. See comments in code for an example.
 		*
 		* @return {HTMLDivElement} The requested nav bar
 		*
@@ -69,8 +69,6 @@ var app = app || {};
 		* @todo Figure out why appending to the main container late in the code affects its contents earlier in the code, causing loss of  control over exact construction of DOM structure (really weird)
 		*
 		* @todo Figure out why activating dropdown menu items is very hard (but not impossible) on iOS (Safari/Chrome)
-		*
-		* @todo Refactor to use generic, dynamically generated modal for delete popup, rather than hardcoding it in HTML
 		*/
 
 		module.NavigationWidget.prototype.createProduct = function(obj_options) {

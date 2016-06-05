@@ -64,7 +64,7 @@ var app = app || {};
 		*
 		* (So, if some aspect of element creation fails, only this method will need to change.)
 		*
-		* @param {Object} JSON object literal containing specs of element to be created. Se comments in code for an example.
+		* @param {Object} JSON object literal containing specs of element to be created. See comments in code for an example.
 		*
 		* @return {HTMLElement} The requested element
 		*

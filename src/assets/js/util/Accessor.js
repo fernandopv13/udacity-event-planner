@@ -26,7 +26,9 @@ var app = app || {};
 *
 * @constructor
 *
-* @author Ulrik H. Gade, February 2016
+* @author Ulrik H. Gade, June 2016
+*
+* @todo The property (private instance attribute) passed in a construction does not get updated when accessor is subsequently called. Investigate inherent to approach.
 */
 
 app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
@@ -41,7 +43,7 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 	
 	// Inner functions that do the actual 'polymorphic' work
 
-	/** Signature 1
+	/** Signature 1: Creates a basic unified accessor without type checking
 	*
 	* @param {Object} property The property to create an accessor for
 	*
@@ -62,13 +64,13 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 	}
 	
 
-	/** Signature 2
+	/** Signature 2: A unified accessor with type checking for primitive JS types
 	*
 	* @param {Object} property The property to create an accessor for
 	*
 	* @param {String} type The primitive type required by the property (by the string typeof would return)
 	*
-	* @return {Function} A unified accessor with type checking for primitive types
+	* @return {Function} A unified accessor with type checking for primitive JS types
 	*
 	* @throws {IllegalArgumentError} If passed a type string that does not represent a primitive type (constructor)
 	*
@@ -105,7 +107,7 @@ app.Accessor = function(obj_prop, bool_readOnly, obj_type, str_className) {
 	}
 
 	
-	/** Signature 3
+	/** Signature 3: A unified accessor with type checking for complex types (i.e. classes/functions)
 	*
 	* @param {Object} property The property to create an accessor for
 	*

@@ -133,12 +133,8 @@ var app = app || {}; // create a simple namespace for the app
 			*
 			* @description Takes a single parameter when setting: either a Date object or a valid date string.
 			*
-			* @param {Date} end The date and time when the event ends (Date representation)
-			*
-			* @param {String} end The date and time when the event ends (String representation)
-			*
-			* @param {null} end In order to clear the event's end date
-			*
+			* @param {Object} end The date and time when the event ends (Date or String representation), or null
+
 			* @return {Date} The date and time when the event ends, or null
 			*
 			* @throws {IllegalArgumentError} If end is not a date, or end is before start
@@ -180,7 +176,7 @@ var app = app || {}; // create a simple namespace for the app
 			
 			/** Gets copy of the guest list for the event. Guest list cannot be manipulated directly: use add() or remove() methods.
 			*
-			* return {Array} A Person array
+			* @return {Array} A Person array
 			*/
 			
 			this.guests = function(arr_guests) { // setting only for use by readObject() when re-instantiating object
@@ -235,9 +231,7 @@ var app = app || {}; // create a simple namespace for the app
 			
 			/** Gets or sets default location for the event. Location may be a string with the position's name, or a Position object
 			*
-			* @param {String} location The default location (as a string with the location's name)
-			*
-			* @param {Position} location The default location (as a geolocation API Position object)
+			* @param {Object} location The default location (as a string with the location's name, or a geolocation API Position object)
 			*
 			* @return {Object} The location
 			*
@@ -285,10 +279,8 @@ var app = app || {}; // create a simple namespace for the app
 			*
 			* @description Takes a single parameter when setting: either a Date object or a valid date string.
 			*
-			* @param {Date} start The date and time when the event starts, or null (Date representation)
-			*
-			* @param {String} start The date and time when the event starts, or the empty string (String representation)
-			*
+			* @param {Object} start The date and time when the event starts, or null (Date or String representation), or null
+
 			* @return {Date} The date and time when the event starts, or null
 			*/
 			
@@ -673,7 +665,7 @@ var app = app || {}; // create a simple namespace for the app
 		*
 		* @param {int} id Id of the event intended to receive the update
 		*
-		* @return {Boolean} true if copy was successful, otherwise error or false
+		* @return {Boolean} true if update was successful, otherwise error or false
 		*
 		* @throws {IllegalArgumentError} If object provided is not an instance of Event
 		*

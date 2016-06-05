@@ -73,9 +73,7 @@ var app = app || {};
 
 			/** Gets or sets account holder
 			*
-			* @param {Person} accountholder The person holding the account (optional, supply if setting)
-			*
-			* @param {null} accountHolder In order to reset the account holder
+			* @param {Person} accountholder The person holding the account (optional, supply if setting), or null
 			*
 			* @return {Person} The person holding the account
 			*

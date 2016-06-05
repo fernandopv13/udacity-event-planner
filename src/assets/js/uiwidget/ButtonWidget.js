@@ -11,7 +11,7 @@ var app = app || {};
 
 	/** @classdesc Abstract base class for the abstract factory method pattern used to create and manage button widgets.
 	*
-	* Represents widgets in a form that take data input from users.
+	* Represents buttons in a form that users may tap/click.
 	*
 	* @constructor
 	*
@@ -57,7 +57,7 @@ var app = app || {};
 	*
 	* Currently does nothing but pass call up the inheritance chain to UIWidget.
 	*
-	* (ssuper only works on level up from the 'lowest' derived class, so must pass manually.)
+	* (ssuper only works one level up from the 'lowest' derived class, so must pass manually.)
 	*
 	*/
 

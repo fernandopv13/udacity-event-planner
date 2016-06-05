@@ -8,7 +8,9 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc View class for generic modal dialog (popup) with customizable header and body content.
+	/** @classdesc View class for first time setup modal dialog (popup).
+	*
+	* Requests permissions for using local storage and geolocation on the device.
 	*
 	* @requires jQuery
 	*

@@ -60,7 +60,7 @@ var app = app || {};
 
 		/** Factory method for creating email fields for forms
 		
-		* @param {Object} JSON object literal containing specs of date input to be created. Se comments in code for an example.
+		* @param {Object} JSON object literal containing specs of date input to be created. See comments in code for an example.
 		*
 		* @return {HTMLDivElement} The requested element
 		*
@@ -196,6 +196,8 @@ var app = app || {};
 
 		
 		/** Event handler for interactive validation of email field
+		*
+		* @param {HTMLInputElement} e The element holding the data to be validated
 		*
 		* @return {Boolean} true if validation is succesful, otherwise false
 		*/

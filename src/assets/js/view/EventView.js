@@ -14,19 +14,11 @@ var app = app || {};
 	*
 	* @extends FormView
 	*
-	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	* @param {String} elementId Id of the HTML DOM element the view is bound to
 	*
-	* @param (String) heading Content for the list heading
+	* @param {String} heading Content for the list heading
 	*
 	* @author Ulrik H. Gade, March 2016
-	*
-	* @todo Simplify date entry: set end date to start date when initially selecting start date, supressing end datepicker, or do not require entry of end date and time unless the user wants to 
-	*
-	* @todo Hide most of the non-required details behind a 'Details' widget (i.e. use 'progressive disclosure')
-	*
-	* @todo Add unit testing of rendering and interaction in browser
-	*
-	* @todo Verify that geolocation works as expected when available in a mobile device with GPS
 	*
 	* @todo Get description character counter to work without breaking rendering on Android and iOS
 	*/
@@ -749,9 +741,9 @@ var app = app || {};
 
 	/** Submits event form to controller if it passes all validations
 	*
-	* @return {Boolean} true if validation and is succesful, otherwise false
+	* @param {nEvent} e The native browser event spawned by the user interaction 
 	*
-	* @todo Fix host hack
+	* @return {Boolean} true if validation is succesful, otherwise false
 	*/
 
 	module.EventView.prototype.submit = function(nEvent) {
@@ -829,27 +821,6 @@ var app = app || {};
 		}
 
 		module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
-
-		/*
-		var $listElement = $('#suggested-hosts'), optionElement;
-
-		$listElement.empty();
-
-		var type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
-		
-		var hosts = type.registry.getObjectList();
-
-		for (var ix in hosts) {
-
-			optionElement = document.createElement('option');
-
-			optionElement.value = hosts[ix].hostName();
-
-			optionElement.innerHTML = hosts[ix].hostName();
-
-			$listElement.append(optionElement);
-		}
-		*/
 	};
 
 

@@ -12,15 +12,13 @@ var app = app || {};
 	*
 	* @extends ListView
 	*
-	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	* @param {String} elementId Id of the HTML DOM element the view is bound to
 	*
-	* @param (String) heading Content for the list heading
+	* @param {String} heading Content for the list heading
 	*
 	* @constructor
 	*
 	* @author Ulrik H. Gade, May 2016
-	*
-	* @todo Add unit testing (of rendering in browser)
 	*/
 
 	module.EventListView = function(str_elementId, str_heading) {

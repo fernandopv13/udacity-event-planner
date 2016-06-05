@@ -63,7 +63,7 @@ var app = app || {};
 
 	/** Renders guest list for an event in the UI
 	*
-	* @param {Event} The event whose guest list we want to render
+	* @param {Event} e The event whose guest list we want to render
 	 */
 
 	module.GuestListView.prototype.render = function(Event_e) {

@@ -8,7 +8,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Handles 'save' (to local storage) action from View on behalf of Controller.
+	/** @classdesc Handles 'save' (all app data to local storage) notification from View on behalf of Controller.
 	*
 	* Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
 	*

@@ -14,9 +14,9 @@ var app = app || {};
 	*
 	* @extends FormView
 	*
-	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	* @param {String} elementId Id of the HTML DOM element the view is bound to
 	*
-	* @param (String) heading Content for the list heading
+	* @param {String} heading Content for the view heading
 	*
 	* @author Ulrik H. Gade, March 2016
 	*/
@@ -63,7 +63,7 @@ var app = app || {};
 
 	/** Renders account to form in UI
 	*
-	* @param {Account} The account from which to present data in the form
+	* @param {Account} a The account from which to present data in the form
 	*
 	* @return void
 	 */
@@ -424,7 +424,7 @@ var app = app || {};
 
 	/** Submits account form to controller if it passes all validations
 	*
-	* @return {Boolean} true if validation and is succesful, otherwise false
+	* @return {Boolean} true if validation is succesful, otherwise false
 	*
 	* @todo Fix host hack
 	*/

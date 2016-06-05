@@ -8,7 +8,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Handles 'navigate' action from View on behalf of Controller.
+	/** @classdesc Handles 'navigate' notification from View on behalf of Controller.
 	*
 	* Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
 	*

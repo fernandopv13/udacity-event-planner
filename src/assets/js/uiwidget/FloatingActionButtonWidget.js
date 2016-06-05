@@ -60,7 +60,7 @@ var app = app || {};
 
 		/** Factory method for creating a submit buttion based on specs provided in JSON object.
 		*
-		* @param {Object} JSON object literal containing specs of element to be created. Se comments in code for an example.
+		* @param {Object} JSON object literal containing specs of element to be created. See comments in code for an example.
 		*
 		* @return {FloatingActionButtonWidget} The requested button
 		*

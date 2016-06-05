@@ -62,9 +62,7 @@ var app = app || {}; // create a simple namespace for the app
 		
 			/** Gets or sets email address
 			*
-			* @param {String} address The email address (optional, supply if setting)
-			*
-			* @param {null} null If resetting the email address
+			* @param {String} address The email address (optional, supply if setting), or null
 			*
 			* @return {String} The email address
 			*/
@@ -271,7 +269,7 @@ var app = app || {}; // create a simple namespace for the app
 		*
 		* @param {Email} email Object holding the data to update from
 		*
-		* @return {Boolean} true if copy was successful, else error or false
+		* @return {Boolean} true if update was successful, else error or false
 		*
 		* @throws {IllegalArgumentError} If object provided is not an instance of Email
 		*

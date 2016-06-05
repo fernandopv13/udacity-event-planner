@@ -8,7 +8,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc View class for generic modal dialog (popup) with customizable header and body content.
+	/** @classdesc View class for sign out modal dialog (popup). Provides the option to sign out, or to stay signed in.
 	*
 	* @requires jQuery
 	*
@@ -17,10 +17,6 @@ var app = app || {};
 	* @constructor
 	*
 	* @param {String} elementId Id of the HTML DOM element the view is bound to
-	*
-	* @param {String} header Content for the modal header
-	*
-	* @param {String} body Content for the modal body
 	*
 	* @author Ulrik H. Gade, May 2016
 	*/
@@ -64,7 +60,7 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Submits any entries made by the user into the form to the controller, which then decides what to do.
+	/** Submits user choice in the UI to the controller, which then decides what to do.
 	*
 	* Only reacts to taps/clicks on the modal's "OK" button (regardless of labelling). Other forms popup of dismissal are simply ignored.
 	*

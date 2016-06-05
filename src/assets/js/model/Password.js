@@ -240,7 +240,7 @@ var app = app || {}; // create a simple namespace for the app
 		*
 		* @param {Password} Password Object holding the data to update from
 		*
-		* @return {Boolean} true if copy was successful, else error or false
+		* @return {Boolean} true if update was successful, else error or false
 		*
 		* @throws {IllegalArgumentError} If object provided is not an instance of Password
 		*

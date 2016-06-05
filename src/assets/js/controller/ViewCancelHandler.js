@@ -9,7 +9,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Handles 'cancel' action from View on behalf of Controller.
+	/** @classdesc Handles 'cancel' notification from View on behalf of Controller.
 	*
 	* Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
 	*

@@ -8,7 +8,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Abstract base class for handlers of updates from Views to a Controller, in the mold of the Strategy pattern.
+	/** @classdesc Abstract base class for handlers of update notifications from Views to a Controller, in the mold of the Strategy pattern.
 	*
 	* Relies on the Observer pattern for handling basic inter-object messaging among the collaborators.
 	*

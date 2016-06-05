@@ -8,19 +8,13 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc View class for generic modal dialog (popup) with customizable header and body content.
+	/** @classdesc View class for "About" modal dialog (popup). Displays basic info about the app.
 	*
 	* @requires jQuery
 	*
 	* @extends ModalView
 	*
 	* @constructor
-	*
-	* @param {String} elementId Id of the HTML DOM element the view is bound to
-	*
-	* @param {String} header Content for the modal header
-	*
-	* @param {String} body Content for the modal body
 	*
 	* @author Ulrik H. Gade, May 2016
 	*/

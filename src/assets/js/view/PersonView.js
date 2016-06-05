@@ -14,9 +14,9 @@ var app = app || {};
 	*
 	* @extends FormView
 	*
-	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	* @param {String} elementId Id of the HTML DOM element the view is bound to
 	*
-	* @param (String) heading Content for the list heading
+	* @param {String} heading Content for the list heading
 	*
 	* @author Ulrik H. Gade, March 2016
 	*/

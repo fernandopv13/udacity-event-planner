@@ -226,7 +226,7 @@ var app = app || {}; // create a simple namespace for the app
 		*
 		* @param {Organization} Organization Object holding the data to update with
 		*
-		* @return {Boolean} true if copy was successful, else error or false
+		* @return {Boolean} true if update was successful, else error or false
 		*
 		* @throws {IllegalArgumentError} If object provided is not an instance of Organization
 		*

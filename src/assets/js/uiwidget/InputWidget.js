@@ -164,7 +164,7 @@ var app = app || {};
 	*
 	* Currently does nothing but pass call up the inheritance chain to UIWidget.
 	*
-	* (ssuper only works on level up from the 'lowest' derived class, so must pass manually.)
+	* (ssuper only works one level up from the 'lowest' derived class, so must pass manually.)
 	*
 	*/
 
@@ -172,11 +172,7 @@ var app = app || {};
 		
 		var element = $('#' + str_id);
 
-		//console.log('entering InputWidget init(), passing call to UIWidget'); // debug
-
 		module.UIWidget.prototype.init(View_v, str_id, obj_options);
-
-		//console.log('back fro UIWidget, exiting InputWidget init()');
 	};
 	
 
@@ -188,12 +184,14 @@ var app = app || {};
 	*
 	* @abstract
 	*
-	* @param {HTMLInputELement} The input to be validated.
+	* @param {HTMLInputELement} e The input to be validated.
 	*
 	* @return {Boolean} true if validation is succesful, otherwise false.
+	*
+	* @throws {AbstractMethodError} If invoked directly on InputWidget (must be realized by subclasses)
 	*/
 
-	module.InputWidget.prototype.validate = function(HTMLInputElement) {
+	module.InputWidget.prototype.validate = function(HTMLInputElement_e) {
 
 		throw new AbstractMethodError('validate() must be realized by subclasses');
 	};

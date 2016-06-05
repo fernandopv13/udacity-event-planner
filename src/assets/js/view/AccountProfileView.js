@@ -14,9 +14,9 @@ var app = app || {};
 	*
 	* @extends FormView
 	*
-	* @param (String) elementId Id of the HTML DOM element the view is bound to
+	* @param {String} elementId Id of the HTML DOM element the view is bound to
 	*
-	* @param (String) heading Content for the list heading
+	* @param {String} heading Content for the list heading
 	*
 	* @author Ulrik H. Gade, May 2016
 	*/
@@ -63,7 +63,7 @@ var app = app || {};
 
 	/** (Re)renders person to form in UI
 	*
-	* @param {Account} The account from whose profile to present data in the form
+	* @param {Person} p The account holder of the selected account
 	*
 	* @return void
 	*
@@ -344,9 +344,9 @@ var app = app || {};
 	};
 
 
-	/** Submits person form to controller if it passes all validations
+	/** Submits account profile form to controller if it passes all validations
 	*
-	* @return {Boolean} true if validation and is succesful, otherwise false
+	* @return {Boolean} true if validation is succesful, otherwise false
 	*
 	* @todo Fix employer hack same is in EventView
 	*/

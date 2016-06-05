@@ -21,8 +21,6 @@ var app = app || {};
 	* @constructor
 	*
 	* @author Ulrik H. Gade, May 2016
-	*
-	* @todo flesh out views() getter
 	*/
 
 	module.Controller = function() {
@@ -58,6 +56,8 @@ var app = app || {};
 		*---------------------------------------------------------------------------------------*/
 
 			/** Gets or sets reference to clone Model when conducting multi-view transaction
+			*
+			* @param {Model} m The source Model
 			*
 			* @return {Model} The source Model, or null
 			*
@@ -107,9 +107,9 @@ var app = app || {};
 			*
 			* When setting, hides the currently presented view and shows the new one.
 			*
-			* @param {View} v currentView The current view, or null
+			* @param {View} v The current view, or null
 			*
-			* @param {Model} m the Model we want displayed in the new current view, or null
+			* @param {Model} m The Model we want displayed in the new current view, or null
 			*
 			* @param {Object} options JSON object passing on options to the View's show() method
 			*
@@ -237,9 +237,24 @@ var app = app || {};
 			this.sourceModel = new module.Accessor(_sourceModel, false, module.Model, 'Model');
 
 
+			/** Gets the list of Views registered with the Controller
+			*
+			* @return {Object} A collection of Views
+			*
+			* @throws {IllegalArgumentError} If passing in any parameters: property is read-only
+			*/
+
 			this.views = function() { // getter for _views, to flesh out
 
-				return _views;
+				if (arguments.length === 0) {
+
+					return _views;	
+				}
+				else {
+
+					throw new IllegalArgumentError('Property is read-only');
+				}
+				
 			}
 
 		/*----------------------------------------------------------------------------------------
@@ -424,7 +439,7 @@ var app = app || {};
 			*
 			* @return {Boolean} instanceof True if class implements interface, otherwise false
 			*
-			* @todo This seems redundant try to find a way to delegate to default method in IInterfaceable
+			* @todo This seems redundant: try to find a way to delegate to default method in IInterfaceable
 			*/
 			
 			this.isInstanceOf = function (func_interface) {
@@ -434,7 +449,7 @@ var app = app || {};
 
 
 			
-			/** Passes history onpopstate events on to router */
+			/** Passes history onpopstate events on to Router */
 
 			this.onPopState = function(nEvent) {
 
@@ -493,7 +508,7 @@ var app = app || {};
 			}
 
 
-			/** Handles Model-directed responses to user action from ViewUpdateHandler
+			/** Handles Model-directed responses to user action from ViewUpdateHandler.
 			*
 			* Called by public update() method, which also does error handling.
 			*
@@ -527,7 +542,7 @@ var app = app || {};
 			}
 
 
-			/** Handles View-directed responses to user action from ViewUpdateHandler
+			/** Handles View-directed responses to user action from ViewUpdateHandler.
 			*
 			* Called by public update() method, which also does error handling.
 			*
@@ -602,7 +617,7 @@ var app = app || {};
 			}
 			
 
-			/** Handles update notifications from either of the Controller's collaborators
+			/** Handles update notifications from either of the Controller's collaborators.
 			*
 			* Uses JS style method 'polymorphism' (i.e. parameter parsing) to decide what to do when invoked.
 			*

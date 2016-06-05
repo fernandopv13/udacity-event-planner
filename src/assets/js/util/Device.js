@@ -29,9 +29,9 @@ var app = app || {}; // Create a simple namespace for the app
 		* Accessors for private instance fields
 		*---------------------------------------------------------------------------------------*/
 		
-		/** Gets or sets the device'a orientation
+		/** Gets or sets the device's orientation
 		*
-		* @param {String} orientation Accepted values are 'portrait' or 'landscape' (without quites, not case-sensitive)
+		* @param {String} orientation Accepted values are 'portrait' or 'landscape' (without quotes, not case-sensitive)
 		*
 		* @return {String} The device's orientation. Possible values are 'portrait' or 'landscape' (without quotes).
 		*
@@ -79,7 +79,7 @@ var app = app || {}; // Create a simple namespace for the app
 	/**
 	* Gets whether browser is Google Chrome or not
 	*
-	* @return {Boolean} true if browser is Safari, otherwise false
+	* @return {Boolean} true if browser is Chrome, otherwise false
 	*/
 	
 	module.Device.prototype.isChrome = function() {
@@ -90,7 +90,7 @@ var app = app || {}; // Create a simple namespace for the app
 	}
 
 	/**
-	* Gets whether device runs iOS (i.e. is an Apple iPhone or iPad) or not
+	* Gets whether device runs iOS (i.e. is an Apple iPhone, iPad or iPod) or not
 	*
 	* @return {Boolean} true if device runs iOS, otherwise false
 	*/
@@ -101,7 +101,7 @@ var app = app || {}; // Create a simple namespace for the app
 	}
 
 
-	/** Gets whether device's currently held in landscape orientation
+	/** Gets whether device is currently held in landscape orientation
 	*
 	* @return {Boolean} true if landscape, else false
 	*/
@@ -136,11 +136,11 @@ var app = app || {}; // Create a simple namespace for the app
 	}
 
 
-	/** Gets whether device is mobile (phone or tablet) or not
+	/** Gets whether device is mobile (i.e. phone or tablet) or not
 	*
 	* @return {Boolean} true if mobile, else false
 	*
-	* @todo Increase sophistication taking inspiration from e.g. https://css-tricks.com/snippets/css/media-queries-for-standard-devices/
+	* @todo Increase sophistication, taking inspiration from e.g. https://css-tricks.com/snippets/css/media-queries-for-standard-devices/
 	*/
 
 	module.Device.prototype.isMobile = function() {
@@ -169,7 +169,7 @@ var app = app || {}; // Create a simple namespace for the app
 	};
 
 
-	/** Gets whether device's currently held in portrait orientation
+	/** Gets whether device is currently held in portrait orientation
 	*
 	* @return {Boolean} true if portrait, else false
 	*/
@@ -208,7 +208,7 @@ var app = app || {}; // Create a simple namespace for the app
 	}
 
 
-	/** Converts Device to JSON. Mostly needed to ease debugging on non-desktops (less typing).
+	/** Converts Device object to JSON. Mostly needed to ease debugging on non-desktops (less typing).
 	*
 	* @return {Object} JSON object literal representation of Device's internal state
 	*/

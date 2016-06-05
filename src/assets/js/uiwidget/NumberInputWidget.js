@@ -58,7 +58,7 @@ var app = app || {};
 	* Public instance methods (on prototype)
 	*---------------------------------------------------------------------------------------*/
 
-		/** Factory method for creating email fields for forms
+		/** Factory method for creating number fields for forms
 		
 		* @param {Object} JSON object literal containing specs of input to be created. See comments in code for an example.
 		*

@@ -76,32 +76,4 @@ describe('Interface IInterfaceable', function(){
 
 		expect(typeof app.IInterfaceable.prototype.default_isInstanceOf).toBe('function');
 	});
-
-
-	/*
-	it('defines an isInstanceOf() method signature', function() {
-			
-		// verify that method signature exists
-		
-		expect(app.IInterfaceable.prototype.isInstanceOf).toBeDefined();
-		
-		expect(typeof app.IInterfaceable.prototype.isInstanceOf).toBe('function');
-	});
-		
-	
-	it('throws an error if isInstanceOf() is invoked', function() {
-			
-		// verify that method invokation throws error
-		
-		try {
-		
-			app.IInterfaceable.prototype.isInstanceOf();
-		}
-		
-		catch(e) { // a method signature cannot be invoked, so an error here is a positive outcome
-		
-			expect(e.name).toBe('AbstractMethodError');
-		}
-	});
-	*/
 });

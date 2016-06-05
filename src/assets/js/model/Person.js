@@ -75,9 +75,7 @@ var app = app || {}; // create a simple namespace for the app
 		*
 		* @description Takes a single parameter when setting: either a Date object or a valid date string, or null
 		*
-		* @param {Date} start The date of the person's birth (Date representation)
-		*
-		* @param {String} start The date of the person's birth (String representation)
+		* @param {Object} start The date of the person's birth (Date or String representation), or null
 		*
 		* @return {Date} The date and time when the person was born
 		*/
@@ -423,7 +421,7 @@ var app = app || {}; // create a simple namespace for the app
 		*
 		* @param {int} id Id of the person intended to receive the update
 		*
-		* @return {Boolean} true if copy was successful, else error or false
+		* @return {Boolean} true if update was successful, else error or false
 		*/
 
 		module.Person.prototype.update = function(Person_p, int_id) {

@@ -148,9 +148,9 @@ var app = app || {}; // create a simple namespace for the module
 
 		/** Does housekeeping common to all Models after they have updated themselves.
 		*
-		* Override in subclsees to do the actual updating, then call this.
+		* Override in subclasses to do the actual updating, then call this.
 		*
-		* @param {Model} obj Temporary object holding the updated information. Is of same class as Modelable itself.
+		* @param {Model} obj Temporary object holding the updated information. Is of same class as Model itself.
 		*
 		* @param {int} id ID of the object to be updated
 		*

@@ -62,7 +62,9 @@ var app = app || {};
 
 	/** Renders front page.
 	*
-	* Front page is pure navigation. It is not bound to any model, nor to the controller.
+	* Front page is pure navigation. It is not bound to any model.
+	*
+	* @param {Model} m Accepts and ignores any object passed in. Signature retained for compliance with View base class.
 	*
 	* @return void
 	*/

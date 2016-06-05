@@ -23,8 +23,6 @@ describe('Abstract class ListView', function(){
 			
 		expect(testListView instanceof app.View).toBe(true); // verify both direct inheritance and parent constructor reference
 
-		console.log
-
 		expect(testListView.ssuper()).toBe(app.View);
 
 		expect(typeof testListView.className).toBe('function') // verify inheritance of parent methods via prototype

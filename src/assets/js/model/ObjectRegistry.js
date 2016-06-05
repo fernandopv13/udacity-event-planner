@@ -8,7 +8,7 @@ var app = app || {}; // create a simple namespace for the app
 	* public class ObjectRegistry implements ISerializable
 	***********************************************************/
 
-	/** @classdesc Keeps track of the objects created of a class, to help avoid duplication when serializing objects for local or remote storage. Can only hold objects of a single class.
+	/** @classdesc Keeps track of the objects created of a class, to help avoid duplication when serializing objects for local or remote storage. Can only hold objects of a single class, or its ancestors.
 	*
 	* @implements ISerializable
 	*
@@ -21,6 +21,8 @@ var app = app || {}; // create a simple namespace for the app
 	* @return {ObjectRegistry} A utility for other classes, providing unique, zero indexed object IDs while the app is runnning
 	*
 	* @author Ulrik H. Gade, May 2016
+	*
+	* @todo Reassess whether registry should accept instances of ancestors to primary target class
 	*/
 
 	module.ObjectRegistry = function(func_objectConstructor, str_objectClassName) {

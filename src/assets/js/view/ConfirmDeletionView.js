@@ -10,6 +10,8 @@ var app = app || {};
 
 	/** @classdesc View class for generic confirm deletion modal dialog (popup) with customizable header and body content.
 	*
+	* Provides options to either go ahead with, or cancel, deletion.
+	*
 	* @requires jQuery
 	*
 	* @extends ModalView

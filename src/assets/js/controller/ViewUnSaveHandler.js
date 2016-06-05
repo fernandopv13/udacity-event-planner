@@ -8,7 +8,7 @@ var app = app || {};
 
 (function (module) { // wrap initialization in anonymous function taking app/module context as parameter
 
-	/** @classdesc Handles 'unsave' (from local storage) action from View on behalf of Controller.
+	/** @classdesc Handles 'unsave' (from local storage) notification from View on behalf of Controller.
 	*
 	* Plays the role of a concrete strategy in our Strategy pattern for the Controller's response to UIActions.
 	*
@@ -59,7 +59,7 @@ var app = app || {};
 	* Public instance methods (beyond accessors)
 	*---------------------------------------------------------------------------------------*/
 
-	/** Handles 'Save' user action in a View on behalf of a Controller
+	/** Handles 'Unsave' user action in a View on behalf of a Controller
 	*
 	* @param {int} UIAction An integer representing the user action to respond to
 	*
