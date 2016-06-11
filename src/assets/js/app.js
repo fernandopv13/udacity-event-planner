@@ -240,11 +240,11 @@ var app = (function(self) {
 
 						var json = backup[prop],
 
-						className = json._className;
+						classNme = json._className;
 
-						if (className !== 'ObjectRegistry') { // skip object registries (already exist)
+						if (classNme !== 'ObjectRegistry') { // skip object registries (already exist)
 
-							var obj = new self[className](); // create new Model object
+							var obj = new self[classNme](); // create new Model object
 
 							for (var ix in json) { // copy data from backup into new object
 

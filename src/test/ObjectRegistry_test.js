@@ -27,8 +27,10 @@ describe('Class ObjectRegistry', function(){
 	
 	describe('instance', function() {
 		
-		// Set up some mocks
-		
+		// Set up some mocks		
+
+		var deSerializedCounter;
+
 		app.TestType = function(str_attr) {
 		
 			this._id = app.TestType.cnt++;
@@ -64,8 +66,6 @@ describe('Class ObjectRegistry', function(){
 		app.TestType.registry = new app.ObjectRegistry(app.TestType, 'TestType');
 		
 		var testRegistry = app.TestType.registry;
-
-		var deSerializedCounter;
 		
 		
 		beforeEach(function() {

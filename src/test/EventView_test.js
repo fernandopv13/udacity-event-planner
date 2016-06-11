@@ -306,7 +306,7 @@ describe('Class EventView', function(){
 
 				done();
 
-			}, 3000); // allow some time for the location search API to respond
+			}, 5000); // allow some time for the location search API to respond
 
 			expect(true).toBe(true);
 		});
@@ -330,7 +330,7 @@ describe('Class EventView', function(){
 
 				done();
 
-			}, 2000); // allow some time for the list generation to respond
+			}, 5000); // allow some time for the list generation to respond
 
 			expect(true).toBe(true);
 		});
@@ -354,7 +354,7 @@ describe('Class EventView', function(){
 
 				done();
 
-			}, 1000); // allow some time for the list generation to respond
+			}, 3000); // allow some time for the list generation to respond
 
 			expect(true).toBe(true);
 		});
