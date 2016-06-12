@@ -145,6 +145,8 @@ var app = app || {};
 
 			if (options.required) {classList.push('validate');}
 
+			if (options.autofocus) {attributes.autofocus = true;}
+
 			innerDiv.appendChild(createElement( // input
 			{
 				element: 'input',			

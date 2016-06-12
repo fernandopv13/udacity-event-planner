@@ -15,7 +15,7 @@ var app = app || {};
 	*
 	* @extends InputWidget
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, June 2016
 	*
 	* @return {PasswordInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
@@ -125,26 +125,31 @@ var app = app || {};
 			outerDiv.appendChild(innerDiv);
 
 
+			var attributes =
+			{
+				type: 'text', // deliberately not hiding password, as per Luke W's advice for mobile
+				
+				id: options.id,
+				
+				value: options.datasource && options.datasource.password() ? options.datasource.password() : '',
+
+				required: 'true',
+
+				'aria-required': true,
+
+				'aria-labelledby': options.id + '-label',
+
+				role: 'textbox'
+			};
+
+			if (options.autofocus) {attributes.autofocus = true;}
+
+
 			innerDiv.appendChild(createElement( // input
 			{
 				element: 'input',			
 				
-				attributes:
-				{
-					type: 'text', // deliberately not hiding password, as per Luke W's advice for mobile
-					
-					id: options.id,
-					
-					value: options.datasource && options.datasource.password() ? options.datasource.password() : '',
-
-					required: 'true',
-
-					'aria-required': true,
-
-					'aria-labelledby': options.id + '-label',
-
-					role: 'textbox'
-				},
+				attributes: attributes,
 
 				dataset:
 				{

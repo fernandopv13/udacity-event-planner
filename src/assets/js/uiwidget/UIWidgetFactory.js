@@ -18,6 +18,8 @@ var app = app || {};
 	* @author Ulrik H. Gade, March 2016
 	*
 	* @return {UIWidgetFactory} Not supposed to be instantiated, except when setting up inheritance in subclasses
+	*
+	* @todo Modify to support JS singleton pattern, e.g. by accepting instance rather than class as product
 	*/
 
 	module.UIWidgetFactory = function() {

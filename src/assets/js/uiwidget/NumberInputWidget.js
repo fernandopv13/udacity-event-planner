@@ -152,6 +152,8 @@ var app = app || {};
 
 			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
 
+			if (options.autofocus) {attributes.autofocus = true;}
+
 			innerDiv.appendChild(createElement( // input
 			{
 				element: 'input',			

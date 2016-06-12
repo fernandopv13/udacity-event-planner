@@ -15,7 +15,7 @@ var app = app || {};
 	*
 	* @extends InputWidget
 	*
-	* @author Ulrik H. Gade, May 2016
+	* @author Ulrik H. Gade, June 2016
 	*
 	* @return {DateInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
@@ -169,9 +169,10 @@ var app = app || {};
 
 				role: 'textbox'
 			}
-
 			
 			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
+
+			if (options.autofocus) {attributes.autofocus = true;}
 
 			
 			var classList = ['datetimepicker-input'];

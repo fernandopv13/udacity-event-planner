@@ -206,7 +206,9 @@ var app = app || {};
 
 					required: true,
 
-					datasource: null
+					datasource: null,
+
+					autofocus: true
 				}
 			));
 
@@ -461,7 +463,7 @@ var app = app || {};
 			this.init(); // call init up parent class chain
 			
 			
-			$('#sign-up-email').attr('autofocus', true); // set focus on email
+			//$('#sign-up-email').attr('autofocus', true); // set focus on email
 
 
 			$('#sign-up-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
