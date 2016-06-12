@@ -1,6 +1,6 @@
 /* Custom selection of Materialize components for use in Udacity Event Planner App
 *
-* Author: Ulrik H. Gade, May 2016
+* Author: Ulrik H. Gade, June 2016
  */
 
 // Import required materialize components
@@ -8,40 +8,40 @@
 @charset "UTF-8";
 
 // Mixins
-// @import "../../lib/materialize_v0.97.5/sass/components/prefixer";
-@import "../../lib/materialize_v0.97.5/sass/components/mixins";
-@import "../../lib/materialize_v0.97.5/sass/components/color";
+// @import "../../../node_modules/materialize-css/sass/components/prefixer";
+@import "../../../node_modules/materialize-css/sass/components/mixins";
+@import "../../../node_modules/materialize-css/sass/components/color";
 
 // Variables;
-@import "../../lib/materialize_v0.97.5/sass/components/variables";
+@import "../../../node_modules/materialize-css/sass/components/variables";
 
 // Reset
-@import "../../lib/materialize_v0.97.5/sass/components/normalize";
+@import "../../../node_modules/materialize-css/sass/components/normalize";
 
 // Components
-@import "../../lib/materialize_v0.97.5/sass/components/global";
-@import "../../lib/materialize_v0.97.5/sass/components/icons-material-design";
-@import "../../lib/materialize_v0.97.5/sass/components/grid";
-@import "../../lib/materialize_v0.97.5/sass/components/navbar";
-@import "../../lib/materialize_v0.97.5/sass/components/roboto";
-@import "../../lib/materialize_v0.97.5/sass/components/typography";
-//@import "../../lib/materialize_v0.97.5/sass/components/cards";
-@import "../../lib/materialize_v0.97.5/sass/components/toast";
-//@import "../../lib/materialize_v0.97.5/sass/components/tabs";
-//@import "../../lib/materialize_v0.97.5/sass/components/tooltip";
-@import "../../lib/materialize_v0.97.5/sass/components/buttons";
-@import "../../lib/materialize_v0.97.5/sass/components/dropdown";
-@import "../../lib/materialize_v0.97.5/sass/components/waves";
-@import "../../lib/materialize_v0.97.5/sass/components/modal";
-//@import "../../lib/materialize_v0.97.5/sass/components/collapsible";
-//@import "../../lib/materialize_v0.97.5/sass/components/chips";
-@import "../../lib/materialize_v0.97.5/sass/components/materialbox";
-@import "../../lib/materialize_v0.97.5/sass/components/form";
-//@import "../../lib/materialize_v0.97.5/sass/components/table_of_contents";
-@import "../../lib/materialize_v0.97.5/sass/components/sideNav";
-@import "../../lib/materialize_v0.97.5/sass/components/preloader";
-//@import "../../lib/materialize_v0.97.5/sass/components/slider";
-//@import "../../lib/materialize_v0.97.5/sass/components/carousel";
-//@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.scss";
-//@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.date.scss";
-//@import "../../lib/materialize_v0.97.5/sass/components/date_picker/default.time.scss";
+@import "../../../node_modules/materialize-css/sass/components/global";
+@import "../../../node_modules/materialize-css/sass/components/icons-material-design";
+@import "../../../node_modules/materialize-css/sass/components/grid";
+@import "../../../node_modules/materialize-css/sass/components/navbar";
+@import "../../../node_modules/materialize-css/sass/components/roboto";
+@import "../../../node_modules/materialize-css/sass/components/typography";
+//@import "../../../node_modules/materialize-css/sass/components/cards";
+@import "../../../node_modules/materialize-css/sass/components/toast";
+//@import "../../../node_modules/materialize-css/sass/components/tabs";
+//@import "../../../node_modules/materialize-css/sass/components/tooltip";
+@import "../../../node_modules/materialize-css/sass/components/buttons";
+@import "../../../node_modules/materialize-css/sass/components/dropdown";
+@import "../../../node_modules/materialize-css/sass/components/waves";
+@import "../../../node_modules/materialize-css/sass/components/modal";
+//@import "../../../node_modules/materialize-css/sass/components/collapsible";
+//@import "../../../node_modules/materialize-css/sass/components/chips";
+@import "../../../node_modules/materialize-css/sass/components/materialbox";
+@import "../../../node_modules/materialize-css/sass/components/form";
+//@import "../../../node_modules/materialize-css/sass/components/table_of_contents";
+@import "../../../node_modules/materialize-css/sass/components/sideNav";
+@import "../../../node_modules/materialize-css/sass/components/preloader";
+//@import "../../../node_modules/materialize-css/sass/components/slider";
+//@import "../../../node_modules/materialize-css/sass/components/carousel";
+//@import "../../../node_modules/materialize-css/sass/components/date_picker/default.scss";
+//@import "../../../node_modules/materialize-css/sass/components/date_picker/default.date.scss";
+//@import "../../../node_modules/materialize-css/sass/components/date_picker/default.time.scss";
