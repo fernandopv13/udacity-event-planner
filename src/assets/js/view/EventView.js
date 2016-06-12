@@ -135,7 +135,7 @@ var app = app || {};
 					{
 						id: 'event-form',
 
-						autocomplete: 'off',
+						//autocomplete: 'off',
 
 						novalidate: true
 					}
@@ -191,7 +191,9 @@ var app = app || {};
 
 						required: false,
 
-						datasource: Event_e.location() ? Event_e.location() : ''//,
+						datasource: Event_e.location() ? Event_e.location() : '',
+
+						autocomplete: 'none'
 
 						//datalist: 'suggested-locations'
 					}
@@ -287,7 +289,9 @@ var app = app || {};
 
 						required: false,
 
-						datasource: Event_e.type() || ''//,
+						datasource: Event_e.type() || '',
+
+						autocomplete: 'none'
 
 						//datalist: 'suggested-event-types'
 					}
@@ -389,7 +393,9 @@ var app = app || {};
 
 						required: false,
 
-						datasource: Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : ''//,
+						datasource: Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : '',
+
+						autocomplete: 'none'
 
 						//datalist: 'suggested-hosts'
 					}

@@ -182,7 +182,7 @@ var app = app || {};
 				{
 					id: 'sign-up-form',
 
-					autocomplete: 'off',
+					//autocomplete: 'off',
 
 					novalidate: true
 				}

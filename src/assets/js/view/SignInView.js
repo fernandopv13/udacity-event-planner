@@ -174,7 +174,7 @@ var app = app || {};
 				{
 					id: 'sign-in-form',
 
-					autocomplete: 'off',
+					//autocomplete: 'off',
 
 					novalidate: true
 				}

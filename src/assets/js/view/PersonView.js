@@ -114,7 +114,7 @@ var app = app || {};
 					{
 						id: 'guest-form',
 
-						autocomplete: 'off',
+						//autocomplete: 'off',
 
 						novalidate: true
 					}

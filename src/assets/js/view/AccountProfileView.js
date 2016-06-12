@@ -112,7 +112,7 @@ var app = app || {};
 					{
 						id: 'account-profile-form',
 
-						autocomplete: 'off',
+						//autocomplete: 'off',
 
 						novalidate: true
 					}

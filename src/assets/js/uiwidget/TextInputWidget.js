@@ -137,16 +137,20 @@ var app = app || {};
 				role: 'textbox'
 			}
 
-			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
+			if (options.autocomplete) {attributes.autocomplete = options.autocomplete;}
 
 			if (options.datalist) {attributes.list = options.datalist;}
 
+			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
+
+			
 			var classList = [];
 
 			if (options.required) {classList.push('validate');}
 
 			if (options.autofocus) {attributes.autofocus = true;}
 
+			
 			innerDiv.appendChild(createElement( // input
 			{
 				element: 'input',			

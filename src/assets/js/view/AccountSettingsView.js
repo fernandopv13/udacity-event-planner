@@ -114,7 +114,7 @@ var app = app || {};
 					{
 						id: 'account-settings-form',
 
-						autocomplete: 'off',
+						//autocomplete: 'off',
 
 						novalidate: false
 					}
