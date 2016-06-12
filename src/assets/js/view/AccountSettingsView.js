@@ -18,7 +18,7 @@ var app = app || {};
 	*
 	* @param {String} heading Content for the view heading
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, June 2016
 	*/
 
 	module.AccountSettingsView = function(str_elementId, str_heading) {
@@ -152,7 +152,9 @@ var app = app || {};
 
 						required: true,
 
-						datasource: Account_a.email()
+						datasource: Account_a.email(),
+
+						autofocus: true
 					}
 				));
 

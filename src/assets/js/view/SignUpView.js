@@ -16,7 +16,7 @@ var app = app || {};
 	*
 	* @extends View
 	*
-	* @author Ulrik H. Gade, May 2016
+	* @author Ulrik H. Gade, June 2016
 	*/
 
 	module.SignUpView = function(str_elementId, str_heading) {
@@ -463,9 +463,6 @@ var app = app || {};
 			this.init(); // call init up parent class chain
 			
 			
-			//$('#sign-up-email').attr('autofocus', true); // set focus on email
-
-
 			$('#sign-up-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
 
 				if ($(nEvent.currentTarget).val().length > 0 // pw is not empty

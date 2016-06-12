@@ -286,6 +286,24 @@ describe('Class EventView', function(){
 
 	// Test UI behaviours
 
+		it('autofocuses on the name field', function(done) {
+			
+			testView.show(); // make sure view is fully initialized
+
+			setTimeout(function() {
+
+				var el = testWindow.$('#event-name');
+
+				expect(el.attr('autofocus')).toBe('autofocus');
+
+				expect(testWindow.document.activeElement.id).toBe('event-name');
+
+				done();
+
+			}, 500); // wait for testWindow show() animation to complete
+		});
+		
+
 		it('provides event location suggestions (autocomplete)', function(done) {
 			
 			var el = $(testElement).find('#event-location');

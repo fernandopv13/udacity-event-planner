@@ -18,7 +18,7 @@ var app = app || {};
 	*
 	* @param {String} heading Content for the list heading
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, June 2016
 	*/
 
 	module.PersonView = function(str_elementId, str_heading) {
@@ -153,7 +153,9 @@ var app = app || {};
 
 						required: true,
 
-						datasource: Person_p.name() || null
+						datasource: Person_p.name() || null,
+
+						autofocus: true
 					}
 				));
 
@@ -321,8 +323,6 @@ var app = app || {};
 		// Do post-render initialization
 
 			this.init();
-
-			$('#guest-name').attr('autofocus', true);
 	};
 
 

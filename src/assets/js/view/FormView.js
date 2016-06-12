@@ -128,6 +128,29 @@ var app = app || {};
 			}
 	};
 
+	/** Shows FormView, making sure input field autofocus is re-applied after the in-animation has completed */
+
+	module.FormView.prototype.show = function() {
+
+		module.View.prototype.show.call(this, {
+
+			done: function() {
+
+				$(this.form()).find('[autofocus="true"]').focus();
+
+				/*void $.each($(this.form()).find('input'), function(ix, obj) {
+
+					if ($(obj).attr('autofocus')) {
+
+						$(obj).focus();
+					}
+				});
+				*/
+
+			}.bind(this)
+		});
+	}
+
 
 	/** Submits entries made by the user into the form to the controller, with the purpose of updating the Model */
 

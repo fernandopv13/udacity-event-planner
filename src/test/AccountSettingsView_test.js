@@ -243,6 +243,24 @@ describe('Class AccountSettingsView', function(){
 
 	// Test UI behaviours
 
+		it('autofocuses on the email field', function(done) {
+			
+			testView.show(); // make sure view is fully initialized
+
+			setTimeout(function() {
+
+				var el = testWindow.$('#account-settings-email');
+
+				expect(el.attr('autofocus')).toBe('autofocus');
+
+				expect(testWindow.document.activeElement.id).toBe('account-settings-email');
+
+				done();
+
+			}, 500); // wait for testWindow show() animation to complete
+		});
+		
+
 		it('will not submit the form if there are validation errors in any fields', function() {
 			
 			void testApp.controller.currentView(testApp.controller.views().accountSettingsView);

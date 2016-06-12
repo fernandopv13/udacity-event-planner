@@ -18,7 +18,7 @@ var app = app || {};
 	*
 	* @param {String} heading Content for the list heading
 	*
-	* @author Ulrik H. Gade, May 2016
+	* @author Ulrik H. Gade, June 2016
 	*/
 
 	module.AccountProfileView = function(str_elementId, str_heading) {
@@ -150,7 +150,9 @@ var app = app || {};
 
 						required: true,
 
-						datasource: Person_p.name() || ''
+						datasource: Person_p.name() || '',
+
+						autofocus: true
 					}
 				));
 

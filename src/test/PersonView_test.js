@@ -248,6 +248,24 @@ describe('Class PersonView', function(){
 
 	// Test UI behaviours
 
+		it('autofocuses on the name field', function(done) {
+			
+			testView.show(); // make sure view is fully initialized
+
+			setTimeout(function() {
+
+				var el = testWindow.$('#guest-name');
+
+				expect(el.attr('autofocus')).toBe('autofocus');
+
+				expect(testWindow.document.activeElement.id).toBe('guest-name');
+
+				done();
+
+			}, 500); // wait for testWindow show() animation to complete
+		});
+		
+
 		it('will not submit the form if there are validation errors in any fields', function() {
 			
 			void testApp.controller.currentView(testApp.controller.views().personView);

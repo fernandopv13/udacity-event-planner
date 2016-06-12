@@ -18,7 +18,7 @@ var app = app || {};
 	*
 	* @param {String} heading Content for the list heading
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, June 2016
 	*
 	* @todo Get description character counter to work without breaking rendering on Android and iOS
 	*/
@@ -170,7 +170,9 @@ var app = app || {};
 
 					required: true,
 
-					datasource: Event_e.name() ? Event_e.name() : ''
+					datasource: Event_e.name() ? Event_e.name() : '',
+
+					autofocus: true
 				}));
 				
 							
@@ -724,18 +726,12 @@ var app = app || {};
 
 		// Render to DOM
 
-			//console.log('generated element, calling FormView render()'); //debug
-
 			this.ssuper().prototype.render.call(this);
-
-			//console.log('back from FormView, initializing EventView');
 
 		
 		// Do post-render initialization
 
 			this.init(); // call init up parent class chain
-
-		//console.log('done initializing, exiting EventView render()'); // debug
 	};
 
 

@@ -16,7 +16,7 @@ var app = app || {};
 	*
 	* @extends View
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, June 2016
 	*/
 
 	module.SignInView = function(str_elementId, str_heading) {
@@ -198,7 +198,9 @@ var app = app || {};
 
 					required: true,
 
-					datasource: null
+					datasource: null,
+
+					autofocus: true
 				}
 			));
 
@@ -321,8 +323,6 @@ var app = app || {};
 		// Do post-render initialization
 
 			this.init(); // call init up parent class chain
-
-			$('#sign-in-email').attr('autofocus', true); // set focus on email field
 	};
 
 
