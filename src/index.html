@@ -14,7 +14,8 @@
 		<!-- For bootstrap-datetimepicker -->
 			<link rel="stylesheet" href="lib/bootstrap_v3.3.6/css/bootstrap.min.css">
 			<!--TODO: link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"-->
-		<link rel="stylesheet" href="lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.min.css">
+			<!--DEPRECATED: link rel="stylesheet" href="lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.min.css"-->
+			<link rel="stylesheet" href="../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
 		<link rel="stylesheet" href="assets/css/materialize.css" media="screen">
 		<link rel="stylesheet" href="assets/css/app.css" media="screen"/>
 		<!-- endbuild -->
@@ -48,9 +49,12 @@
 				<!--DEPRECATED: script src="lib/bootstrap_v3.3.6/js/bootstrap.min.js"></script!-->
 				<script src="../node_modules/bootstrap/js/collapse.js"></script>
 				<script src="../node_modules/bootstrap/js/transition.js"></script>
-			<script src="lib/modernizr_v3.3.1/modernizr_v3.3.1-custom.js"></script>
-			<script src="lib/moment.js_V2.12.0/min/moment-with-locales.min.js"></script><!-- for bootstrap-datetimepicker -->
-			<script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script>
+				<!--DEPRECATED: script src="lib/moment.js_V2.12.0/min/moment-with-locales.min.js"></script-->
+				<script src="../node_modules/moment/min/moment-with-locales.js"></script>
+				<!--DEPRECATED: script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script-->
+				<script src="../node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+			<!--DEPRECATED: script src="lib/modernizr_v3.3.1/modernizr_v3.3.1-custom.js"></script-->
+			<script src="lib/modernizr-custom.js"></script>
 			
 			<!-- Materialize component libraries (in order of sample gulpfile, using only what's necessary) -->
 				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/initial.js"></script-->
