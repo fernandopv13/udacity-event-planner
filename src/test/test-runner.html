@@ -19,21 +19,11 @@
 			<!---script type="text/javascript" src="util/firebug-lite/build/firebug-lite-debug.js"></script--><!-- Debug: shows JavaScript console on mobile devices -->
 
 		<!-- Library source files -->
-			<script src="../lib/polyfills/Object.js"></script>
-			<script src="../lib/polyfills/Array.js"></script>
-			<script src="../lib/polyfills/Storage.js"></script>
 			
-			<script src="../../node_modules/jquery/dist/jquery.js"></script> <!--Import jQuery before materialize.js; stic with 2.1.1 until materialize/picker.js catch up -->
-			<!-- for bootstrap-datetimepicker (minimal bs install) -->
-				<script src="../../node_modules/bootstrap/js/collapse.js"></script>
-				<script src="../../node_modules/bootstrap/js/transition.js"></script>
-				<script src="../../node_modules/moment/min/moment-with-locales.js"></script>
-				<script src="../../node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-			<script src="../lib/modernizr-custom.js"></script>
-			
-			<!-- No need to load Materialize component libraries; only needed for View testing, done in separate window  -->
-				
-		
+			<!-- Loading libraries from build to allow tests to run online without needeing access to the node_modules -->
+
+			<script src="../../build/lib/lib.js"></script>
+
 		<!-- App source files -->
 			
 			<!-- Utils, polyfills and interfaces-->
@@ -159,11 +149,11 @@
 
 						// test on development version of app
 						
-						app.testutil.testTarget = (function() {path.pop(); path.pop(); return path.join('/') + '/index.html'})();
+						//app.testutil.testTarget = (function() {path.pop(); path.pop(); return path.join('/') + '/index.html'})();
 
 						// test on production version of app
 						
-						//app.testutil.testTarget = (function() {path.pop(); path.pop(); path.pop(); return path.join('/') + '/build/index.html'})();
+						app.testutil.testTarget = (function() {path.pop(); path.pop(); path.pop(); return path.join('/') + '/build/index.html'})();
 
 					})();
 				</script>
