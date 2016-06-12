@@ -272,7 +272,7 @@ describe('Class PersonView', function(){
 
 			testWindow.$('#guest-name').val('');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#guest-form'))).toBe(false);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#guest-form'))).toBe(false);
 
 			testWindow.$('#guest-form-submit').trigger('mousedown');
 
@@ -315,7 +315,7 @@ describe('Class PersonView', function(){
 				testWindow.$('#guest-birthday').val('05/22/2263');
 			}
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#guest-form'))).toBe(true);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#guest-form'))).toBe(true);
 			
 			testWindow.$('#guest-form-submit').trigger('mousedown');
 			

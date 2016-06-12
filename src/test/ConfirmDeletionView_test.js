@@ -1,6 +1,6 @@
 'use strict';
 
-/* Jasmine.js test suite for ConfirmDeletionView class in Meetup Event Planner app.
+/* Jasmine.js test suite for ConfirmDeletionView class in Meetup Event Planner testApp.
 *
 * These tests combine unit tests of the class itself and integration tests of the UI it represents.
 * The suite is therefore dependent on the other, non-View classes of tha app performning correctly,
@@ -15,13 +15,35 @@ describe('Class ConfirmDeletionView', function(){
 	*  Localhost is also OK, but file:// throws CORS related security error
 	*/
 	
-	var testModal, testElement;
+	var testApp, testDoc, testElement, testModal, testView, testWindow;
 	
-	beforeAll(function(){
-		
-		void $('#modal-view').remove(); // make sure we have a fresh div
+	beforeAll(function(done){
 
-		void $('body').append('<div id="modal-view" class="modal view"></div>');
+		testWindow = window.open(app.testutil.testTarget);
+
+		setTimeout(function() {
+
+			testApp = testWindow.app;
+
+			testApp.controller.views().frontPageView.hide(5);
+
+			testDoc = testWindow.document;
+			
+			testApp = testWindow.app;
+
+			app.testutil.resetTestData(testApp);
+
+			testView = testApp.controller.views().eventListView;
+
+			testElement = testView.$renderContext();
+
+			void testWindow.$('#modal-view').remove(); // make sure we have a fresh div
+
+			void testWindow.$('body').append('<div id="modal-view" class="modal view"></div>');
+
+			done();
+
+		}, 2000); // wait for page to load		
 	});
 	
 	
@@ -29,13 +51,13 @@ describe('Class ConfirmDeletionView', function(){
 
 		it('inherits from ModalView', function() {
 
-			expect((new app.ConfirmDeletionView()) instanceof app.ModalView).toBe(true);
+			expect((new testApp.ConfirmDeletionView()) instanceof testApp.ModalView).toBe(true);
 		});
 
 		
 		it('can be instantiated', function() {
 
-			expect((new app.ConfirmDeletionView()).constructor).toBe(app.ConfirmDeletionView);
+			expect((new testApp.ConfirmDeletionView()).constructor).toBe(testApp.ConfirmDeletionView);
 		});
 
 	
@@ -43,9 +65,9 @@ describe('Class ConfirmDeletionView', function(){
 
 		beforeEach(function() {
 
-			testModal = new app.ConfirmDeletionView('modal-view', 'Delete');
+			testModal = new testApp.ConfirmDeletionView('modal-view', 'Delete');
 
-			testElement = $('#modal-view');
+			testElement = testWindow.$('#modal-view');
 		});
 
 
@@ -55,7 +77,7 @@ describe('Class ConfirmDeletionView', function(){
 
 				expect(typeof testModal.complete).toBe('function');
 
-				expect(testModal.render).not.toEqual((new app.ModalView()).render);
+				expect(testModal.render).not.toEqual((new testApp.ModalView()).render);
 			});
 			
 
@@ -63,7 +85,7 @@ describe('Class ConfirmDeletionView', function(){
 
 				expect(typeof testModal.render).toBe('function');
 
-				expect(testModal.render).not.toEqual((new app.ModalView()).render);
+				expect(testModal.render).not.toEqual((new testApp.ModalView()).render);
 			});
 
 
@@ -71,7 +93,7 @@ describe('Class ConfirmDeletionView', function(){
 
 				expect(typeof testModal.show).toBe('function');
 
-				expect(testModal.show).not.toEqual((new app.ModalView()).show);
+				expect(testModal.show).not.toEqual((new testApp.ModalView()).show);
 			});
 
 
@@ -97,7 +119,7 @@ describe('Class ConfirmDeletionView', function(){
 
 				expect(testModal.$renderContext().children().length).toBe(0);
 
-				testModal.update(null, new app.ConfirmDeletionView());
+				testModal.update(null, new testApp.ConfirmDeletionView());
 
 				expect(testModal.$renderContext().children().length).toBeGreaterThan(0);
 			});
@@ -234,6 +256,6 @@ describe('Class ConfirmDeletionView', function(){
 
 	afterAll(function() {
 
-		void $('#modal-view').remove();
+		testWindow.close();
 	});
 });

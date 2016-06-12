@@ -286,7 +286,7 @@ describe('Class SignUpView', function(){
 
 			testWindow.$('#sign-up-email').val('');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#sign-up-form'))).toBe(false);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#sign-up-form'))).toBe(false);
 
 			testWindow.$('#sign-up-submit').trigger('mousedown');
 
@@ -316,7 +316,7 @@ describe('Class SignUpView', function(){
 
 
 			
-			expect(app.FormWidget.instance().validate(testWindow.$('#sign-up-form'))).toBe(true);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#sign-up-form'))).toBe(true);
 			
 			testWindow.$('#sign-up-submit').trigger('mousedown');
 

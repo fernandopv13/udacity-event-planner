@@ -17,7 +17,7 @@ describe('Class EventView', function(){
 	*  Localhost is also OK, but file:// throws CORS related security error
 	*/
 	
-	var testApp, testDoc, testElement, testEvent, testView, testWindow;
+	var testAccount, testApp, testDoc, testElement, testEvent, testView, testWindow;
 	
 	beforeAll(function(done){
 		
@@ -39,7 +39,7 @@ describe('Class EventView', function(){
 			
 			app.testutil.resetTestData(testApp);
 			
-			var testAccount = testCtrl.selectedAccount(testApp.Account.registry.getObjectList()[0]);
+			testAccount = testCtrl.selectedAccount(testApp.Account.registry.getObjectList()[0]);
 
 			testView = testCtrl.views().eventView;
 
@@ -53,7 +53,7 @@ describe('Class EventView', function(){
 
 		}, 2000); // wait for page to load		
 	});
-	
+
 	
 	// Test generic class features
 
@@ -384,7 +384,7 @@ describe('Class EventView', function(){
 
 			testWindow.$('#event-name').val('');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(false);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(false);
 
 			testWindow.$('#event-form-submit').trigger('mousedown');
 
@@ -424,7 +424,7 @@ describe('Class EventView', function(){
 
 			testWindow.$('#event-description').val('Death to the rebels!');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(true);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(true);
 			
 			
 			var val = testView.val(); // get values Model
@@ -498,7 +498,7 @@ describe('Class EventView', function(){
 
 
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(true);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#event-form'))).toBe(true);
 
 			testWindow.$('#event-form-submit').trigger('mousedown');
 

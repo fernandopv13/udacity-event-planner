@@ -1,6 +1,6 @@
 'use strict';
 
-/* Jasmine.js test suite for AboutView class in Meetup Event Planner app.
+/* Jasmine.js test suite for AboutView class in Meetup Event Planner testApp.
 *
 * These tests combine unit tests of the class itself and integration tests of the UI it represents.
 * The suite is therefore dependent on the other, non-View classes of tha app performning correctly,
@@ -15,13 +15,35 @@ describe('Class AboutView', function(){
 	*  Localhost is also OK, but file:// throws CORS related security error
 	*/
 	
-	var testModal, testElement;
+	var testApp, testDoc, testElement, testModal, testView, testWindow;
 	
-	beforeAll(function(){
-		
-		void $('#modal-view').remove(); // make sure we have a fresh div
+	beforeAll(function(done){
 
-		void $('body').append('<div id="modal-view" class="modal view"></div>');
+		testWindow = window.open(app.testutil.testTarget);
+
+		setTimeout(function() {
+
+			testApp = testWindow.app;
+
+			testApp.controller.views().frontPageView.hide(5);
+
+			testDoc = testWindow.document;
+			
+			testApp = testWindow.app;
+
+			//app.testutil.resetTestData(testApp);
+
+			testView = testApp.controller.views().eventListView;
+
+			testElement = testView.$renderContext();
+
+			void testWindow.$('#modal-view').remove(); // make sure we have a fresh div
+
+			void testWindow.$('body').append('<div id="modal-view" class="modal view"></div>');
+
+			done();
+
+		}, 2000); // wait for page to load		
 	});
 	
 	
@@ -29,13 +51,13 @@ describe('Class AboutView', function(){
 
 		it('inherits from ModalView', function() {
 
-			expect((new app.AboutView()) instanceof app.ModalView).toBe(true);
+			expect((new testApp.AboutView()) instanceof testApp.ModalView).toBe(true);
 		});
 
 		
 		it('can be instantiated', function() {
 
-			expect((new app.AboutView()).constructor).toBe(app.AboutView);
+			expect((new testApp.AboutView()).constructor).toBe(testApp.AboutView);
 		});
 
 	
@@ -43,9 +65,9 @@ describe('Class AboutView', function(){
 
 		beforeEach(function() {
 
-			testModal = new app.AboutView('modal-view', 'About Test');
+			testModal = new testApp.AboutView('modal-view', 'About Test');
 
-			testElement = $('#modal-view');
+			testElement = testWindow.$('#modal-view');
 		});
 
 
@@ -55,7 +77,7 @@ describe('Class AboutView', function(){
 
 				expect(typeof testModal.render).toBe('function');
 
-				expect(testModal.render).not.toEqual((new app.ModalView()).render);
+				expect(testModal.render).not.toEqual((new testApp.ModalView()).render);
 			});
 
 			it('can render itself to the DOM', function() {
@@ -80,7 +102,7 @@ describe('Class AboutView', function(){
 
 				expect(testModal.$renderContext().children().length).toBe(0);
 
-				testModal.update(null, new app.AboutView());
+				testModal.update(null, new testApp.AboutView());
 
 				expect(testModal.$renderContext().children().length).toBeGreaterThan(0);
 			});
@@ -197,6 +219,6 @@ describe('Class AboutView', function(){
 
 	afterAll(function() {
 
-		void $('#modal-view').remove();
+		void testWindow.close();
 	});
 });

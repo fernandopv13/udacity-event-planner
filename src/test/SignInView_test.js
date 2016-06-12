@@ -216,7 +216,7 @@ describe('Class SignInView', function(){
 
 			$(testElement).find('#sign-in-password').val('not valid');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#sign-in-form'))).toBe(false);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#sign-in-form'))).toBe(false);
 
 			testWindow.$('#sign-in-submit').trigger('mousedown');
 
@@ -233,7 +233,7 @@ describe('Class SignInView', function(){
 
 			testWindow.$('#sign-in-password').val('DEMO5%demo');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#sign-in-form'))).toBe(true);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#sign-in-form'))).toBe(true);
 			
 			testWindow.$('#sign-in-submit').trigger('mousedown');
 

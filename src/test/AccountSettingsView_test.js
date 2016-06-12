@@ -269,7 +269,7 @@ describe('Class AccountSettingsView', function(){
 
 			testWindow.$('#account-settings-password').val('');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#account-settings-form'))).toBe(false);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#account-settings-form'))).toBe(false);
 
 			testWindow.$('#account-settings-submit').trigger('mousedown');
 
@@ -307,7 +307,7 @@ describe('Class AccountSettingsView', function(){
 			testWindow.$('#account-settings-localstorage').val(true);
 
 			
-			expect(app.FormWidget.instance().validate(testWindow.$('#account-settings-form'))).toBe(true);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#account-settings-form'))).toBe(true);
 			
 			testWindow.$('#account-settings-submit').trigger('mousedown');
 			

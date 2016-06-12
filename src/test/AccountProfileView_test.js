@@ -17,10 +17,6 @@ describe('Class AccountProfileView', function(){
 	
 	beforeAll(function(done) {
 		
-		//testWindow = window.open('../index.html'); // test on development version of app
-
-		//testWindow = window.open('../../build/index.html'); // test on production version of app
-
 		testWindow = window.open(app.testutil.testTarget);
 
 		setTimeout(function() {
@@ -279,7 +275,7 @@ describe('Class AccountProfileView', function(){
 
 			testWindow.$('#account-profile-name').val('');
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#account-profile-form'))).toBe(false);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#account-profile-form'))).toBe(false);
 
 			testWindow.$('#account-profile-form-submit').trigger('mousedown');
 
@@ -320,7 +316,7 @@ describe('Class AccountProfileView', function(){
 				testWindow.$('#account-profile-birthday').val('05/22/2263');
 			}
 
-			expect(app.FormWidget.instance().validate(testWindow.$('#account-profile-form'))).toBe(true);
+			expect(testApp.FormWidget.instance().validate(testWindow.$('#account-profile-form'))).toBe(true);
 			
 			testWindow.$('#account-profile-submit').trigger('mousedown');
 
