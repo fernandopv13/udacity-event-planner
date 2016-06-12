@@ -211,7 +211,7 @@ var app = app || {};
 
 				void Model_n.capacity(acc.defaultCapacity()); // set app/account specific defaults
 
-				if (acc.defaultLocation()) {void Model_n.location(acc.defaultLocation())}
+				//if (acc.defaultLocation()) {void Model_n.location(acc.defaultLocation())}
 
 				void ctrl.selectedAccount().addEvent(Model_n) // add new Event to account
 

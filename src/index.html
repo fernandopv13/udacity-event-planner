@@ -11,7 +11,9 @@
 		
 		<!-- build:css assets/css/app.css -->
 		<!-- App and library stylesheets -->
-		<link rel="stylesheet" href="lib/bootstrap_v3.3.6/css/bootstrap.min.css"><!-- for bootstrap-datetimepicker -->
+		<!-- For bootstrap-datetimepicker -->
+			<link rel="stylesheet" href="lib/bootstrap_v3.3.6/css/bootstrap.min.css">
+			<!--TODO: link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css"-->
 		<link rel="stylesheet" href="lib/bootstrap-datetimepicker_v4.17.37/build/css/bootstrap-datetimepicker.min.css">
 		<link rel="stylesheet" href="assets/css/materialize.css" media="screen">
 		<link rel="stylesheet" href="assets/css/app.css" media="screen"/>
@@ -39,46 +41,63 @@
 			<script src="lib/polyfills/Object.js"></script>
 			<script src="lib/polyfills/Array.js"></script>
 			<script src="lib/polyfills/Storage.js"></script>
-			<script src="lib/jquery-2.2.2.min.js"></script>
-			<script src="lib/jquery.browser.min.js"></script>
-			<script src="lib/bootstrap_v3.3.6/js/bootstrap.min.js"></script><!-- for bootstrap-datetimepicker (minimal bs install) -->
+			<!--DEPRECATED: script src="lib/jquery-2.2.2.min.js"></script-->
+			<script src="../node_modules/jquery/dist/jquery.js"></script>
+			<!--DEPRECATED: script src="lib/jquery.browser.min.js"></script-->
+			<!-- for bootstrap-datetimepicker (minimal bs install) -->
+				<!--DEPRECATED: script src="lib/bootstrap_v3.3.6/js/bootstrap.min.js"></script!-->
+				<script src="../node_modules/bootstrap/js/collapse.js"></script>
+				<script src="../node_modules/bootstrap/js/transition.js"></script>
 			<script src="lib/modernizr_v3.3.1/modernizr_v3.3.1-custom.js"></script>
 			<script src="lib/moment.js_V2.12.0/min/moment-with-locales.min.js"></script><!-- for bootstrap-datetimepicker -->
 			<script src="lib/bootstrap-datetimepicker_v4.17.37/build/js/bootstrap-datetimepicker.min.js"></script>
 			
 			<!-- Materialize component libraries (in order of sample gulpfile, using only what's necessary) -->
-				<script src="lib/materialize_v0.97.5/js/initial.js"></script>
-				<script src="lib/materialize_v0.97.5/js/jquery.easing.1.3.js"></script>
-				<script src="lib/materialize_v0.97.5/js/animation.js"></script>
-				<script src="lib/materialize_v0.97.5/js/velocity.min.js"></script>
-				<script src="lib/materialize_v0.97.5/js/hammer.min.js"></script>
-				<script src="lib/materialize_v0.97.5/js/jquery.hammer.js"></script>
-				<script src="lib/materialize_v0.97.5/js/global.js"></script>
-				<!--script src="lib/materialize_v0.97.5/js/collapsible.js"></script-->
-				<script src="lib/materialize_v0.97.5/js/dropdown.js"></script>
-				<!--script src="lib/materialize_v0.97.5/js/leanModal.js"></script-->
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/initial.js"></script-->
+				<script src="../node_modules/materialize-css/js/initial.js"></script>
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/jquery.easing.1.3.js"></script-->
+				<script src="../node_modules/materialize-css/js/jquery.easing.1.3.js"></script>
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/animation.js"></script-->
+				<script src="../node_modules/materialize-css/js/animation.js"></script>
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/velocity.min.js"></script-->
+				<script src="../node_modules/materialize-css/js/velocity.min.js"></script>
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/hammer.min.js"></script-->
+				<script src="../node_modules/materialize-css/js/hammer.min.js"></script>
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/jquery.hammer.js"></script-->
+				<script src="../node_modules/materialize-css/js/jquery.hammer.js"></script>
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/global.js"></script-->
+				<script src="../node_modules/materialize-css/js/global.js"></script>
+				<!--script src="../node_modules/materialize-css/js/collapsible.js"></script-->
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/dropdown.js"></script-->
+				<script src="../node_modules/materialize-css/js/dropdown.js"></script>
+				<!--script src="../node_modules/materialize-css/js/leanModal.js"></script-->
 				<script src="assets/js/util/Materialize-leanModal-override.js"></script>
-				<!--script src="lib/materialize_v0.97.5/js/materialbox.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/parallax.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/tabs.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/tooltip.js"></script-->
-				<script src="lib/materialize_v0.97.5/js/waves.js"></script>
-				<script src="lib/materialize_v0.97.5/js/toasts.js"></script>
-				<script src="lib/materialize_v0.97.5/js/sideNav.js"></script>
-				<!--script src="lib/materialize_v0.97.5/js/scrollspy.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/forms.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/materialbox.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/parallax.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/tabs.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/tooltip.js"></script-->
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/waves.js"></script-->
+				<script src="../node_modules/materialize-css/js/waves.js"></script>
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/toasts.js"></script-->
+				<script src="../node_modules/materialize-css/js/toasts.js"></script>
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/sideNav.js"></script-->
+				<script src="../node_modules/materialize-css/js/sideNav.js"></script>
+				<!--script src="../node_modules/materialize-css/js/scrollspy.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/forms.js"></script-->
 				<script src="assets/js/util/Materialize-forms-override.js"></script>
-				<!--script src="lib/materialize_v0.97.5/js/slider.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/cards.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/chips.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/pushpin.js"></script-->
-				<script src="lib/materialize_v0.97.5/js/buttons.js"></script>
-				<!--script src="lib/materialize_v0.97.5/js/transitions.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/scrollFire.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/date_picker/picker.js"></script-->
-				<!--script src="lib/materialize_v0.97.5/js/date_picker/picker.date.js"></script-->
-				<script src="lib/materialize_v0.97.5/js/character_counter.js"></script>
-				<!--script src="lib/materialize_v0.97.5/js/carousel.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/slider.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/cards.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/chips.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/pushpin.js"></script-->
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/buttons.js"></script-->
+				<script src="../node_modules/materialize-css/js/buttons.js"></script>
+				<!--script src="../node_modules/materialize-css/js/transitions.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/"></script-->
+				<!--script src="../node_modules/materialize-css/js/date_picker/picker.js"></script-->
+				<!--script src="../node_modules/materialize-css/js//js/date_picker/picker.date.js"></script-->
+				<!--DEPRECATED: script src="lib/materialize_v0.97.5/js/character_counter.js"></script-->
+				<script src="../node_modules/materialize-css/js/character_counter.js"></script>
+				<!--script src="../node_modules/materialize-css/js/carousel.js"></script-->
 				<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
 		<!-- endbuild -->
 			
