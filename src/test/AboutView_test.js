@@ -80,6 +80,7 @@ describe('Class AboutView', function(){
 				expect(testModal.render).not.toEqual((new testApp.ModalView()).render);
 			});
 
+			
 			it('can render itself to the DOM', function() {
 				
 				// Just testing that something is rendered to its div, check details individually
@@ -118,7 +119,7 @@ describe('Class AboutView', function(){
 			});
 
 
-			it('can show and hide itself', function(done) {
+			/*it('can show and hide itself', function(done) {
 				
 				testModal.$renderContext().empty();
 
@@ -127,6 +128,34 @@ describe('Class AboutView', function(){
 				testModal.show({duration: 5});
 
 				expect(testModal.$renderContext().css('display')).toBe('block');
+
+				testModal.hide(5);
+
+				setTimeout(function() {
+					
+					expect(testModal.$renderContext().css('display')).toBe('none');
+
+					done();
+
+				}, 500);
+			});
+			*/
+
+			it('can show and hide itself', function(done) {
+				
+				testModal.$renderContext().empty();
+
+				testModal.render();
+
+				testModal.show(
+				{
+					done: function() {
+
+						expect(testModal.$renderContext().css('display')).toBe('block');
+					}
+
+					duration: 5
+				});
 
 				testModal.hide(5);
 

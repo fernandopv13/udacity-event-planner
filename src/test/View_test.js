@@ -238,44 +238,80 @@ describe('Abstract class View', function(){
 			});
 			
 
-			
-			xit('can hide itself', function() {
-
-			});
-
-
 			it('can tell if it is an instance of a given class or interface (by function reference)', function() {
 
 				expect(testView.isInstanceOf(app.View)).toBe(true);
+
+				expect(testView.isInstanceOf(app.IInterfaceable)).toBe(true);
 
 				expect(testView.isInstanceOf(Array)).toBe(false);
 			});
 
 
-			xit('can initialize itself', function() {
+			it('provides a cancel() method', function() {
 
-			});
-
-
-			xit('can clean up after itself when it unloads (i.e. hides)', function() {
-
-			});
-
-
-			xit('can show (i.e. unhide) itself', function() {
-
+				expect(typeof testView.cancel).toBe('function');
 			});
 			
 
-			xit('can render itself', function() {
+			it('provides a hide() method', function() {
 
+				expect(typeof testView.hide).toBe('function');
+			});
+			
+			
+			it('provides an init() method', function() {
+
+				expect(typeof testView.init).toBe('function');
+			});
+
+
+			it('provides a render() method', function() {
+
+				expect(typeof testView.render).toBe('function');
 			});
 			
 
-			xit('can render itself in response to an update from a Controller', function() {
+			it('provides a show() method', function() {
 
+				expect(typeof testView.show).toBe('function');
 			});
-			
+
+
+			it('runs an optional done() callback when the show() method has completed', function(done) {
+
+				var wasDoneCalled = false;
+
+				void testView.$renderContext($('body'));
+
+				testView.show(
+				{
+					done: function() {
+
+						wasDoneCalled = true;
+					
+					}.bind(this)
+				});
+
+				setTimeout(function() { // provide some time for the callback to complete
+
+					// taking the timeout it here should free up a lot of the concrete show() tests
+					// to rely on the callback instead
+
+					expect(wasDoneCalled).toBe(true);
+
+					done();
+
+				}, 100);
+
+				expect(true).toBe(true); // Jasmine may not see expect in timeout block
+			});
+
+
+			it('provides an update() method', function() {
+
+				expect(typeof testView.update).toBe('function');
+			});
 		});
 
 		describe('using static members', function() {

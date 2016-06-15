@@ -149,11 +149,11 @@
 
 						// test on development version of app
 						
-						//app.testutil.testTarget = (function() {path.pop(); path.pop(); return path.join('/') + '/index.html'})();
+						app.testutil.testTarget = (function() {path.pop(); path.pop(); return path.join('/') + '/index.html'})();
 
 						// test on production version of app
 						
-						app.testutil.testTarget = (function() {path.pop(); path.pop(); path.pop(); return path.join('/') + '/build/index.html'})();
+						//app.testutil.testTarget = (function() {path.pop(); path.pop(); path.pop(); return path.join('/') + '/build/index.html'})();
 
 					})();
 				</script>
@@ -197,6 +197,7 @@
 				<script src="ModalView_test.js"></script>
 			
 			<!-- MVC concrete Views -->
+				<!--
 				<script src="AboutView_test.js"></script>
 				<script src="AccountProfileView_test.js"></script>
 				<script src="AccountSettingsView_test.js"></script>
@@ -211,7 +212,6 @@
 				<script src="SignInView_test.js"></script>
 				<script src="SignOutView_test.js"></script>
 				<script src="SignUpView_test.js"></script>
-				<!--
 				-->
 			
 			<!-- MVC Controller and its delegates -->

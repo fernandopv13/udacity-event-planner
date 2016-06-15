@@ -527,7 +527,7 @@ var app = app || {}; // create a simple namespace for the module
 
 				done: function() {
 
-					void this.ready(true);
+					void this.ready(true); //DEPRECATED: Remove and fix what breaks
 
 					if (obj_options && obj_options.done) {obj_options.done();}
 				
