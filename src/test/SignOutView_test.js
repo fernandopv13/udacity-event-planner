@@ -137,6 +137,7 @@ describe('Class SignOutView', function(){
 			});
 
 
+			/*
 			it('can show and hide itself', function(done) {
 				
 				testModal.$renderContext().empty();
@@ -156,6 +157,56 @@ describe('Class SignOutView', function(){
 					done();
 
 				}, 500);
+			});
+			*/
+
+			it('can show itself', function(done) {
+				
+				testModal.$renderContext().empty();
+
+				testModal.render();
+
+				testModal.show(
+				{
+					done: function() {
+						
+						console.log('done');
+
+						expect(this.$renderContext().css('display')).toBe('block');
+
+						done();
+						
+					}.bind(testModal),
+
+					duration: 5
+				});
+
+				expect(true).toBe(true); // Jasmine may not see expect in block
+			});
+
+
+			it('can hide itself', function(done) {
+				
+				testModal.$renderContext().empty();
+
+				testModal.render();
+
+				testModal.hide(
+				{
+					complete: function() {
+
+						console.log('complete');
+
+						expect(this.$renderContext().css('display')).toBe('none');
+
+						done();
+
+					}.bind(testModal),
+
+					duration: 5
+				});
+
+				expect(true).toBe(true); // Jasmine may not see expect in block
 			});
 
 		

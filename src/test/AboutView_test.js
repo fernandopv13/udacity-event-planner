@@ -119,7 +119,8 @@ describe('Class AboutView', function(){
 			});
 
 
-			/*it('can show and hide itself', function(done) {
+			/*DEPRECATED
+			it('can show and hide itself', function(done) {
 				
 				testModal.$renderContext().empty();
 
@@ -141,7 +142,7 @@ describe('Class AboutView', function(){
 			});
 			*/
 
-			it('can show and hide itself', function(done) {
+			it('can show itself', function(done) {
 				
 				testModal.$renderContext().empty();
 
@@ -150,28 +151,50 @@ describe('Class AboutView', function(){
 				testModal.show(
 				{
 					done: function() {
+						
+						console.log('done');
 
-						expect(testModal.$renderContext().css('display')).toBe('block');
-					},
+						expect(this.$renderContext().css('display')).toBe('block');
+
+						done();
+						
+					}.bind(testModal),
 
 					duration: 5
 				});
 
-				testModal.hide(5);
+				expect(true).toBe(true); // Jasmine may not see expect in block
+			});
 
-				setTimeout(function() {
-					
-					expect(testModal.$renderContext().css('display')).toBe('none');
 
-					done();
+			it('can hide itself', function(done) {
+				
+				testModal.$renderContext().empty();
 
-				}, 500);
+				testModal.render();
+
+				testModal.hide(
+				{
+					complete: function() {
+
+						console.log('complete');
+
+						expect(this.$renderContext().css('display')).toBe('none');
+
+						done();
+
+					}.bind(testModal),
+
+					duration: 5
+				});
+
+				expect(true).toBe(true); // Jasmine may not see expect in block
 			});
 
 		
 		// Test presence of UI widgets
 
-			it('displays a main heading', function() {
+			xit('displays a main heading', function() {
 				
 				testModal.$renderContext().empty();
 
@@ -181,7 +204,7 @@ describe('Class AboutView', function(){
 			});
 
 
-			it('displays one or more paragraphs of text ', function() {
+			xit('displays one or more paragraphs of text ', function() {
 				
 				testModal.$renderContext().empty();
 
@@ -192,7 +215,7 @@ describe('Class AboutView', function(){
 			});
 
 			
-			it('displays an OK button', function() {
+			xit('displays an OK button', function() {
 				
 				testModal.$renderContext().empty();
 
@@ -203,7 +226,7 @@ describe('Class AboutView', function(){
 			});
 
 
-			it('does not display a cancel button', function() {
+			xit('does not display a cancel button', function() {
 				
 				testModal.$renderContext().empty();
 
@@ -216,7 +239,7 @@ describe('Class AboutView', function(){
 			
 		// Test UI behaviours
 
-			it('closes (hides) when the user clicks/taps OK', function(done) {
+			xit('closes (hides) when the user clicks/taps OK', function(done) {
 				
 				testModal.$renderContext().empty();
 

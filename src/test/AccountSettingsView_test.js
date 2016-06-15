@@ -123,6 +123,7 @@ describe('Class AccountSettingsView', function(){
 		});
 
 
+		/*DEPRECATED
 		it('can show and hide itself', function(done) {
 			
 			testView.show(5);
@@ -145,6 +146,42 @@ describe('Class AccountSettingsView', function(){
 
 			}, 1000); // Safari win needs longish delay here, others are OK with 25ms
 		});
+		*/
+
+		it('can show and hide itself', function(done) {
+				
+				expect(testElement.hasClass('hidden')).toBe(true);
+
+				expect(testElement.css('display')).toBe('none');
+
+				testView.show(
+				{
+					done: function() {
+
+						expect(testElement.hasClass('hidden')).toBe(false);
+
+						expect(testElement.css('display')).toBe('block');
+					},
+
+					duration: 5
+				});
+
+				testView.hide(
+				{
+					complete: function() {
+
+						expect(testElement.hasClass('hidden')).toBe(true);
+
+						expect(testElement.css('display')).toBe('none');
+					},
+
+					duration: 5
+				});
+
+				expect(true).toBe(true); // Jasmine may not see expect in block
+
+				done();
+			});
 
 	
 	// Test presence of UI widgets

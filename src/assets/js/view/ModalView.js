@@ -62,11 +62,16 @@ var app = app || {};
 	/** Closes modal dialog with no further action.
 	*
 	* Relies on Materialize leanModal so overriding default hide() method in View. 
+	*
+	* @param {Object} options JSON object with the same attributes as Materialize leanModal.closeModal (optional)
 	*/
 
-	module.ModalView.prototype.hide = function() {
+	module.ModalView.prototype.hide = function(obj_options) {
 
-		this.$renderContext().closeModal();
+		this.$renderContext().closeModal(
+		{
+			complete: obj_options && obj_options.complete ? obj_options.complete : null // Callback for Modal close
+		});
 	}
 
 
@@ -200,7 +205,7 @@ var app = app || {};
 	*
 	* Relies on Materialize leanModal so overriding default show() method in View. 
 	*
-	* @param {Object} options JSON object with the same attributes as Materialize leanModal (optional)
+	* @param {Object} options JSON object with the same attributes as Materialize leanModal.openModal (optional)
 	*/
 
 	module.ModalView.prototype.show = function(obj_options) {
