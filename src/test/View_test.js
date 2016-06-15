@@ -30,11 +30,13 @@ describe('Abstract class View', function(){
 
 	describe('instance', function() {
 
-		var testView;
+		var testView, wasDoneCalled;
 
 		beforeEach(function() {
 
 			testView = new app.View(app.Model, 'event-view', 'Test Heading');
+
+			wasDoneCalled = false;
 		});
 
 
@@ -260,6 +262,38 @@ describe('Abstract class View', function(){
 			});
 			
 			
+			it('runs an optional complete() callback when the hide() method has completed', function(done) {
+
+				//var wasDoneCalled = false;
+
+				void testView.$renderContext($('body'));
+
+				testView.hide(
+				{
+					duration: 5,
+
+					complete: function() {
+
+						wasDoneCalled = true;
+					
+					}.bind(this)
+				});
+
+				setTimeout(function() { // provide some time for the callback to complete
+
+					// taking the timeout it here should free up a lot of the concrete hide() tests
+					// to rely on the callback instead
+
+					expect(wasDoneCalled).toBe(true);
+
+					done();
+
+				}, 100);
+
+				expect(true).toBe(true); // Jasmine may not see expect in timeout block
+			});
+
+
 			it('provides an init() method', function() {
 
 				expect(typeof testView.init).toBe('function');
@@ -280,12 +314,14 @@ describe('Abstract class View', function(){
 
 			it('runs an optional done() callback when the show() method has completed', function(done) {
 
-				var wasDoneCalled = false;
+				//var wasDoneCalled = false;
 
 				void testView.$renderContext($('body'));
 
 				testView.show(
 				{
+					duration: 5,
+
 					done: function() {
 
 						wasDoneCalled = true;

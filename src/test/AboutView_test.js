@@ -152,7 +152,7 @@ describe('Class AboutView', function(){
 					done: function() {
 
 						expect(testModal.$renderContext().css('display')).toBe('block');
-					}
+					},
 
 					duration: 5
 				});

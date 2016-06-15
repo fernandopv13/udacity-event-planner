@@ -305,15 +305,22 @@ var app = app || {}; // create a simple namespace for the module
 		* @param Same as jQuery.hide()
 		*
 		* @return {void}
-		*
-		* @todo Find a way of re-styling the timepicker using CSS rather than JS, make am/pm button prettier
 		*/
 
 		module.View.prototype.hide = function(obj_options) {
 
 			void this.ready(false);
 
-			this.$renderContext().hide(obj_options ? obj_options : 'fast');
+			this.$renderContext().hide({
+
+				duration: obj_options && obj_options.duration ? obj_options.duration : 'fast',
+
+				complete: function() {
+
+					if (obj_options && obj_options.complete) {obj_options.complete();}
+				
+				}.bind(this)
+			});
 
 			this.$renderContext().addClass('hidden');
 
