@@ -304,6 +304,8 @@ var app = app || {}; // create a simple namespace for the module
 		*
 		* @param Same as jQuery.hide(), including optional complete() callback to run when view change has completed
 		*
+		* (for use e.g. when acting on confirmation action in ModalView, or in testing)
+		*
 		* @return {void}
 		*/
 
@@ -518,6 +520,8 @@ var app = app || {}; // create a simple namespace for the module
 		* Uses jQuery.show().
 		*
 		* @param Same as jQuery.show(), including optional done() callback to run when view change has completed
+		*
+		* (for use e.g. when acting on confirmation action in ModalView, or in testing)
 		*
 		* @return {void}
 		*
