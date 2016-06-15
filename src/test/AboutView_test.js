@@ -152,7 +152,7 @@ describe('Class AboutView', function(){
 				{
 					done: function() {
 						
-						console.log('done');
+						//console.log('done');
 
 						expect(this.$renderContext().css('display')).toBe('block');
 
@@ -177,7 +177,7 @@ describe('Class AboutView', function(){
 				{
 					complete: function() {
 
-						console.log('complete');
+						//console.log('complete');
 
 						expect(this.$renderContext().css('display')).toBe('none');
 
@@ -194,7 +194,7 @@ describe('Class AboutView', function(){
 		
 		// Test presence of UI widgets
 
-			xit('displays a main heading', function() {
+			it('displays a main heading', function() {
 				
 				testModal.$renderContext().empty();
 
@@ -204,7 +204,7 @@ describe('Class AboutView', function(){
 			});
 
 
-			xit('displays one or more paragraphs of text ', function() {
+			it('displays one or more paragraphs of text ', function() {
 				
 				testModal.$renderContext().empty();
 
@@ -215,7 +215,7 @@ describe('Class AboutView', function(){
 			});
 
 			
-			xit('displays an OK button', function() {
+			it('displays an OK button', function() {
 				
 				testModal.$renderContext().empty();
 
@@ -226,7 +226,7 @@ describe('Class AboutView', function(){
 			});
 
 
-			xit('does not display a cancel button', function() {
+			it('does not display a cancel button', function() {
 				
 				testModal.$renderContext().empty();
 
@@ -239,7 +239,7 @@ describe('Class AboutView', function(){
 			
 		// Test UI behaviours
 
-			xit('closes (hides) when the user clicks/taps OK', function(done) {
+			it('closes (hides) when the user clicks/taps OK', function(done) {
 				
 				testModal.$renderContext().empty();
 
@@ -272,5 +272,7 @@ describe('Class AboutView', function(){
 	afterAll(function() {
 
 		void testWindow.close();
+
+		testApp = testDoc = testElement = testModal = testView = testWindow = null;
 	});
 });

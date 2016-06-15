@@ -130,22 +130,15 @@ var app = app || {};
 
 	/** Shows FormView, making sure input field autofocus is re-applied after the in-animation has completed */
 
-	module.FormView.prototype.show = function() {
+	module.FormView.prototype.show = function(obj_options) {
 
 		module.View.prototype.show.call(this, {
 
 			done: function() {
 
+				if (obj_options && obj_options.done) {obj_options.done(obj_options);}
+
 				$(this.form()).find('[autofocus="true"]').focus();
-
-				/*void $.each($(this.form()).find('input'), function(ix, obj) {
-
-					if ($(obj).attr('autofocus')) {
-
-						$(obj).focus();
-					}
-				});
-				*/
 
 			}.bind(this)
 		});

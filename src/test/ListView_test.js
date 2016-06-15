@@ -66,7 +66,7 @@ describe('Abstract class ListView', function(){
 		
 		afterEach(function() {
 
-			testListView = null;
+			testListView = testView = null;
 		});
 		
 	});

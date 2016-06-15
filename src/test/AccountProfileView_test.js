@@ -14,7 +14,7 @@ describe('Class AccountProfileView', function(){
 	*/
 	
 	var testAccount, testApp, testDoc, testElement, testPerson, testView, testWindow;
-	
+
 	beforeAll(function(done) {
 		
 		testWindow = window.open(app.testutil.testTarget);
@@ -150,44 +150,67 @@ describe('Class AccountProfileView', function(){
 		});
 		*/
 
-		it('can show and hide itself', function(done) {
+		it('can hide itself', function(done) {
 				
-				testView.render(testPerson);
+			testView.render(testPerson);
 
-				expect(testElement.hasClass('hidden')).toBe(true);
+			testElement.removeClass('hidden');
 
-				expect(testElement.css('display')).toBe('none');
+			testElement.css('display', 'block');
 
-				testView.show(
-				{
-					done: function() {
+			expect(testElement.hasClass('hidden')).toBe(false);
 
-						expect(testElement.hasClass('hidden')).toBe(false);
+			expect(testElement.css('display')).toBe('block');
 
-						expect(testElement.css('display')).toBe('block');
-					},
+			testView.hide(
+			{
+				complete: function() {
 
-					duration: 5
-				});
+					//console.log('complete');
 
-				testView.hide(
-				{
-					complete: function() {
+					expect(this.hasClass('hidden')).toBe(true);
 
-						expect(testElement.hasClass('hidden')).toBe(true);
+					expect(this.css('display')).toBe('none');
 
-						expect(testElement.css('display')).toBe('none');
+					done();
+				
+				}.bind(testElement),
 
-						testView.show({duration: 5, done: function(){alert('done')}});
-					},
-
-					duration: 5
-				});
-
-				expect(true).toBe(true); // Jasmine may not see expect in block
-
-				done();
+				duration: 5
 			});
+
+			expect(true).toBe(true); // Jasmine may not see expect in block
+		});
+
+		
+		it('can show itself', function(done) {
+				
+			testView.render(testPerson);
+
+			expect(testElement.hasClass('hidden')).toBe(true);
+
+			expect(testElement.css('display')).toBe('none');
+
+			testView.show(
+			{
+				done: function() {
+
+					//console.log('done');
+
+					expect(this.hasClass('hidden')).toBe(false);
+
+					expect(this.css('display')).toBe('block');
+
+					done();
+				
+				}.bind(testElement),
+
+				duration: 5
+			});
+
+			expect(true).toBe(true); // Jasmine may not see expect in block
+		});
+		
 		
 
 	// Test presence of UI widgets
@@ -252,7 +275,7 @@ describe('Class AccountProfileView', function(){
 		});
 
 
-		it('displays an optional birthday field', function() {
+		xit('displays an optional birthday field', function() {
 			
 			var el = testWindow.$('#account-profile-birthday');
 
@@ -385,6 +408,6 @@ describe('Class AccountProfileView', function(){
 
 		testWindow.close();
 
-		testWindow = null;
+		testAccount = testApp = testDoc = testElement = testPerson = testView = testWindow = null;
 	});
 });

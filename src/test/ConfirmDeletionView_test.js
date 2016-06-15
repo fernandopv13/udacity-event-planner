@@ -135,6 +135,7 @@ describe('Class ConfirmDeletionView', function(){
 			});
 
 
+			/*DEPRECATED
 			it('can show and hide itself', function(done) {
 				
 				testModal.$renderContext().empty();
@@ -155,6 +156,57 @@ describe('Class ConfirmDeletionView', function(){
 
 				}, 500);
 			});
+			*/
+
+			it('can show itself', function(done) {
+				
+				testModal.$renderContext().empty();
+
+				testModal.render();
+
+				testModal.show(
+				{
+					done: function() {
+						
+						//console.log('done');
+
+						expect(this.$renderContext().css('display')).toBe('block');
+
+						done();
+						
+					}.bind(testModal),
+
+					duration: 5
+				});
+
+				expect(true).toBe(true); // Jasmine may not see expect in block
+			});
+
+
+			it('can hide itself', function(done) {
+				
+				testModal.$renderContext().empty();
+
+				testModal.render();
+
+				testModal.hide(
+				{
+					complete: function() {
+
+						//console.log('complete');
+
+						expect(this.$renderContext().css('display')).toBe('none');
+
+						done();
+
+					}.bind(testModal),
+
+					duration: 5
+				});
+
+				expect(true).toBe(true); // Jasmine may not see expect in block
+			});
+
 
 		
 		// Test presence of UI widgets
@@ -257,5 +309,7 @@ describe('Class ConfirmDeletionView', function(){
 	afterAll(function() {
 
 		testWindow.close();
+
+		testApp = testDoc = testElement = testModal = testView = testWindow = null;
 	});
 });

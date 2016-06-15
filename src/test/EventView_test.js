@@ -119,6 +119,7 @@ describe('Class EventView', function(){
 		});
 
 
+		/*DEPRECATED
 		it('can show and hide itself', function(done) {
 			
 			testView.render(testEvent);
@@ -142,6 +143,68 @@ describe('Class EventView', function(){
 				done();
 
 			}, 25);
+		});
+		*/
+
+		it('can hide itself', function(done) {
+				
+			testView.render(testEvent);
+
+			testElement.removeClass('hidden');
+
+			testElement.css('display', 'block');
+
+			expect(testElement.hasClass('hidden')).toBe(false);
+
+			expect(testElement.css('display')).toBe('block');
+
+			testView.hide(
+			{
+				complete: function() {
+
+					//console.log('complete');
+
+					expect(this.hasClass('hidden')).toBe(true);
+
+					expect(this.css('display')).toBe('none');
+
+					done();
+				
+				}.bind(testElement),
+
+				duration: 5
+			});
+
+			expect(true).toBe(true); // Jasmine may not see expect in block
+		});
+
+		
+		it('can show itself', function(done) {
+				
+			testView.render(testEvent);
+
+			expect(testElement.hasClass('hidden')).toBe(true);
+
+			expect(testElement.css('display')).toBe('none');
+
+			testView.show(
+			{
+				done: function() {
+
+					//console.log('done');
+
+					expect(this.hasClass('hidden')).toBe(false);
+
+					expect(this.css('display')).toBe('block');
+
+					done();
+				
+				}.bind(testElement),
+
+				duration: 5
+			});
+
+			expect(true).toBe(true); // Jasmine may not see expect in block
 		});
 
 	
@@ -530,6 +593,6 @@ describe('Class EventView', function(){
 
 		testWindow.close();
 
-		testWindow = null;
+		testAccount = testApp = testDoc = testElement = testEvent = testView = testWindow = null;
 	});
 });

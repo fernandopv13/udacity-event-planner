@@ -165,7 +165,7 @@ describe('Class FirstTimeSetupView', function(){
 				{
 					done: function() {
 						
-						console.log('done');
+						//console.log('done');
 
 						expect(this.$renderContext().css('display')).toBe('block');
 
@@ -190,7 +190,7 @@ describe('Class FirstTimeSetupView', function(){
 				{
 					complete: function() {
 
-						console.log('complete');
+						//console.log('complete');
 
 						expect(this.$renderContext().css('display')).toBe('none');
 
@@ -356,6 +356,8 @@ describe('Class FirstTimeSetupView', function(){
 
 	afterAll(function() {
 
-		testWindow.close()
+		testWindow.close();
+
+		testApp = testDoc = testElement = testModal = testView = testWindow = null;
 	});
 });

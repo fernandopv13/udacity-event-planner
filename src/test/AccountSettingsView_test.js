@@ -148,40 +148,62 @@ describe('Class AccountSettingsView', function(){
 		});
 		*/
 
-		it('can show and hide itself', function(done) {
+		it('can hide itself', function(done) {
 				
-				expect(testElement.hasClass('hidden')).toBe(true);
+			testView.render(testAccount);
 
-				expect(testElement.css('display')).toBe('none');
+			testElement.removeClass('hidden');
 
-				testView.show(
-				{
-					done: function() {
+			testElement.css('display', 'block');
 
-						expect(testElement.hasClass('hidden')).toBe(false);
+			expect(testElement.hasClass('hidden')).toBe(false);
 
-						expect(testElement.css('display')).toBe('block');
-					},
+			expect(testElement.css('display')).toBe('block');
 
-					duration: 5
-				});
+			testView.hide(
+			{
+				complete: function() {
 
-				testView.hide(
-				{
-					complete: function() {
+					expect(this.hasClass('hidden')).toBe(true);
 
-						expect(testElement.hasClass('hidden')).toBe(true);
+					expect(this.css('display')).toBe('none');
 
-						expect(testElement.css('display')).toBe('none');
-					},
+					done();
+				
+				}.bind(testElement),
 
-					duration: 5
-				});
-
-				expect(true).toBe(true); // Jasmine may not see expect in block
-
-				done();
+				duration: 5
 			});
+
+			expect(true).toBe(true); // Jasmine may not see expect in block
+		});
+
+		
+		it('can show itself', function(done) {
+				
+			testView.render(testAccount);
+
+			expect(testElement.hasClass('hidden')).toBe(true);
+
+			expect(testElement.css('display')).toBe('none');
+
+			testView.show(
+			{
+				done: function() {
+
+					expect(this.hasClass('hidden')).toBe(false);
+
+					expect(this.css('display')).toBe('block');
+
+					done();
+				
+				}.bind(testElement),
+
+				duration: 5
+			});
+
+			expect(true).toBe(true); // Jasmine may not see expect in block
+		});
 
 	
 	// Test presence of UI widgets
@@ -373,6 +395,6 @@ describe('Class AccountSettingsView', function(){
 
 		testWindow.close();
 
-		testWindow = null;
+		testAccount = testApp = testDoc = testElement = testView = testWindow = null;
 	});
 });

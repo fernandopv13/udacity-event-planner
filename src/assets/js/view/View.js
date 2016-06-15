@@ -302,7 +302,7 @@ var app = app || {}; // create a simple namespace for the module
 
 		/** Utility for hiding view in the UI on demand. Uses jQuery.hide().
 		*
-		* @param Same as jQuery.hide()
+		* @param Same as jQuery.hide(), including optional complete() callback to run when view change has completed
 		*
 		* @return {void}
 		*/
@@ -517,7 +517,7 @@ var app = app || {}; // create a simple namespace for the module
 		*
 		* Uses jQuery.show().
 		*
-		* @param Same as jQuery.show(), including optional done() Callback to run when view change has completed
+		* @param Same as jQuery.show(), including optional done() callback to run when view change has completed
 		*
 		* @return {void}
 		*

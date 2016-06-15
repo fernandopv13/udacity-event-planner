@@ -363,7 +363,7 @@ describe('Abstract class View', function(){
 
 		afterEach(function() {
 
-			testView = null;
+			testView = wasDoneCalled = null;
 		});
 		
 	});

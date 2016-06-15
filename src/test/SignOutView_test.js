@@ -170,7 +170,7 @@ describe('Class SignOutView', function(){
 				{
 					done: function() {
 						
-						console.log('done');
+						//console.log('done');
 
 						expect(this.$renderContext().css('display')).toBe('block');
 
@@ -195,7 +195,7 @@ describe('Class SignOutView', function(){
 				{
 					complete: function() {
 
-						console.log('complete');
+						//console.log('complete');
 
 						expect(this.$renderContext().css('display')).toBe('none');
 
@@ -310,5 +310,7 @@ describe('Class SignOutView', function(){
 	afterAll(function() {
 
 		testWindow.close();
+
+		testAccount = testApp = testDoc = testElement = testModal = testView = testWindow = null;
 	});
 });

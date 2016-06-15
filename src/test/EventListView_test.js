@@ -110,6 +110,7 @@ describe('class EventListView', function(){
 		});
 
 
+		/*DEPRECATED
 		it('can show and hide itself', function(done) {
 			
 			testView.render(testAccount);
@@ -133,6 +134,68 @@ describe('class EventListView', function(){
 				done();
 
 			}, 1000); //Safari Win requires a longish delay here, others are OK with 25ms
+		});
+		*/
+
+		it('can hide itself', function(done) {
+				
+			testView.render(testAccount);
+
+			testElement.removeClass('hidden');
+
+			testElement.css('display', 'block');
+
+			expect(testElement.hasClass('hidden')).toBe(false);
+
+			expect(testElement.css('display')).toBe('block');
+
+			testView.hide(
+			{
+				complete: function() {
+
+					//console.log('complete');
+
+					expect(this.hasClass('hidden')).toBe(true);
+
+					expect(this.css('display')).toBe('none');
+
+					done();
+				
+				}.bind(testElement),
+
+				duration: 5
+			});
+
+			expect(true).toBe(true); // Jasmine may not see expect in block
+		});
+
+		
+		it('can show itself', function(done) {
+				
+			testView.render(testAccount);
+
+			expect(testElement.hasClass('hidden')).toBe(true);
+
+			expect(testElement.css('display')).toBe('none');
+
+			testView.show(
+			{
+				done: function() {
+
+					//console.log('done');
+
+					expect(this.hasClass('hidden')).toBe(false);
+
+					expect(this.css('display')).toBe('block');
+
+					done();
+				
+				}.bind(testElement),
+
+				duration: 5
+			});
+
+			expect(true).toBe(true); // Jasmine may not see expect in block
 		});
 
 
@@ -221,6 +284,6 @@ describe('class EventListView', function(){
 
 		testWindow.close();
 
-		testWindow = null;
+		testAccount = testApp = testDoc = testElement = testView = testWindow = null;
 	});
 });
