@@ -52,7 +52,7 @@ describe('Class PersonView', function(){
 
 			done();
 
-		}, 2000); // wait for page to load
+		}, app.testutil.pageLoadDelay); // wait for page to load
 	});
 	
 	
@@ -313,8 +313,23 @@ describe('Class PersonView', function(){
 
 		it('autofocuses on the name field', function(done) {
 			
-			testView.show(); // make sure view is fully initialized
+			testView.show( // make sure view is fully initialized
+			{
+				done: function(){ // wait for animation to complete
 
+					var el = testWindow.$('#guest-name');
+
+					expect(el.attr('autofocus')).toBe('autofocus');
+
+					expect(testWindow.document.activeElement.id).toBe('guest-name');
+
+					done();
+				},
+
+				duration: 5
+			});
+
+			/*DEPRECATED
 			setTimeout(function() {
 
 				var el = testWindow.$('#guest-name');
@@ -325,7 +340,8 @@ describe('Class PersonView', function(){
 
 				done();
 
-			}, 500); // wait for testWindow show() animation to complete
+			}, app.testutil.animationDelay); // wait for testWindow show() animation to complete
+			*/
 		});
 		
 

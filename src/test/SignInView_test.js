@@ -42,7 +42,7 @@ describe('Class SignInView', function(){
 
 			done();
 
-		}, 2000); // wait for page to load
+		}, app.testutil.pageLoadDelay); // wait for page to load
 	});
 
 	
@@ -151,7 +151,7 @@ describe('Class SignInView', function(){
 			{
 				complete: function() {
 
-					console.log('complete');
+					//console.log('complete');
 
 					expect(this.hasClass('hidden')).toBe(true);
 
@@ -180,7 +180,7 @@ describe('Class SignInView', function(){
 			{
 				done: function() {
 
-					console.log('done');
+					//console.log('done');
 
 					expect(this.hasClass('hidden')).toBe(false);
 

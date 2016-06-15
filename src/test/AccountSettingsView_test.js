@@ -18,10 +18,6 @@ describe('Class AccountSettingsView', function(){
 	
 	beforeAll(function(done){
 		
-		//testWindow = window.open('../index.html'); // test on development version of app
-
-		//testWindow = window.open('../../build/index.html'); // test on production version of app
-
 		testWindow = window.open(app.testutil.testTarget);
 		
 		setTimeout(function() {
@@ -48,7 +44,7 @@ describe('Class AccountSettingsView', function(){
 
 			done();
 
-		}, 2000); // wait for page to load
+		}, app.testutil.pageLoadDelay); // wait for page to load
 		
 	});
 	
@@ -304,8 +300,7 @@ describe('Class AccountSettingsView', function(){
 
 		it('autofocuses on the email field', function(done) {
 			
-			testView.show(); // make sure view is fully initialized
-
+			/*DEPRECATED
 			setTimeout(function() {
 
 				var el = testWindow.$('#account-settings-email');
@@ -316,7 +311,25 @@ describe('Class AccountSettingsView', function(){
 
 				done();
 
-			}, 500); // wait for testWindow show() animation to complete
+			}, app.testutil.animationDelay); // wait for testWindow show() animation to complete
+			*/
+
+
+			testView.show( // make sure view is fully initialized
+			{
+				done: function(){ // wait for animation to complete
+
+					var el = testWindow.$('#account-settings-email');
+
+					expect(el.attr('autofocus')).toBe('autofocus');
+
+					expect(testWindow.document.activeElement.id).toBe('account-settings-email');
+
+					done();
+				},
+
+				duration: 5
+			});
 		});
 		
 

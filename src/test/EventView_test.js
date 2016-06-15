@@ -51,7 +51,7 @@ describe('Class EventView', function(){
 
 			done();
 
-		}, 2000); // wait for page to load		
+		}, app.testutil.pageLoadDelay); // wait for page to load		
 	});
 
 	
@@ -353,6 +353,7 @@ describe('Class EventView', function(){
 			
 			testView.show(); // make sure view is fully initialized
 
+			/*DEPRECATED
 			setTimeout(function() {
 
 				var el = testWindow.$('#event-name');
@@ -363,7 +364,24 @@ describe('Class EventView', function(){
 
 				done();
 
-			}, 500); // wait for testWindow show() animation to complete
+			}, app.testutil.animationDelay); // wait for testWindow show() animation to complete
+			*/
+
+			testView.show( // make sure view is fully initialized
+			{
+				done: function(){ // wait for animation to complete
+
+					var el = testWindow.$('#event-name');
+
+					expect(el.attr('autofocus')).toBe('autofocus');
+
+					expect(testWindow.document.activeElement.id).toBe('event-name');
+
+					done();
+				},
+
+				duration: 5
+			});
 		});
 		
 
@@ -387,7 +405,7 @@ describe('Class EventView', function(){
 
 				done();
 
-			}, 5000); // allow some time for the location search API to respond
+			}, app.testutil.ajaxDelay); // allow some time for the location search API to respond
 
 			expect(true).toBe(true);
 		});
@@ -411,7 +429,7 @@ describe('Class EventView', function(){
 
 				done();
 
-			}, 5000); // allow some time for the list generation to respond
+			}, app.testutil.ajaxDelay); // allow some time for the list generation to respond
 
 			expect(true).toBe(true);
 		});
@@ -435,7 +453,7 @@ describe('Class EventView', function(){
 
 				done();
 
-			}, 3000); // allow some time for the list generation to respond
+			}, app.testutil.ajaxDelay); // allow some time for the list generation to respond
 
 			expect(true).toBe(true);
 		});

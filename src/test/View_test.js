@@ -281,7 +281,7 @@ describe('Abstract class View', function(){
 
 				setTimeout(function() { // provide some time for the callback to complete
 
-					// taking the timeout it here should free up a lot of the concrete hide() tests
+					// taking the timeout hit here should free up a lot of the concrete hide() tests
 					// to rely on the callback instead
 
 					expect(wasDoneCalled).toBe(true);
@@ -331,7 +331,7 @@ describe('Abstract class View', function(){
 
 				setTimeout(function() { // provide some time for the callback to complete
 
-					// taking the timeout it here should free up a lot of the concrete show() tests
+					// taking the timeout hit here should free up a lot of the concrete show() tests
 					// to rely on the callback instead
 
 					expect(wasDoneCalled).toBe(true);

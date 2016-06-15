@@ -38,7 +38,7 @@ describe('Class SignUpView', function(){
 
 			done();
 
-		}, 2000); // wait for page to load//500
+		}, app.testutil.pageLoadDelay); // wait for page to load//500
 		
 	});
 	
@@ -419,7 +419,7 @@ describe('Class SignUpView', function(){
 
 				done();
 
-			}, 500);
+			}, app.testutil.animationDelay);
 		});
 
 

@@ -43,7 +43,7 @@ describe('Class FirstTimeSetupView', function(){
 
 			done();
 
-		}, 2000); // wait for page to load		
+		}, app.testutil.pageLoadDelay); // wait for page to load		
 	});
 	
 	

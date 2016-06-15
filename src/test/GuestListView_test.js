@@ -46,7 +46,7 @@ describe('class GuestListView', function(){
 
 			done();
 
-		}, 2000); // wait for page to load		
+		}, app.testutil.pageLoadDelay); // wait for page to load		
 	});
 
 
@@ -257,7 +257,7 @@ describe('class GuestListView', function(){
 
 					done();
 
-				}, 25);
+				}, app.testutil.propagationDelay);
 			}
 
 			else {

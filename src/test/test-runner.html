@@ -140,7 +140,7 @@
 				
 				<script src="FourSquareSearch_test.js"></script>
 
-			<!-- Test target (i.e. src or build) -->
+			<!-- Test target (i.e. src or build) and other run settings -->
 				<script>
 					
 					(function() { // some successive test suites get confused by simple relative URL, so elaborating
@@ -154,6 +154,14 @@
 						// test on production version of app
 						
 						//app.testutil.testTarget = (function() {path.pop(); path.pop(); path.pop(); return path.join('/') + '/build/index.html'})();
+
+						app.testutil.ajaxDelay = 500; // default time to wait for external api calls to complete (e.g. Foursquare, in ms)
+
+						app.testutil.animationDelay = 500; // default time to wait for view animations to complete (e.g. show/hide view, in ms)
+
+						app.testutil.pageLoadDelay = 2000; // default time to wait for page to load when opening in new window (in ms)
+
+						app.testutil.propagationDelay = 25; // default time to wait for simple function calls to propagate (in ms)
 
 					})();
 				</script>
@@ -197,8 +205,8 @@
 				<script src="ModalView_test.js"></script>
 			
 			<!-- MVC concrete Views -->
-				<script src="AboutView_test.js"></script>
 				<script src="AccountProfileView_test.js"></script>
+				<script src="AboutView_test.js"></script>
 				<script src="AccountSettingsView_test.js"></script>
 				<script src="ConfirmDeletionView_test.js"></script>
 				<script src="EventListView_test.js"></script>
@@ -206,8 +214,8 @@
 				<script src="FirstTimeSetupView_test.js"></script>
 				<script src="FrontPageView_test.js"></script>
 				<script src="GuestListView_test.js"></script>
-				<script src="PersonView_test.js"></script>
 				<script src="Navigation_test.js"></script>
+				<script src="PersonView_test.js"></script>
 				<script src="SignInView_test.js"></script>
 				<script src="SignOutView_test.js"></script>
 				<script src="SignUpView_test.js"></script>

@@ -44,7 +44,7 @@ describe('class EventListView', function(){
 
 			done();
 
-		}, 2000); // wait for page to load		
+		}, app.testutil.pageLoadDelay); // wait for page to load		
 	});
 
 
@@ -251,7 +251,7 @@ describe('class EventListView', function(){
 
 					done();
 
-				}, 25);
+				}, app.testutil.propagationDelay);
 			}
 			else {
 		
@@ -266,8 +266,26 @@ describe('class EventListView', function(){
 			
 			testView.render(testAccount);
 
-			testView.show(5);
+			testView.show(
+			{
+				done: function() {
 
+					//console.log('done');
+
+					this.$renderContext().find('#event-list-add').trigger('click');
+
+					expect(testApp.controller.currentView().constructor).toBe(testApp.EventView);
+
+					done();
+
+				}.bind(testView),
+
+				duration: 5
+			});
+
+			expect(true).toBe(true);
+
+			/*DEPRECATED
 			setTimeout(function() {
 				
 				testElement.find('#event-list-add').trigger('click');
@@ -277,6 +295,7 @@ describe('class EventListView', function(){
 				done();
 
 			}, 25);
+			*/
 		});
 
 

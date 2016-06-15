@@ -47,7 +47,7 @@ describe('Class AccountProfileView', function(){
 
 			done();
 
-		}, 2000); // wait for page to load
+		}, app.testutil.pageLoadDelay); // wait for page to load
 	});
 	
 	
@@ -319,6 +319,7 @@ describe('Class AccountProfileView', function(){
 			
 			testView.show(); // make sure view is fully initialized
 
+			/*DEPRECATED
 			setTimeout(function() {
 
 				var el = testWindow.$('#account-profile-name');
@@ -329,7 +330,25 @@ describe('Class AccountProfileView', function(){
 
 				done();
 
-			}, 500); // wait for testWindow show() animation to complete
+			}, app.testutil.animationDelay); // wait for testWindow show() animation to complete
+			*/
+
+			testView.show( // make sure view is fully initialized
+			{
+				done: function(){ // wait for animation to complete
+
+					var el = testWindow.$('#account-profile-name');
+
+					expect(el.attr('autofocus')).toBe('autofocus');
+
+					expect(testWindow.document.activeElement.id).toBe('account-profile-name');
+
+					done();
+				},
+
+				duration: 5
+			});
+
 		});
 
 
