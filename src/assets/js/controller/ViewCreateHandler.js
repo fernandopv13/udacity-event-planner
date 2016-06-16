@@ -16,7 +16,7 @@ var app = app || {};
 	*
 	* @extends ViewUpdateHandler
 	*
-	* @author Ulrik H. Gade, May 2016
+	* @author Ulrik H. Gade, June 2016
 	*/
 
 	module.ViewCreateHandler = function(Controller_c) {
@@ -83,15 +83,15 @@ var app = app || {};
 		
 		function initModel(Model_m, Model_new, View_new) { // do work common to all Model creations
 
-			Model_m.delete(); Model_m = null; // clear tmp object for garbage collection
+			void Model_m.delete(); Model_m = null; // clear tmp object for garbage collection
 
-			ctrl.newModel(Model_new); // replace with new Model and store for future reference
+			void ctrl.newModel(Model_new); // replace with new Model and store for future reference
 
 			//ctrl.registerObserver(Model_new); // register new Model and controller as mutual observers
 
 			//Model_new.registerObserver(ctrl);
 
-			ctrl.registerMutualObserver(Model_new); // register new Model and controller as mutual observers
+			void ctrl.registerMutualObserver(Model_new); // register new Model and controller as mutual observers
 
 			self.notifyObservers(Model_new, View_new); // render/refresh the view in the background
 		}
@@ -217,9 +217,13 @@ var app = app || {};
 
 				void ctrl.selectedEvent(Model_n); // set new Event as selected
 
+				void ctrl.views().eventView.heading('Add Event')// set view heading
+
 				initModel(Model_m, Model_n, ctrl.views().eventView); // do boilerplate initialization
 
 				ctrl.onEventSelected.call(ctrl, Model_n); // show the View
+
+				void ctrl.views().eventView.heading('Edit Event')// reset view heading
 
 				break;
 
@@ -235,9 +239,13 @@ var app = app || {};
 
 					void ctrl.selectedGuest(Model_n); // set new person as selected
 
+					void ctrl.views().personView.heading('Add Guest')// set view heading
+
 					initModel(Model_m, Model_n, ctrl.views().personView); // do boilerplate initialization
 
 					ctrl.onGuestSelected.call(ctrl, Model_n); // show the view
+
+					void ctrl.views().personView.heading('Edit Guest')// reset view heading
 				}
 				
 				else { // inform user of capacity constraint
