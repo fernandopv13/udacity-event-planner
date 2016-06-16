@@ -15,7 +15,7 @@ var app = app || {};
 	*
 	* @extends UIWidget
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, June 2016
 	*
 	* @return {NavigationWidget} Not supposed to be instantiated, except when creating singleton
 	*/
@@ -420,7 +420,9 @@ var app = app || {};
 				
 				$(element).find('.button-collapse').sideNav(); // initialize Materialize 'hamburger' menu
 
-				$(element).find('.nav-menu-item').on('mousedown', function(nEvent) { // side nav and dropdown menu items
+				$(element).find('.nav-menu-item').on('click', function(nEvent) { // side nav and dropdown menu items
+
+					// mousedown prevents autofocus on iOS, so using click
 
 					$(element).find('.button-collapse').sideNav('hide');
 

@@ -15,7 +15,7 @@ var app = app || {};
 	*
 	* @extends UIWidget
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, June 2016
 	*
 	* @return {NormalButtonWidget} Not supposed to be instantiated, except when creating singleton
 	*/
@@ -133,7 +133,7 @@ var app = app || {};
 
 			if (options.action && typeof options.action === 'function') {
 			
-				$(buttonElement).on('mousedown', options.action);
+				$(buttonElement).on('click', options.action); // mousedown prevents autofocus on iOS, so going with click
 			}
 
 			return buttonElement;
