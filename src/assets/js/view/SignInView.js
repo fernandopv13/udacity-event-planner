@@ -264,7 +264,7 @@ var app = app || {};
 				{
 					element: 'div',			
 					
-					classList: ['row', 'center-align'],//, 'hidden'] // // Udacity reviewer didn't like this idea, so hiding it
+					classList: ['row', 'center-align', 'hidden'] // // Udacity reviewer didn't like this idea, so hiding it
 				}
 			);
 

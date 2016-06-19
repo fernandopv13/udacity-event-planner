@@ -85,6 +85,7 @@ var app = app || {};
 
 				var container = document.createElement('div');
 
+				/*
 				container.appendChild(self.createWidget(
 
 					'HTMLElement',
@@ -93,9 +94,10 @@ var app = app || {};
 
 						id: 'setup-intro',
 
-						innerHTML: 'Before you start using the app, please decide about these permissions.'
+						innerHTML: 'Please decide about these permissions.'
 					}
 				));
+				*/
 
 				container.appendChild(self.createWidget(
 
@@ -116,7 +118,7 @@ var app = app || {};
 					'InputDescriptionWidget',
 
 					{
-						datasource: 'Please allow the app to store your account and event details on this device. Otherwise, you will have to start over from scratch every time you come back to the app.',
+						datasource: 'Allows the app to store your account information on this device.',
 
 						divider: false
 					}
@@ -141,7 +143,7 @@ var app = app || {};
 					'InputDescriptionWidget',
 
 					{
-						datasource: 'Allowing geolocation will enable the app to suggest event venues and other useful information based on the location of this device (optional).',
+						datasource: 'Allows the app to make useful suggestions based on the location of this device',
 
 						divider: false
 					}
@@ -155,7 +157,7 @@ var app = app || {};
 
 						id: 'setup-outro',
 
-						innerHTML: 'You can change these choices at any time in the app\'s Account Settings.'
+						innerHTML: 'See Account Settings for more info, or if you change your mind.'
 					}
 				));
 
