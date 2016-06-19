@@ -90,7 +90,7 @@ var app = app || {};
 
 		if (view) {
 
-			if (clone !== null && source !== null) { // a transaction is in progress
+			if (clone !== null && source !== null) { //console.log('transaction in progress');
 
 				if (Model_m !== null && Model_m.constructor === clone.constructor
 
@@ -116,10 +116,10 @@ var app = app || {};
 
 				this.notifyObservers(Model_m, View_v); // render/refresh the view in the background
 
-				ctrl.currentView(view, Model_m); // show the view
+				ctrl.currentView(view, Model_m).className(); // show the view
 			}
 
-			else { // navigate to view
+			else { //console.log('no transaction')
 			
 				if (Model_m === null) { // try to match view with model, if missing (e.g. when called from navbar item)
 

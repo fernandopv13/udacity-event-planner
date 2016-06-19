@@ -41,15 +41,42 @@ var app = app || {};
 
 	module.Router.prototype.onPopState = function(PopStateEvent_e) {
 
+		var view, className, id;
+
 		//console.log(PopStateEvent_e);
 
-		if (PopStateEvent_e.state === null) { // ignore redudant calls from closing ModalViews in some browsers
+		if (PopStateEvent_e.state === null) { //console.log('handle redundant null request (from ModalView)');
 
-			//console.log('ignoring redundant null request');
+			if (history.state === null) { //console.log('replace redundant null entry in browser history');
 
-			if (history.state === null) { // clean out redunant null entries in browser history
+				view = module.controller.currentView();
 
-				if (!(module.device().isiOS() && module.device().isChrome())) { // work around apparent bug in iOS Chrome
+				className = view ? view.className() : null;
+
+				id = view && view.model() ? view.model().id(): null;
+
+				//console.log(history.state);
+
+				history.replaceState( // state object
+				{
+					className: className,
+
+					id: id
+				},
+
+					'', // title
+
+					'#!' // URL
+
+					+ className.toLowerCase().slice(0, className.length - 4) // pop 'View' from class name
+
+					+ '?id=' + id // add model object id
+				);
+
+				//console.log(history.state);
+
+				/*DEPRECATED: Solved by using replaceState
+				if (!(module.device().isiOS() && module.device().isChrome())) { //console.log('browser is not iOS Chrome');
 
 					// When popping a null entry, iOS Chrome seems to also pop the next item on the stack, causing
 
@@ -59,17 +86,11 @@ var app = app || {};
 
 					// before it takes effect. There seems to be no way around this compromise without resorting to
 
-					// 3rd party polyfills (e.g. History.js), which I would rather avoid in this project (nned to wrap it up).
+					// 3rd party polyfills (e.g. History.js), which I would rather avoid in this project (need to wrap it up).
 
-					//console.log('removing redundant null entry');
+					console.log('removing redundant null entry');
 
 					history.back();
-				}
-
-				/*
-				else {
-
-					console.log('skipping iOS Chrome');
 				}
 				*/
 			}
@@ -77,11 +98,11 @@ var app = app || {};
 
 		else { // navigate to requested View
 
-			var className = PopStateEvent_e.state.className,
+			className = PopStateEvent_e.state.className;
 
 			id = parseInt(PopStateEvent_e.state.id);
 
-			//console.log('popping ' + className); // debug
+			console.log('popping ' + className); // debug
 
 			switch (className) { // use the MVC protocol to simulate an update from a view
 
@@ -133,7 +154,7 @@ var app = app || {};
 
 				if (!history.state || history.state.className !== className) { // don't set state if navigating back
 
-					//console.log('pushing ' + className); // debug
+					console.log('pushing ' + className); // debug
 
 					history.pushState( // state object
 					{

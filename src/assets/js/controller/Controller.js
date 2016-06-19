@@ -417,7 +417,7 @@ var app = app || {};
 					_router = new module.Router();
 
 					window.onpopstate = function(event) {this.onPopState(event);}.bind(this);
-
+					
 
 				// UI
 
@@ -563,7 +563,7 @@ var app = app || {};
 
 						if (Model_m === null || (typeof Model_m !== 'undefined' && Model_m.isInstanceOf && Model_m.isInstanceOf(module.Model))) { //console.log('first param is instance of Model, or null');
 
-							//console.log('entering ___update()');
+							//console.log('notifying ' + View_v.className());
 
 							//console.log('Notifying Views of update from ViewUpdateHandler: Model, View');
 
@@ -642,9 +642,9 @@ var app = app || {};
 
 				var args = arguments, ret = false, strategies = [_update, __update, ___update, ____update];
 
-				//console.log(args);
-
 				//console.log('entering controller.update()'); // debug
+
+				//console.log(args);
 
 				for (var i = 0, len = strategies.length; i < len; i++) { // using 'for' b/c forEach does not support break
 

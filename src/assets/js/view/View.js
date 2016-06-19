@@ -579,6 +579,8 @@ var app = app || {}; // create a simple namespace for the module
 
 						//console.log('Received update to ' + View_v.className()); // debug
 
+						//console.log(Model_m);
+
 						this.model(Model_m);
 
 						this.render(Model_m);

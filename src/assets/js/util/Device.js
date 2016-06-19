@@ -89,6 +89,31 @@ var app = app || {}; // Create a simple namespace for the app
 				|| /crios/i.test(navigator.userAgent.toLowerCase()); // on iOS, Chrome identifies as 'CriOS'
 	}
 
+
+	/**
+	* Gets whether browser is Microsoft Edge or not
+	*
+	* @return {Boolean} true if browser is Firefox, otherwise false
+	*/
+	
+	module.Device.prototype.isEdge = function() {
+
+		return /edge/i.test(navigator.userAgent.toLowerCase());
+	}
+
+
+	/**
+	* Gets whether browser is Mozilla Firefox or not
+	*
+	* @return {Boolean} true if browser is Firefox, otherwise false
+	*/
+	
+	module.Device.prototype.isFirefox = function() {
+
+		return /firefox/i.test(navigator.userAgent.toLowerCase());
+	}
+
+
 	/**
 	* Gets whether device runs iOS (i.e. is an Apple iPhone, iPad or iPod) or not
 	*
@@ -220,6 +245,10 @@ var app = app || {}; // Create a simple namespace for the app
 			android: this.isAndroid(),
 
 			chrome: this.isChrome(),
+
+			edge: this.isEdge(),
+
+			firefox: this.isFirefox(),
 
 			iOS: this.isiOS(),
 

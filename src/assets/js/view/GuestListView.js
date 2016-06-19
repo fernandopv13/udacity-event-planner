@@ -110,17 +110,18 @@ var app = app || {};
 
 						function(nEvent) {
 							
-							 // Hack: work around iOS history weirdness causing back() to reload app
-							 // Spent ages trying to analyze the cause, to no avail, so settling for what works.
-							 // Too late to capture problem in Router.onPopState, so doing it here.
+							/*DEPRECATED: Solved by using replaceState in Router
+							// Hack: work around iOS history weirdness causing back() to reload app
+							// Spent ages trying to analyze the cause, to no avail, so settling for what works.
+							// Too late to capture problem in Router.onPopState, so doing it here.
 							
-							if (module.device().isiOS() && module.controller.recentDeleted) {
+							if (module.device().isiOS() && module.controller.recentDeleted) { console.log('pushing a redundant state object to workaround apparent iOS bug');
 
-								history.pushState( // pushing a redundant state object seems to do the trick
+								history.pushState( 
 								{
 									className: 'EventView',
 
-									id: Event_e.id()
+									id: null//Event_e ? Event_e.id() : null
 								},
 
 									'', // title
@@ -129,20 +130,25 @@ var app = app || {};
 
 									+ 'Event'
 
-									+ '?id=' + Event_e.id()
+									+ '?id=' + 'null'//Event_e ? Event_e.id() : 'null'
 								);
+
+								console.log(history.state);
 
 								module.controller.recentDeleted = false;
 
 								window.history.go(module.device().isChrome() ? -4: -2); // skip back to EventView (Chroms and Safari have different behaviours)
 							}
 
-							else { // normal operation in compliant browsers
+							else { console.log('normal click handler');
 
 								window.history.back();
 
 								//$('#secondary-nav').off();
 							}
+							*/
+
+							history.back();
 
 						}.bind(this)
 				}

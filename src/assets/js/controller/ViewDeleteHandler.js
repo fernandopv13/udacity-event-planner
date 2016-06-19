@@ -125,13 +125,13 @@ var app = app || {};
 
 				this.notifyObservers(ctrl.selectedAccount(), ctrl.views().eventListView); // render/refresh EventListView in the background
 
-				ctrl.currentView(ctrl.views().eventListView, ctrl.selectedAccount()); // show the view
+				void ctrl.currentView(ctrl.views().eventListView, ctrl.selectedAccount()); // show the view
 
 				Materialize.toast('Event was deleted', module.prefs.defaultToastDelay());
 
 				break;
 
-			case module.Person: // assume we're removing a guest from an event; don't delete
+			case module.Person: console.log('assume we\'re removing a guest from an event; don\'t delete');
 
 				void ctrl.selectedEvent().removeGuest(Model_m); // remove from event (but keep in account)
 
@@ -139,13 +139,19 @@ var app = app || {};
 
 				void ctrl.newModel(null); // remove reference to model if it was just created
 
-				this.notifyObservers(ctrl.selectedEvent(), ctrl.views().guestListView); // render/refresh guestListView in the background
+				//ctrl.recentDeleted = true; // HACK: flag used by secondary nav workaround in GuestListView
+				
+				//this.notifyObservers(ctrl.selectedEvent(), ctrl.views().guestListView); // render/refresh guestListView in the background
 
-				ctrl.recentDeleted = true;
+				history.go( // navigate back to guest list (working around strange history bug)
 
-				window.history.back();
+					module.device().isiOS() ? (module.device().isSafari() ? -2 : -1) :
 
-				//window.history.go(module.device().isiOS() ? -2 : -1); // navigate back to guest list (working around strange iOS Safari/Chrome bug)
+					module.device().isEdge() ? -3 : // bug: Edge pops the history but does not navigate
+
+					module.device().isChrome() || module.device().isFirefox() ? -2 : -1
+				);
+
 
 				Materialize.toast('Guest was removed from event', module.prefs.defaultToastDelay());
 
