@@ -885,7 +885,7 @@ var app = app || {};
 			}
 		}
 
-		if (position) {// position is defined
+		if (position) {// position is defined, so search for venues
 
 			module.prefs.locationSearchProvider().execute(function(venues) { // get venues (max on mobile, fewer in desktop)
 
@@ -904,7 +904,39 @@ var app = app || {};
 			}, position);	
 		}
 		
-		// else don't provide suggestions
+		else { // parse existing events in this account for locations
+
+			var events = module.controller.selectedAccount().events(),
+
+			list = [],
+
+			location;
+			
+			if (events) {
+
+				events.forEach(function(event){
+					
+					location = event.location();
+
+					if (location && list.indexOf(location) === -1) {
+
+						list.push(location);
+					}
+				});
+
+			}
+
+			list.sort(function(a,b) { // sort ascending
+				
+					a = a.toLowerCase();
+					
+					b = b.toLowerCase();
+					
+					return a === b ? 0 : +(a > b) || -1;
+			});
+
+			module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
+		}
 	};
 
 
