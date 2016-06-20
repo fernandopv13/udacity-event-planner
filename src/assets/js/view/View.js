@@ -40,7 +40,7 @@ var app = app || {}; // create a simple namespace for the module
 	*
 	* @return {View} Not supposed to be instantiated, except when extended by subclasses. But subclasses need to be able to call constructor when setting up inheritance.
 	*
-	* @author Ulrik H. Gade, May 2016
+	* @author Ulrik H. Gade, June 2016
 	*/
 
 
@@ -364,8 +364,6 @@ var app = app || {}; // create a simple namespace for the module
 
 				}.bind(this));
 
-				console.log(!excluded);
-
 				if (!excluded) { // view not excluded from having nav bar
 
 					if ($('#nav-main').length === 0) { // nav bar not already in DOM
@@ -432,7 +430,7 @@ var app = app || {}; // create a simple namespace for the module
 						//module.NavigationWidget.instance().init(this, 'nav-main', {}); // initialize in DOM
 					}
 
-					else if ($('#nav-main').hasClass('hidden')) { // nav bar in DOM, but hidden, so show
+					else if ($('#nav-main').hasClass('hidden') || $('#nav-main').css('display') === 'none') { // nav bar in DOM, but hidden, so show
 
 						$('#nav-main').removeClass('hidden');
 
