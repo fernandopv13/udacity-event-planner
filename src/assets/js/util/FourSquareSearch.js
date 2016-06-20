@@ -19,7 +19,7 @@ app.FourSquare = app.FourSquare || {};
 *
 * @return {FourSquareSearch} A new FourSquareSearch instance
 *
-* @author Ulrik H. Gade, December 2015
+* @author Ulrik H. Gade, June 2016
 */
 
 app.FourSquareSearch = function(int_count) {
@@ -86,19 +86,22 @@ app.FourSquareSearch.prototype.execute = function(callback, obj_location) {
 		
 			var venues = data.response.venues;
 					
-			// Sort venues ascending by name
+			// Sort venues ascending by name, if search was unsuccesfull
 				
-			venues.sort(function(a,b){
+			if (venues) { // venues is 'undefined' if no results
+
+				venues.sort(function(a,b){
 				
-				a = a.name.toLowerCase();
-				
-				b = b.name.toLowerCase();
-				
-				return a === b ? 0 : +(a > b) || -1;
-			});
+					a = a.name.toLowerCase();
+					
+					b = b.name.toLowerCase();
+					
+					return a === b ? 0 : +(a > b) || -1;
+				});
+			}
 
 
-			callback(venues);
+			callback(venues ? venues : []); // make sure return value is always an Array
 		},
 		
 		error: function(e) { // request failed, so log error

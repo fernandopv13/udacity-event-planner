@@ -1,4 +1,4 @@
-/** Slight override of Materialize's forms.js component library, with these aims:
+/* Slight override of Materialize's forms.js component library, with these aims:
 *
 * 1. Keep labels active on empty fields that have validation (error) messages,
 * lest the typography and spacing get thrown way off.

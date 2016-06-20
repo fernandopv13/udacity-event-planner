@@ -1,28 +1,26 @@
-'use strict';
-
-/*
-* The app object provides a basic namespace for the application
-* and app.init() gets things going when the page has fully loaded.
-* 
-*
-* Please see individual source files, and provided UML diagrams,
-* for further details.
+'use strict'; // Not in functions to make it easier to remove by build process
 
 /******************************************************************************
 * public module app
 ******************************************************************************/
 
-/** @description Creates a module for the app using the immediately invoked anonymous function pattern. In OO terms, basically a singleton of an anonymous class with no meaningful static members.
+/** @description Creates a JavaScript 'module' for the app using the immediately invoked (anonymous) function pattern.
+*
+* In traditional OO terms, basically a singleton of an anonymous class with no meaningful static members.
+*
+* The app object provides a basic namespace for the application and app.init() gets things going when the page has fully loaded.
+*
+* Please see individual source files, and provided documentation, for further details.
 *
 * @constructor
 *
 * @return {Object} Top-level singleton (module) providing a simple, encapsulated namespace, as well as module-level functionality, for the app.
 *
-* @author Ulrik H. Gade, May 2016
+* @author Ulrik H. Gade, June 2016
 *
 * @todo Be more consistent about either using public attributes, or private attributes and public accessors
 *
-* @todo Rewrite as proper class (e.g. "Main"), then instantiate as singleton
+* @todo Maybe rewrite as proper class (e.g. "Main"), then instantiate as singleton
 */
 
 var app = (function(self) {

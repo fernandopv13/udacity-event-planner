@@ -12,7 +12,7 @@ var app = app || {}; // create a simple namespace for the module
 	*
 	* Presents information from the data model in the UI. Handles all work directly related to the UI.
 	*
-	* Provides a default UI widget factory method draaing on the UIWidgetFactory object ecology.
+	* Provides a default UI widget factory method drawing on the UIWidgetFactory object ecology.
 	*
 	* NOTE: Views must only notify observers as a direct result of user actions in the UI.
 	*
@@ -364,9 +364,9 @@ var app = app || {}; // create a simple namespace for the module
 
 				}.bind(this));
 
-				if (!excluded) { // view not excluded from having nav bar
+				console.log(!excluded);
 
-				//if (exclusions.indexOf(this.constructor) < 0) { // view not excluded from having nav bar
+				if (!excluded) { // view not excluded from having nav bar
 
 					if ($('#nav-main').length === 0) { // nav bar not already in DOM
 
