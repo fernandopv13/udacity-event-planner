@@ -928,7 +928,7 @@ var app = app || {};
 
 		if (position) {// position is defined, so search for venues
 
-			module.prefs.locationSearchProvider().execute(function(venues) { // get venues (max on mobile, fewer in desktop)
+			module.prefs.locationSearchProvider().execute(function(venues) { // get venues
 
 				var list = [];
 
@@ -940,9 +940,7 @@ var app = app || {};
 					})
 				}
 
-				console.log(list.length);
-
-				 // refresh suggestions, parsing locations from existing events if FSQ comes up empty
+				// refresh suggestions, parsing locations from existing events if FSQ comes up empty
 
 				module.TextInputWidget.instance().addAutocomplete(input, list.length > 0 ? list : parseEvents());
 

@@ -118,18 +118,10 @@ var app = app || {};
 					}
 				}
 
-				if (account !== null) { // account exists, sign in or reject account creation
+				if (account !== null) { // account exists, reject account creation
 					
-					if (Model_m.password().password() === account.password().password()) { // passwords match
-
-						View_v.ssuper().prototype.submit.call(View_v, Model_m, module.View.UIAction.SIGNIN);// pass request on to ViewSignInHandler
-					}
-
-					else { // wrong password
-
-						Materialize.toast('An account using this email already exists. Please enter another email and try again.', module.prefs.defaultToastDelay());
-					}
-
+					Materialize.toast('An account using this email already exists. Please enter another email and try again.', module.prefs.defaultToastDelay());
+					
 					Model_m.delete(); // destroy temporary Model holding form data
 
 					Model_m = null; // try to accelerate garbage collection
