@@ -827,7 +827,11 @@ var app = app || {};
 
 
 
-	/** Suggests venues for event based on device's location (if available).
+	/** Suggests venues for event.
+	*
+	* Defaults to FourSquare API search; falls back on locations in existing events
+	*
+	* if FourSquare search doesn't work out (e.g. device location is unavailable).
 	*
 	* @return {void} Directly updates location datalist in the DOM
 	*/
@@ -839,9 +843,46 @@ var app = app || {};
 		var account = module.controller.selectedAccount(),
 
 		input = nEvent.currentTarget,
+		
+		$datalist = $($(input).attr('id') + '-suggest'),
 
 		position = account.defaultLocation(); // set default
 
+		function parseEvents() { // parses locations from existing events, if necessary
+
+			var events = module.controller.selectedAccount().events(),
+
+			list = [],
+
+			location;
+			
+			if (Object.keys(events).length > 0) {
+
+				for(var event in events) {
+
+				//events.forEach(function(event){ // naïve de-dupe'ing: may not scale well, OK for now
+					
+					location = events[event].location();
+
+					if (location && list.indexOf(location) === -1) {
+
+						list.push(location);
+					}
+				}
+
+			}
+
+			list.sort(function(a,b) { // sort ascending
+				
+					a = a.toLowerCase();
+					
+					b = b.toLowerCase();
+					
+					return a === b ? 0 : +(a > b) || -1;
+			});
+
+			return list;
+		}
 
 		// Get device's current location if available and allowed
 
@@ -889,53 +930,26 @@ var app = app || {};
 
 			module.prefs.locationSearchProvider().execute(function(venues) { // get venues (max on mobile, fewer in desktop)
 
-				if (venues !== null) { // search succeeded
+				var list = [];
 
-					var list = [];
+				if (venues !== null) { // search succeeded, so we've got an array
 
 					venues.forEach(function(venue) { // build suggest list
 
 						void list.push(venue.name + (venue.location.address ? ' (' + venue.location.address + ')' : ''));
 					})
-
-					module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
 				}
+
+				 // refresh suggestions, parsing locations from existing events if FSQ comes up empty
+
+				module.TextInputWidget.instance().addAutocomplete(input, list.length > 0 ? list : parseEvents());
 
 			}, position);	
 		}
-		
-		else { // parse existing events in this account for locations
 
-			var events = module.controller.selectedAccount().events(),
+		else { // position not available, so parse existing events in this account for locations
 
-			list = [],
-
-			location;
-			
-			if (events) {
-
-				events.forEach(function(event){
-					
-					location = event.location();
-
-					if (location && list.indexOf(location) === -1) {
-
-						list.push(location);
-					}
-				});
-
-			}
-
-			list.sort(function(a,b) { // sort ascending
-				
-					a = a.toLowerCase();
-					
-					b = b.toLowerCase();
-					
-					return a === b ? 0 : +(a > b) || -1;
-			});
-
-			module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
+			module.TextInputWidget.instance().addAutocomplete(input, parseEvents());			
 		}
 	};
 
