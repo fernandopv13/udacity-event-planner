@@ -940,6 +940,8 @@ var app = app || {};
 					})
 				}
 
+				console.log(list.length);
+
 				 // refresh suggestions, parsing locations from existing events if FSQ comes up empty
 
 				module.TextInputWidget.instance().addAutocomplete(input, list.length > 0 ? list : parseEvents());

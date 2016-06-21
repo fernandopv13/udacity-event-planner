@@ -43,7 +43,9 @@ var app = (function(self) {
 		
 			localStoragePrefix: 'dk.ulrikgade.udacity.srwebdev.meetup-app.',
 
-			locationSearchProvider: new app.FourSquareSearch($(window).width() > 1024 || $(window).height() > 1024 ? 20 : 50) // get max venues on mobile, fewer on desktop (b/c poor scrolling)
+			//locationSearchProvider: new app.FourSquareSearch($(window).width() > 1024 || $(window).height() > 1024 ? 20 : 50) // get max venues on mobile, fewer on desktop (b/c poor scrolling)
+
+			locationSearchProvider: new app.FourSquareSearch(_device.mobile ? 50 : 20) // get max venues on mobile, fewer on desktop (b/c poor scrolling)
 		},
 
 		_ready = false, // set true at end of app initialization
