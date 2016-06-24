@@ -188,7 +188,6 @@ var app = app || {};
 			formElement.appendChild(this.createWidget(
 
 				'EmailInputWidget',
-
 				{
 					width: 's12',
 
@@ -212,7 +211,6 @@ var app = app || {};
 			formElement.appendChild(this.createWidget(
 
 				'PasswordInputWidget',
-
 				{
 					width: 's12',
 

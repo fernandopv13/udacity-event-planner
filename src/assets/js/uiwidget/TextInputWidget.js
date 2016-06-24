@@ -15,7 +15,7 @@ var app = app || {};
 	*
 	* @extends InputWidget
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, June 2016
 	*
 	* @return {TextInputWidget} Not supposed to be instantiated, except when creating singleton
 	*/
@@ -142,6 +142,8 @@ var app = app || {};
 			if (options.datalist) {attributes.list = options.datalist;}
 
 			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
+
+			if (options.value) {attributes.value = options.value;}
 
 			
 			var classList = [];

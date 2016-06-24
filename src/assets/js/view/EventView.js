@@ -713,7 +713,7 @@ var app = app || {};
 				formElement.appendChild(outerDiv);
 
 			
-		$('#event-name').attr('autofocus', true); // set initial focus on name
+			//$('#event-name').attr('autofocus', true); // DEPRECATED: set initial focus on name
 		}
 
 		else { // present default message
@@ -838,7 +838,7 @@ var app = app || {};
 
 	module.EventView.prototype.suggestLocations = function(nEvent) {
 
-		//if (app.device().isiOS()) {return;} // prevent iOS user from being asked to accept location access
+		if (app.device().isiOS()) {return;} // iOS does not support html datalist; prevent futile location access popup
 
 		var account = module.controller.selectedAccount(),
 

@@ -95,7 +95,7 @@ var app = app || {};
 				{
 					id: options.id,
 
-					autocomplete: options.autocomplete,
+					autocomplete: options.autocomplete || 'none',
 
 					novalidate: options.novalidate
 				},

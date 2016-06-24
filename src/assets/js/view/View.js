@@ -348,23 +348,17 @@ var app = app || {}; // create a simple namespace for the module
 			
 			// Generate nav bar (in most cases)
 
-				//console.log('Generating navbar'); // debug
-
-				var excluded = false;
-
+				if ( // view not excluded from having nav bar
 				[
-					module.FrontPageView, module.SignInView, module.SignUpView, module.ModalView
+					module.FrontPageView,
+					
+					module.SignInView,
+					
+					module.SignUpView,
+					
+					module.ModalView
 
-				].forEach(function(klass) {
-
-					if (this.isInstanceOf(klass)) {
-
-						excluded = true;
-					}
-
-				}.bind(this));
-
-				if (!excluded) { // view not excluded from having nav bar
+				].indexOf(this.constructor) === -1) {
 
 					if ($('#nav-main').length === 0) { // nav bar not already in DOM
 

@@ -110,6 +110,7 @@ var app = app || {};
 
 			container.appendChild(innerDiv);
 
+		
 		// Add logo
 
 			innerDiv.appendChild(this.createWidget(
@@ -196,7 +197,6 @@ var app = app || {};
 			formElement.appendChild(this.createWidget(
 
 				'EmailInputWidget',
-
 				{
 					width: 's12',
 
@@ -271,7 +271,6 @@ var app = app || {};
 			formElement.appendChild(this.createWidget(
 
 				'TextInputWidget',
-
 				{
 					width: 's12',
 
@@ -325,7 +324,8 @@ var app = app || {};
 				}
 			));
 
-		// Add job title field
+		
+		// DEPRECATED: Add job title field
 
 			/*
 			formElement.appendChild(this.createWidget(
@@ -387,7 +387,7 @@ var app = app || {};
 			}
 
 
-		// Add demo sign-in link (disabled/hidden)
+		// Add demo sign-in link (debug: remove in production)
 
 			innerDiv = this.createWidget(
 
@@ -461,7 +461,6 @@ var app = app || {};
 		// Do post-render initialization
 
 			this.init(); // call init up parent class chain
-			
 			
 			$('#sign-up-password').blur(function(nEvent) { // hide password hints, show confirmation (global handler takes care of the rest)
 
