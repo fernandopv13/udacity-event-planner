@@ -2,7 +2,7 @@ Welcome to the Meetup Event Planner app by Ulrik H. Gade.
 
 USE
 
-To use the app, install the 'build' folder on your Web server and go to 'index.html' in a modern Web browser (as of early 2016). Install e.g. WAMP to run the app locally on your own machine.
+To use the app, build the project (see below) then install the 'build' folder on your Web server and go to 'index.html' in a modern Web browser (as of early 2016). Install e.g. WAMP to run the app locally on your own machine.
 
 Choose "Sign Up" from the front page to create an account, and take it from there.
 
@@ -16,7 +16,7 @@ You can build the app yourself from the source using gulp in Node.js (see gulpfi
 
 Start by running 'npm install' in Node.js from the root directory (i.e. the one where this readme file resides) to install the required modules. Ignore any NPM warnings re. deprecated versions of some dependencies: usually, this is just the module devs falling behind on maintenance, with no relevant adverse effects for this project.
 
-Then just call 'gulp' to run the default build script, which should get everything ready for you. Or, run 'gulp setup' to just get ready for development without doing a complete build.
+Then call 'gulp' to run the default build script, which should get everything ready for you. Or, run 'gulp setup' to just get ready for development without doing a complete build.
 
 TEST
 
