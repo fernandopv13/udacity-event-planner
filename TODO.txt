@@ -1,0 +1,42 @@
+A list of to-dos that have nowhere else to live. See code and docs for more.
+
+MUST-HAVE
+
+Publish project to Github.
+
+Submit project for review/approval.
+
+
+
+NICE-TO-HAVE
+
+Document View and UIWidget rendering and submission processes e.g. in a sequence diagram (see UIWidget, View init() comments, remember container and elementOptions).
+
+Fix tests that fail (exclusively) in Firefox
+
+
+Expand test coverage to include current xit's.
+
+Expand test coverage to Controller and its delegates.
+
+Move effects of UI actions (e.g. submit) out from View tests to ViewUpdateHandler tests, so that business logic testing does not rely on UI implementation 
+
+Add top margin to description field in event form (too close to radios when active)
+
+Get password confirmations into the right tab order.
+
+Support use of return key for submitting forms.
+
+Increase size of button links on front pages; hard to activate on small phones
+
+Scroll to field with autofocus; iPhone 5 scrolls down past it
+
+Move Materialize toast out to generic widget that abstracts away the reference to Materialize
+
+Add image upload widget based on dropify library. Combine with localStorage of images to allow uploading of custom images for account profile and guest (person).
+
+Transition to e.g. Angular.js to get past Router fragility.
+
+Upgrade to newest version of Materialize-css.
+
+Update JavaScript class template
