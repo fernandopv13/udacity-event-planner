@@ -1,6 +1,6 @@
 /*!
  * modernizr v3.3.1
- * Build http://modernizr.com/download?-formvalidation-input-inputtypes-localstorage-matchmedia-dontmin
+ * Build http://modernizr.com/download?-checked-datalistelem-formvalidation-geolocation-input-inputtypes-localstorage-matchmedia-dontmin
  *
  * Copyright (c)
  *  Faruk Ates
@@ -218,6 +218,94 @@
   }
 
   ;
+
+  /**
+   * since we have a fairly large number of input tests that don't mutate the input
+   * we create a single element that can be shared with all of those tests for a
+   * minor perf boost
+   *
+   * @access private
+   * @returns {HTMLInputElement}
+   */
+  var inputElem = createElement('input');
+  
+/*!
+{
+  "name": "Input attributes",
+  "property": "input",
+  "tags": ["forms"],
+  "authors": ["Mike Taylor"],
+  "notes": [{
+    "name": "WHATWG spec",
+    "href": "https://html.spec.whatwg.org/multipage/forms.html#input-type-attr-summary"
+  }],
+  "knownBugs": ["Some blackberry devices report false positive for input.multiple"]
+}
+!*/
+/* DOC
+Detects support for HTML5 `<input>` element attributes and exposes Boolean subproperties with the results:
+
+```javascript
+Modernizr.input.autocomplete
+Modernizr.input.autofocus
+Modernizr.input.list
+Modernizr.input.max
+Modernizr.input.min
+Modernizr.input.multiple
+Modernizr.input.pattern
+Modernizr.input.placeholder
+Modernizr.input.required
+Modernizr.input.step
+```
+*/
+
+  // Run through HTML5's new input attributes to see if the UA understands any.
+  // Mike Taylr has created a comprehensive resource for testing these attributes
+  //   when applied to all input types:
+  //   miketaylr.com/code/input-type-attr.html
+
+  // Only input placeholder is tested while textarea's placeholder is not.
+  // Currently Safari 4 and Opera 11 have support only for the input placeholder
+  // Both tests are available in feature-detects/forms-placeholder.js
+
+  var inputattrs = 'autocomplete autofocus list placeholder max min multiple pattern required step'.split(' ');
+  var attrs = {};
+
+  Modernizr.input = (function(props) {
+    for (var i = 0, len = props.length; i < len; i++) {
+      attrs[ props[i] ] = !!(props[i] in inputElem);
+    }
+    if (attrs.list) {
+      // safari false positive's on datalist: webk.it/74252
+      // see also github.com/Modernizr/Modernizr/issues/146
+      attrs.list = !!(createElement('datalist') && window.HTMLDataListElement);
+    }
+    return attrs;
+  })(inputattrs);
+
+/*!
+{
+  "name": "datalist Element",
+  "caniuse": "datalist",
+  "property": "datalistelem",
+  "tags": ["elem"],
+  "builderAliases": ["elem_datalist"],
+  "warnings": ["This test is a dupe of Modernizr.input.list. Only around for legacy reasons."],
+  "notes": [{
+    "name": "CSS Tricks Article",
+    "href": "https://css-tricks.com/15346-relevant-dropdowns-polyfill-for-datalist/"
+  },{
+    "name": "Mike Taylor Code",
+    "href": "https://miketaylr.com/code/datalist.html"
+  }]
+}
+!*/
+
+  // lol. we already have a test for datalist built in! silly you.
+  // Leaving it around in case anyone's using it
+
+  Modernizr.addTest('datalistelem', Modernizr.input.list);
+
 
   /**
    * getBody returns the body of a document, or an element that can stand in for
@@ -443,71 +531,6 @@ the test can be combined:
 
     return invalidFired;
   });
-
-
-  /**
-   * since we have a fairly large number of input tests that don't mutate the input
-   * we create a single element that can be shared with all of those tests for a
-   * minor perf boost
-   *
-   * @access private
-   * @returns {HTMLInputElement}
-   */
-  var inputElem = createElement('input');
-  
-/*!
-{
-  "name": "Input attributes",
-  "property": "input",
-  "tags": ["forms"],
-  "authors": ["Mike Taylor"],
-  "notes": [{
-    "name": "WHATWG spec",
-    "href": "https://html.spec.whatwg.org/multipage/forms.html#input-type-attr-summary"
-  }],
-  "knownBugs": ["Some blackberry devices report false positive for input.multiple"]
-}
-!*/
-/* DOC
-Detects support for HTML5 `<input>` element attributes and exposes Boolean subproperties with the results:
-
-```javascript
-Modernizr.input.autocomplete
-Modernizr.input.autofocus
-Modernizr.input.list
-Modernizr.input.max
-Modernizr.input.min
-Modernizr.input.multiple
-Modernizr.input.pattern
-Modernizr.input.placeholder
-Modernizr.input.required
-Modernizr.input.step
-```
-*/
-
-  // Run through HTML5's new input attributes to see if the UA understands any.
-  // Mike Taylr has created a comprehensive resource for testing these attributes
-  //   when applied to all input types:
-  //   miketaylr.com/code/input-type-attr.html
-
-  // Only input placeholder is tested while textarea's placeholder is not.
-  // Currently Safari 4 and Opera 11 have support only for the input placeholder
-  // Both tests are available in feature-detects/forms-placeholder.js
-
-  var inputattrs = 'autocomplete autofocus list placeholder max min multiple pattern required step'.split(' ');
-  var attrs = {};
-
-  Modernizr.input = (function(props) {
-    for (var i = 0, len = props.length; i < len; i++) {
-      attrs[ props[i] ] = !!(props[i] in inputElem);
-    }
-    if (attrs.list) {
-      // safari false positive's on datalist: webk.it/74252
-      // see also github.com/Modernizr/Modernizr/issues/146
-      attrs.list = !!(createElement('datalist') && window.HTMLDataListElement);
-    }
-    return attrs;
-  })(inputattrs);
 
 /*!
 {
@@ -1193,6 +1216,63 @@ Detects support for matchMedia.
 */
 
   Modernizr.addTest('matchmedia', !!prefixed('matchMedia', window));
+
+/*!
+{
+  "name": "Geolocation API",
+  "property": "geolocation",
+  "caniuse": "geolocation",
+  "tags": ["media"],
+  "notes": [{
+    "name": "MDN documentation",
+    "href": "https://developer.mozilla.org/en-US/docs/WebAPI/Using_geolocation"
+  }],
+  "polyfills": [
+    "joshuabell-polyfill",
+    "webshims",
+    "geo-location-javascript",
+    "geolocation-api-polyfill"
+  ]
+}
+!*/
+/* DOC
+Detects support for the Geolocation API for users to provide their location to web applications.
+*/
+
+  // geolocation is often considered a trivial feature detect...
+  // Turns out, it's quite tricky to get right:
+  //
+  // Using !!navigator.geolocation does two things we don't want. It:
+  //   1. Leaks memory in IE9: github.com/Modernizr/Modernizr/issues/513
+  //   2. Disables page caching in WebKit: webk.it/43956
+  //
+  // Meanwhile, in Firefox < 8, an about:config setting could expose
+  // a false positive that would throw an exception: bugzil.la/688158
+
+  Modernizr.addTest('geolocation', 'geolocation' in navigator);
+
+/*!
+{
+  "name": "CSS :checked pseudo-selector",
+  "caniuse": "css-sel3",
+  "property": "checked",
+  "tags": ["css"],
+  "notes": [{
+    "name": "Related Github Issue",
+    "href": "https://github.com/Modernizr/Modernizr/pull/879"
+  }]
+}
+!*/
+
+  Modernizr.addTest('checked', function() {
+    return testStyles('#modernizr {position:absolute} #modernizr input {margin-left:10px} #modernizr :checked {margin-left:20px;display:block}', function(elem) {
+      var cb = createElement('input');
+      cb.setAttribute('type', 'checkbox');
+      cb.setAttribute('checked', 'checked');
+      elem.appendChild(cb);
+      return cb.offsetLeft === 20;
+    });
+  });
 
 
   // Run each test

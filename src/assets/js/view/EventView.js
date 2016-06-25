@@ -135,8 +135,6 @@ var app = app || {};
 						{
 							id: 'event-form',
 
-							//autocomplete: 'off',
-
 							novalidate: true
 						}
 					);
@@ -193,7 +191,7 @@ var app = app || {};
 
 							datasource: Event_e.location() ? Event_e.location() : '',
 
-							autocomplete: 'none'
+							autocomplete: (Modernizr.datalistelem || module.device().isiOS()) ? 'none' : 'on'
 
 							//datalist: 'suggested-locations'
 						}
@@ -291,7 +289,7 @@ var app = app || {};
 
 							datasource: Event_e.type() || '',
 
-							autocomplete: 'none'
+							autocomplete: (Modernizr.datalistelem || module.device().isiOS()) ? 'none' : 'on'
 
 							//datalist: 'suggested-event-types'
 						}
@@ -395,7 +393,7 @@ var app = app || {};
 
 							datasource: Event_e.host() && Event_e.host().hostName() ? Event_e.host().hostName() : '',
 
-							autocomplete: 'none'
+							autocomplete: (Modernizr.datalistelem || module.device().isiOS()) ? 'none' : 'on'
 
 							//datalist: 'suggested-hosts'
 						}
@@ -773,30 +771,33 @@ var app = app || {};
 
 		module.EventView.prototype.suggestEventTypes = function(nEvent) {
 
-			var input = nEvent.currentTarget;
+			if (Modernizr.datalistelem || module.device().isiOS()) { // requires datalist support; works on iOS despite Modernizr claiming the opposite
 
-			if ($(input).parent().find('datalist').length === 0 && $(input).parent().find('ul').length === 0) { // only generate list once
+				var input = nEvent.currentTarget;
 
-				module.TextInputWidget.instance().addAutocomplete(input,
-				[
-					'Birthday party',
+				if ($(input).parent().find('datalist').length === 0 && $(input).parent().find('ul').length === 0) { // only generate list once
 
-					'Bachelor\'s party',
+					module.TextInputWidget.instance().addAutocomplete(input,
+					[
+						'Birthday party',
 
-					'Business meeting',
+						'Bachelor\'s party',
 
-					'Conference talk',
+						'Business meeting',
 
-					'Family gathering',
+						'Conference talk',
 
-					'Job interview',
+						'Family gathering',
 
-					'Religious festival',
+						'Job interview',
 
-					'Romantic dinner',
+						'Religious festival',
 
-					'Wedding'
-				]);
+						'Romantic dinner',
+
+						'Wedding'
+					]);
+				}
 			}
 		};
 
@@ -808,20 +809,23 @@ var app = app || {};
 
 		module.EventView.prototype.suggestHosts = function(nEvent) {
 
-			var input = nEvent.currentTarget;
+			if (Modernizr.datalistelem || module.device().isiOS()) { // requires datalist support; works on iOS despite Modernizr claiming the opposite
 
-			var type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
-			
-			var hosts = type.registry.getObjectList(); // get list of hosts of selected type in account
+				var input = nEvent.currentTarget;
 
-			var list = [];
+				var type = $('input:radio[name ="event-host-type"]:checked').val().toLowerCase() === 'person' ? module.Person : module.Organization;
+				
+				var hosts = type.registry.getObjectList(); // get list of hosts of selected type in account
 
-			for (var ix in hosts) { // generate list of host names (addAutocomplete() requires flat string array)
+				var list = [];
 
-				void list.push(hosts[ix].hostName());
+				for (var ix in hosts) { // generate list of host names (addAutocomplete() requires flat string array)
+
+					void list.push(hosts[ix].hostName());
+				}
+
+				module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
 			}
-
-			module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
 		};
 
 
@@ -836,118 +840,121 @@ var app = app || {};
 
 		module.EventView.prototype.suggestLocations = function(nEvent) {
 
-			if (app.device().isiOS()) {return;} // iOS does not support html datalist; prevent futile location access popup
-
-			var account = module.controller.selectedAccount(),
-
-			input = nEvent.currentTarget,
-			
-			$datalist = $($(input).attr('id') + '-suggest'),
-
-			position = account.defaultLocation(); // set default
-
 			function parseEvents() { // parses locations from existing events, if necessary
 
-				var events = module.controller.selectedAccount().events(),
+					var events = module.controller.selectedAccount().events(),
 
-				list = [],
+					list = [],
 
-				location;
-				
-				if (Object.keys(events).length > 0) {
-
-					for(var event in events) {
-
-					//events.forEach(function(event){ // naïve de-dupe'ing: may not scale well, OK for now
-						
-						location = events[event].location();
-
-						if (location && list.indexOf(location) === -1) {
-
-							list.push(location);
-						}
-					}
-
-				}
-
-				list.sort(function(a,b) { // sort ascending
+					location;
 					
-						a = a.toLowerCase();
-						
-						b = b.toLowerCase();
-						
-						return a === b ? 0 : +(a > b) || -1;
-				});
+					if (Object.keys(events).length > 0) {
 
-				return list;
-			}
+						for(var event in events) {
 
-			// Get device's current location if available and allowed
+						//events.forEach(function(event){ // naïve de-dupe'ing: may not scale well, OK for now
+							
+							location = events[event].location();
 
-			if (account.geoLocationAllowed()) { // user has granted permission to use geolocation
+							if (location && list.indexOf(location) === -1) {
 
-				if(navigator.geolocation) { // device provides access to geolocation
-
-					navigator.geolocation.getCurrentPosition(
-
-						function(pos) { // success
-
-							position = pos; // override default
-						},
-
-						function(error) { // error
-
-							console.log(error);
+								list.push(location);
+							}
 						}
-					)
 
-					// Geolocation seems to require access via https.
-					// Don't currently have access to a secure server,
-					// so mocked geolocation result here during development.
-					// This works, but isn't helpful for people in other
-					// locations than mine, so disabling it in production.
-
-					/*
-					position = {
-
-						coords:
-						{
-
-							latitude: 55.6666281,
-
-							longitude: 12.556294
-						},
-
-						timestamp: new Date().valueOf()
 					}
-					*/
+
+					list.sort(function(a,b) { // sort ascending
+						
+							a = a.toLowerCase();
+							
+							b = b.toLowerCase();
+							
+							return a === b ? 0 : +(a > b) || -1;
+					});
+
+					return list;
+			}
+
+			if (Modernizr.datalistelem || module.device().isiOS()) { // requires datalist support; works on iOS despite Modernizr claiming the opposite
+
+				var account = module.controller.selectedAccount(),
+
+				input = nEvent.currentTarget,
+				
+				$datalist = $($(input).attr('id') + '-suggest'),
+
+				position = account.defaultLocation(); // set default
+
+				
+
+				// Get device's current location if available and allowed
+
+				if (account.geoLocationAllowed()) { // user has granted permission to use geolocation
+
+					if(navigator.geolocation) { // device provides access to geolocation
+
+						navigator.geolocation.getCurrentPosition(
+
+							function(pos) { // success
+
+								position = pos; // override default
+							},
+
+							function(error) { // error
+
+								console.log(error);
+							}
+						)
+
+						// Geolocation seems to require access via https.
+						// Don't currently have access to a secure server,
+						// so mocked geolocation result here during development.
+						// This works, but isn't helpful for people in other
+						// locations than mine, so disabling it in production.
+
+						/*
+						position = {
+
+							coords:
+							{
+
+								latitude: 55.6666281,
+
+								longitude: 12.556294
+							},
+
+							timestamp: new Date().valueOf()
+						}
+						*/
+					}
 				}
-			}
 
-			if (position) {// position is defined, so search for venues
+				if (position) {// position is defined, so search for venues
 
-				module.prefs.locationSearchProvider().execute(function(venues) { // get venues
+					module.prefs.locationSearchProvider().execute(function(venues) { // get venues
 
-					var list = [];
+						var list = [];
 
-					if (venues !== null) { // search succeeded, so we've got an array
+						if (venues !== null) { // search succeeded, so we've got an array
 
-						venues.forEach(function(venue) { // build suggest list
+							venues.forEach(function(venue) { // build suggest list
 
-							void list.push(venue.name + (venue.location.address ? ' (' + venue.location.address + ')' : ''));
-						})
-					}
+								void list.push(venue.name + (venue.location.address ? ' (' + venue.location.address + ')' : ''));
+							})
+						}
 
-					// refresh suggestions, parsing locations from existing events if FSQ comes up empty
+						// refresh suggestions, parsing locations from existing events if FSQ comes up empty
 
-					module.TextInputWidget.instance().addAutocomplete(input, list.length > 0 ? list : parseEvents());
+						module.TextInputWidget.instance().addAutocomplete(input, list.length > 0 ? list : parseEvents());
 
-				}, position);	
-			}
+					}, position);	
+				}
 
-			else { // position not available, so parse existing events in this account for locations
+				else { // position not available, so parse existing events in this account for locations
 
-				module.TextInputWidget.instance().addAutocomplete(input, parseEvents());			
+					module.TextInputWidget.instance().addAutocomplete(input, parseEvents());			
+				}
 			}
 		};
 
