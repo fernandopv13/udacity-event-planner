@@ -2,8 +2,6 @@ A list of to-dos that have nowhere else to live. See code and docs for more.
 
 MUST-HAVE
 
-Publish project to Github.
-
 Submit project for review/approval.
 
 
