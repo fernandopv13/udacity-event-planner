@@ -37,4 +37,4 @@ $ cat .gitignore
     !.jshintrc
 
     # try to force-commit tests
-    !test
+    !/test/**/
