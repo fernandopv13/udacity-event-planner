@@ -1,0 +1,40 @@
+$ cat .gitignore
+    
+    # exclude archive
+    archive/**/
+
+    # exclude build
+    build/**/
+
+    # exclude ui design sketches
+    design/ui-design/sketches/**/
+
+    # exclude system design archive
+    design/system-design/archive/**/
+
+    # exclude JSDocs
+    docs/**/
+
+    # exclude node_modules
+    node_modules/**/
+    
+    # exclude requirements
+    requirements/**/
+
+    # exclude source assets that are auto-generated from NPM dependencies (node modules)
+    src/assets/css/**/
+    src/assets/font/**/
+    src/assets/fonts/**/
+
+    # exclude manual source archive
+    src/archive.lnk
+
+    # exclude firebug lite
+    #test/util/firebug-lite/**/
+
+    # make sure we do get the relevant dot-hidden files
+    !.gitignore
+    !.jshintrc
+
+    # try to force-commit tests
+    !test
