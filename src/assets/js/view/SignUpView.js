@@ -206,9 +206,9 @@ var app = app || {};
 
 					required: true,
 
-					datasource: null,
+					//datasource: null,
 
-					autofocus: true
+					autofocus: !module.device().isiOS() // autofocus sets focus but fails to bring up keyboard on iOS, so skip it
 				}
 			));
 

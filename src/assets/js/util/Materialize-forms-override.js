@@ -18,7 +18,7 @@
 *
 * Most of the code is a straight copy from the main Materialize library, with only slight
 * modifications. Pulling this excerpt out into separate file to keep main library intact.
-* Load this file after the main Materialize library to put the override into effect.
+* Load this file after the main Materialize library to put the override into effect or just load this instead.
 * 
 * The original Materialize authors retain all rights to their work, including most of this file,
 * and are welcome to incorporate the minor adjustments made free of charge, should they so choose.

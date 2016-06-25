@@ -48,11 +48,11 @@ var app = app || {};
 	* Inherit from FormView
 	*---------------------------------------------------------------------------------------*/	
 
-	module.SignInView.prototype = Object.create(module.FormView.prototype); // Set up inheritance
+		module.SignInView.prototype = Object.create(module.FormView.prototype); // Set up inheritance
 
-	module.SignInView.prototype.constructor = module.SignInView; //Reset constructor property
+		module.SignInView.prototype.constructor = module.SignInView; //Reset constructor property
 
-	module.View.children.push(module.SignInView); // Add to list of derived classes
+		module.View.children.push(module.SignInView); // Add to list of derived classes
 
 
 
@@ -199,7 +199,7 @@ var app = app || {};
 
 					datasource: null,
 
-					autofocus: true
+					autofocus: !module.device().isiOS() // autofocus sets focus but fails to bring up keyboard on iOS, so skip it
 				}
 			));
 

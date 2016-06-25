@@ -129,9 +129,7 @@ var app = app || {};
 
 	/**	Shows FormView, making sure input field autofocus is re-applied after the in-animation has completed
 	*
-	* @todo: Figure out how to get touch keyboard to display on SignInView and SignUpView with autofocus in iOS,
-	*
-	* and why it works fine on other FormViews
+	* @todo: Get touch keyboard to display on SignInView and SignUpView with autofocus in iOS (works everywhere else)
 	*/
 
 	module.FormView.prototype.show = function(obj_options) {
@@ -142,12 +140,16 @@ var app = app || {};
 
 				if (obj_options && obj_options.done) {obj_options.done(obj_options);}
 
-				// input.focus() works but fails to bring up touch keyboard on iOS (Chrome)
-				// tried touchstart workaround, but made no difference
-				// check if maybe caused by global Materialize validation function
+				// autofocus/focus() mostly works, but it fails to bring up touch keyboard on iOS (Chrome):
+				// - tried touchstart handler workaround, but made no difference
+				// - tried replacing entire file with EventView code (which works), but thenautofocus no longer worked
+				// - tried disabling global event handlers in Materialize-forms, but didn't work
+				// - tried using setSelectionRange() in focus() function, no luck
+				// - tried setting autofocus on plain text field, didn't work
+				// - tried selectively disabling every step on the render()/show() chain, no luck
 
-				$(this.form()).find('[autofocus="true"]').focus();
-
+				$(this.form()).find('[autofocus="true"]').focus(); // force the hand of older browsers
+				
 			}.bind(this)
 		});
 	}

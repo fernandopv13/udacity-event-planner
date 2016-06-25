@@ -341,24 +341,12 @@ var app = app || {}; // create a simple namespace for the module
 
 		module.View.prototype.init = function() {
 
-			//console.log('Initializing ' + this.className()); // debug
-
 			this.hide(); // when rendering in the background, prevent first render from resulting in showing the view
 
 			
 			// Generate nav bar (in most cases)
 
-				if ( // view not excluded from having nav bar
-				[
-					module.FrontPageView,
-					
-					module.SignInView,
-					
-					module.SignUpView,
-					
-					module.ModalView
-
-				].indexOf(this.constructor) === -1) {
+				if (this.showNav()) {
 
 					if ($('#nav-main').length === 0) { // nav bar not already in DOM
 
@@ -444,8 +432,6 @@ var app = app || {}; // create a simple namespace for the module
 
 			// Initialize UIWidgets (including nav bar)
 
-				//console.log('parsing elementOptions');
-
 				if (this.elementOptions) { // do post-processing that requires elements to be rendered to the DOM first
 
 					//console.log(this.elementOptions); // debug
@@ -477,8 +463,6 @@ var app = app || {}; // create a simple namespace for the module
 
 					this.elementOptions = null; // free up temporary object for garbage collection after initializing
 				}
-			
-			//console.log('exiting View init()');
 		};
 
 
@@ -541,12 +525,32 @@ var app = app || {}; // create a simple namespace for the module
 
 			this.$renderContext().attr('aria-hidden', false); // later, investigate if this could do more of the work of showing
 
-			if (!this.isInstanceOf(module.ModalView) && this.isInstanceOf(module.FormView)) { // show delete icon on forms
-
+			if (this.showNav() && this.isInstanceOf(module.FormView)) { // show delete icon on forms
+				
 				$('#nav-delete-icon').parent().removeClass('hidden');
 
 				$('#nav-delete-icon').show('slow');
 			}
+		}
+
+		/** Determines if this View should display the navbar
+		*
+		* @return {Boolean} true if View should display the navbar, otherwise false
+		*/
+
+		module.View.prototype.showNav = function() {
+
+			return !this.isInstanceOf(module.ModalView) // not a modal
+
+				&& [ // not a pre-login View
+
+					module.FrontPageView,
+
+					module.SignUpView,
+
+					module.SignInView
+
+					].indexOf(this.constructor) === -1;
 		}
 
 
