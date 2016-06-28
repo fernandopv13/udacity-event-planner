@@ -19,7 +19,7 @@ var app = app || {};
 	*
 	* @extends UIWidget
 	*
-	* @author Ulrik H. Gade, March 2016
+	* @author Ulrik H. Gade, June 2016
 	*
 	* @return {InputWidget} Not supposed to be instantiated, except when setting up inheritance in subclasses (concrete products)
 	*/
@@ -87,6 +87,8 @@ var app = app || {};
 
 			listElement.id = id
 
+			listElement.setAttribute('role', 'list');
+
 			arr_options.forEach(function(value) {
 
 				option = document.createElement('option');
@@ -94,6 +96,8 @@ var app = app || {};
 				option.value = value;
 
 				option.innerHTML = value;
+
+				option.setAttribute('role', 'listitem');
 
 				listElement.appendChild(option);
 			});
@@ -109,6 +113,8 @@ var app = app || {};
 
 			listElement.id = id;
 
+			listElement.setAttribute('role', 'list');
+
 			listElement.classList.add('autocomplete-content');
 
 			arr_options.forEach(function(value) {
@@ -118,6 +124,8 @@ var app = app || {};
 				option.classList.add('autocomplete-option');
 
 				option.classList.add('hide');
+
+				option.setAttribute('role', 'listitem');
 
 				spanElement = document.createElement('span');
 
