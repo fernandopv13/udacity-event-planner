@@ -378,10 +378,9 @@ var app = app || {};
 					
 				// Add host field
 
-					formElement.appendChild(this.createWidget(
+					formElement.appendChild(this.createWidget( // input
 
-						'TextInputWidget',
-
+						'TextInputWidget', // input
 						{
 							id: 'event-host',
 
@@ -408,13 +407,13 @@ var app = app || {};
 					};
 
 					
-					innerDiv = this.createWidget(
+					innerDiv = this.createWidget( // wrapper for host type selector
 
-						'HTMLElement', // IHost type selector
+						'HTMLElement', 
 						{
 							element: 'div',
 
-							classList: ['radioset-container','input-field', 'col', 's12']
+							classList: ['col', 's12']
 						}
 					);
 
@@ -433,14 +432,13 @@ var app = app || {};
 								id: 'event-host-type'
 							},
 							
-							classList: ['materialize-textarea'],
+							classList: ['radioset-container'],
 
 							innerHTML: Event_e.description()
 						}
 					);
 
 					innerDiv.appendChild(fieldsetElement);
-
 					
 					fieldsetElement.appendChild(this.createWidget(
 
@@ -452,8 +450,7 @@ var app = app || {};
 							innerHTML: 'Host type'
 						}
 					));
-					
-					
+									
 					var attributes = 
 					{
 						id: 'event-host-type-organization',
@@ -471,8 +468,9 @@ var app = app || {};
 
 					fieldsetElement.appendChild(this.createWidget(
 
-						'HTMLElement', // org radio
+					//innerDiv.appendChild(this.createWidget( // org radio
 
+						'HTMLElement', 
 						{
 							element: 'input',
 
@@ -482,8 +480,8 @@ var app = app || {};
 
 					this.elementOptions['event-host-type-organization'] = 
 					{
-						listeners: {
-
+						listeners:
+						{
 							click: 
 
 								function(nEvent) { // reset host if host type changed
@@ -495,8 +493,9 @@ var app = app || {};
 
 					fieldsetElement.appendChild(this.createWidget(
 
-						'HTMLElement', // org label
+					//innerDiv.appendChild(this.createWidget( // org label
 
+						'HTMLElement',
 						{
 							element: 'label',
 
@@ -529,8 +528,9 @@ var app = app || {};
 
 					fieldsetElement.appendChild(this.createWidget(
 
-						'HTMLElement', // person radio
+					//innerDiv.appendChild(this.createWidget( // person radio
 
+						'HTMLElement',
 						{
 							element: 'input',
 
@@ -538,11 +538,10 @@ var app = app || {};
 						}
 					));
 
-
 					this.elementOptions['event-host-type-person'] = 
 					{
-						listeners: {
-
+						listeners:
+						{
 							click: 
 
 								function(nEvent) { // reset host if host type changed
@@ -554,8 +553,9 @@ var app = app || {};
 
 					fieldsetElement.appendChild(this.createWidget(
 
-						'HTMLElement', // person label
+					//innerDiv.appendChild(this.createWidget( // person label
 
+						'HTMLElement',
 						{
 							element: 'label',
 
