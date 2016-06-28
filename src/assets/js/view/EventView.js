@@ -771,11 +771,13 @@ var app = app || {};
 
 		module.EventView.prototype.suggestEventTypes = function(nEvent) {
 
-			if (Modernizr.datalistelem || module.device().isiOS()) { // requires datalist support; works on iOS despite Modernizr claiming the opposite
+			//console.log('suggestEventTypes');
+
+			//if (Modernizr.datalistelem || module.device().isiOS()) { // requires datalist support; do custom list on iOS
 
 				var input = nEvent.currentTarget;
 
-				if ($(input).parent().find('datalist').length === 0 && $(input).parent().find('ul').length === 0) { // only generate list once
+			//	if ($(input).parent().find('datalist').length === 0 && $(input).parent().find('ul').length === 0) { // only generate list once
 
 					module.TextInputWidget.instance().addAutocomplete(input,
 					[
@@ -797,8 +799,8 @@ var app = app || {};
 
 						'Wedding'
 					]);
-				}
-			}
+			//	}
+			//}
 		};
 
 
@@ -809,7 +811,7 @@ var app = app || {};
 
 		module.EventView.prototype.suggestHosts = function(nEvent) {
 
-			if (Modernizr.datalistelem || module.device().isiOS()) { // requires datalist support; works on iOS despite Modernizr claiming the opposite
+			//if (Modernizr.datalistelem || module.device().isiOS()) { // requires datalist support;  do custom list on iOS
 
 				var input = nEvent.currentTarget;
 
@@ -825,7 +827,7 @@ var app = app || {};
 				}
 
 				module.TextInputWidget.instance().addAutocomplete(input, list); // refresh suggestions
-			}
+			//}
 		};
 
 
@@ -876,7 +878,7 @@ var app = app || {};
 					return list;
 			}
 
-			if (Modernizr.datalistelem || module.device().isiOS()) { // requires datalist support; works on iOS despite Modernizr claiming the opposite
+			//if (Modernizr.datalistelem || module.device().isiOS()) { // requires datalist support; works on iOS despite Modernizr claiming the opposite
 
 				var account = module.controller.selectedAccount(),
 
@@ -955,7 +957,7 @@ var app = app || {};
 
 					module.TextInputWidget.instance().addAutocomplete(input, parseEvents());			
 				}
-			}
+			//}
 		};
 
 

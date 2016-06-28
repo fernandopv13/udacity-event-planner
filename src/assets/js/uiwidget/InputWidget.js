@@ -123,7 +123,7 @@ var app = app || {};
 
 				option.classList.add('autocomplete-option');
 
-				option.classList.add('hide');
+				//option.classList.add('hide');
 
 				option.setAttribute('role', 'listitem');
 
@@ -135,15 +135,27 @@ var app = app || {};
 
 				listElement.appendChild(option);
 
-				$(option).click(function() {
+				$(option).click(function() { // set input to content of selected option
 
 					$input.val($(this).text().trim());
+
+					Materialize.updateTextFields($input); // get Materialize to mark label as active w/o reopening suggestions
 				
 					$('.autocomplete-option').addClass('hide');
 				});
 			});
 
-			$input.on('keyup', function() { // show suggestions
+			$input.blur(function() { // hide list after delay to allow capture of option selection
+
+				setTimeout(function() {
+
+					listElement.classList.add('hide');
+
+				}, 200);
+				
+			});
+
+			$input.on('keyup', function() { // filter suggestions based on user input
 
 				var $val = $input.val().trim();
 				
