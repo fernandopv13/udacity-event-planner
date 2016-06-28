@@ -78,7 +78,7 @@ describe('Class PasswordInputWidget', function(){
 
 			el = el.firstChild;
 
-			expect(el.type).toBe('text'); // input
+			expect(el.type).toBe('password'); // input
 
 			expect(el.id).toBe('test-password');
 
