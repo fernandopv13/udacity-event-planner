@@ -156,7 +156,7 @@ var app = app || {};
 
 						element.setCustomValidity(fn(element) ? '' : false); // run custom validator and set custom validity based on result
 
-						console.log(element.id + ': ' + element.checkValidity() + ', ' + fn(element)); // debug
+						//console.log(element.id + ': ' + element.checkValidity() + ', ' + fn(element)); // debug
 					}
 				}
 			});
