@@ -1066,7 +1066,7 @@ var app = app || {};
 					
 					if (startDate !== null) { // a valid start date has been entered
 
-						ret =  (endDate.valueOf() >= startDate.valueOf()); // end date must be on or after start date
+						ret =  (endDate.valueOf() > startDate.valueOf() + 60000); // end date must be after start date by at least a minute
 					}
 
 					else { // an end date has been entered, but no start date (that's OK)
