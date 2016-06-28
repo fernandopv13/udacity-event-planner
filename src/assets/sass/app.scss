@@ -3,7 +3,7 @@
 *
 * Adds a few apparent bug fixes and other customizations to the stock Materialize styles.
 *
-* Author: Ulrik H. Gade, May 2016
+* Author: Ulrik H. Gade, June 2016
  */
 
 
@@ -222,10 +222,10 @@ td.today {
 }
 
 
-// Custom autocomplete list styling (used when datalist is not supported)
+// Custom autocomplete list styling (automagically used when datalist is not supported)
 // Draws heavily on example at https://jsfiddle.net/ypcrumble/ht379nq5/ 
 
-.autocomplete-content { /*UL holding list*/
+.autocomplete-content { //UL holding list
 	position: absolute;
 	background: rgba(255,255,255,255);
 	margin-top: -.9rem;
