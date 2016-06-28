@@ -8,7 +8,7 @@
 
 	//var browserSync = require('browser-sync').create(); // install fails on too deep dir structure
 
-	var concat = require('gulp-concat');
+	//var concat = require('gulp-concat');
 
 	var cssnano = require('gulp-cssnano');
 
