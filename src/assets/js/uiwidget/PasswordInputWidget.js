@@ -127,7 +127,7 @@ var app = app || {};
 
 			var attributes =
 			{
-				type: 'text', // deliberately not hiding password, as per Luke W's advice for mobile
+				type: 'password', // deliberately not hiding password, as per Luke W's advice for mobile
 				
 				id: options.id,
 				

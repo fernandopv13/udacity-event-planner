@@ -174,6 +174,37 @@ var app = app || {};
 					}));
 					
 								
+				// Add event type field
+
+					formElement.appendChild(this.createWidget(
+
+						'TextInputWidget',
+						{
+							id: 'event-type',
+
+							width: 's12',
+
+							label: 'Event Type',
+
+							required: false,
+
+							datasource: Event_e.type() || '',
+
+							autocomplete: (Modernizr.datalistelem || module.device().isiOS()) ? 'none' : 'on'
+
+							//datalist: 'suggested-event-types'
+						}
+					));
+
+					this.elementOptions['event-type'] = 
+					{
+						listeners: {
+
+							focus: this.suggestEventTypes // suggest event types
+						}
+					}
+								
+				
 				// Add location field
 
 					formElement.appendChild(this.createWidget(
@@ -273,37 +304,6 @@ var app = app || {};
 					outerDiv.appendChild(endDate);
 
 					
-				// Add event type field
-
-					formElement.appendChild(this.createWidget(
-
-						'TextInputWidget',
-						{
-							id: 'event-type',
-
-							width: 's12',
-
-							label: 'Event Type',
-
-							required: false,
-
-							datasource: Event_e.type() || '',
-
-							autocomplete: (Modernizr.datalistelem || module.device().isiOS()) ? 'none' : 'on'
-
-							//datalist: 'suggested-event-types'
-						}
-					));
-
-					this.elementOptions['event-type'] = 
-					{
-						listeners: {
-
-							focus: this.suggestEventTypes // suggest event types
-						}
-					}
-								
-				
 				// Add capacity field and edit guest list button
 
 					outerDiv = this.createWidget(

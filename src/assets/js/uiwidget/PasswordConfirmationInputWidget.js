@@ -120,7 +120,7 @@ var app = app || {};
 
 			var attributes = 
 			{
-				type: 'text',
+				type: 'password',
 				
 				id: options.id,
 				
