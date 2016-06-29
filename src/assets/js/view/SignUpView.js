@@ -192,6 +192,27 @@ var app = app || {};
 			container.appendChild(formElement);
 
 		
+		// Add account holder name field
+
+			formElement.appendChild(this.createWidget(
+
+				'TextInputWidget',
+				{
+					width: 's12',
+
+					id: 'sign-up-name',
+
+					label: 'Your Name',
+
+					required: true,
+
+					datasource: null,
+
+					autofocus: !module.device().isiOS() // autofocus sets focus but fails to bring up keyboard on iOS, so skip it
+				}
+			));
+
+
 		// Add email field
 
 			formElement.appendChild(this.createWidget(
@@ -207,8 +228,6 @@ var app = app || {};
 					required: true,
 
 					//datasource: null,
-
-					autofocus: !module.device().isiOS() // autofocus sets focus but fails to bring up keyboard on iOS, so skip it
 				}
 			));
 
@@ -266,25 +285,6 @@ var app = app || {};
 			));
 
 		
-		// Add account holder name field
-
-			formElement.appendChild(this.createWidget(
-
-				'TextInputWidget',
-				{
-					width: 's12',
-
-					id: 'sign-up-name',
-
-					label: 'Your Name',
-
-					required: false,
-
-					datasource: null
-				}
-			));
-
-
 		// Add birthday field
 
 			formElement.appendChild(this.createWidget(
