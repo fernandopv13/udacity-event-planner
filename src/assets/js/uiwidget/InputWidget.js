@@ -182,7 +182,7 @@ var app = app || {};
 
 	/** Initializes InputWidget upon rendering it into the HTML DOM.
 	*
-	* Currently does nothing but pass call up the inheritance chain to UIWidget.
+	* Sets default error message, then passes call up the inheritance chain to UIWidget.
 	*
 	* (ssuper only works one level up from the 'lowest' derived class, so must pass manually.)
 	*
@@ -190,11 +190,36 @@ var app = app || {};
 
 	module.InputWidget.prototype.init = function(View_v, str_id, obj_options) {
 		
-		var element = $('#' + str_id);
+		var label = $('#' + str_id + '-label')[0];
+
+		// can't get setting to work with jQuery data(), so going old school
+
+		label.dataset.error_default = label.dataset.error;
 
 		module.UIWidget.prototype.init(View_v, str_id, obj_options);
 	};
 	
+
+	/** Sets custom error message on input field (technically, on its label) if
+	*
+	* provided with the expected two params, or reset to default.
+	*
+	* @param {HTMLInputELement} e The input to be validated.
+	*
+	* @param {String} msg The error message to display, or null to reset to default
+	*
+	* @return {void}
+	*/
+
+	module.InputWidget.prototype.setErrorMessage = function(HTMLInputElement_e, str_msg) {
+
+		var label = document.getElementById($(HTMLInputElement_e).attr('id') + '-label');
+
+		// can't get setting to work with jQuery data(), so going old school
+
+		label.dataset.error = str_msg !== null ? str_msg : label.dataset.error_default;
+	};
+
 
 	/** Performs custom validation of input field beyond what can be acheived using the
 	*

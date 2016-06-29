@@ -268,7 +268,7 @@ var app = app || {};
 
 							datasource: Event_e.start(),
 
-							//errormessage: '...',
+							//errormessage: '...', // fall back on default
 
 							validator: 'EventView.prototype.validateStartDate'
 
@@ -294,7 +294,7 @@ var app = app || {};
 
 							validator: 'EventView.prototype.validateEndDate',
 
-							errormessage: 'Please enter end after start in format dd/mm/yyyy hh:mm'
+							//errormessage: 'Please enter as "dd/mm/yyyy hh:mm"' fall back on default
 
 						}
 					).children[0]; // extract from wrapper
@@ -1056,11 +1056,17 @@ var app = app || {};
 
 			startDate = dateWidget.value($('#event-start-date')[0]),
 
-			ret = false; // return false by default
+			ret = false, // return false by default
 
-			$(Element_e).siblings('label').data('error',  // pre-emptively (re)set error message to default
+			setError = module.InputWidget.prototype.setErrorMessage;
+
+			setError(Element_e, null); // pre-emptively (re)set error message to default
+			
+			/*DEPRECATED: jQuery data() fails to write
+			$(Element_e).siblings('label').data('error',  
 
 				$(Element_e).siblings('label').data('error_default'));
+			*/
 			
 			if ($(Element_e).val() !== '') { // an entry has been made in end date
 
@@ -1069,6 +1075,8 @@ var app = app || {};
 					if (startDate !== null) { // a valid start date has been entered
 
 						ret =  (endDate.valueOf() > startDate.valueOf() + 60000); // end date must be after start date by at least a minute
+
+						setError(Element_e, 'End must be after start')
 					}
 
 					else { // an end date has been entered, but no start date (that's OK)
@@ -1089,8 +1097,6 @@ var app = app || {};
 			}
 
 			Element_e.setCustomValidity(ret ? '' : false); // set up for global handler, anything other than the empty string is taken as indicating an error
-
-			//console.log('// end date validates to ' + ret);
 
 			return ret;
 
