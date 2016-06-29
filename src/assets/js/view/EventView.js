@@ -101,7 +101,6 @@ var app = app || {};
 					container = this.containerElement(this.createWidget(
 
 						'HTMLElement', // div
-
 						{
 							element: 'div',			
 							
@@ -115,7 +114,6 @@ var app = app || {};
 					container.appendChild(this.createWidget(
 
 						'HTMLElement',
-
 						{
 							element: 'h4',
 
@@ -131,7 +129,6 @@ var app = app || {};
 					var formElement = this.createWidget(
 
 						'FormWidget',
-
 						{
 							id: 'event-form',
 
@@ -147,7 +144,6 @@ var app = app || {};
 					formElement.appendChild(this.createWidget(
 
 						'HTMLElement',
-
 						{
 							element: 'input',
 
@@ -210,7 +206,6 @@ var app = app || {};
 					formElement.appendChild(this.createWidget(
 
 						'TextInputWidget',
-
 						{
 							id: 'event-location',
 							
@@ -242,7 +237,6 @@ var app = app || {};
 					var outerDiv = this.createWidget(
 
 						'HTMLElement',
-
 						{
 							element: 'div',
 							
@@ -256,7 +250,6 @@ var app = app || {};
 					outerDiv.appendChild(this.createWidget(
 
 						'DateInputWidget',
-
 						{
 							id: 'event-start-date',
 
@@ -280,7 +273,6 @@ var app = app || {};
 					var endDate = this.createWidget(
 
 						'DateInputWidget',
-
 						{
 							id: 'event-end-date',
 
@@ -297,6 +289,7 @@ var app = app || {};
 							//errormessage: 'Please enter as "dd/mm/yyyy hh:mm"' fall back on default
 
 						}
+
 					).children[0]; // extract from wrapper
 					
 					endDate.children[0].classList.add('validate'); // 'validate' normally only comes with required field, so add seperately here
@@ -304,16 +297,15 @@ var app = app || {};
 					outerDiv.appendChild(endDate);
 
 					
-				// Add capacity field and edit guest list button
+				// Add capacity field
 
-					outerDiv = this.createWidget(
+					formElement.appendChild(this.createWidget(
 
 						'NumberInputWidget',
-
 						{
 							id: 'event-capacity',
 
-							width: 's6',
+							width: 's12',
 
 							label: 'Capacity',
 
@@ -327,27 +319,65 @@ var app = app || {};
 
 							errormessage: 'Please enter capacity (0 or greater)'
 						}
-					);
+					));
 
-					formElement.appendChild(outerDiv);
+					//formElement.appendChild(outerDiv);
 
-					
-					var innerDiv = this.createWidget(
+				// Add guest count and button
 
-						'HTMLElement', // inner div
+					var row = this.createWidget( // wrapper row
 
+						'HTMLElement',
 						{
 							element: 'div',
 
-							classList: ['col', 's6']
+							classList: ['row', 'valign-wrapper']
 						}
 					);
 
+					formElement.appendChild(row);
 
-					innerDiv.appendChild(this.createWidget(
+					var innerDiv = this.createWidget( // inner div
 
-						'HTMLElement', // button
+						'HTMLElement',
+						{
+							element: 'div',
 
+							classList: ['col', 's12', 'valign']
+						}
+					);
+
+					row.appendChild(innerDiv);
+
+
+					innerDiv.appendChild(this.createWidget( // guests icon
+
+						'HTMLElement',
+						{
+							element: 'i',
+
+							attributes: {id: 'guests-icon'},
+
+							classList: ['circle', 'material-icons'],
+
+							innerHTML: 'account_circle'
+						}
+					));
+
+					innerDiv.appendChild(this.createWidget( // guest counter
+
+						'HTMLElement',
+						{
+							element: 'span',
+
+							innerHTML: Event_e.guests().length + ' guest' + (Event_e.guests().length !== 1 ? 's' : '')
+						}
+					));
+
+
+					innerDiv.appendChild(this.createWidget( // button
+
+						'HTMLElement',
 						{
 							element: 'a',
 
@@ -373,7 +403,60 @@ var app = app || {};
 						}
 					};
 
-					outerDiv.appendChild(innerDiv);
+					innerDiv.appendChild(this.createWidget( // error message
+						'HTMLElement',
+						{
+							element: 'div',
+
+							attributes: {id: 'guests-error'},
+
+							classList: ['custom-error'],
+
+							innerHTML: 'Event must have guest(s)'
+						}
+					));
+
+					/*DEPRECATED:
+						var innerDiv = this.createWidget( // inner div
+
+							'HTMLElement',
+							{
+								element: 'div',
+
+								classList: ['col', 's6']
+							}
+						);
+
+
+						innerDiv.appendChild(this.createWidget( // button
+							'HTMLElement',
+							{
+								element: 'a',
+
+								attributes: {id: 'event-edit-guests-button', role: 'button', tabindex: 0},
+								
+								classList: ['waves-effect', 'waves-teal', 'btn-flat'],
+
+								innerHTML: 'Edit guests'
+							}
+						));
+
+						this.elementOptions['event-edit-guests-button'] = 
+						{
+							listeners: {
+
+								mousedown: 
+
+									function(nEvent) { // navigate to guest list
+
+										this.editGuests(nEvent);
+
+									}.bind(this)
+							}
+						};
+
+						outerDiv.appendChild(innerDiv);
+					*/
 
 					
 				// Add host field
@@ -748,16 +831,24 @@ var app = app || {};
 
 		module.EventView.prototype.submit = function(nEvent) {
 			
-			var val = this.val(); // get Model to submit
+			var val = this.val(); // get Event to submit
 
-			if (val !== null) { // Submit form if all validations pass
+			if (val !== null) { // all inputs validate
 
-				this.ssuper().prototype.submit.call(this, val);
+				if (val.guests().length > 0) { // event has guest(s)
 
-				return true;
+					this.ssuper().prototype.submit.call(this, val); //Submit form
+
+					$('#guests-error').hide();
+
+					return true;
+				}
+			
+				else {
+
+					$('#guests-error').show();
+				}
 			}
-
-			// else
 
 			Materialize.updateTextFields(); // make sure validation errors are shown
 

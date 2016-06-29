@@ -9,7 +9,6 @@
 
 /*{border: 1px solid blue;}*/ // debug
 
-
 // Custom validation message for date- and timepickers:
 // stock message doesn't seem to work with the pickers
 
@@ -116,8 +115,26 @@
 
 #event-edit-guests-button {
 	color: blue;
-	margin-top: 25px;
+	/*margin-top: 25px;*/
+	padding-left: 10px;
 	z-index: 100;
+}
+
+#guests-icon {
+	vertical-align: middle;
+	margin-right: 5px;
+}
+
+.custom-error {
+	color: #F44336;
+	font-family: "Roboto", sans-serif;
+	font-size: 0.8rem;
+	font-weight: normal;
+	width: 100%;
+	line-height: 1.5;
+	opacity: 1;
+	transition: .2s ease-out;
+	display: none;
 }
 
 

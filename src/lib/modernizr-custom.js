@@ -1,6 +1,6 @@
 /*!
  * modernizr v3.3.1
- * Build http://modernizr.com/download?-checked-datalistelem-formvalidation-geolocation-input-inputtypes-localstorage-matchmedia-dontmin
+ * Build http://modernizr.com/download?-checked-datalistelem-dataset-formvalidation-geolocation-input-inputtypes-localstorage-matchmedia-dontmin
  *
  * Copyright (c)
  *  Faruk Ates
@@ -1216,6 +1216,24 @@ Detects support for matchMedia.
 */
 
   Modernizr.addTest('matchmedia', !!prefixed('matchMedia', window));
+
+/*!
+{
+  "name": "dataset API",
+  "caniuse": "dataset",
+  "property": "dataset",
+  "tags": ["dom"],
+  "builderAliases": ["dom_dataset"],
+  "authors": ["@phiggins42"]
+}
+!*/
+
+  // dataset API for data-* attributes
+  Modernizr.addTest('dataset', function() {
+    var n = createElement('div');
+    n.setAttribute('data-a-b', 'c');
+    return !!(n.dataset && n.dataset.aB === 'c');
+  });
 
 /*!
 {

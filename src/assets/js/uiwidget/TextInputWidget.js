@@ -89,6 +89,8 @@ var app = app || {};
 				datalist: 'text-test-list', // id of datalist (optional)
 
 				validator: 'Class.prototype.validationMethod' // method used for custom validation (optional, defaults to DateInputWidget.prototype.validate)
+
+				disabled: true
 			}
 			*/
 
@@ -140,6 +142,8 @@ var app = app || {};
 			if (options.autocomplete) {attributes.autocomplete = options.autocomplete;}
 
 			if (options.datalist) {attributes.list = options.datalist;}
+
+			if (options.disabled) {attributes.disabled = true;}
 
 			if (options.required) {attributes.required = true; attributes['aria-required'] = true;}
 

@@ -230,6 +230,19 @@ describe('Class SignUpView', function(){
 		});
 
 
+		it('displays a required name field', function() {
+			
+			var el = $(testElement).find('#sign-up-name');
+
+			expect(el.length).toBe(1);
+
+			expect(el.attr('type')).toBe('text');
+
+			expect(el.attr('required')).toBe('required');
+
+		});
+
+
 		it('displays a required email input field', function() {
 			
 			var el = testWindow.$('input[type=email]');
@@ -272,19 +285,6 @@ describe('Class SignUpView', function(){
 			expect(testWindow.$('#sign-up-password-confirmation-parent').hasClass('hidden')).toBe(false);
 
 			testWindow.$('#sign-up-password').val('');
-		});
-
-
-		it('displays an optional name field', function() {
-			
-			var el = $(testElement).find('#sign-up-name');
-
-			expect(el.length).toBe(1);
-
-			expect(el.attr('type')).toBe('text');
-
-			expect(el.attr('required')).not.toBeDefined();
-
 		});
 
 

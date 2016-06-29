@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+	<head>
+		<title> Meetup Event Planner</title>
+		
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+		
+		<!--Google Icon Font used by Materialize-->
+		<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="http://fonts.googleapis.com/icon?family=Roboto" rel="stylesheet">
+		
+		<!-- build:css assets/css/app.css -->
+		<!-- App and library stylesheets -->
+			<link rel="stylesheet" href="assets/css/bootstrap.css"><!-- For bootstrap-datetimepicker -->
+			<link rel="stylesheet" href="../node_modules/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css">
+			<link rel="stylesheet" href="assets/css/materialize.css" media="screen">
+			<link rel="stylesheet" href="assets/css/app.css" media="screen"/>
+
+			<link rel="stylesheet" href="../node_modules/materialize-css/bin/materialize.css" media="screen">
+
+		<!-- endbuild -->
+	</head>
+
+	<body>
+		<form id="event-form" autocomplete="none" novalidate="true" class="col s12" data-widgetclass="FormWidget"><input id="event-id" type="hidden" value="1">
+			<div class="row">
+				<div class="input-field col s12">
+					<input type="text" id="event-name" value="" aria-labelledby="event-name-label" role="textbox" required="true" aria-required="true" autofocus="true" class="validate invalid" data-custom-validator="" data-widgetclass="TextInputWidget"><label for="event-name" id="event-name-label" class="form-label active" data-error="Please enter event name" data-error_default="Please enter event name">Event Name<span class="required-indicator">*</span></label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+				<input type="text" id="event-type" value="" aria-labelledby="event-type-label" role="textbox" autocomplete="none" data-custom-validator="" data-widgetclass="TextInputWidget"><label for="event-type" id="event-type-label" class="form-label" data-error="Please enter event type" data-error_default="Please enter event type">Event Type</label>
+			</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<input type="text" id="event-location" value="" aria-labelledby="event-location-label" role="textbox" autocomplete="none" data-custom-validator="" data-widgetclass="TextInputWidget"><label for="event-location" id="event-location-label" class="form-label" data-error="Please enter location" data-error_default="Please enter location">Location</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<input id="event-capacity" type="number" value="50" aria-labelledby="event-capacity-label" role="textbox" min="0" step="1" class="validate" data-custom-validator="NumberInputWidget.prototype.validate" data-widgetclass="NumberInputWidget"><label for="event-capacity" id="event-capacity-label" class="form-label active" data-error="Please enter capacity (0 or greater)" data-error_default="Please enter capacity (0 or greater)">Capacity</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s6">
+					<input type="text" id="event-start-date" value="" aria-labelledby="event-start-date-label" role="textbox" required="true" aria-required="true" class="datetimepicker-input validate" data-value="" data-custom-validator="EventView.prototype.validateStartDate" data-widgetclass="DateInputWidget"><label for="event-start-date" id="event-start-date-label" class="form-label" data-error="Please enter date (mm/dd/yyyy hh:mm)" data-error_default="Please enter date (mm/dd/yyyy hh:mm)">Starts<span class="required-indicator">*</span></label>
+				</div>
+				<div class="input-field col s6">
+					<input type="text" id="event-end-date" value="" aria-labelledby="event-end-date-label" role="textbox" class="datetimepicker-input validate" data-value="" data-custom-validator="EventView.prototype.validateEndDate" data-widgetclass="DateInputWidget"><label for="event-end-date" id="event-end-date-label" class="form-label" data-error="Please enter date (mm/dd/yyyy hh:mm)" data-error_default="Please enter date (mm/dd/yyyy hh:mm)">Ends</label>
+				</div>
+			</div>
+			<div class="row valign-wrapper">
+				<div class="col s12 valign">
+					<i class="circle material-icons" id="guests-icon">account_circle</i>
+					<span> 0 guests</span>
+					<a id="event-edit-guests-button" role="button" tabindex="0" class="waves-effect waves-teal btn-flat">Edit guests</a>
+					<div class="custom-error invalid">Error</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="input-field col s12">
+					<input type="text" id="event-host" value="" aria-labelledby="event-host-label" role="textbox" autocomplete="none" data-custom-validator="" data-widgetclass="TextInputWidget"><label for="event-host" id="event-host-label" class="form-label" data-error="Please enter host" data-error_default="Please enter host">Host</label>
+				</div>
+			</div>
+				<div class="col s12">
+					<fieldset id="event-host-type" class="radioset-container"><legend>Host type</legend><input id="event-host-type-organization" name="event-host-type" type="radio" value="organization" aria-labelledby="event-host-type-organization-label" checked="true"><label id="event-host-type-organization-label" for="event-host-type-organization">Organization</label><input id="event-host-type-person" name="event-host-type" type="radio" value="person" aria-labelledby="event-host-type-person-label"><label id="event-host-type-person-label" for="event-host-type-person">Person</label></fieldset>
+				</div>
+			<div class="row">
+				<div class="input-field col s12"><textarea id="event-description" length="120" maxlength="120" aria-labelledby="event-description-label" role="textbox" aria-multiline="true" class="materialize-textarea"></textarea><label for="event-description" id="event-description-label" class="form-label" data-error="Please enter description">Description</label>
+				</div>
+			</div>
+			<div class="row">
+				<p class="required-indicator">* indicates a required field</p>
+			</div>
+			<div class="row form-submit">
+				<a id="event-form-cancel" role="button" tabindex="0" class="waves-effect waves-teal btn-flat" data-widgetclass="CancelButtonWidget">Cancel</a><a id="event-form-submit" role="button" tabindex="0" class="waves-effect waves-light btn" data-widgetclass="SubmitButtonWidget">Done<i class="material-icons right">send</i></a>
+			</div>
+		</form>
+
+		<!-- Page content -->
+			<!--div class="container" id="container" role="main">
+				<div id="preloader" class="valign-wrapper" role="progressbar" style="height:160px;">
+					<div class="valign" style="width:90%;text-align:center;">
+						<div>Loading the app...</div>
+						<div class="progress">
+							<div class="indeterminate"></div>
+						</div>
+					</div>
+				</div>
+			</div-->
+
+		<!-- build:js lib/lib.js -->
+		<!-- JavaScript library source files (in required source order) -->
+			<!--script type="text/javascript" src="../test/util/firebug-lite/build/firebug-lite-debug.js"></script--> <!-- Debug: shows JavaScript console on mobile devices -->
+			<script src="lib/polyfills/Object.js"></script>
+			<script src="lib/polyfills/Array.js"></script>
+			<script src="lib/polyfills/Storage.js"></script>
+			<script src="../node_modules/jquery/dist/jquery.js"></script>
+			<!-- for bootstrap-datetimepicker (minimal bootstrap install) -->
+				<script src="../node_modules/bootstrap/js/collapse.js"></script>
+				<script src="../node_modules/bootstrap/js/transition.js"></script>
+				<!--script src="../node_modules/moment/min/moment-with-locales.js"></script-->
+				<script src="../node_modules/moment/min/moment.min.js"></script>
+				<script src="../node_modules/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+			<script src="lib/modernizr-custom.js"></script>
+			<!-- Materialize component libraries (in order of sample gulpfile, using only what's necessary) -->
+				<script src="../node_modules/materialize-css/js/initial.js"></script>
+				<script src="../node_modules/materialize-css/js/jquery.easing.1.3.js"></script>
+				<script src="../node_modules/materialize-css/js/animation.js"></script>
+				<script src="../node_modules/materialize-css/js/velocity.min.js"></script>
+				<script src="../node_modules/materialize-css/js/hammer.min.js"></script>
+				<script src="../node_modules/materialize-css/js/jquery.hammer.js"></script>
+				<script src="../node_modules/materialize-css/js/global.js"></script>
+				<!--script src="../node_modules/materialize-css/js/collapsible.js"></script-->
+				<script src="../node_modules/materialize-css/js/dropdown.js"></script>
+				<!--script src="../node_modules/materialize-css/js/leanModal.js"></script-->
+				<script src="assets/js/util/Materialize-leanModal-override.js"></script>
+				<!--script src="../node_modules/materialize-css/js/materialbox.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/parallax.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/tabs.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/tooltip.js"></script-->
+				<script src="../node_modules/materialize-css/js/waves.js"></script>
+				<script src="../node_modules/materialize-css/js/toasts.js"></script>
+				<script src="../node_modules/materialize-css/js/sideNav.js"></script>
+				<!--script src="../node_modules/materialize-css/js/scrollspy.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/forms.js"></script-->
+				<script src="assets/js/util/Materialize-forms-override.js"></script>
+				<!--script src="../node_modules/materialize-css/js/slider.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/cards.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/chips.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/pushpin.js"></script-->
+				<script src="../node_modules/materialize-css/js/buttons.js"></script>
+				<!--script src="../node_modules/materialize-css/js/transitions.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/scrollFire.js"></script-->
+				<!--script src="../node_modules/materialize-css/js/date_picker/picker.js"></script-->
+				<!--script src="../node_modules/materialize-css/js//js/date_picker/picker.date.js"></script-->
+				<script src="../node_modules/materialize-css/js/character_counter.js"></script>
+				<!--script src="../node_modules/materialize-css/js/carousel.js"></script-->
+			
+				<!--script src="../node_modules/materialize-css/bin/materialize.js"></script-->
+
+				<!--script type="text/javascript" src="lib/pickadate.js_v3.5.6/compressed/picker.time.js"></script--> <!-- old picker -->
+		<!-- endbuild -->
+			
+		<!-- build:js assets/js/app.js -->
+		<!-- JavaScript app source files (in required source order) -->
+			
+			<!-- Utils, polyfills and generic interfaces -->
+				<script src="assets/js/util/Accessor.js"></script>
+				<script src="assets/js/util/Device.js"></script>
+				<script src="assets/js/util/Error.js"></script>
+				
+				
+				<script src="assets/js/model/IHost.js"></script>
+				<script src="assets/js/util/IInterfaceable.js"></script>
+				<script src="assets/js/observer/IObserver.js"></script>
+				<script src="assets/js/observer/IObservable.js"></script>
+				<script src="assets/js/model/ISerializable.js"></script>
+
+			<!-- UIWidgets -->
+				<script src="assets/js/factory/Product.js"></script>
+				<script src="assets/js/factory/Factory.js"></script>
+				<script src="assets/js/uiwidget/UIWidget.js"></script>
+				<script src="assets/js/uiwidget/InputWidget.js"></script>
+				<script src="assets/js/uiwidget/UIWidgetFactory.js"></script>
+				<script src="assets/js/uiwidget/HTMLElement.js"></script>			
+				<script src="assets/js/uiwidget/DateInputWidget.js"></script>
+				<script src="assets/js/uiwidget/EmailInputWidget.js"></script>
+				<script src="assets/js/uiwidget/NumberInputWidget.js"></script>
+				<script src="assets/js/uiwidget/PasswordInputWidget.js"></script>
+				<script src="assets/js/uiwidget/PasswordConfirmationInputWidget.js"></script>
+				<script src="assets/js/uiwidget/SwitchInputWidget.js"></script>
+				<script src="assets/js/uiwidget/TextInputWidget.js"></script>
+				<script src="assets/js/uiwidget/InputDescriptionWidget.js"></script>
+				<script src="assets/js/uiwidget/ButtonWidget.js"></script>
+				<script src="assets/js/uiwidget/NormalButtonWidget.js"></script>
+				<script src="assets/js/uiwidget/SubmitButtonWidget.js"></script>
+				<script src="assets/js/uiwidget/CancelButtonWidget.js"></script>
+				<script src="assets/js/uiwidget/FloatingActionButtonWidget.js"></script>
+				<script src="assets/js/uiwidget/FormWidget.js"></script>
+				<script src="assets/js/uiwidget/NavigationWidget.js"></script>
+			
+			<!-- MVC Models -->
+				<script src="assets/js/model/Model.js"></script>
+				<script src="assets/js/model/ObjectRegistry.js"></script>
+				<script src="assets/js/model/Email.js"></script>
+				<script src="assets/js/model/Password.js"></script>
+				<script src="assets/js/model/Person.js"></script>
+				<script src="assets/js/model/Organization.js"></script>
+				<script src="assets/js/model/Event.js"></script>
+			
+			<!-- MVC abstract Views -->
+				<script src="assets/js/view/View.js"></script>
+				<script src="assets/js/view/FrontPageView.js"></script>
+				<script src="assets/js/view/FormView.js"></script>
+				<script src="assets/js/view/ListView.js"></script>
+		
+			<!-- MVC concrete Views -->
+				<script src="assets/js/view/SignUpView.js"></script>
+				<script src="assets/js/view/SignInView.js"></script>
+				<script src="assets/js/view/PersonView.js"></script>
+				<script src="assets/js/view/GuestListView.js"></script>
+				<script src="assets/js/view/EventView.js"></script>
+				<script src="assets/js/view/EventListView.js"></script>
+				<script src="assets/js/model/Account.js"></script>
+				<script src="assets/js/view/AccountSettingsView.js"></script>
+				<script src="assets/js/view/AccountProfileView.js"></script>
+				<script src="assets/js/view/ModalView.js"></script>
+				<script src="assets/js/view/AboutView.js"></script>
+				<script src="assets/js/view/ConfirmDeletionView.js"></script>
+				<script src="assets/js/view/FirstTimeSetupView.js"></script>
+				<script src="assets/js/view/SignOutView.js"></script>
+			
+			<script src="assets/js/util/FourSquareSearch.js"></script>
+			
+			<!-- MVC Controller and its delegates -->
+				<script src="assets/js/controller/Controller.js"></script>
+				<script src="assets/js/controller/Router.js"></script>
+				<script src="assets/js/controller/ViewUpdateHandler.js"></script>
+				<script src="assets/js/controller/ViewCancelHandler.js"></script>
+				<script src="assets/js/controller/ViewConfirmedDeleteHandler.js"></script>
+				<script src="assets/js/controller/ViewCreateHandler.js"></script>
+				<script src="assets/js/controller/ViewDeleteHandler.js"></script>
+				<script src="assets/js/controller/ViewNavigateHandler.js"></script>
+				<script src="assets/js/controller/ViewSaveHandler.js"></script>
+				<script src="assets/js/controller/ViewSelectHandler.js"></script>
+				<script src="assets/js/controller/ViewSignInHandler.js"></script>
+				<script src="assets/js/controller/ViewSignOutHandler.js"></script>
+				<script src="assets/js/controller/ViewSubmitHandler.js"></script>
+				<script src="assets/js/controller/ViewSubViewHandler.js"></script>
+				<script src="assets/js/controller/ViewUnSaveHandler.js"></script>
+			
+			<script src="assets/js/app.js"></script>
+			<!--script src="assets/js/util/demodata.js"></script-->
+		<!-- endbuild -->
+
+		<!-- Load app when page is ready -->
+			<script>
+				window.onload = function() { // $(document).ready()) may fire too early, so going old school
+					//app.init($('#container')[0]);
+				};
+			</script>
+			<noscript>
+				This app relies very heavily on scripted content running in the browser 'front-end'. You seem to have scripting disabled, or perhaps prefer not to enable it. Which is fine. But at this time the app is only available with scripting enabled. Sorry.
+			</noscript>
+	</body>
+
+</html> 
